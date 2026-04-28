@@ -2,13 +2,49 @@ User-agent: *
 Allow: /
 Allow: /search
 Allow: /article
+Allow: /categories
+Allow: /bookmarks
+Allow: /profile
+Allow: /settings
 
-Sitemap: https://themoonr4.github.io/the-moon-supreme/sitemap.xml
+Sitemap: https://${DOMAIN}/sitemap.xml
 
+# Google specific
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 2
+Crawl-delay: 1
 
+# Bing specific
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
+
+# Yahoo specific
+User-agent: Yahoo! Slurp
+Allow: /
+Crawl-delay: 1
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# Baidu
+User-agent: Baiduspider
+Allow: /
 Crawl-delay: 2
+
+# Yandex
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Disable AI scrapers (optional)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
