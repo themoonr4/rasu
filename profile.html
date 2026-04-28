@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - My Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        [data-theme="light"] {
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: #dc2626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+
+        .settings-section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        input, select {
+            padding: 0.5rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            background: #6c757d;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 1px solid #333;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🌙 THE MOON</a>
+            <button id="themeToggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">🌙</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/'"><i class="fas fa-arrow-left"></i> Back to Home</div>
+        
+        <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+
+        <div id="profileContent"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentUser = null;
+        let userStats = { bookmarks: 0, readingHistory: 0, totalViews: 0 };
+
+        async function loadUserStats() {
+            const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+            const readingHistory = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+            
+            userStats.bookmarks = bookmarks.length;
+            userStats.readingHistory = readingHistory.length;
+            
+            // Calculate total reading time
+            let totalReads = readingHistory.length;
+            userStats.totalViews = totalReads * 3; // avg 3 min per article
+        }
+
+        async function checkAuth() {
+            const { data } = await supabase.auth.getSession();
+            
+            if (data.session) {
+                currentUser = data.session.user;
+                await loadUserStats();
+                showProfile();
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('profileContent').innerHTML = `
+                <div class="profile-card">
+                    <div class="avatar"><i class="fas fa-user"></i></div>
+                    <h3>Not Logged In</h3>
+                    <p style="color: #aaa; margin-bottom: 1rem;">Sign in to access your profile</p>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="email" id="loginEmail" placeholder="Email" style="width: 100%; margin-bottom: 0.5rem;">
+                        <input type="password" id="loginPassword" placeholder="Password" style="width: 100%; margin-bottom: 0.5rem;">
+                        <button id="loginBtn" style="width: 100%;">Login / Sign Up</button>
+                    </div>
+                    <div id="loginMsg"></div>
+                </div>
+            `;
+
+            document.getElementById('loginBtn').addEventListener('click', async () => {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const msgDiv = document.getElementById('loginMsg');
+
+                if (!email || !password) {
+                    msgDiv.innerHTML = '<div style="color: #dc3545;">Please enter email and password</div>';
+                    return;
+                }
+
+                await supabase.auth.signUp({ email, password });
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    msgDiv.innerHTML = `<div style="color: #dc3545;">${error.message}</div>`;
+                } else {
+                    location.reload();
+                }
+            });
+        }
+
+        function showProfile() {
+            const readingStreak = localStorage.getItem('readingStreak') || 0;
+            const joinDate = currentUser?.created_at ? new Date(currentUser.created_at).toLocaleDateString() : '2024';
+
+            document.getElementById('profileContent').innerHTML = `
+                <div class="profile-card">
+                    <div class="avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3>${currentUser?.email || 'User'}</h3>
+                    <p style="color: #aaa;">Member since ${joinDate}</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat">
+                            <div class="stat-number">${userStats.bookmarks}</div>
+                            <div class="stat-label">Bookmarks</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${readingStreak}</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${userStats.readingHistory}</div>
+                            <div class="stat-label">Articles Read</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+                    <div class="setting-item">
+                        <div>Display Name</div>
+                        <input type="text" id="displayName" placeholder="Your name">
+                    </div>
+                    <div class="setting-item">
+                        <div>Bio</div>
+                        <input type="text" id="bio" placeholder="Short bio">
+                    </div>
+                    <button id="updateProfileBtn" style="margin-top: 1rem;">Update Profile</button>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-chart-line"></i> Reading Stats</h2>
+                    <div class="setting-item">
+                        <div>Total Bookmarks</div>
+                        <div>${userStats.bookmarks}</div>
+                    </div>
+                    <div class="setting-item">
+                        <div>Articles Read</div>
+                        <div>${userStats.readingHistory}</div>
+                    </div>
+                    <div class="setting-item">
+                        <div>Reading Time</div>
+                        <div>${userStats.totalViews} minutes</div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2><i class="fas fa-crown"></i> Achievements</h2>
+                    <div class="setting-item">
+                        <div>📖 ${userStats.readingHistory >= 10 ? '✅' : '🔒'} First 10 Articles</div>
+                        <div>${userStats.readingHistory}/10</div>
+                    </div>
+                    <div class="setting-item">
+                        <div>🔖 ${userStats.bookmarks >= 5 ? '✅' : '🔒'} Bookmark Collector</div>
+                        <div>${userStats.bookmarks}/5</div>
+                    </div>
+                    <div class="setting-item">
+                        <div>⚡ ${readingStreak >= 7 ? '✅' : '🔒'} Weekly Warrior</div>
+                        <div>${readingStreak}/7 days</div>
+                    </div>
+                </div>
+
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+                <div id="msg"></div>
+            `;
+
+            // Load saved profile
+            const savedName = localStorage.getItem('displayName') || '';
+            const savedBio = localStorage.getItem('bio') || '';
+            if (document.getElementById('displayName')) document.getElementById('displayName').value = savedName;
+            if (document.getElementById('bio')) document.getElementById('bio').value = savedBio;
+
+            document.getElementById('updateProfileBtn')?.addEventListener('click', () => {
+                const name = document.getElementById('displayName').value;
+                const bio = document.getElementById('bio').value;
+                localStorage.setItem('displayName', name);
+                localStorage.setItem('bio', bio);
+                showMsg('Profile updated!', 'success');
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                await supabase.auth.signOut();
+                location.reload();
+            });
+        }
+
+        function showMsg(msg, type) {
+            const msgDiv = document.getElementById('msg');
+            msgDiv.innerHTML = `<div style="background:${type === 'success' ? '#28a745' : '#dc3545'}; padding:0.75rem; border-radius:8px; margin-top:1rem;">${msg}</div>`;
+            setTimeout(() => msgDiv.innerHTML = '', 3000);
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                btn.innerHTML = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerHTML = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.setAttribute('data-theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '☀️';
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
