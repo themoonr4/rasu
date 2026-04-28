@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+    <ShortName>THE MOON</ShortName>
+    <Description>Search THE MOON News</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Url type="text/html" template="https://themoonr4.github.io/the-moon-supreme/search.html?q={searchTerms}"/>
+    <Url type="application/x-suggestions+json" template="https://themoonr4.github.io/the-moon-supreme/suggest?q={searchTerms}"/>
+    <Image width="16" height="16">https://themoonr4.github.io/the-moon-supreme/favicon.ico</Image>
+</OpenSearchDescription>
