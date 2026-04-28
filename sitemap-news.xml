@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    <url>
+        <loc>https://themoonr4.github.io/the-moon-supreme/article.html?id=1</loc>
+        <news:news>
+            <news:publication>
+                <news:name>THE MOON</news:name>
+                <news:language>en</news:language>
+            </news:publication>
+            <news:publication_date>2024-04-28T00:00:00Z</news:publication_date>
+            <news:title>Welcome to THE MOON - World's Best News Platform</news:title>
+            <news:keywords>news, world news, breaking news</news:keywords>
+        </news:news>
+    </url>
+</urlset>
