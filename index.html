@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="THE MOON - World's Most Advanced News Platform">
+    <meta name="theme-color" content="#dc2626">
+    <title>THE MOON - World Class News</title>
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ============================================
+           THE MOON - Universal Design System
+           Works on ALL devices (Mobile to 4K Desktop)
+           ============================================ */
+
+        /* CSS Variables */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+            --border: #e2e8f0;
+            --brand-red: #dc2626;
+            --brand-red-dark: #b91c1c;
+            --brand-red-light: #ef4444;
+            
+            --tech: #3b82f6;
+            --sports: #10b981;
+            --business: #f59e0b;
+            --politics: #8b5cf6;
+            --study: #06b6d4;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --text-xs: clamp(0.7rem, 0.65rem + 0.5vw, 0.8rem);
+            --text-sm: clamp(0.8rem, 0.75rem + 0.7vw, 0.9rem);
+            --text-base: clamp(0.9rem, 0.85rem + 0.8vw, 1rem);
+            --text-lg: clamp(1rem, 0.95rem + 1vw, 1.15rem);
+            --text-xl: clamp(1.15rem, 1.05rem + 1.2vw, 1.3rem);
+            --text-2xl: clamp(1.3rem, 1.2rem + 1.5vw, 1.6rem);
+            --text-3xl: clamp(1.6rem, 1.4rem + 2vw, 2rem);
+            --text-4xl: clamp(2rem, 1.6rem + 2.5vw, 2.5rem);
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #222222;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #64748b;
+            --border: #2a2a2a;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+        }
+
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        @media (min-width: 768px) { .container { padding: 0 1.5rem; } }
+        @media (min-width: 1024px) { .container { padding: 0 2rem; } }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            gap: 1rem;
+        }
+        @media (min-width: 768px) { .header-content { height: 70px; gap: 2rem; } }
+
+        .logo {
+            font-size: var(--text-xl);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* Desktop Navigation */
+        .nav-desktop {
+            display: none;
+            flex: 1;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) { .nav-desktop { display: flex; } }
+
+        .nav-desktop a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition-fast);
+        }
+        .nav-desktop a:hover,
+        .nav-desktop a.active { color: var(--brand-red); }
+
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-actions button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 0.5rem;
+            min-width: 40px;
+            min-height: 40px;
+            border-radius: var(--radius-md);
+        }
+        .header-actions button:hover { background: var(--bg-secondary); }
+
+        /* Search */
+        .search-container {
+            position: relative;
+        }
+        .search-input {
+            width: 0;
+            opacity: 0;
+            transition: all var(--transition-normal);
+            border: none;
+            background: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+        }
+        .search-input.active {
+            width: 200px;
+            opacity: 1;
+            padding: 0.5rem 1rem;
+        }
+        @media (min-width: 768px) { .search-input.active { width: 300px; } }
+
+        /* Mobile Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 1rem;
+            z-index: 99;
+        }
+        @media (min-width: 768px) { .bottom-nav { display: none; } }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            min-width: 44px;
+            min-height: 44px;
+            justify-content: center;
+        }
+        .bottom-nav-item.active { color: var(--brand-red); }
+        .bottom-nav-item i { font-size: 1.2rem; }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 200;
+            transition: left var(--transition-normal);
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+        }
+        .sidebar.open { left: 0; }
+        @media (min-width: 768px) {
+            .sidebar {
+                position: sticky;
+                top: 70px;
+                left: auto;
+                width: auto;
+                height: auto;
+                box-shadow: none;
+                background: transparent;
+            }
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        @media (min-width: 768px) { .sidebar-header { display: none; } }
+
+        .sidebar-nav {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        @media (min-width: 768px) { .sidebar-nav { flex-direction: row; flex-wrap: wrap; } }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+        }
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--bg-secondary);
+            color: var(--brand-red);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;
+            display: none;
+        }
+        .overlay.active { display: block; }
+        @media (min-width: 768px) { .overlay { display: none !important; } }
+
+        /* Main Layout */
+        .layout-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-bottom: 70px;
+        }
+        @media (min-width: 768px) { .layout-main { padding-bottom: 0; } }
+        @media (min-width: 1024px) {
+            .layout-main {
+                display: grid;
+                grid-template-columns: 1fr 320px;
+                gap: 2rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .hero { padding: 2rem; text-align: left; }
+        }
+        .hero h1 { font-size: var(--text-2xl); margin-bottom: 0.5rem; }
+        .hero p { font-size: var(--text-sm); opacity: 0.9; }
+
+        /* Breaking Ticker */
+        .ticker {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 0.5rem 1rem;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-bottom: 1rem;
+        }
+        .ticker-content {
+            display: inline-block;
+            animation: ticker-scroll 20s linear infinite;
+            font-size: var(--text-sm);
+        }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ticker-content { animation: none; white-space: normal; }
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 640px) { .category-grid { grid-template-columns: repeat(6, 1fr); } }
+
+        .category-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 0.75rem;
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+        .category-card:hover { transform: translateY(-2px); }
+        .category-card i { font-size: 1.5rem; margin-bottom: 0.25rem; display: block; }
+        .category-card span { font-size: var(--text-xs); color: var(--text-primary); font-weight: 500; }
+        .category-card small { font-size: 0.6rem; color: var(--text-tertiary); }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .news-grid { grid-template-columns: 1fr; } }
+
+        .news-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        @media (min-width: 768px) {
+            .news-card { flex-direction: row; }
+        }
+        .news-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        @media (hover: none) { .news-card:hover { transform: none; } }
+
+        .news-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        @media (min-width: 768px) {
+            .news-image { width: 120px; height: 120px; }
+        }
+
+        .news-content { padding: 0.75rem; flex: 1; }
+        .news-category {
+            display: inline-block;
+            background: var(--brand-red);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        .news-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            line-height: 1.4;
+        }
+        .news-excerpt {
+            color: var(--text-secondary);
+            font-size: var(--text-xs);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .news-meta {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.6rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Sidebar Right */
+        .sidebar-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Widget Cards */
+        .widget {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+        }
+        .widget h3 {
+            font-size: var(--text-base);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trending-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .trending-item:last-child { border-bottom: none; }
+        .trending-rank {
+            font-size: 0.7rem;
+            color: var(--brand-red);
+            font-weight: bold;
+        }
+        .trending-title {
+            font-size: var(--text-sm);
+            margin: 0.25rem 0;
+        }
+        .trending-views {
+            font-size: 0.6rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Weather Widget */
+        .weather-info { text-align: center; }
+        .weather-temp { font-size: 2rem; font-weight: bold; }
+        .weather-location { font-size: var(--text-sm); color: var(--text-secondary); }
+
+        /* Newsletter */
+        .newsletter-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .newsletter-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        .newsletter-input button {
+            background: var(--brand-red);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+        }
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .footer-social a {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+        .copyright {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Loader */
+        .loader {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--brand-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Utility */
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <button class="menu-toggle" id="menuToggle" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-primary);min-width:44px;min-height:44px;">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <a href="/" class="logo">🌙 THE MOON</a>
+            
+            <div class="nav-desktop">
+                <a href="#" data-category="all" class="active">All</a>
+                <a href="#" data-category="tech">Tech</a>
+                <a href="#" data-category="sports">Sports</a>
+                <a href="#" data-category="business">Business</a>
+                <a href="#" data-category="politics">Politics</a>
+                <a href="#" data-category="study">Study</a>
+            </div>
+            
+            <div class="header-actions">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search news...">
+                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                <button id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button id="loginBtn"><i class="fas fa-user-circle"></i></button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <span class="logo">🌙 THE MOON</span>
+        <button id="closeSidebar" style="background:none;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+    </div>
+    <div class="sidebar-nav">
+        <a href="#" data-category="all">🏠 Home</a>
+        <a href="#" data-category="tech">💻 Technology</a>
+        <a href="#" data-category="sports">🏏 Sports</a>
+        <a href="#" data-category="business">📊 Business</a>
+        <a href="#" data-category="politics">🏛️ Politics</a>
+        <a href="#" data-category="study">📚 Study</a>
+        <a href="#" data-page="bookmarks">🔖 Bookmarks</a>
+        <a href="#" data-page="settings">⚙️ Settings</a>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- Bottom Navigation (Mobile) -->
+<div class="bottom-nav">
+    <a href="#" class="bottom-nav-item active" data-category="all"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" class="bottom-nav-item" data-category="tech"><i class="fas fa-microchip"></i><span>Tech</span></a>
+    <a href="#" class="bottom-nav-item" data-category="sports"><i class="fas fa-futbol"></i><span>Sports</span></a>
+    <a href="#" class="bottom-nav-item" id="mobileSearchBtn"><i class="fas fa-search"></i><span>Search</span></a>
+    <a href="#" class="bottom-nav-item" id="mobileProfileBtn"><i class="fas fa-user"></i><span>Profile</span></a>
+</div>
+
+<!-- Main Content -->
+<main class="container">
+    <div class="layout-main">
+        <!-- Left Column -->
+        <div>
+            <div class="hero">
+                <h1>Welcome to THE MOON</h1>
+                <p>World's Most Advanced News Platform | AI-Powered | Real-Time</p>
+            </div>
+            
+            <div class="ticker" id="ticker">
+                <div class="ticker-content" id="tickerContent">
+                    🔴 LIVE | Breaking news will appear here
+                </div>
+            </div>
+            
+            <div class="category-grid" id="categoryGrid"></div>
+            
+            <div class="news-grid" id="newsGrid">
+                <div class="loader"><div class="spinner"></div></div>
+            </div>
+        </div>
+        
+        <!-- Right Column (Sidebar) -->
+        <div class="sidebar-right">
+            <div class="widget">
+                <h3><i class="fas fa-fire" style="color: var(--brand-red);"></i> Trending Now</h3>
+                <div id="trendingList"></div>
+            </div>
+            
+            <div class="widget">
+                <h3><i class="fas fa-robot"></i> AI Curated</h3>
+                <div id="aiPicks"></div>
+            </div>
+            
+            <div class="widget">
+                <h3><i class="fas fa-cloud-sun"></i> Weather</h3>
+                <div class="weather-info" id="weatherWidget">
+                    <div class="weather-temp" id="weatherTemp">--°C</div>
+                    <div class="weather-location" id="weatherLocation">Loading...</div>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <h3><i class="fas fa-envelope"></i> Newsletter</h3>
+                <div class="newsletter-input">
+                    <input type="email" id="newsletterEmail" placeholder="Your email address">
+                    <button id="subscribeBtn">Subscribe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+        <a href="#">Advertise</a>
+    </div>
+    <div class="footer-social">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+    <div class="copyright">
+        <p>© 2024 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
+    </div>
+</footer>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+    <div class="modal-content" style="background: var(--bg-primary);border-radius: var(--radius-xl);padding: 1.5rem;max-width: 400px;margin: auto;">
+        <h2 style="margin-bottom: 1rem;">Welcome Back</h2>
+        <input type="email" id="loginEmail" placeholder="Email" style="width:100%;padding:0.75rem;margin-bottom:0.75rem;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-primary);">
+        <input type="password" id="loginPassword" placeholder="Password" style="width:100%;padding:0.75rem;margin-bottom:1rem;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-primary);">
+        <button id="doLogin" style="width:100%;padding:0.75rem;background:var(--brand-red);color:white;border:none;border-radius:var(--radius-md);cursor:pointer;">Login</button>
+        <button id="closeModal" style="margin-top:1rem;width:100%;padding:0.5rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;">Cancel</button>
+    </div>
+</div>
+
+<script>
+    // ============================================
+    // THE MOON - Core JavaScript
+    // All Devices Supported
+    // ============================================
+    
+    const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+    
+    let currentCategory = 'all';
+    let currentPage = 1;
+    let isLoading = false;
+    let allNews = [];
+    
+    // Theme
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    }
+    
+    function toggleTheme() {
+        if (document.body.hasAttribute('data-theme')) {
+            document.body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    }
+    
+    // Fetch News
+    async function fetchNews() {
+        const grid = document.getElementById('newsGrid');
+        grid.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+        
+        try {
+            let url = `${SUPABASE_URL}/rest/v1/news?select=*,categories(*)&status=eq.published&order=published_at.desc&limit=20`;
+            if (currentCategory !== 'all') {
+                url = `${SUPABASE_URL}/rest/v1/news?select=*,categories(*)&categories.slug=eq.${currentCategory}&status=eq.published&order=published_at.desc&limit=20`;
+            }
+            
+            const response = await fetch(url, {
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+            });
+            
+            if (!response.ok) throw new Error('Failed to fetch');
+            
+            const news = await response.json();
+            allNews = news;
+            
+            if (news.length === 0) {
+                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Check back soon!</div>';
+                return;
+            }
+            
+            grid.innerHTML = news.map(article => `
+                <div class="news-card" onclick="location.href='/article.html?id=${article.id}'">
+                    ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="width:100%;height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
+                    <div class="news-content">
+                        <span class="news-category">${article.categories?.name || 'News'}</span>
+                        <h3 class="news-title">${article.title}</h3>
+                        <p class="news-excerpt">${article.excerpt || article.content?.substring(0, 100)}...</p>
+                        <div class="news-meta">
+                            <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                            <span>👁️ ${article.views || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
+        }
+    }
+    
+    // Trending
+    async function loadTrending() {
+        const trendingDiv = document.getElementById('trendingList');
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title,views&status=eq.published&order=views.desc&limit=5`, {
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+            });
+            const news = await response.json();
+            
+            trendingDiv.innerHTML = news.map((item, index) => `
+                <div class="trending-item" onclick="location.href='/article.html?id=${item.id}'">
+                    <div class="trending-rank">#${index + 1}</div>
+                    <div class="trending-title">${item.title}</div>
+                    <div class="trending-views">👁️ ${item.views || 0} views</div>
+                </div>
+            `).join('');
+        } catch (e) {
+            trendingDiv.innerHTML = '<p>Loading...</p>';
+        }
+    }
+    
+    // Categories
+    async function loadCategories() {
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*`, {
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+            });
+            const categories = await response.json();
+            
+            const categoryGrid = document.getElementById('categoryGrid');
+            categoryGrid.innerHTML = categories.map(cat => `
+                <a href="#" class="category-card" data-category="${cat.slug}">
+                    <i>${cat.icon || '📰'}</i>
+                    <span>${cat.name}</span>
+                    <small>news</small>
+                </a>
+            `).join('');
+            
+            document.querySelectorAll('.category-card, .nav-desktop a, .sidebar-nav a, .bottom-nav-item').forEach(el => {
+                if (el.getAttribute('data-category')) {
+                    el.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentCategory = el.getAttribute('data-category');
+                        fetchNews();
+                        document.querySelectorAll('.nav-desktop a, .bottom-nav-item').forEach(nav => nav.classList.remove('active'));
+                        el.classList.add('active');
+                    });
+                }
+            });
+        } catch (e) {}
+    }
+    
+    // Weather
+    function getWeather() {
+        const tempDiv = document.getElementById('weatherTemp');
+        const locDiv = document.getElementById('weatherLocation');
+        if (tempDiv) tempDiv.textContent = '28°C';
+        if (locDiv) locDiv.textContent = 'New Delhi, IN';
+    }
+    
+    // Ticker
+    async function loadTicker() {
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title&status=eq.published&order=published_at.desc&limit=5`, {
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+            });
+            const news = await response.json();
+            const tickerContent = document.getElementById('tickerContent');
+            if (tickerContent) {
+                tickerContent.innerHTML = '🔴 LIVE | ' + news.map(n => n.title).join(' | ') + ' | ';
+            }
+        } catch (e) {}
+    }
+    
+    // AI Picks
+    async function loadAIPicks() {
+        const aiDiv = document.getElementById('aiPicks');
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title&status=eq.published&order=views.desc&limit=3`, {
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+            });
+            const news = await response.json();
+            aiDiv.innerHTML = news.map(item => `
+                <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;">
+                    <div class="trending-title">🤖 ${item.title}</div>
+                </div>
+            `).join('');
+        } catch (e) {
+            aiDiv.innerHTML = '<p>AI picks loading...</p>';
+        }
+    }
+    
+    // Search
+    function initSearch() {
+        const searchBtn = document.getElementById('searchBtn');
+        const searchInput = document.getElementById('searchInput');
+        searchBtn.addEventListener('click', () => {
+            searchInput.classList.toggle('active');
+            if (searchInput.classList.contains('active')) {
+                searchInput.focus();
+            }
+        });
+        
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const term = searchInput.value.toLowerCase();
+                const filtered = allNews.filter(n => n.title.toLowerCase().includes(term) || (n.content && n.content.toLowerCase().includes(term)));
+                const grid = document.getElementById('newsGrid');
+                if (filtered.length === 0) {
+                    grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results found</div>';
+                } else {
+                    grid.innerHTML = filtered.map(article => `
+                        <div class="news-card" onclick="location.href='/article.html?id=${article.id}'">
+                            ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="width:100%;height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
+                            <div class="news-content">
+                                <span class="news-category">${article.categories?.name || 'News'}</span>
+                                <h3 class="news-title">${article.title}</h3>
+                                <p class="news-excerpt">${article.excerpt || article.content?.substring(0, 100)}...</p>
+                                <div class="news-meta">
+                                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                                    <span>👁️ ${article.views || 0}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        });
+    }
+    
+    // Sidebar
+    function initSidebar() {
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebar = document.getElementById('sidebar');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
+        
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+    }
+    
+    // Login Modal
+    function initLogin() {
+        const loginBtn = document.getElementById('loginBtn');
+        const modal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        loginBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        const doLogin = document.getElementById('doLogin');
+        doLogin.addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            alert('Login feature coming soon. Use admin.html for full access.');
+            modal.style.display = 'none';
+        });
+    }
+    
+    // Newsletter
+    function initNewsletter() {
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        subscribeBtn.addEventListener('click', () => {
+            const email = document.getElementById('newsletterEmail').value;
+            if (email) {
+                alert(`Subscribed with ${email}!`);
+                document.getElementById('newsletterEmail').value = '';
+            } else {
+                alert('Please enter email');
+            }
+        });
+    }
+    
+    // Theme Toggle
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    
+    // Initialize all
+    initTheme();
+    fetchNews();
+    loadCategories();
+    loadTrending();
+    loadTicker();
+    loadAIPicks();
+    getWeather();
+    initSearch();
+    initSidebar();
+    initLogin();
+    initNewsletter();
+</script>
+</body>
+</html>
