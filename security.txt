@@ -1,0 +1,6 @@
+# Security contact for THE MOON
+Contact: mailto:security@themoon.news
+Contact: https://themoonr4.github.io/N/contact.html
+Expires: 2025-04-28T00:00:00.000Z
+Preferred-Languages: en, hi
+Canonical: https://themoonr4.github.io/N/.well-known/security.txt
