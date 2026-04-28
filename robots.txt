@@ -1,0 +1,15 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://themoonr4.github.io/the-moon-supreme/sitemap.xml
+
+# Disable admin pages from search engines
+User-agent: *
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /categories.html
+
+# Crawl delay for bots
+Crawl-delay: 5
