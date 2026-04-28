@@ -1,0 +1,13 @@
+/* TEAM */
+    Founder: THE MOON Team
+    Developer: Web Development Team
+    Content: AI + Human Editors
+
+/* SITE */
+    Last update: 2024-04-28
+    Standards: HTML5, CSS3, ES6
+    Software: VS Code, GitHub, Supabase
+
+/* THANKS */
+    Thanks to all readers and contributors
+    Made with ❤️ in India
