@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #dc2626;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .chart-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar-item {
+            margin-bottom: 1rem;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .bar {
+            height: 30px;
+            background: #dc2626;
+            border-radius: 8px;
+            transition: width 0.5s;
+        }
+
+        .news-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .news-table th,
+        .news-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #222;
+        }
+
+        .news-table th {
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        .refresh-btn {
+            background: #dc2626;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-chart-line"></i> THE MOON - Analytics Dashboard</h1>
+        <button class="refresh-btn" onclick="loadData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        
+        <div class="stats-grid" id="statsGrid"></div>
+        
+        <div class="chart-card">
+            <div class="chart-title"><i class="fas fa-chart-bar"></i> News by Category</div>
+            <div id="categoryChart"></div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-title"><i class="fas fa-fire"></i> Top Performing News</div>
+            <table class="news-table" id="topNewsTable">
+                <thead>
+                    <tr><th>Title</th><th>Category</th><th>Views</th><th>Date</th></tr>
+                </thead>
+                <tbody id="topNewsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function loadData() {
+            const { data: news } = await supabase.from('news').select('*, categories(*)');
+            const { data: categories } = await supabase.from('categories').select('*');
+            
+            const totalNews = news?.length || 0;
+            const totalViews = news?.reduce((a,b) => a + (b.views || 0), 0) || 0;
+            const totalLikes = news?.reduce((a,b) => a + (b.likes || 0), 0) || 0;
+            
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-label">📰 Total News</div><div class="stat-value">${totalNews}</div></div>
+                <div class="stat-card"><div class="stat-label">👁️ Total Views</div><div class="stat-value">${totalViews.toLocaleString()}</div></div>
+                <div class="stat-card"><div class="stat-label">❤️ Total Likes</div><div class="stat-value">${totalLikes.toLocaleString()}</div></div>
+                <div class="stat-card"><div class="stat-label">📁 Categories</div><div class="stat-value">${categories?.length || 0}</div></div>
+            `;
+            
+            const categoryCounts = {};
+            news?.forEach(n => {
+                const catName = n.categories?.name || 'Uncategorized';
+                categoryCounts[catName] = (categoryCounts[catName] || 0) + 1;
+            });
+            const maxCount = Math.max(...Object.values(categoryCounts), 1);
+            
+            document.getElementById('categoryChart').innerHTML = Object.entries(categoryCounts).map(([name, count]) => `
+                <div class="bar-item">
+                    <div class="bar-label"><span>${name}</span><span>${count} news</span></div>
+                    <div class="bar" style="width: ${(count/maxCount)*100}%"></div>
+                </div>
+            `).join('');
+            
+            const topNews = [...(news || [])].sort((a,b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+            document.getElementById('topNewsBody').innerHTML = topNews.map(n => `
+                <tr>
+                    <td>${n.title}</td>
+                    <td>${n.categories?.name || '-'}</td>
+                    <td>${(n.views || 0).toLocaleString()}</td>
+                    <td>${new Date(n.published_at).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+        
+        loadData();
+    </script>
+</body>
+</html>
