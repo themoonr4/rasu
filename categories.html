@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Category Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #dc2626;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-card h3 {
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #b91c1c;
+        }
+
+        .list-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .list-header {
+            padding: 1rem;
+            background: #1a1a1a;
+            border-bottom: 1px solid #222;
+            font-weight: 600;
+        }
+
+        .category-item {
+            padding: 1rem;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-item:hover {
+            background: #1a1a1a;
+        }
+
+        .category-name {
+            font-weight: 500;
+        }
+
+        .category-slug {
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-top: 0.25rem;
+        }
+
+        .subcategory-list {
+            margin-left: 2rem;
+            background: #0d0d0d;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .subcategory-item {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .edit-btn {
+            background: #28a745;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .success {
+            background: #28a745;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .error {
+            background: #dc3545;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .flex {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-folder-tree"></i> Category Manager</h1>
+        
+        <!-- Add Category Form -->
+        <div class="form-card">
+            <h3><i class="fas fa-plus-circle"></i> Add New Category</h3>
+            <div class="flex" style="gap: 1rem;">
+                <div style="flex: 2;">
+                    <input type="text" id="catName" placeholder="Category Name (e.g., Technology)">
+                </div>
+                <div style="flex: 1;">
+                    <input type="text" id="catSlug" placeholder="Slug (e.g., tech)">
+                </div>
+                <div style="flex: 0.5;">
+                    <input type="text" id="catIcon" placeholder="Icon (e.g., 💻)" maxlength="2">
+                </div>
+            </div>
+            <button onclick="addCategory()" style="margin-top: 0.5rem;"><i class="fas fa-save"></i> Save Category</button>
+            <div id="catMsg"></div>
+        </div>
+        
+        <!-- Add Sub Category Form -->
+        <div class="form-card">
+            <h3><i class="fas fa-plus-circle"></i> Add New Sub Category</h3>
+            <div class="flex" style="gap: 1rem;">
+                <div style="flex: 1.5;">
+                    <select id="parentCat">
+                        <option value="">Select Parent Category</option>
+                    </select>
+                </div>
+                <div style="flex: 2;">
+                    <input type="text" id="subName" placeholder="Sub Category Name (e.g., Artificial Intelligence)">
+                </div>
+                <div style="flex: 1;">
+                    <input type="text" id="subSlug" placeholder="Slug (e.g., ai)">
+                </div>
+                <div style="flex: 0.5;">
+                    <input type="text" id="subIcon" placeholder="Icon (e.g., 🤖)" maxlength="2">
+                </div>
+            </div>
+            <button onclick="addSubCategory()" style="margin-top: 0.5rem;"><i class="fas fa-save"></i> Save Sub Category</button>
+            <div id="subMsg"></div>
+        </div>
+        
+        <!-- Category List -->
+        <div class="list-card">
+            <div class="list-header">
+                <i class="fas fa-list"></i> All Categories & Sub Categories
+            </div>
+            <div id="categoryList"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function loadData() {
+            // Load categories
+            const { data: categories } = await supabase.from('categories').select('*').order('id');
+            
+            // Load subcategories with category info
+            const { data: subcategories } = await supabase.from('subcategories').select('*, categories(*)').order('id');
+            
+            // Populate parent category dropdown
+            const parentSelect = document.getElementById('parentCat');
+            parentSelect.innerHTML = '<option value="">Select Parent Category</option>' + 
+                categories?.map(c => `<option value="${c.id}">${c.icon || '📁'} ${c.name}</option>`).join('');
+            
+            // Display categories with subcategories
+            const listDiv = document.getElementById('categoryList');
+            if (!categories || categories.length === 0) {
+                listDiv.innerHTML = '<div style="padding: 2rem; text-align: center; color: #aaa;">No categories yet. Add your first category!</div>';
+                return;
+            }
+            
+            listDiv.innerHTML = categories.map(cat => `
+                <div>
+                    <div class="category-item">
+                        <div>
+                            <div class="category-name"><span style="font-size: 1.2rem;">${cat.icon || '📁'}</span> ${cat.name}</div>
+                            <div class="category-slug">slug: ${cat.slug}</div>
+                        </div>
+                        <div>
+                            <button class="edit-btn" onclick="editCategory('${cat.id}', '${cat.name}', '${cat.slug}', '${cat.icon || ''}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteCategory('${cat.id}')">Delete</button>
+                        </div>
+                    </div>
+                    <div class="subcategory-list">
+                        ${subcategories?.filter(sub => sub.parent_id === cat.id).map(sub => `
+                            <div class="subcategory-item">
+                                <div>
+                                    <span style="font-size: 1rem;">${sub.icon || '📌'}</span> ${sub.name}
+                                    <div style="font-size: 0.7rem; color: #aaa;">slug: ${sub.slug}</div>
+                                </div>
+                                <div>
+                                    <button class="edit-btn" onclick="editSubCategory('${sub.id}', '${sub.name}', '${sub.slug}', '${sub.icon || ''}', '${sub.parent_id}')">Edit</button>
+                                    <button class="delete-btn" onclick="deleteSubCategory('${sub.id}')">Delete</button>
+                                </div>
+                            </div>
+                        `).join('') || '<div style="padding: 0.5rem 1rem; color: #666; font-size: 0.8rem;">No subcategories</div>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function addCategory() {
+            const name = document.getElementById('catName').value;
+            let slug = document.getElementById('catSlug').value;
+            const icon = document.getElementById('catIcon').value;
+            const msgDiv = document.getElementById('catMsg');
+            
+            if (!name) {
+                msgDiv.innerHTML = '<div class="error">Please enter category name</div>';
+                setTimeout(() => msgDiv.innerHTML = '', 3000);
+                return;
+            }
+            
+            if (!slug) {
+                slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            }
+            
+            const { error } = await supabase.from('categories').insert({ name, slug, icon });
+            
+            if (error) {
+                msgDiv.innerHTML = `<div class="error">${error.message}</div>`;
+            } else {
+                msgDiv.innerHTML = '<div class="success">✅ Category added successfully!</div>';
+                document.getElementById('catName').value = '';
+                document.getElementById('catSlug').value = '';
+                document.getElementById('catIcon').value = '';
+                loadData();
+                setTimeout(() => msgDiv.innerHTML = '', 3000);
+            }
+        }
+
+        async function addSubCategory() {
+            const name = document.getElementById('subName').value;
+            let slug = document.getElementById('subSlug').value;
+            const icon = document.getElementById('subIcon').value;
+            const parent_id = document.getElementById('parentCat').value;
+            const msgDiv = document.getElementById('subMsg');
+            
+            if (!name || !parent_id) {
+                msgDiv.innerHTML = '<div class="error">Please enter name and select parent category</div>';
+                setTimeout(() => msgDiv.innerHTML = '', 3000);
+                return;
+            }
+            
+            if (!slug) {
+                slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            }
+            
+            // Get parent slug
+            const { data: parent } = await supabase.from('categories').select('slug').eq('id', parent_id).single();
+            
+            const { error } = await supabase.from('subcategories').insert({ 
+                name, slug, icon, parent_id, parent_slug: parent?.slug 
+            });
+            
+            if (error) {
+                msgDiv.innerHTML = `<div class="error">${error.message}</div>`;
+            } else {
+                msgDiv.innerHTML = '<div class="success">✅ Sub category added successfully!</div>';
+                document.getElementById('subName').value = '';
+                document.getElementById('subSlug').value = '';
+                document.getElementById('subIcon').value = '';
+                loadData();
+                setTimeout(() => msgDiv.innerHTML = '', 3000);
+            }
+        }
+
+        async function deleteCategory(id) {
+            if (confirm('Delete this category? All subcategories will also be deleted.')) {
+                await supabase.from('subcategories').delete().eq('parent_id', id);
+                await supabase.from('categories').delete().eq('id', id);
+                loadData();
+            }
+        }
+
+        async function deleteSubCategory(id) {
+            if (confirm('Delete this sub category?')) {
+                await supabase.from('subcategories').delete().eq('id', id);
+                loadData();
+            }
+        }
+
+        function editCategory(id, name, slug, icon) {
+            const newName = prompt('Edit category name:', name);
+            const newSlug = prompt('Edit slug:', slug);
+            const newIcon = prompt('Edit icon (emoji):', icon);
+            
+            if (newName && newSlug) {
+                supabase.from('categories').update({ name: newName, slug: newSlug, icon: newIcon }).eq('id', id).then(() => loadData());
+            }
+        }
+
+        function editSubCategory(id, name, slug, icon, parent_id) {
+            const newName = prompt('Edit sub category name:', name);
+            const newSlug = prompt('Edit slug:', slug);
+            const newIcon = prompt('Edit icon (emoji):', icon);
+            
+            if (newName && newSlug) {
+                supabase.from('subcategories').update({ name: newName, slug: newSlug, icon: newIcon }).eq('id', id).then(() => loadData());
+            }
+        }
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html>
