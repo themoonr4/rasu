@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - THE MOON</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        [data-theme="light"] {
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 500px;
+        }
+
+        .error-code {
+            font-size: 6rem;
+            font-weight: 800;
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+
+        .error-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .home-btn:hover {
+            background: #b91c1c;
+        }
+
+        .search-box {
+            margin-top: 2rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .search-box button {
+            background: #dc2626;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        [data-theme="light"] .theme-toggle {
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+    
+    <div class="error-container">
+        <div class="error-code">404</div>
+        <div class="error-title"><i class="fas fa-moon"></i> Lost in Space?</div>
+        <div class="error-message">The page you're looking for doesn't exist or has been moved.</div>
+        
+        <a href="/" class="home-btn"><i class="fas fa-home"></i> Back to Home</a>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search news...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                btn.innerHTML = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerHTML = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const query = document.getElementById('searchInput').value;
+            if (query) {
+                window.location.href = `/search.html?q=${encodeURIComponent(query)}`;
+            }
+        });
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.setAttribute('data-theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '☀️';
+        }
+    </script>
+</body>
+</html>
