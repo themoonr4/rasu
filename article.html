@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Article</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        [data-theme="light"] {
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .article-category {
+            display: inline-block;
+            background: #dc2626;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .article-image {
+            width: 100%;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .article-content p {
+            margin-bottom: 1rem;
+        }
+
+        .article-content h2 {
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            padding-top: 1rem;
+            border-top: 1px solid #222;
+        }
+
+        .share-btn {
+            background: #1a1a1a;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #dc2626;
+        }
+
+        .comments-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #222;
+        }
+
+        .comments-title {
+            margin-bottom: 1rem;
+        }
+
+        .comment-form {
+            margin-bottom: 2rem;
+        }
+
+        .comment-form input,
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-item {
+            padding: 1rem;
+            background: #111;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .comment-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .comment-date {
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #222;
+            border-top-color: #dc2626;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 1px solid #333;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .article-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🌙 THE MOON</a>
+            <button id="themeToggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">🌙</button>
+        </div>
+    </div>
+
+    <div class="container" id="articleContainer">
+        <div class="loader"><div class="spinner"></div></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Get article ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleId = urlParams.get('id');
+
+        async function loadArticle() {
+            if (!articleId) {
+                document.getElementById('articleContainer').innerHTML = '<p>Article not found</p>';
+                return;
+            }
+
+            const { data: article, error } = await supabase
+                .from('news')
+                .select('*, categories(*)')
+                .eq('id', articleId)
+                .single();
+
+            if (error || !article) {
+                document.getElementById('articleContainer').innerHTML = '<p>Article not found</p>';
+                return;
+            }
+
+            // Update view count
+            await supabase.rpc('increment_views', { news_id: articleId });
+
+            document.getElementById('articleContainer').innerHTML = `
+                <a href="/" class="back-btn" onclick="location.href='/'"><i class="fas fa-arrow-left"></i> Back to Home</a>
+                <div>
+                    <span class="article-category">${article.categories?.name || 'News'}</span>
+                    <h1 class="article-title">${article.title}</h1>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> ${new Date(article.published_at).toLocaleDateString()}</span>
+                        <span><i class="far fa-eye"></i> ${article.views || 0} views</span>
+                        <span><i class="far fa-heart"></i> ${article.likes || 0} likes</span>
+                    </div>
+                    ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" alt="${article.title}">` : ''}
+                    <div class="article-content">${article.content || article.excerpt}</div>
+                    
+                    <div class="share-buttons">
+                        <div class="share-btn" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+                        <div class="share-btn" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> Twitter</div>
+                        <div class="share-btn" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</div>
+                        <div class="share-btn" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i> Telegram</div>
+                        <div class="share-btn" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</div>
+                    </div>
+                    
+                    <div class="comments-section">
+                        <h3 class="comments-title"><i class="far fa-comment"></i> Comments</h3>
+                        <div class="comment-form">
+                            <input type="text" id="commentName" placeholder="Your Name">
+                            <textarea id="commentContent" rows="3" placeholder="Write a comment..."></textarea>
+                            <button onclick="postComment()">Post Comment</button>
+                        </div>
+                        <div id="commentsList"></div>
+                    </div>
+                </div>
+            `;
+
+            loadComments();
+        }
+
+        async function loadComments() {
+            const { data: comments } = await supabase
+                .from('comments')
+                .select('*')
+                .eq('news_id', articleId)
+                .eq('status', 'approved')
+                .order('created_at', { ascending: false });
+
+            const commentsDiv = document.getElementById('commentsList');
+            if (!comments || comments.length === 0) {
+                commentsDiv.innerHTML = '<p style="color: #aaa;">No comments yet. Be the first to comment!</p>';
+                return;
+            }
+
+            commentsDiv.innerHTML = comments.map(c => `
+                <div class="comment-item">
+                    <div class="comment-name">${c.user_name}</div>
+                    <div class="comment-date">${new Date(c.created_at).toLocaleDateString()}</div>
+                    <div>${c.content}</div>
+                </div>
+            `).join('');
+        }
+
+        async function postComment() {
+            const name = document.getElementById('commentName').value;
+            const content = document.getElementById('commentContent').value;
+
+            if (!name || !content) {
+                alert('Please enter your name and comment');
+                return;
+            }
+
+            const { error } = await supabase.from('comments').insert({
+                news_id: articleId,
+                user_name: name,
+                content: content,
+                status: 'pending'
+            });
+
+            if (error) {
+                alert('Error posting comment: ' + error.message);
+            } else {
+                alert('Comment posted! Awaiting approval.');
+                document.getElementById('commentContent').value = '';
+                loadComments();
+            }
+        }
+
+        function shareOnWhatsApp() {
+            window.open(`https://wa.me/?text=${encodeURIComponent(window.location.href)}`);
+        }
+
+        function shareOnTwitter() {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`);
+        }
+
+        function shareOnFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`);
+        }
+
+        function shareOnTelegram() {
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}`);
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                btn.innerHTML = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerHTML = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.setAttribute('data-theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '☀️';
+        }
+
+        loadArticle();
+    </script>
+</body>
+</html>
