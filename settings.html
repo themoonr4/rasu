@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        [data-theme="light"] {
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .settings-section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-weight: 500;
+        }
+
+        .setting-desc {
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-top: 0.25rem;
+        }
+
+        select, input {
+            padding: 0.5rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .danger-zone {
+            border-color: #dc3545;
+        }
+
+        .danger-zone h2 {
+            color: #dc3545;
+        }
+
+        .danger-btn {
+            background: #dc3545;
+        }
+
+        .success {
+            background: #28a745;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #dc2626;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 1px solid #333;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🌙 THE MOON</a>
+            <button id="themeToggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">🌙</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="/" class="back-btn" onclick="location.href='/'"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        
+        <h1><i class="fas fa-cog"></i> Settings</h1>
+
+        <div class="settings-section">
+            <h2><i class="fas fa-palette"></i> Appearance</h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Theme Mode</div>
+                    <div class="setting-desc">Choose light or dark theme</div>
+                </div>
+                <select id="themeSelect">
+                    <option value="dark">🌙 Dark</option>
+                    <option value="light">☀️ Light</option>
+                    <option value="auto">⚡ Auto (System)</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Font Size</div>
+                    <div class="setting-desc">Adjust text size for better reading</div>
+                </div>
+                <select id="fontSizeSelect">
+                    <option value="small">Small</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2><i class="fas fa-bell"></i> Notifications</h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Push Notifications</div>
+                    <div class="setting-desc">Get breaking news alerts</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="pushNotifications">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Email Digest</div>
+                    <div class="setting-desc">Daily news summary in your inbox</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="emailDigest">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2><i class="fas fa-globe"></i> Language & Region</h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Language</div>
+                    <div class="setting-desc">Select your preferred language</div>
+                </div>
+                <select id="languageSelect">
+                    <option value="en">🇬🇧 English</option>
+                    <option value="hi">🇮🇳 हिंदी</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="fr">🇫🇷 Français</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Time Zone</div>
+                    <div class="setting-desc">Set your local time zone</div>
+                </div>
+                <select id="timezoneSelect">
+                    <option value="IST">IST (India)</option>
+                    <option value="EST">EST (US)</option>
+                    <option value="GMT">GMT (UK)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2><i class="fas fa-newspaper"></i> Reading Preferences</h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Categories to follow</div>
+                    <div class="setting-desc">Select news categories you care about</div>
+                </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;" id="categoryPrefs"></div>
+        </div>
+
+        <div class="settings-section">
+            <h2><i class="fas fa-database"></i> Data Management</h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Reading History</div>
+                    <div class="setting-desc">Clear your reading history</div>
+                </div>
+                <button id="clearHistory" class="danger-btn">Clear History</button>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Bookmarks</div>
+                    <div class="setting-desc">Clear all saved bookmarks</div>
+                </div>
+                <button id="clearBookmarks" class="danger-btn">Clear Bookmarks</button>
+            </div>
+        </div>
+
+        <div class="settings-section danger-zone">
+            <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Clear All Data</div>
+                    <div class="setting-desc">Delete all settings, history, and bookmarks</div>
+                </div>
+                <button id="clearAll" class="danger-btn">Clear All</button>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Delete Account</div>
+                    <div class="setting-desc">Permanently delete your account</div>
+                </div>
+                <button id="deleteAccount" class="danger-btn">Delete Account</button>
+            </div>
+        </div>
+
+        <div id="msg"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Load categories for preferences
+        async function loadCategories() {
+            const { data: categories } = await supabase.from('categories').select('*');
+            const prefsDiv = document.getElementById('categoryPrefs');
+            const savedPrefs = JSON.parse(localStorage.getItem('categoryPrefs') || '[]');
+
+            prefsDiv.innerHTML = categories?.map(cat => `
+                <button class="cat-pref" data-id="${cat.id}" data-slug="${cat.slug}" style="padding:0.5rem 1rem;background:${savedPrefs.includes(cat.slug) ? '#dc2626' : '#1a1a1a'};border:none;border-radius:20px;cursor:pointer;color:white;">
+                    ${cat.icon || '📰'} ${cat.name}
+                </button>
+            `).join('');
+
+            document.querySelectorAll('.cat-pref').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    let prefs = JSON.parse(localStorage.getItem('categoryPrefs') || '[]');
+                    const slug = btn.getAttribute('data-slug');
+                    if (prefs.includes(slug)) {
+                        prefs = prefs.filter(p => p !== slug);
+                        btn.style.background = '#1a1a1a';
+                    } else {
+                        prefs.push(slug);
+                        btn.style.background = '#dc2626';
+                    }
+                    localStorage.setItem('categoryPrefs', JSON.stringify(prefs));
+                    showMsg('Preferences saved!', 'success');
+                });
+            });
+        }
+
+        function showMsg(msg, type) {
+            const msgDiv = document.getElementById('msg');
+            msgDiv.innerHTML = `<div class="${type}">${msg}</div>`;
+            setTimeout(() => msgDiv.innerHTML = '', 3000);
+        }
+
+        // Theme
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.removeAttribute('data-theme');
+            } else if (theme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+            } else if (theme === 'auto') {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (isDark) {
+                    document.body.removeAttribute('data-theme');
+                } else {
+                    document.body.setAttribute('data-theme', 'light');
+                }
+            }
+            localStorage.setItem('theme', theme);
+            document.getElementById('themeSelect').value = theme;
+        }
+
+        document.getElementById('themeSelect').addEventListener('change', (e) => applyTheme(e.target.value));
+
+        // Font size
+        function applyFontSize(size) {
+            const sizes = { small: '14px', medium: '16px', large: '18px' };
+            document.body.style.fontSize = sizes[size];
+            localStorage.setItem('fontSize', size);
+        }
+        document.getElementById('fontSizeSelect').addEventListener('change', (e) => applyFontSize(e.target.value));
+
+        // Language
+        document.getElementById('languageSelect').addEventListener('change', (e) => {
+            localStorage.setItem('language', e.target.value);
+            showMsg('Language saved! Refresh page to apply.', 'success');
+        });
+
+        // Notifications
+        document.getElementById('pushNotifications').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                if ('Notification' in window) {
+                    Notification.requestPermission();
+                }
+            }
+            localStorage.setItem('pushNotifications', e.target.checked);
+        });
+
+        document.getElementById('emailDigest').addEventListener('change', (e) => {
+            localStorage.setItem('emailDigest', e.target.checked);
+        });
+
+        // Clear data
+        document.getElementById('clearHistory').addEventListener('click', () => {
+            localStorage.removeItem('readingHistory');
+            showMsg('Reading history cleared!', 'success');
+        });
+
+        document.getElementById('clearBookmarks').addEventListener('click', () => {
+            localStorage.removeItem('bookmarks');
+            showMsg('Bookmarks cleared!', 'success');
+        });
+
+        document.getElementById('clearAll').addEventListener('click', () => {
+            if (confirm('Are you sure? This will delete all your data.')) {
+                localStorage.clear();
+                showMsg('All data cleared! Page will refresh.', 'success');
+                setTimeout(() => location.reload(), 1500);
+            }
+        });
+
+        // Theme toggle button
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const current = localStorage.getItem('theme') || 'dark';
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        // Load saved settings
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
+        if (document.getElementById('themeToggle')) {
+            document.getElementById('themeToggle').innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        const savedFontSize = localStorage.getItem('fontSize') || 'medium';
+        applyFontSize(savedFontSize);
+        document.getElementById('fontSizeSelect').value = savedFontSize;
+
+        const savedLanguage = localStorage.getItem('language') || 'en';
+        document.getElementById('languageSelect').value = savedLanguage;
+
+        const savedPush = localStorage.getItem('pushNotifications') === 'true';
+        document.getElementById('pushNotifications').checked = savedPush;
+
+        const savedDigest = localStorage.getItem('emailDigest') === 'true';
+        document.getElementById('emailDigest').checked = savedDigest;
+
+        loadCategories();
+    </script>
+</body>
+</html>
