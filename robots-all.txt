@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /search
+Allow: /article
+
+Sitemap: https://themoonr4.github.io/the-moon-supreme/sitemap.xml
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
