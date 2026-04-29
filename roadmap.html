@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Roadmap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:2rem;color:#dc2626;}
+        .phase{margin-bottom:2rem;background:#111;border-radius:16px;padding:1.5rem;border:1px solid #222;}
+        .phase h2{color:#dc2626;margin-bottom:1rem;}
+        .phase ul{list-style:none;}
+        .phase li{margin-bottom:0.5rem;padding-left:1.5rem;position:relative;}
+        .phase li:before{content:"🚀";position:absolute;left:0;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-map"></i> Product Roadmap</h1>
+        
+        <div class="phase">
+            <h2>Phase 1: Current (Q2 2024)</h2>
+            <ul>
+                <li>Core news platform ✅</li>
+                <li>Admin panel ✅</li>
+                <li>Categories system ✅</li>
+                <li>User bookmarks ✅</li>
+            </ul>
+        </div>
+
+        <div class="phase">
+            <h2>Phase 2: Coming Soon (Q3 2024)</h2>
+            <ul>
+                <li>Mobile app (iOS/Android)</li>
+                <li>Push notifications</li>
+                <li>Email newsletter</li>
+                <li>Premium subscriptions</li>
+                <li>AI content recommendations</li>
+            </ul>
+        </div>
+
+        <div class="phase">
+            <h2>Phase 3: Future (2025)</h2>
+            <ul>
+                <li>Video news integration</li>
+                <li>Live streaming</li>
+                <li>Podcast platform</li>
+                <li>Multi-language AI translation</li>
+                <li>Fact-check API integration</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
