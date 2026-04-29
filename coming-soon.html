@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Coming Soon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+        .container{text-align:center;padding:2rem;}
+        .logo{font-size:3rem;margin-bottom:1rem;}
+        h1{font-size:2rem;margin-bottom:0.5rem;color:#dc2626;}
+        .countdown{display:flex;justify-content:center;gap:1rem;margin:2rem 0;}
+        .countdown-item{background:#111;border:1px solid #222;border-radius:12px;padding:1rem;min-width:80px;}
+        .countdown-number{font-size:2rem;font-weight:700;}
+        .countdown-label{font-size:0.7rem;color:#aaa;}
+        .notify-form{display:flex;gap:0.5rem;max-width:400px;margin:0 auto;}
+        input{flex:1;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
+        button{background:#dc2626;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;}
+        @media(max-width:600px){.countdown{gap:0.5rem;}.countdown-item{padding:0.5rem;min-width:60px;}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🌙</div>
+        <h1>THE MOON</h1>
+        <p>Something amazing is coming soon...</p>
+        <div class="countdown" id="countdown"></div>
+        <div class="notify-form">
+            <input type="email" id="notifyEmail" placeholder="Notify me when ready">
+            <button onclick="notifyMe()">Notify</button>
+        </div>
+        <div id="msg" style="margin-top:1rem;"></div>
+    </div>
+    <script>
+        const targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + 30);
+        
+        function updateCountdown() {
+            const now = new Date();
+            const diff = targetDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (86400000)) / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            document.getElementById('countdown').innerHTML = `
+                <div class="countdown-item"><div class="countdown-number">${days}</div><div class="countdown-label">Days</div></div>
+                <div class="countdown-item"><div class="countdown-number">${hours}</div><div class="countdown-label">Hours</div></div>
+                <div class="countdown-item"><div class="countdown-number">${minutes}</div><div class="countdown-label">Minutes</div></div>
+                <div class="countdown-item"><div class="countdown-number">${seconds}</div><div class="countdown-label">Seconds</div></div>
+            `;
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        function notifyMe() {
+            const email = document.getElementById('notifyEmail').value;
+            const msgDiv = document.getElementById('msg');
+            if(!email){msgDiv.innerHTML='<div style="color:#dc3545;">Enter email</div>';return;}
+            msgDiv.innerHTML='<div style="color:#28a745;">✅ You\'ll be notified!</div>';
+            setTimeout(()=>msgDiv.innerHTML='',3000);
+        }
+    </script>
+</body>
+</html>
