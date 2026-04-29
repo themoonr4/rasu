@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Badges</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin-top:2rem;}
+        .badge-card{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;text-align:center;}
+        .badge-icon{font-size:3rem;margin-bottom:0.5rem;}
+        .badge-name{font-weight:bold;margin-bottom:0.25rem;}
+        .obtained{color:#28a745;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/profile.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-medal"></i> Your Badges</h1>
+        
+        <div class="badge-grid" id="badgeGrid"></div>
+    </div>
+    <script>
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        const readingHistory = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+        const readingStreak = localStorage.getItem('readingStreak') || 0;
+        
+        const badges = [
+            { name:"First Step", icon:"🌱", required: readingHistory.length>=1, obtained: readingHistory.length>=1 },
+            { name:"Regular Reader", icon:"📚", required: readingHistory.length>=10, obtained: readingHistory.length>=10 },
+            { name:"News Master", icon:"🏆", required: readingHistory.length>=50, obtained: readingHistory.length>=50 },
+            { name:"Bookmarker", icon:"🔖", required: bookmarks.length>=5, obtained: bookmarks.length>=5 },
+            { name:"Super Saver", icon:"💾", required: bookmarks.length>=20, obtained: bookmarks.length>=20 },
+            { name:"On Fire", icon:"🔥", required: readingStreak>=7, obtained: readingStreak>=7 },
+            { name:"Legend", icon:"⭐", required: readingStreak>=30, obtained: readingStreak>=30 }
+        ];
+        
+        const grid = document.getElementById('badgeGrid');
+        grid.innerHTML = badges.map(b => `
+            <div class="badge-card">
+                <div class="badge-icon">${b.icon}</div>
+                <div class="badge-name">${b.name}</div>
+                <div class="${b.obtained ? 'obtained' : ''}">${b.obtained ? '✅ Obtained' : '🔒 Locked'}</div>
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>
