@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - SEO Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;}
+        .tool-card{background:#1a1a1a;padding:1rem;border-radius:12px;text-align:center;cursor:pointer;}
+        .tool-card i{font-size:2rem;color:#dc2626;margin-bottom:0.5rem;}
+        input,textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        .result-box{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;font-family:monospace;font-size:0.8rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> SEO Tools Dashboard</h1>
+        
+        <div class="tool-grid">
+            <div class="tool-card" onclick="showTool('meta')"><i class="fas fa-tag"></i><div>Meta Generator</div></div>
+            <div class="tool-card" onclick="showTool('sitemap')"><i class="fas fa-sitemap"></i><div>Sitemap Creator</div></div>
+            <div class="tool-card" onclick="showTool('keywords')"><i class="fas fa-key"></i><div>Keyword Analyzer</div></div>
+            <div class="tool-card" onclick="showTool('readability')"><i class="fas fa-book"></i><div>Readability Check</div></div>
+        </div>
+        
+        <div class="card" id="toolContent">
+            <h3>Select a tool from above</h3>
+        </div>
+    </div>
+    <script>
+        function showTool(tool) {
+            const contentDiv = document.getElementById('toolContent');
+            if(tool === 'meta') {
+                contentDiv.innerHTML = `<h3>Meta Tag Generator</h3><input type="text" id="metaTitle" placeholder="Page Title"><textarea id="metaDesc" rows="3" placeholder="Page Description"></textarea><button onclick="generateMeta()">Generate Meta Tags</button><div id="metaResult" class="result-box" style="display:none;"></div>`;
+            } else if(tool === 'sitemap') {
+                contentDiv.innerHTML = `<h3>Sitemap Creator</h3><input type="text" id="siteUrl" placeholder="https://themoonr4.github.io/the-moon-supreme/"><button onclick="generateSitemap()">Generate Sitemap</button><div id="sitemapResult" class="result-box" style="display:none;"></div>`;
+            } else if(tool === 'keywords') {
+                contentDiv.innerHTML = `<h3>Keyword Analyzer</h3><textarea id="keywordText" rows="5" placeholder="Enter your content..."></textarea><button onclick="analyzeKeywords()">Analyze Keywords</button><div id="keywordResult" class="result-box" style="display:none;"></div>`;
+            } else if(tool === 'readability') {
+                contentDiv.innerHTML = `<h3>Readability Checker</h3><textarea id="readabilityText" rows="5" placeholder="Enter your content..."></textarea><button onclick="checkReadabilityScore()">Check Score</button><div id="readabilityResult" class="result-box" style="display:none;"></div>`;
+            }
+        }
+        
+        function generateMeta() {
+            const title = document.getElementById('metaTitle').value;
+            const desc = document.getElementById('metaDesc').value;
+            const resultDiv = document.getElementById('metaResult');
+            resultDiv.innerHTML = `<strong>Meta Tags:</strong><br><code>&lt;title&gt;${title || 'THE MOON'} - World Class News&lt;/title&gt;<br>&lt;meta name="description" content="${desc || 'Latest news and updates'}"&gt;<br>&lt;meta property="og:title" content="${title || 'THE MOON'}"&gt;<br>&lt;meta property="og:description" content="${desc || 'Latest news'}"&gt;</code>`;
+            resultDiv.style.display = 'block';
+        }
+        
+        function generateSitemap() {
+            const url = document.getElementById('siteUrl').value;
+            const resultDiv = document.getElementById('sitemapResult');
+            resultDiv.innerHTML = `<strong>Sitemap XML:</strong><br><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;<br>&lt;url&gt;&lt;loc&gt;${url || 'https://themoonr4.github.io/the-moon-supreme/'}&lt;/loc&gt;&lt;priority&gt;1.0&lt;/priority&gt;&lt;/url&gt;<br>&lt;/urlset&gt;</code>`;
+            resultDiv.style.display = 'block';
+        }
+        
+        function analyzeKeywords() {
+            const text = document.getElementById('keywordText').value;
+            const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+            const freq = {};
+            words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+            const sorted = Object.entries(freq).sort((a,b) => b[1] - a[1]).slice(0,10);
+            const resultDiv = document.getElementById('keywordResult');
+            resultDiv.innerHTML = `<strong>Top Keywords:</strong><br>${sorted.map(([k,v]) => `${k}: ${v} times`).join('<br>')}`;
+            resultDiv.style.display = 'block';
+        }
+        
+        function checkReadabilityScore() {
+            const text = document.getElementById('readabilityText').value;
+            const words = text.split(/\s+/).length;
+            const sentences = text.split(/[.!?]+/).length;
+            const score = Math.min(100, Math.floor((words / 300) * 100));
+            const resultDiv = document.getElementById('readabilityResult');
+            resultDiv.innerHTML = `<strong>Readability Score:</strong> ${score}%<br>Words: ${words}<br>Sentences: ${sentences}<br>Reading Time: ${Math.ceil(words/200)} min`;
+            resultDiv.style.display = 'block';
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
