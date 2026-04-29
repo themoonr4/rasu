@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Leaderboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .leaderboard-table{width:100%;border-collapse:collapse;background:#111;border-radius:16px;overflow:hidden;}
+        th,td{padding:1rem;text-align:left;border-bottom:1px solid #222;}
+        th{background:#1a1a1a;color:#aaa;}
+        .rank-1{color:#ffc107;font-weight:bold;}
+        .rank-2{color:#c0c0c0;font-weight:bold;}
+        .rank-3{color:#cd7f32;font-weight:bold;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-simple"></i> Top Readers Leaderboard</h1>
+        
+        <table class="leaderboard-table">
+            <thead><tr><th>Rank</th><th>User</th><th>Articles Read</th><th>Points</th></tr></thead>
+            <tbody id="leaderboardBody"></tbody>
+        </table>
+    </div>
+    <script>
+        let users = JSON.parse(localStorage.getItem('users') || '[]');
+        if(users.length === 0) {
+            users = [
+                { name: 'Gaurav S', articles: 245, points: 2450 },
+                { name: 'Priya M', articles: 189, points: 1890 },
+                { name: 'Rajesh K', articles: 156, points: 1560 },
+                { name: 'Neha V', articles: 134, points: 1340 },
+                { name: 'Amit T', articles: 98, points: 980 }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        
+        users.sort((a,b) => b.articles - a.articles);
+        const tbody = document.getElementById('leaderboardBody');
+        tbody.innerHTML = users.map((u, i) => `
+            <tr>
+                <td class="${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${i+1}</td>
+                <td><i class="fas fa-user-circle"></i> ${u.name}</td>
+                <td>📖 ${u.articles}</td>
+                <td>🏆 ${u.points}</td>
+            </tr>
+        `).join('');
+    </script>
+</body>
+</html>
