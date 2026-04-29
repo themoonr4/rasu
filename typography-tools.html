@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Typography Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:1rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .result-text{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-font"></i> Typography Tools</h1>
+        
+        <div class="card">
+            <h3>Text Case Converter</h3>
+            <textarea id="caseText" rows="4" placeholder="Enter text to convert..."></textarea>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <button onclick="convertCase('upper')">UPPERCASE</button>
+                <button onclick="convertCase('lower')">lowercase</button>
+                <button onclick="convertCase('title')">Title Case</button>
+                <button onclick="convertCase('sentence')">Sentence case</button>
+            </div>
+            <div id="caseResult" class="result-text" style="display:none;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>HTML to Text Converter</h3>
+            <textarea id="htmlText" rows="4" placeholder="<p>HTML content here...</p>"></textarea>
+            <button onclick="convertHTML()">Convert to Plain Text</button>
+            <div id="htmlResult" class="result-text" style="display:none;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Word Counter</h3>
+            <textarea id="wordText" rows="4" placeholder="Type or paste content..."></textarea>
+            <button onclick="countWords()">Count Words</button>
+            <div id="wordResult" class="result-text" style="display:none;"></div>
+        </div>
+    </div>
+    <script>
+        function convertCase(type) {
+            const text = document.getElementById('caseText').value;
+            let result = '';
+            if(type === 'upper') result = text.toUpperCase();
+            else if(type === 'lower') result = text.toLowerCase();
+            else if(type === 'title') result = text.replace(/\b\w/g, l => l.toUpperCase());
+            else if(type === 'sentence') result = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+            document.getElementById('caseResult').innerHTML = `<strong>Result:</strong><br>${result}`;
+            document.getElementById('caseResult').style.display = 'block';
+        }
+        
+        function convertHTML() {
+            const html = document.getElementById('htmlText').value;
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const text = temp.textContent || temp.innerText || '';
+            document.getElementById('htmlResult').innerHTML = `<strong>Plain Text:</strong><br>${text}`;
+            document.getElementById('htmlResult').style.display = 'block';
+        }
+        
+        function countWords() {
+            const text = document.getElementById('wordText').value;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            const chars = text.length;
+            const sentences = text.split(/[.!?]+/).length - 1;
+            document.getElementById('wordResult').innerHTML = `<strong>Statistics:</strong><br>Words: ${words.length}<br>Characters: ${chars}<br>Sentences: ${sentences}<br>Reading Time: ${Math.ceil(words.length/200)} min`;
+            document.getElementById('wordResult').style.display = 'block';
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
