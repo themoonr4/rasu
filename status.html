@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - API Status</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .status-card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .status-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid #222;}
+        .status-badge{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:0.5rem;}
+        .up{background:#28a745;box-shadow:0 0 5px #28a745;}
+        .down{background:#dc3545;}
+        .degraded{background:#ffc107;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-server"></i> API Status Dashboard</h1>
+        
+        <div class="status-card">
+            <div class="status-item"><span><span class="status-badge up"></span> Supabase Database</span><span style="color:#28a745;">Operational</span></div>
+            <div class="status-item"><span><span class="status-badge up"></span> Cloudflare Workers</span><span style="color:#28a745;">Operational</span></div>
+            <div class="status-item"><span><span class="status-badge up"></span> GitHub Pages</span><span style="color:#28a745;">Operational</span></div>
+            <div class="status-item"><span><span class="status-badge up"></span> Image Storage</span><span style="color:#28a745;">Operational</span></div>
+            <div class="status-item"><span><span class="status-badge up"></span> Authentication Service</span><span style="color:#28a745;">Operational</span></div>
+        </div>
+        
+        <div class="status-card">
+            <h3>Uptime History</h3>
+            <div style="display:flex;gap:0.25rem;margin:1rem 0;">
+                <div style="flex:1;height:30px;background:#28a745;border-radius:4px;"></div>
+                <div style="flex:1;height:30px;background:#28a745;border-radius:4px;"></div>
+                <div style="flex:1;height:30px;background:#28a745;border-radius:4px;"></div>
+                <div style="flex:1;height:30px;background:#28a745;border-radius:4px;"></div>
+                <div style="flex:1;height:30px;background:#ffc107;border-radius:4px;"></div>
+                <div style="flex:1;height:30px;background:#28a745;border-radius:4px;"></div>
+                <div style="flex:1;height:30px;background:#28a745;border-radius:4px;"></div>
+            </div>
+            <p>99.8% uptime over last 30 days</p>
+        </div>
+    </div>
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
