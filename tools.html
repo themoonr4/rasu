@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Content Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .tool-card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .tool-card h3{margin-bottom:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        .result{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:0.5rem;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back to Admin</div>
+        <h1><i class="fas fa-tools"></i> Content Tools</h1>
+        
+        <div class="tool-card">
+            <h3>📝 Title Generator</h3>
+            <input type="text" id="titleTopic" placeholder="Enter topic (e.g., IPL 2024)">
+            <button onclick="generateTitle()">Generate Headlines</button>
+            <div id="generatedTitles" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="tool-card">
+            <h3>📊 Readability Checker</h3>
+            <textarea id="readabilityText" rows="5" placeholder="Paste your content here..."></textarea>
+            <button onclick="checkReadability()">Analyze</button>
+            <div id="readabilityResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="tool-card">
+            <h3>🔍 SEO Keyword Suggester</h3>
+            <input type="text" id="keywordTopic" placeholder="Enter topic">
+            <button onclick="suggestKeywords()">Get Keywords</button>
+            <div id="keywordResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+    <script>
+        function generateTitle() {
+            const topic = document.getElementById('titleTopic').value;
+            const resultDiv = document.getElementById('generatedTitles');
+            if(!topic) { alert('Enter topic'); return; }
+            const titles = [
+                `🚀 Breaking: ${topic} - Latest Updates You Can't Miss`,
+                `📰 ${topic}: Complete Coverage and Analysis`,
+                `⚡ ${topic} - What You Need to Know Today`,
+                `🔥 ${topic}: Experts Share Their Insights`,
+                `📊 ${topic} - The Full Story Behind the Headlines`
+            ];
+            resultDiv.innerHTML = titles.map(t => `<div style="margin-bottom:0.5rem;">📌 ${t}</div>`).join('');
+            resultDiv.style.display = 'block';
+        }
+        
+        function checkReadability() {
+            const text = document.getElementById('readabilityText').value;
+            const resultDiv = document.getElementById('readabilityResult');
+            if(!text) { alert('Paste some content'); return; }
+            const words = text.trim().split(/\s+/).length;
+            const sentences = text.split(/[.!?]+/).length;
+            const readingTime = Math.ceil(words / 200);
+            const score = Math.min(100, Math.floor((words / 500) * 100));
+            resultDiv.innerHTML = `<div>📊 Words: ${words}</div><div>📖 Sentences: ${sentences}</div><div>⏱️ Reading time: ${readingTime} min</div><div>📈 Readability score: ${score}%</div>`;
+            resultDiv.style.display = 'block';
+        }
+        
+        function suggestKeywords() {
+            const topic = document.getElementById('keywordTopic').value;
+            const resultDiv = document.getElementById('keywordResult');
+            if(!topic) { alert('Enter topic'); return; }
+            const keywords = [`${topic} news`, `latest ${topic}`, `${topic} updates`, `${topic} today`, `${topic} 2024`, `breaking ${topic}`];
+            resultDiv.innerHTML = `<div>🔑 Suggested keywords:</div><div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;">${keywords.map(k => `<span style="background:#dc2626;padding:0.25rem 0.75rem;border-radius:20px;">${k}</span>`).join('')}</div>`;
+            resultDiv.style.display = 'block';
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
