@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Schema Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,textarea,select{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .code-block{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;font-family:monospace;font-size:0.7rem;overflow-x:auto;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-code"></i> Schema Markup Generator</h1>
+        
+        <div class="card">
+            <h3>Article Schema</h3>
+            <input type="text" id="articleTitle" placeholder="Article Title">
+            <input type="text" id="articleUrl" placeholder="Article URL">
+            <input type="text" id="articleImage" placeholder="Image URL">
+            <textarea id="articleDesc" rows="3" placeholder="Description"></textarea>
+            <input type="text" id="articleAuthor" placeholder="Author Name">
+            <input type="text" id="articleDate" placeholder="Published Date (YYYY-MM-DD)">
+            <button onclick="generateArticleSchema()">Generate Article Schema</button>
+            <div id="schemaResult" class="code-block" style="display:none;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Organization Schema</h3>
+            <button onclick="generateOrgSchema()">Generate Organization Schema</button>
+            <div id="orgResult" class="code-block" style="display:none;"></div>
+        </div>
+    </div>
+    <script>
+        function generateArticleSchema() {
+            const title = document.getElementById('articleTitle').value;
+            const url = document.getElementById('articleUrl').value;
+            const image = document.getElementById('articleImage').value;
+            const desc = document.getElementById('articleDesc').value;
+            const author = document.getElementById('articleAuthor').value;
+            const date = document.getElementById('articleDate').value;
+            
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "NewsArticle",
+                "headline": title || "THE MOON News",
+                "url": url || window.location.href,
+                "image": image || "https://themoonr4.github.io/the-moon-supreme/assets/logo.svg",
+                "description": desc || "Latest news from THE MOON",
+                "author": { "@type": "Person", "name": author || "THE MOON Team" },
+                "datePublished": date || new Date().toISOString().split('T')[0],
+                "publisher": { "@type": "Organization", "name": "THE MOON", "logo": { "@type": "ImageObject", "url": "https://themoonr4.github.io/the-moon-supreme/assets/logo.svg" } }
+            };
+            
+            document.getElementById('schemaResult').innerHTML = `<strong>Copy this script to your &lt;head&gt; section:</strong><br><br><code>&lt;script type="application/ld+json"&gt;${JSON.stringify(schema, null, 2)}&lt;/script&gt;</code>`;
+            document.getElementById('schemaResult').style.display = 'block';
+        }
+        
+        function generateOrgSchema() {
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "NewsMediaOrganization",
+                "name": "THE MOON",
+                "url": "https://themoonr4.github.io/the-moon-supreme/",
+                "logo": "https://themoonr4.github.io/the-moon-supreme/assets/logo.svg",
+                "sameAs": [
+                    "https://facebook.com/themoonnews",
+                    "https://twitter.com/themoonnews",
+                    "https://instagram.com/themoonnews"
+                ],
+                "foundingDate": "2024",
+                "areaServed": "Worldwide"
+            };
+            document.getElementById('orgResult').innerHTML = `<strong>Organization Schema:</strong><br><br><code>&lt;script type="application/ld+json"&gt;${JSON.stringify(schema, null, 2)}&lt;/script&gt;</code>`;
+            document.getElementById('orgResult').style.display = 'block';
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
