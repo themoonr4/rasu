@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Activity Logs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .log-table{width:100%;border-collapse:collapse;background:#111;border-radius:12px;overflow:hidden;}
+        th,td{padding:0.75rem;text-align:left;border-bottom:1px solid #222;}
+        th{background:#1a1a1a;color:#aaa;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        .filter-bar{display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;}
+        select{padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-history"></i> Activity Logs</h1>
+        
+        <div class="filter-bar">
+            <select id="typeFilter">
+                <option value="all">All Types</option>
+                <option value="news">News</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+                <option value="system">System</option>
+            </select>
+            <button id="clearLogsBtn" style="background:#dc3545;">Clear Logs</button>
+        </div>
+        
+        <table class="log-table">
+            <thead><tr><th>Time</th><th>Type</th><th>Action</th><th>User</th><th>Details</th></tr>
+            </thead>
+            <tbody id="logList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
+        
+        function addSampleLogs() {
+            if(logs.length === 0) {
+                logs = [
+                    { id: 1, time: new Date().toLocaleString(), type: 'news', action: 'Created', user: 'admin@themoon.news', details: 'Added new article' },
+                    { id: 2, time: new Date().toLocaleString(), type: 'user', action: 'Login', user: 'user@example.com', details: 'User logged in' },
+                    { id: 3, time: new Date().toLocaleString(), type: 'admin', action: 'Settings', user: 'admin@themoon.news', details: 'Updated site settings' }
+                ];
+                localStorage.setItem('activityLogs', JSON.stringify(logs));
+            }
+        }
+        
+        function loadLogs() {
+            const filter = document.getElementById('typeFilter').value;
+            const filtered = filter === 'all' ? logs : logs.filter(l => l.type === filter);
+            const tbody = document.getElementById('logList');
+            tbody.innerHTML = filtered.map(l => `
+                <tr><td>${l.time}</td><td>${l.type}</td><td>${l.action}</td><td>${l.user}</td><td>${l.details}</td></tr>
+            `).join('');
+        }
+        
+        document.getElementById('typeFilter').addEventListener('change', loadLogs);
+        document.getElementById('clearLogsBtn').addEventListener('click', () => {
+            if(confirm('Clear all logs?')) {
+                localStorage.removeItem('activityLogs');
+                logs = [];
+                loadLogs();
+            }
+        });
+        
+        addSampleLogs();
+        loadLogs();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
