@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Workflow Automation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .rule-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        select,input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        .status-active{color:#28a745;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-robot"></i> Workflow Automation</h1>
+        
+        <div class="card">
+            <h3>Add Automation Rule</h3>
+            <select id="triggerEvent">
+                <option value="news_published">News Published</option>
+                <option value="comment_added">Comment Added</option>
+                <option value="user_registered">User Registered</option>
+            </select>
+            <select id="actionType">
+                <option value="send_email">Send Email</option>
+                <option value="post_social">Post to Social Media</option>
+                <option value="send_notification">Send Notification</option>
+            </select>
+            <button onclick="addRule()">Add Rule</button>
+        </div>
+        
+        <div class="card">
+            <h3>Active Automation Rules</h3>
+            <div id="rulesList"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Automation Logs</h3>
+            <div id="logsList" style="height:200px;overflow-y:auto;"></div>
+        </div>
+    </div>
+    <script>
+        let rules = JSON.parse(localStorage.getItem('automationRules') || '[]');
+        let logs = JSON.parse(localStorage.getItem('automationLogs') || '[]');
+        
+        function loadRules() {
+            const listDiv = document.getElementById('rulesList');
+            if(rules.length === 0) { listDiv.innerHTML = '<p>No automation rules</p>'; return; }
+            listDiv.innerHTML = rules.map((r, i) => `
+                <div class="rule-item">
+                    <div><strong>${r.trigger}</strong> → <strong>${r.action}</strong><br><small class="status-active">Active</small></div>
+                    <button onclick="deleteRule(${i})" style="background:#dc3545;">Delete</button>
+                </div>
+            `).join('');
+        }
+        
+        function loadLogs() {
+            const logsDiv = document.getElementById('logsList');
+            logsDiv.innerHTML = logs.map(l => `<div class="rule-item" style="font-size:0.7rem;">${l.time} - ${l.message}</div>`).join('');
+        }
+        
+        function addRule() {
+            const trigger = document.getElementById('triggerEvent').value;
+            const action = document.getElementById('actionType').value;
+            rules.push({ trigger, action, createdAt: new Date().toISOString() });
+            localStorage.setItem('automationRules', JSON.stringify(rules));
+            logs.unshift({ time: new Date().toLocaleString(), message: `Rule added: ${trigger} → ${action}` });
+            localStorage.setItem('automationLogs', JSON.stringify(logs));
+            loadRules(); loadLogs();
+        }
+        
+        function deleteRule(index) {
+            rules.splice(index, 1);
+            localStorage.setItem('automationRules', JSON.stringify(rules));
+            loadRules();
+        }
+        
+        loadRules(); loadLogs();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
