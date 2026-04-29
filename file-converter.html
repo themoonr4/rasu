@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - File Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:600px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;text-align:center;}
+        .drop-zone{border:2px dashed #333;border-radius:16px;padding:2rem;margin-bottom:1rem;cursor:pointer;}
+        select,button{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;cursor:pointer;}
+        button{background:#dc2626;color:white;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-exchange-alt"></i> File Converter</h1>
+        
+        <div class="card">
+            <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size:3rem;"></i>
+                <p>Click to upload file</p>
+                <input type="file" id="fileInput" style="display:none;">
+            </div>
+            <select id="convertType">
+                <option value="json">JSON</option>
+                <option value="csv">CSV</option>
+                <option value="xml">XML</option>
+            </select>
+            <button onclick="convertFile()">Convert</button>
+            <div id="convertResult"></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => { window.fileContent = e.target.result; };
+                reader.readAsText(file);
+            }
+        });
+        
+        function convertFile() {
+            if(!window.fileContent) { alert('Select a file first'); return; }
+            const type = document.getElementById('convertType').value;
+            let result = '';
+            if(type === 'json') {
+                const lines = window.fileContent.split('\n');
+                const headers = lines[0].split(',');
+                const json = [];
+                for(let i=1; i<lines.length; i++) {
+                    const values = lines[i].split(',');
+                    const obj = {};
+                    headers.forEach((h,idx) => obj[h.trim()] = values[idx]?.trim());
+                    json.push(obj);
+                }
+                result = JSON.stringify(json, null, 2);
+            } else if(type === 'csv') {
+                const data = JSON.parse(window.fileContent);
+                const headers = Object.keys(data[0]);
+                result = headers.join(',') + '\n';
+                data.forEach(row => { result += headers.map(h => row[h]).join(',') + '\n'; });
+            }
+            document.getElementById('convertResult').innerHTML = `<pre style="background:#1a1a1a;padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.7rem;">${result}</pre><button onclick="downloadResult('${type}')">Download</button>`;
+        }
+        
+        function downloadResult(type) { alert('Download would start'); }
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
