@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - AI Content Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,textarea,select{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .generated-content{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;white-space:pre-wrap;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-magic"></i> AI Content Generator</h1>
+        
+        <div class="card">
+            <h3>Generate Content</h3>
+            <input type="text" id="topicInput" placeholder="Enter topic (e.g., IPL 2024 Final)">
+            <select id="contentType">
+                <option value="news">News Article</option>
+                <option value="headline">Headline Only</option>
+                <option value="summary">Short Summary</option>
+            </select>
+            <select id="toneSelect">
+                <option value="professional">Professional</option>
+                <option value="casual">Casual</option>
+                <option value="exciting">Exciting</option>
+            </select>
+            <button onclick="generateContent()">Generate</button>
+            <div id="generatedOutput" class="generated-content" style="display:none;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Recent Generations</h3>
+            <div id="historyList"></div>
+        </div>
+    </div>
+    <script>
+        let history = JSON.parse(localStorage.getItem('aiHistory') || '[]');
+        
+        function loadHistory() {
+            const historyDiv = document.getElementById('historyList');
+            if(history.length === 0) { historyDiv.innerHTML = '<p>No generation history</p>'; return; }
+            historyDiv.innerHTML = history.slice(0,10).map(h => `<div class="generated-content" style="margin-bottom:0.5rem;padding:0.5rem;"><strong>${h.topic}</strong><br><small>${h.time}</small></div>`).join('');
+        }
+        
+        async function generateContent() {
+            const topic = document.getElementById('topicInput').value;
+            const type = document.getElementById('contentType').value;
+            const tone = document.getElementById('toneSelect').value;
+            if(!topic) { alert('Enter topic'); return; }
+            const outputDiv = document.getElementById('generatedOutput');
+            outputDiv.style.display = 'block';
+            outputDiv.innerHTML = '<div class="spinner" style="width:20px;height:20px;border:2px solid #333;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;"></div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
+            
+            await new Promise(r => setTimeout(r, 1500));
+            
+            let content = '';
+            if(type === 'headline') {
+                content = `🚨 BREAKING: ${topic} - Latest Updates You Can't Miss!\n📰 Exclusive: Inside ${topic}\n⚡ ${topic}: What You Need to Know Today`;
+            } else if(type === 'summary') {
+                content = `${topic} has become the trending topic worldwide. Experts suggest this development will have significant impact on the industry. Stay tuned for more updates as this story develops.`;
+            } else {
+                content = `In a significant development, ${topic} has captured global attention. Industry leaders are closely monitoring the situation. According to sources, this could mark a turning point in the sector. The coming days will reveal the full impact of this event on markets and consumers alike.`;
+            }
+            outputDiv.innerHTML = `<div>${content}</div><div style="margin-top:1rem;"><button onclick="copyToClipboard('${content.replace(/'/g, "\\'")}')">Copy to Clipboard</button><button onclick="saveToDraft('${topic.replace(/'/g, "\\'")}', '${content.replace(/'/g, "\\'")}')">Save as Draft</button></div>`;
+            
+            history.unshift({ topic, type, tone, time: new Date().toLocaleString() });
+            if(history.length > 20) history.pop();
+            localStorage.setItem('aiHistory', JSON.stringify(history));
+            loadHistory();
+        }
+        
+        function copyToClipboard(text) { navigator.clipboard.writeText(text); alert('Copied!'); }
+        function saveToDraft(topic, content) { alert(`Draft saved: ${topic}`); }
+        
+        loadHistory();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
