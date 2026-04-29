@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Webhook Tester</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,select{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:1rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;}
+        .response{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;font-family:monospace;font-size:0.8rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-plug"></i> Webhook Tester</h1>
+        
+        <div class="card">
+            <h3>Send Test Webhook</h3>
+            <input type="text" id="webhookUrl" placeholder="Webhook URL" value="https://api.telegram.org/botYOUR_TOKEN/sendMessage">
+            <select id="webhookMethod"><option value="GET">GET</option><option value="POST">POST</option></select>
+            <textarea id="webhookPayload" rows="4" placeholder='{"chat_id":"123","text":"Test message"}'></textarea>
+            <button onclick="sendWebhook()">Send Webhook</button>
+            <div id="webhookResponse" class="response" style="display:none;"></div>
+        </div>
+    </div>
+    <script>
+        async function sendWebhook() {
+            const url = document.getElementById('webhookUrl').value;
+            const method = document.getElementById('webhookMethod').value;
+            const payload = document.getElementById('webhookPayload').value;
+            const responseDiv = document.getElementById('webhookResponse');
+            
+            try {
+                const options = { method: method, headers: { 'Content-Type': 'application/json' } };
+                if(method === 'POST' && payload) options.body = payload;
+                const response = await fetch(url, options);
+                const data = await response.text();
+                responseDiv.innerHTML = `<strong>Status:</strong> ${response.status}<br><strong>Response:</strong><br>${data}`;
+                responseDiv.style.display = 'block';
+            } catch(e) {
+                responseDiv.innerHTML = `<strong>Error:</strong> ${e.message}`;
+                responseDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
