@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - API Key Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .api-key-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid #222;}
+        .key-value{font-family:monospace;background:#1a1a1a;padding:0.25rem 0.5rem;border-radius:4px;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        input{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        select{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-key"></i> API Key Management</h1>
+        
+        <div class="card">
+            <h3>Generate New API Key</h3>
+            <input type="text" id="keyName" placeholder="Key Name (e.g., Mobile App)">
+            <select id="keyPermissions">
+                <option value="read">Read Only</option>
+                <option value="read_write">Read & Write</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button onclick="generateKey()">Generate API Key</button>
+            <div id="newKey" style="margin-top:1rem;display:none;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Active API Keys</h3>
+            <div id="keyList"></div>
+        </div>
+    </div>
+    <script>
+        let apiKeys = JSON.parse(localStorage.getItem('apiKeys') || '[]');
+        
+        function loadKeys() {
+            const listDiv = document.getElementById('keyList');
+            if(apiKeys.length === 0) { listDiv.innerHTML = '<p>No API keys generated</p>'; return; }
+            listDiv.innerHTML = apiKeys.map((key, i) => `
+                <div class="api-key-item">
+                    <div><strong>${key.name}</strong><br><span class="key-value">${key.key.substring(0,20)}...</span><br><small>${key.permissions} | Created: ${key.date}</small></div>
+                    <div><button onclick="revokeKey(${i})">Revoke</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function generateKey() {
+            const name = document.getElementById('keyName').value;
+            const permissions = document.getElementById('keyPermissions').value;
+            if(!name) { alert('Enter key name'); return; }
+            const key = 'tm_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 8);
+            apiKeys.push({ name, key, permissions, date: new Date().toLocaleString() });
+            localStorage.setItem('apiKeys', JSON.stringify(apiKeys));
+            const newKeyDiv = document.getElementById('newKey');
+            newKeyDiv.innerHTML = `<div style="background:#1a1a1a;padding:1rem;border-radius:8px;"><strong>Your new API key:</strong><br><code style="background:#000;padding:0.5rem;display:block;margin-top:0.5rem;">${key}</code><br><small>Copy this key now. You won't see it again!</small></div>`;
+            newKeyDiv.style.display = 'block';
+            document.getElementById('keyName').value = '';
+            loadKeys();
+            setTimeout(() => newKeyDiv.style.display = 'none', 10000);
+        }
+        
+        function revokeKey(index) {
+            if(confirm('Revoke this API key?')) {
+                apiKeys.splice(index, 1);
+                localStorage.setItem('apiKeys', JSON.stringify(apiKeys));
+                loadKeys();
+            }
+        }
+        
+        loadKeys();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
