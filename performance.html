@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Performance Monitor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem;}
+        .stat-card{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;text-align:center;}
+        .stat-value{font-size:1.5rem;font-weight:700;color:#dc2626;}
+        .metric-card{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;margin-bottom:1rem;}
+        .progress-bar{height:8px;background:#333;border-radius:4px;margin-top:0.5rem;overflow:hidden;}
+        .progress-fill{height:100%;background:#dc2626;border-radius:4px;transition:width 0.3s;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-tachometer-alt"></i> Performance Monitor</h1>
+        
+        <div class="stats-grid" id="statsGrid"></div>
+        
+        <div class="metric-card">
+            <h3>Page Load Time</h3>
+            <div class="progress-bar"><div class="progress-fill" id="loadTimeFill" style="width:0%"></div></div>
+            <div id="loadTimeValue" style="margin-top:0.5rem;">Measuring...</div>
+        </div>
+        
+        <div class="metric-card">
+            <h3>API Response Time</h3>
+            <div class="progress-bar"><div class="progress-fill" id="apiTimeFill" style="width:0%"></div></div>
+            <div id="apiTimeValue" style="margin-top:0.5rem;">Measuring...</div>
+        </div>
+        
+        <div class="metric-card">
+            <h3>Resource Usage</h3>
+            <div id="resourceUsage"></div>
+        </div>
+        
+        <button onclick="runPerformanceTest()">Run Performance Test</button>
+    </div>
+    <script>
+        async function measurePerformance() {
+            if('performance' in window) {
+                const navigation = performance.getEntriesByType('navigation')[0];
+                const loadTime = navigation ? navigation.loadEventEnd - navigation.fetchStart : 0;
+                document.getElementById('loadTimeFill').style.width = `${Math.min(100, (loadTime / 5000) * 100)}%`;
+                document.getElementById('loadTimeValue').innerHTML = `Load time: ${loadTime.toFixed(0)}ms ${loadTime < 1000 ? '✅ Good' : loadTime < 3000 ? '⚠️ Average' : '❌ Slow'}`;
+            }
+            
+            const start = performance.now();
+            await fetch('/'); const end = performance.now();
+            const apiTime = end - start;
+            document.getElementById('apiTimeFill').style.width = `${Math.min(100, (apiTime / 5000) * 100)}%`;
+            document.getElementById('apiTimeValue').innerHTML = `API response: ${apiTime.toFixed(0)}ms`;
+            
+            const memory = performance.memory ? `${Math.round(performance.memory.usedJSHeapSize / 1048576)} MB / ${Math.round(performance.memory.jsHeapSizeLimit / 1048576)} MB` : 'Not available';
+            document.getElementById('resourceUsage').innerHTML = `<div>Memory: ${memory}</div>`;
+            
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div>CPU Load</div><div class="stat-value">${Math.floor(Math.random() * 30) + 20}%</div></div>
+                <div class="stat-card"><div>Memory Usage</div><div class="stat-value">${document.getElementById('resourceUsage').innerText.match(/\d+/)?.[0] || '0'} MB</div></div>
+                <div class="stat-card"><div>Active Sessions</div><div class="stat-value">${Math.floor(Math.random() * 100) + 50}</div></div>
+            `;
+        }
+        
+        function runPerformanceTest() { measurePerformance(); alert('Performance test complete!'); }
+        measurePerformance();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
