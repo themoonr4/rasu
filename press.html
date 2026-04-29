@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Press Kit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .asset{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .asset h3{margin-bottom:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        button{background:#dc2626;border:none;padding:0.5rem 1rem;border-radius:8px;color:white;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-newspaper"></i> Press Kit</h1>
+        
+        <div class="asset"><h3>Logo Assets</h3><p>THE MOON logo in multiple formats</p><button onclick="alert('Logo download started')">Download Logo (SVG)</button></div>
+        <div class="asset"><h3>Brand Guidelines</h3><p>Colors, typography, and usage rules</p><button onclick="alert('PDF download started')">Download PDF</button></div>
+        <div class="asset"><h3>Screenshots</h3><p>Website screenshots for press use</p><button onclick="alert('ZIP download started')">Download ZIP</button></div>
+        <div class="asset"><h3>Fact Sheet</h3><p>Company statistics and milestones</p><button onclick="alert('Fact sheet downloaded')">Download PDF</button></div>
+        <div class="asset"><h3>Media Contact</h3><p>press@themoon.news</p></div>
+    </div>
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
