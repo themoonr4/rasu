@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Feature Flags</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0-auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .flag-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid #222;}
+        .toggle-switch{position:relative;display:inline-block;width:50px;height:24px;}
+        .toggle-switch input{opacity:0;width:0;height:0;}
+        .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#333;transition:0.3s;border-radius:24px;}
+        .slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:white;transition:0.3s;border-radius:50%;}
+        input:checked+.slider{background-color:#dc2626;}
+        input:checked+.slider:before{transform:translateX(26px);}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-flag-checkered"></i> Feature Flags</h1>
+        
+        <div class="card">
+            <h3>Feature Toggles</h3>
+            <div class="flag-item"><span><strong>🔔 Push Notifications</strong><br><small>Enable push notifications for users</small></span><label class="toggle-switch"><input type="checkbox" id="flag_push" onchange="toggleFlag('push')"><span class="slider"></span></label></div>
+            <div class="flag-item"><span><strong>💬 Comments System</strong><br><small>Enable comments on articles</small></span><label class="toggle-switch"><input type="checkbox" id="flag_comments" onchange="toggleFlag('comments')"><span class="slider"></span></label></div>
+            <div class="flag-item"><span><strong>🤖 AI Recommendations</strong><br><small>Show AI-powered news recommendations</small></span><label class="toggle-switch"><input type="checkbox" id="flag_ai" onchange="toggleFlag('ai')"><span class="slider"></span></label></div>
+            <div class="flag-item"><span><strong>📧 Newsletter</strong><br><small>Enable email newsletter signup</small></span><label class="toggle-switch"><input type="checkbox" id="flag_newsletter" onchange="toggleFlag('newsletter')"><span class="slider"></span></label></div>
+            <div class="flag-item"><span><strong>🔍 Advanced Search</strong><br><small>Enable advanced search filters</small></span><label class="toggle-switch"><input type="checkbox" id="flag_search" onchange="toggleFlag('search')"><span class="slider"></span></label></div>
+        </div>
+        
+        <div class="card">
+            <h3>Rollout Percentage</h3>
+            <div class="flag-item"><span>New UI Rollout</span><input type="range" id="rolloutPercent" min="0" max="100" value="0" onchange="updateRollout()"><span id="rolloutValue">0%</span></div>
+        </div>
+    </div>
+    <script>
+        function toggleFlag(flag) {
+            const isEnabled = document.getElementById(`flag_${flag}`).checked;
+            localStorage.setItem(`flag_${flag}`, isEnabled);
+            console.log(`${flag} feature: ${isEnabled ? 'ENABLED' : 'DISABLED'}`);
+        }
+        
+        function updateRollout() {
+            const percent = document.getElementById('rolloutPercent').value;
+            document.getElementById('rolloutValue').innerHTML = percent + '%';
+            localStorage.setItem('uiRollout', percent);
+        }
+        
+        document.getElementById('flag_push').checked = localStorage.getItem('flag_push') === 'true';
+        document.getElementById('flag_comments').checked = localStorage.getItem('flag_comments') !== 'false';
+        document.getElementById('flag_ai').checked = localStorage.getItem('flag_ai') !== 'false';
+        document.getElementById('flag_newsletter').checked = localStorage.getItem('flag_newsletter') !== 'false';
+        document.getElementById('flag_search').checked = localStorage.getItem('flag_search') !== 'false';
+        document.getElementById('rolloutPercent').value = localStorage.getItem('uiRollout') || 0;
+        document.getElementById('rolloutValue').innerHTML = document.getElementById('rolloutPercent').value + '%';
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
