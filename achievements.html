@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Achievements</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .achievement-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:2rem;}
+        .achievement-card{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;text-align:center;position:relative;}
+        .achievement-icon{font-size:3rem;margin-bottom:0.5rem;}
+        .locked{opacity:0.3;filter:grayscale(1);}
+        .check{position:absolute;top:10px;right:10px;color:#28a745;font-size:1.2rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/profile.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-trophy"></i> Achievements</h1>
+        
+        <div class="achievement-grid" id="achievementsGrid"></div>
+    </div>
+    <script>
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        const readingHistory = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+        const readingStreak = localStorage.getItem('readingStreak') || 0;
+        
+        const achievements = [
+            { id:1, name:"First Read", desc:"Read your first article", icon:"📖", required: readingHistory.length>=1, unlocked: readingHistory.length>=1 },
+            { id:2, name:"Bookmarker", desc:"Save 5 articles", icon:"🔖", required: bookmarks.length>=5, unlocked: bookmarks.length>=5 },
+            { id:3, name:"News Junkie", desc:"Read 25 articles", icon:"📰", required: readingHistory.length>=25, unlocked: readingHistory.length>=25 },
+            { id:4, name:"Super Reader", desc:"Read 100 articles", icon:"⭐", required: readingHistory.length>=100, unlocked: readingHistory.length>=100 },
+            { id:5, name:"Weekly Warrior", desc:"7 day reading streak", icon:"⚡", required: readingStreak>=7, unlocked: readingStreak>=7 },
+            { id:6, name:"Sharer", desc:"Share 10 articles", icon:"📤", required: false, unlocked: false },
+            { id:7, name:"Commentator", desc:"Leave 5 comments", icon:"💬", required: false, unlocked: false },
+            { id:8, name:"Collector", desc:"Bookmark 25 articles", icon:"🏆", required: bookmarks.length>=25, unlocked: bookmarks.length>=25 }
+        ];
+        
+        const grid = document.getElementById('achievementsGrid');
+        grid.innerHTML = achievements.map(a => `
+            <div class="achievement-card ${!a.unlocked ? 'locked' : ''}">
+                ${a.unlocked ? '<div class="check"><i class="fas fa-check-circle"></i></div>' : ''}
+                <div class="achievement-icon">${a.icon}</div>
+                <h3>${a.name}</h3>
+                <p style="font-size:0.7rem;color:#aaa;">${a.desc}</p>
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>
