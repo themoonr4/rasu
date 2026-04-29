@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Editorial Guidelines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .section{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .section h3{color:#dc2626;margin-bottom:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-pen-fancy"></i> Editorial Guidelines</h1>
+        
+        <div class="section"><h3>Accuracy & Fact-Checking</h3><p>All news must be verified from at least two reliable sources. Cross-check facts before publishing. Correct errors immediately with editor's note.</p></div>
+        <div class="section"><h3>Originality</h3><p>Content must be original. Give proper attribution when quoting sources. Avoid plagiarism at all costs.</p></div>
+        <div class="section"><h3>Tone & Voice</h3><p>Maintain neutral, professional tone. Avoid sensationalism. Present facts without bias. Use clear, simple language.</p></div>
+        <div class="section"><h3>Conflicts of Interest</h3><p>Disclose any potential conflicts. Avoid publishing content that promotes personal interests. Maintain editorial independence.</p></div>
+    </div>
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
