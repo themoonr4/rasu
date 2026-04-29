@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        button{background:#dc2626;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;}
+        .setting-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/settings.html'"><i class="fas fa-arrow-left"></i> Back to Settings</div>
+        <h1><i class="fas fa-bell"></i> Notification Settings</h1>
+        
+        <div class="card">
+            <div class="setting-item"><div>🔔 Breaking News Alerts</div><button id="breakingToggle" onclick="toggleBreaking()">Enable</button></div>
+            <div class="setting-item"><div>📰 Daily Digest</div><button id="digestToggle" onclick="toggleDigest()">Enable</button></div>
+            <div class="setting-item"><div>🏷️ Category Updates</div><button id="categoryToggle" onclick="toggleCategory()">Enable</button></div>
+            <div class="setting-item"><div>💬 Comment Replies</div><button id="commentToggle" onclick="toggleComment()">Enable</button></div>
+        </div>
+        
+        <div class="card">
+            <h3>Send Test Notification</h3>
+            <input type="text" id="testTitle" placeholder="Notification Title" style="width:100%;padding:0.5rem;margin:0.5rem 0;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;">
+            <textarea id="testBody" placeholder="Notification Body" rows="2" style="width:100%;padding:0.5rem;margin:0.5rem 0;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;"></textarea>
+            <button onclick="sendTestNotification()">Send Test</button>
+        </div>
+    </div>
+    <script>
+        function toggleBreaking() { alert('Breaking news alerts ' + (localStorage.getItem('breakingAlerts') === 'enabled' ? 'disabled' : 'enabled')); localStorage.setItem('breakingAlerts', localStorage.getItem('breakingAlerts') === 'enabled' ? 'disabled' : 'enabled'); location.reload(); }
+        function toggleDigest() { alert('Daily digest ' + (localStorage.getItem('digestAlerts') === 'enabled' ? 'disabled' : 'enabled')); localStorage.setItem('digestAlerts', localStorage.getItem('digestAlerts') === 'enabled' ? 'disabled' : 'enabled'); location.reload(); }
+        function toggleCategory() { alert('Category updates ' + (localStorage.getItem('categoryAlerts') === 'enabled' ? 'disabled' : 'enabled')); localStorage.setItem('categoryAlerts', localStorage.getItem('categoryAlerts') === 'enabled' ? 'disabled' : 'enabled'); location.reload(); }
+        function toggleComment() { alert('Comment replies ' + (localStorage.getItem('commentAlerts') === 'enabled' ? 'disabled' : 'enabled')); localStorage.setItem('commentAlerts', localStorage.getItem('commentAlerts') === 'enabled' ? 'disabled' : 'enabled'); location.reload(); }
+        
+        function sendTestNotification() {
+            const title = document.getElementById('testTitle').value || 'Test Notification';
+            const body = document.getElementById('testBody').value || 'This is a test notification from THE MOON';
+            if(Notification.permission === 'granted') { new Notification(title, { body: body, icon: '/assets/logo.svg' }); alert('Notification sent!'); }
+            else if(Notification.permission !== 'denied') { Notification.requestPermission().then(perm => { if(perm === 'granted') { new Notification(title, { body: body, icon: '/assets/logo.svg' }); alert('Notification sent!'); } }); }
+            else { alert('Please enable notifications in browser settings'); }
+        }
+        
+        document.getElementById('breakingToggle').innerHTML = localStorage.getItem('breakingAlerts') === 'enabled' ? 'Disable' : 'Enable';
+        document.getElementById('digestToggle').innerHTML = localStorage.getItem('digestAlerts') === 'enabled' ? 'Disable' : 'Enable';
+        document.getElementById('categoryToggle').innerHTML = localStorage.getItem('categoryAlerts') === 'enabled' ? 'Disable' : 'Enable';
+        document.getElementById('commentToggle').innerHTML = localStorage.getItem('commentAlerts') === 'enabled' ? 'Disable' : 'Enable';
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
