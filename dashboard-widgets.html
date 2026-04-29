@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Dashboard Widgets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .widget-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-bottom:1rem;}
+        .widget{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;}
+        .widget-header{display:flex;justify-content:space-between;margin-bottom:0.5rem;}
+        .add-widget{background:#1a1a1a;padding:1rem;border-radius:16px;margin-top:1rem;}
+        select,button{padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-right:0.5rem;cursor:pointer;}
+        button{background:#dc2626;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-th-large"></i> Custom Dashboard Widgets</h1>
+        
+        <div class="widget-grid" id="widgetGrid"></div>
+        
+        <div class="add-widget">
+            <select id="widgetType">
+                <option value="stats">Statistics</option>
+                <option value="news">Recent News</option>
+                <option value="weather">Weather</option>
+                <option value="quote">Quote</option>
+            </select>
+            <button onclick="addWidget()">Add Widget</button>
+        </div>
+    </div>
+    <script>
+        let widgets = JSON.parse(localStorage.getItem('dashboardWidgets') || '["stats","news","weather"]');
+        
+        function loadWidgets() {
+            const grid = document.getElementById('widgetGrid');
+            grid.innerHTML = widgets.map((w, i) => {
+                if(w === 'stats') return `<div class="widget"><div class="widget-header"><strong>Statistics</strong><button onclick="removeWidget(${i})">✕</button></div><div>Visitors: 1,234<br>Views: 5,678<br>Articles: 45</div></div>`;
+                if(w === 'news') return `<div class="widget"><div class="widget-header"><strong>Recent News</strong><button onclick="removeWidget(${i})">✕</button></div><div>• Breaking News 1<br>• Latest Update 2<br>• Top Story 3</div></div>`;
+                if(w === 'weather') return `<div class="widget"><div class="widget-header"><strong>Weather</strong><button onclick="removeWidget(${i})">✕</button></div><div>🌤️ 28°C<br>New Delhi, IN</div></div>`;
+                return `<div class="widget"><div class="widget-header"><strong>Quote</strong><button onclick="removeWidget(${i})">✕</button></div><div>"The only limit is your imagination." - Elon Musk</div></div>`;
+            }).join('');
+        }
+        
+        function addWidget() {
+            const type = document.getElementById('widgetType').value;
+            widgets.push(type);
+            localStorage.setItem('dashboardWidgets', JSON.stringify(widgets));
+            loadWidgets();
+        }
+        
+        function removeWidget(index) {
+            widgets.splice(index, 1);
+            localStorage.setItem('dashboardWidgets', JSON.stringify(widgets));
+            loadWidgets();
+        }
+        
+        loadWidgets();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
