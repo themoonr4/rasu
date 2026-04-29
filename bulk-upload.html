@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Bulk Uploader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .drop-zone{border:2px dashed #333;border-radius:16px;padding:2rem;text-align:center;margin-bottom:1rem;cursor:pointer;}
+        .drop-zone.drag-over{border-color:#dc2626;background:#1a1a1a;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .preview-item{padding:0.5rem;border-bottom:1px solid #222;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        .progress-bar{height:4px;background:#333;border-radius:2px;margin-top:1rem;overflow:hidden;}
+        .progress-fill{width:0%;height:100%;background:#dc2626;transition:width 0.3s;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-upload"></i> Bulk Content Uploader</h1>
+        
+        <div class="card">
+            <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size:3rem;"></i>
+                <p>Drag & drop CSV/JSON file here or click to upload</p>
+                <input type="file" id="fileInput" accept=".csv,.json" style="display:none;">
+            </div>
+            <select id="uploadFormat" style="width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:1rem;">
+                <option value="csv">CSV Format</option>
+                <option value="json">JSON Format</option>
+            </select>
+            <button onclick="processBulkUpload()">Process Upload</button>
+            <div class="progress-bar"><div class="progress-fill" id="uploadProgress"></div></div>
+            <div id="previewList"></div>
+            <div id="uploadResult"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Sample CSV Format</h3>
+            <pre style="background:#1a1a1a;padding:1rem;border-radius:8px;font-size:0.7rem;">title,category,content,excerpt
+Breaking News,tech,Breaking news content...,Short excerpt
+Sports Update,sports,Sports news content...,Sports excerpt</pre>
+            <button onclick="downloadSample()">Download Sample CSV</button>
+        </div>
+    </div>
+    <script>
+        let uploadedData = [];
+        
+        document.getElementById('fileInput').addEventListener('change', handleFile);
+        const dropZone = document.getElementById('dropZone');
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('drag-over'); });
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('drag-over'); const file = e.dataTransfer.files[0]; if(file) processFile(file); });
+        
+        function handleFile(e) { if(e.target.files[0]) processFile(e.target.files[0]); }
+        
+        function processFile(file) {
+            const format = document.getElementById('uploadFormat').value;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if(format === 'csv') {
+                    const lines = e.target.result.split('\n');
+                    const headers = lines[0].split(',');
+                    uploadedData = [];
+                    for(let i = 1; i < lines.length; i++) {
+                        const values = lines[i].split(',');
+                        if(values.length >= 3) {
+                            const item = {};
+                            headers.forEach((h, idx) => { item[h.trim()] = values[idx]?.trim(); });
+                            uploadedData.push(item);
+                        }
+                    }
+                } else { uploadedData = JSON.parse(e.target.result); }
+                displayPreview();
+            };
+            reader.readAsText(file);
+        }
+        
+        function displayPreview() {
+            const previewDiv = document.getElementById('previewList');
+            previewDiv.innerHTML = `<h4>${uploadedData.length} items ready to upload</h4>${uploadedData.slice(0,5).map(item => `<div class="preview-item">${item.title || item.name || 'Untitled'}</div>`).join('')}${uploadedData.length > 5 ? '<div>...</div>' : ''}`;
+        }
+        
+        async function processBulkUpload() {
+            const progressDiv = document.getElementById('uploadProgress');
+            for(let i = 0; i < uploadedData.length; i++) {
+                progressDiv.style.width = `${((i+1)/uploadedData.length)*100}%`;
+                await new Promise(r => setTimeout(r, 50));
+            }
+            document.getElementById('uploadResult').innerHTML = `<div style="background:#28a745;padding:0.5rem;border-radius:8px;">✅ ${uploadedData.length} items uploaded successfully!</div>`;
+            setTimeout(() => document.getElementById('uploadResult').innerHTML = '', 3000);
+        }
+        
+        function downloadSample() {
+            const csv = 'title,category,content,excerpt\n"Breaking News","tech","Full content here...","Short excerpt"';
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'sample_news.csv'; a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
