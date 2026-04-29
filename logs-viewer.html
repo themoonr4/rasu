@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - System Logs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .log-controls{display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;}
+        select{padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
+        .log-table{width:100%;border-collapse:collapse;background:#111;border-radius:16px;overflow:hidden;}
+        th,td{padding:0.75rem;text-align:left;border-bottom:1px solid #222;}
+        th{background:#1a1a1a;color:#aaa;}
+        .log-error{color:#dc3545;}
+        .log-warning{color:#ffc107;}
+        .log-info{color:#17a2b8;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-file-alt"></i> System Logs Viewer</h1>
+        
+        <div class="log-controls">
+            <select id="logLevel">
+                <option value="all">All Levels</option>
+                <option value="error">Error</option>
+                <option value="warning">Warning</option>
+                <option value="info">Info</option>
+            </select>
+            <button onclick="clearLogs()">Clear Logs</button>
+            <button onclick="exportLogs()">Export Logs</button>
+        </div>
+        
+        <table class="log-table">
+            <thead><tr><th>Time</th><th>Level</th><th>Source</th><th>Message</th></tr></thead>
+            <tbody id="logBody"></tbody>
+        </table>
+    </div>
+    <script>
+        let systemLogs = JSON.parse(localStorage.getItem('systemLogs') || '[]');
+        
+        function addSampleLogs() {
+            if(systemLogs.length === 0) {
+                systemLogs = [
+                    { time: new Date().toLocaleString(), level: 'info', source: 'System', message: 'Server started' },
+                    { time: new Date().toLocaleString(), level: 'warning', source: 'API', message: 'Rate limit nearing 80%' },
+                    { time: new Date().toLocaleString(), level: 'error', source: 'Database', message: 'Connection timeout retrying' }
+                ];
+                localStorage.setItem('systemLogs', JSON.stringify(systemLogs));
+            }
+        }
+        
+        function loadLogs() {
+            const level = document.getElementById('logLevel').value;
+            const filtered = level === 'all' ? systemLogs : systemLogs.filter(l => l.level === level);
+            const tbody = document.getElementById('logBody');
+            tbody.innerHTML = filtered.map(l => `
+                <tr>
+                    <td>${l.time}</td>
+                    <td class="log-${l.level}">${l.level.toUpperCase()}</td>
+                    <td>${l.source}</td>
+                    <td>${l.message}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function clearLogs() { if(confirm('Clear all logs?')) { systemLogs = []; localStorage.setItem('systemLogs', JSON.stringify(systemLogs)); loadLogs(); } }
+        function exportLogs() { const data = JSON.stringify(systemLogs, null, 2); const blob = new Blob([data], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `logs_${Date.now()}.json`; a.click(); URL.revokeObjectURL(url); }
+        
+        document.getElementById('logLevel').addEventListener('change', loadLogs);
+        addSampleLogs();
+        loadLogs();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
