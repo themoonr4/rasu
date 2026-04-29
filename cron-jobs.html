@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Scheduled Tasks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .task-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid #222;}
+        .status-active{color:#28a745;}
+        .status-paused{color:#ffc107;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-clock"></i> Scheduled Tasks Manager</h1>
+        
+        <div class="card">
+            <h3>Add New Scheduled Task</h3>
+            <select id="taskType" style="width:100%;padding:0.5rem;margin-bottom:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;">
+                <option value="fetch_news">Fetch News from API</option>
+                <option value="send_newsletter">Send Newsletter</option>
+                <option value="clear_cache">Clear Cache</option>
+                <option value="backup_db">Backup Database</option>
+            </select>
+            <select id="taskInterval" style="width:100%;padding:0.5rem;margin-bottom:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;">
+                <option value="hourly">Every Hour</option>
+                <option value="daily">Every Day</option>
+                <option value="weekly">Every Week</option>
+            </select>
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        
+        <div class="card">
+            <h3>Scheduled Tasks</h3>
+            <div id="taskList"></div>
+        </div>
+    </div>
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('scheduledTasks') || '[]');
+        
+        function loadTasks() {
+            const listDiv = document.getElementById('taskList');
+            if(tasks.length === 0) { listDiv.innerHTML = '<p>No scheduled tasks</p>'; return; }
+            listDiv.innerHTML = tasks.map((t, i) => `
+                <div class="task-item">
+                    <div><strong>${t.type}</strong><br><small>${t.interval} | Last run: ${t.lastRun || 'Never'}</small></div>
+                    <div><button onclick="runTask(${i})">Run Now</button><button onclick="deleteTask(${i})" style="background:#6c757d;">Delete</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function addTask() {
+            const type = document.getElementById('taskType').value;
+            const interval = document.getElementById('taskInterval').value;
+            tasks.push({ type, interval, lastRun: null, status: 'active' });
+            localStorage.setItem('scheduledTasks', JSON.stringify(tasks));
+            loadTasks();
+            alert(`Task ${type} added!`);
+        }
+        
+        function runTask(index) {
+            tasks[index].lastRun = new Date().toLocaleString();
+            localStorage.setItem('scheduledTasks', JSON.stringify(tasks));
+            alert(`${tasks[index].type} task executed!`);
+            loadTasks();
+        }
+        
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            localStorage.setItem('scheduledTasks', JSON.stringify(tasks));
+            loadTasks();
+        }
+        
+        loadTasks();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
