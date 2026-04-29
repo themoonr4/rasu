@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Invite Friends</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        .container{max-width:600px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:2rem;margin-bottom:1rem;text-align:center;}
+        .referral-code{background:#1a1a1a;padding:1rem;border-radius:12px;font-size:1.2rem;letter-spacing:2px;margin:1rem 0;}
+        .share-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+        .share-btn{background:#1a1a1a;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/profile.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-user-plus"></i> Invite Friends</h1>
+        
+        <div class="card">
+            <h3>Your Referral Code</h3>
+            <div class="referral-code" id="referralCode">MOON2024</div>
+            <button onclick="copyCode()">Copy Code</button>
+        </div>
+        
+        <div class="card">
+            <h3>Share via</h3>
+            <div class="share-buttons">
+                <div class="share-btn" onclick="shareWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+                <div class="share-btn" onclick="shareTelegram()"><i class="fab fa-telegram"></i> Telegram</div>
+                <div class="share-btn" onclick="shareTwitter()"><i class="fab fa-twitter"></i> Twitter</div>
+                <div class="share-btn" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Referral Stats</h3>
+            <p>Friends invited: <span id="inviteCount">0</span></p>
+            <p>Rewards earned: ₹<span id="rewardCount">0</span></p>
+        </div>
+    </div>
+    <script>
+        let invites = JSON.parse(localStorage.getItem('invites') || '[]');
+        document.getElementById('inviteCount').innerHTML = invites.length;
+        document.getElementById('rewardCount').innerHTML = invites.length * 50;
+        
+        function copyCode() { navigator.clipboard.writeText('MOON2024'); alert('Code copied!'); }
+        function shareWhatsApp() { window.open(`https://wa.me/?text=Join THE MOON using code MOON2024`); }
+        function shareTelegram() { window.open(`https://t.me/share/url?url=Join THE MOON using code MOON2024`); }
+        function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=Join THE MOON using code MOON2024`); }
+        function copyLink() { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); }
+    </script>
+</body>
+</html>
