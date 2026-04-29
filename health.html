@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - System Health</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:2rem;color:#dc2626;}
+        .health-card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .health-status{display:flex;align-items:center;gap:1rem;margin:1rem 0;}
+        .status-badge{width:12px;height:12px;border-radius:50%;}
+        .green{background:#28a745;}
+        .red{background:#dc3545;}
+        .yellow{background:#ffc107;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-heartbeat"></i> System Health Check</h1>
+        
+        <div class="health-card" id="supabaseStatus">
+            <h3><i class="fas fa-database"></i> Supabase Connection</h3>
+            <div class="health-status" id="supabaseHealth">Checking...</div>
+        </div>
+        
+        <div class="health-card" id="storageStatus">
+            <h3><i class="fas fa-hdd"></i> Storage Usage</h3>
+            <div class="health-status" id="storageHealth">Checking...</div>
+        </div>
+        
+        <div class="health-card">
+            <h3><i class="fas fa-chart-line"></i> Last 24 Hours</h3>
+            <div class="health-status" id="statsHealth"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        async function checkHealth() {
+            try {
+                const { data, error } = await supabase.from('news').select('count', { count: 'exact', head: true });
+                if(error) throw error;
+                document.getElementById('supabaseHealth').innerHTML = '<div><div class="status-badge green" style="display:inline-block;margin-right:0.5rem;"></div> Connected - Database online</div>';
+            } catch(e) {
+                document.getElementById('supabaseHealth').innerHTML = '<div><div class="status-badge red" style="display:inline-block;margin-right:0.5rem;"></div> Connection failed</div>';
+            }
+            
+            const used = JSON.parse(localStorage.getItem('backups') || '[]').length;
+            const storageMB = (used * 0.5).toFixed(1);
+            document.getElementById('storageHealth').innerHTML = `<div>📦 ${used} backups | ~${storageMB} MB used</div>`;
+            
+            const { data: lastDay } = await supabase.from('news').select('views').gte('published_at', new Date(Date.now() - 86400000).toISOString());
+            const viewsCount = lastDay?.reduce((a,b) => a + (b.views || 0), 0) || 0;
+            document.getElementById('statsHealth').innerHTML = `<div>👁️ ${viewsCount} views in last 24 hours</div>`;
+        }
+        
+        checkHealth();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
