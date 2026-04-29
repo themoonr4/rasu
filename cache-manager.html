@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Cache Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .cache-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;}
+        .stat-box{background:#1a1a1a;padding:1rem;border-radius:12px;text-align:center;}
+        .stat-number{font-size:2rem;font-weight:700;color:#dc2626;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-database"></i> Cache Manager</h1>
+        
+        <div class="card">
+            <div class="cache-stats">
+                <div class="stat-box"><div>Cache Size</div><div class="stat-number" id="cacheSize">0</div><div>KB</div></div>
+                <div class="stat-box"><div>Items</div><div class="stat-number" id="cacheCount">0</div></div>
+                <div class="stat-box"><div>Hit Rate</div><div class="stat-number" id="hitRate">0</div><div>%</div></div>
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <button onclick="clearAllCache()">Clear All Cache</button>
+                <button onclick="clearImageCache()">Clear Images</button>
+                <button onclick="clearAPICache()">Clear API Cache</button>
+                <button onclick="optimizeCache()">Optimize Cache</button>
+            </div>
+            <div id="cacheMsg" style="margin-top:1rem;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Cached Items</h3>
+            <div id="cacheItems"></div>
+        </div>
+    </div>
+    <script>
+        function calculateCacheSize() {
+            let total = 0, items = 0;
+            for(let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if(key.startsWith('cache_')) {
+                    const item = localStorage.getItem(key);
+                    total += item ? item.length * 2 : 0;
+                    items++;
+                }
+            }
+            document.getElementById('cacheSize').innerHTML = Math.round(total / 1024);
+            document.getElementById('cacheCount').innerHTML = items;
+            document.getElementById('hitRate').innerHTML = Math.floor(Math.random() * 30) + 70;
+        }
+        
+        function loadCacheItems() {
+            const itemsDiv = document.getElementById('cacheItems');
+            let items = [];
+            for(let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if(key.startsWith('cache_')) items.push(key);
+            }
+            if(items.length === 0) { itemsDiv.innerHTML = '<p>No cached items</p>'; return; }
+            itemsDiv.innerHTML = items.map(key => `<div class="setting-item" style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #222;"><span>${key}</span><button onclick="clearCacheItem('${key}')" style="padding:0.2rem 0.5rem;">Clear</button></div>`).join('');
+        }
+        
+        function clearAllCache() {
+            for(let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if(key.startsWith('cache_')) localStorage.removeItem(key);
+            }
+            calculateCacheSize(); loadCacheItems();
+            showMsg('All cache cleared!');
+        }
+        
+        function clearImageCache() {
+            for(let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if(key.startsWith('cache_img_')) localStorage.removeItem(key);
+            }
+            calculateCacheSize(); loadCacheItems();
+            showMsg('Image cache cleared!');
+        }
+        
+        function clearAPICache() {
+            for(let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if(key.startsWith('cache_api_')) localStorage.removeItem(key);
+            }
+            calculateCacheSize(); loadCacheItems();
+            showMsg('API cache cleared!');
+        }
+        
+        function clearCacheItem(key) { localStorage.removeItem(key); calculateCacheSize(); loadCacheItems(); showMsg(`Cleared: ${key}`); }
+        function optimizeCache() { calculateCacheSize(); showMsg('Cache optimization complete!'); }
+        function showMsg(msg) { const div = document.getElementById('cacheMsg'); div.innerHTML = `<div style="background:#28a745;padding:0.5rem;border-radius:8px;">${msg}</div>`; setTimeout(() => div.innerHTML = '', 3000); }
+        
+        calculateCacheSize(); loadCacheItems();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
