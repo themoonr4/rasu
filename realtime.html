@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Real-time Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1200px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .live-badge{background:#dc2626;display:inline-block;padding:0.2rem 0.5rem;border-radius:20px;font-size:0.7rem;margin-left:0.5rem;animation:pulse 1s infinite;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+        .stat-card{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;text-align:center;}
+        .stat-value{font-size:2rem;font-weight:700;color:#dc2626;}
+        .events-list{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;height:300px;overflow-y:auto;}
+        .event-item{padding:0.5rem;border-bottom:1px solid #222;font-size:0.8rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Real-time Dashboard <span class="live-badge">LIVE</span></h1>
+        
+        <div class="stats-grid" id="statsGrid"></div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="events-list"><h3>Live Events</h3><div id="liveEvents"></div></div>
+            <div class="events-list"><h3>Recent Visitors</h3><div id="recentVisitors"></div></div>
+        </div>
+    </div>
+    <script>
+        let events = [];
+        let visitors = [];
+        
+        function updateStats() {
+            const stats = {
+                online: Math.floor(Math.random() * 50) + 10,
+                pageViews: Math.floor(Math.random() * 1000) + 500,
+                apiCalls: Math.floor(Math.random() * 500) + 200,
+                avgResponse: Math.floor(Math.random() * 200) + 50
+            };
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div>Online Visitors</div><div class="stat-value">${stats.online}</div></div>
+                <div class="stat-card"><div>Page Views (hour)</div><div class="stat-value">${stats.pageViews}</div></div>
+                <div class="stat-card"><div>API Calls (min)</div><div class="stat-value">${stats.apiCalls}</div></div>
+                <div class="stat-card"><div>Avg Response</div><div class="stat-value">${stats.avgResponse}ms</div></div>
+            `;
+        }
+        
+        function addEvent(event) {
+            events.unshift({ ...event, time: new Date().toLocaleTimeString() });
+            if(events.length > 20) events.pop();
+            const eventsDiv = document.getElementById('liveEvents');
+            eventsDiv.innerHTML = events.map(e => `<div class="event-item"><i class="fas ${e.type === 'news' ? 'fa-newspaper' : e.type === 'user' ? 'fa-user' : 'fa-comment'}"></i> ${e.message} <span style="float:right;">${e.time}</span></div>`).join('');
+        }
+        
+        function addVisitor() {
+            const names = ['Guest_123', 'User_456', 'Admin', 'Reader_789', 'Subscriber'];
+            visitors.unshift({ name: names[Math.floor(Math.random() * names.length)], page: ['Home', 'Article', 'Search', 'Profile'][Math.floor(Math.random() * 4)], time: new Date().toLocaleTimeString() });
+            if(visitors.length > 20) visitors.pop();
+            const visitorsDiv = document.getElementById('recentVisitors');
+            visitorsDiv.innerHTML = visitors.map(v => `<div class="event-item"><i class="fas fa-eye"></i> ${v.name} viewed ${v.page} <span style="float:right;">${v.time}</span></div>`).join('');
+        }
+        
+        function simulateEvents() {
+            const eventTypes = ['news', 'user', 'comment'];
+            const messages = ['New article published', 'User logged in', 'New comment posted', 'News shared', 'Bookmark added'];
+            addEvent({ type: eventTypes[Math.floor(Math.random() * eventTypes.length)], message: messages[Math.floor(Math.random() * messages.length)] });
+            addVisitor();
+        }
+        
+        updateStats();
+        setInterval(updateStats, 10000);
+        setInterval(simulateEvents, 8000);
+        addEvent({ type: 'system', message: 'Real-time monitoring started' });
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
