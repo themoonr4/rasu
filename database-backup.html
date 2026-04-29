@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Database Backup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .backup-list{background:#1a1a1a;border-radius:12px;margin-top:1rem;padding:0.5rem;}
+        .backup-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #333;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        .progress-bar{height:4px;background:#333;border-radius:2px;margin-top:0.5rem;overflow:hidden;}
+        .progress-fill{width:0%;height:100%;background:#dc2626;transition:width 0.3s;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back to Admin</div>
+        <h1><i class="fas fa-database"></i> Database Backup Manager</h1>
+        
+        <div class="card">
+            <h3>Create Backup</h3>
+            <button onclick="createBackup()"><i class="fas fa-download"></i> Export Database</button>
+            <div id="backupProgress" class="progress-bar"><div class="progress-fill" id="backupFill"></div></div>
+        </div>
+        
+        <div class="card">
+            <h3>Restore Backup</h3>
+            <input type="file" id="restoreFile" accept=".json">
+            <button onclick="restoreBackup()"><i class="fas fa-upload"></i> Restore</button>
+            <div id="restoreMsg"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Available Backups</h3>
+            <div id="backupList" class="backup-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        async function createBackup() {
+            const fill = document.getElementById('backupFill');
+            fill.style.width = '30%';
+            const { data: news } = await supabase.from('news').select('*');
+            fill.style.width = '60%';
+            const { data: categories } = await supabase.from('categories').select('*');
+            fill.style.width = '80%';
+            const { data: subcategories } = await supabase.from('subcategories').select('*');
+            
+            const backup = { news, categories, subcategories, date: new Date().toISOString() };
+            const backupName = `backup_${Date.now()}.json`;
+            localStorage.setItem(backupName, JSON.stringify(backup));
+            
+            let backups = JSON.parse(localStorage.getItem('databaseBackups') || '[]');
+            backups.push({ name: backupName, date: new Date().toISOString(), size: JSON.stringify(backup).length });
+            localStorage.setItem('databaseBackups', JSON.stringify(backups));
+            
+            fill.style.width = '100%';
+            loadBackups();
+            setTimeout(() => fill.style.width = '0%', 1000);
+            alert('Backup created!');
+        }
+        
+        async function restoreBackup() {
+            const file = document.getElementById('restoreFile').files[0];
+            if(!file) { alert('Select backup file'); return; }
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const backup = JSON.parse(e.target.result);
+                for(let news of backup.news) { await supabase.from('news').upsert(news); }
+                alert('Database restored!');
+            };
+            reader.readAsText(file);
+        }
+        
+        function loadBackups() {
+            const backups = JSON.parse(localStorage.getItem('databaseBackups') || '[]');
+            const listDiv = document.getElementById('backupList');
+            if(backups.length === 0) { listDiv.innerHTML = '<div style="padding:1rem;text-align:center;">No backups found</div>'; return; }
+            listDiv.innerHTML = backups.map(b => `
+                <div class="backup-item">
+                    <div><i class="fas fa-archive"></i> ${b.name}<br><small>${new Date(b.date).toLocaleString()} | ${Math.round(b.size/1024)} KB</small></div>
+                    <div><button onclick="downloadBackup('${b.name}')" style="padding:0.3rem 0.8rem;">Download</button><button onclick="deleteBackup('${b.name}')" style="background:#dc3545;padding:0.3rem 0.8rem;">Delete</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function downloadBackup(name) {
+            const data = localStorage.getItem(name);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = name; a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function deleteBackup(name) {
+            localStorage.removeItem(name);
+            let backups = JSON.parse(localStorage.getItem('databaseBackups') || '[]');
+            backups = backups.filter(b => b.name !== name);
+            localStorage.setItem('databaseBackups', JSON.stringify(backups));
+            loadBackups();
+        }
+        
+        loadBackups();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
