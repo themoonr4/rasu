@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Database Maintenance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .maintenance-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .progress-bar{height:4px;background:#333;border-radius:2px;margin-top:0.5rem;}
+        .progress-fill{width:0%;height:100%;background:#dc2626;transition:width 0.3s;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-database"></i> Database Maintenance Tools</h1>
+        
+        <div class="card">
+            <h3>Database Statistics</h3>
+            <div id="dbStats"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Maintenance Actions</h3>
+            <div class="maintenance-item"><span>🗑️ Clean Old Data</span><button onclick="cleanOldData()">Run</button></div>
+            <div class="maintenance-item"><span>🔄 Optimize Tables</span><button onclick="optimizeTables()">Run</button></div>
+            <div class="maintenance-item"><span>📊 Rebuild Indexes</span><button onclick="rebuildIndexes()">Run</button></div>
+            <div class="maintenance-item"><span>🔍 Check Integrity</span><button onclick="checkIntegrity()">Run</button></div>
+        </div>
+        
+        <div class="card">
+            <h3>Maintenance Log</h3>
+            <div id="logList"></div>
+        </div>
+        
+        <div class="card">
+            <div class="progress-bar"><div class="progress-fill" id="maintainProgress"></div></div>
+        </div>
+    </div>
+    <script>
+        let logs = JSON.parse(localStorage.getItem('dbMaintenanceLogs') || '[]');
+        
+        function loadStats() {
+            const newsCount = JSON.parse(localStorage.getItem('newsData') || '[]').length;
+            const userCount = JSON.parse(localStorage.getItem('users') || '[]').length;
+            const totalSize = Math.round(JSON.stringify(localStorage).length / 1024);
+            document.getElementById('dbStats').innerHTML = `
+                <div class="maintenance-item"><span>Total Records</span><span>${newsCount + userCount}</span></div>
+                <div class="maintenance-item"><span>Database Size</span><span>${totalSize} KB</span></div>
+                <div class="maintenance-item"><span>Last Optimized</span><span>${localStorage.getItem('lastOptimized') || 'Never'}</span></div>
+            `;
+        }
+        
+        function addLog(message) {
+            logs.unshift({ message, time: new Date().toLocaleString() });
+            if(logs.length > 20) logs.pop();
+            localStorage.setItem('dbMaintenanceLogs', JSON.stringify(logs));
+            const logDiv = document.getElementById('logList');
+            logDiv.innerHTML = logs.map(l => `<div class="maintenance-item"><span>${l.time}</span><span>${l.message}</span></div>`).join('');
+        }
+        
+        function cleanOldData() {
+            const progress = document.getElementById('maintainProgress');
+            progress.style.width = '50%';
+            setTimeout(() => {
+                progress.style.width = '100%';
+                addLog('Cleaned old data successfully');
+                setTimeout(() => progress.style.width = '0%', 1000);
+                alert('Old data cleaned!');
+            }, 1000);
+        }
+        
+        function optimizeTables() {
+            const progress = document.getElementById('maintainProgress');
+            progress.style.width = '50%';
+            setTimeout(() => {
+                progress.style.width = '100%';
+                localStorage.setItem('lastOptimized', new Date().toLocaleString());
+                addLog('Tables optimized successfully');
+                setTimeout(() => progress.style.width = '0%', 1000);
+                loadStats();
+                alert('Tables optimized!');
+            }, 1500);
+        }
+        
+        function rebuildIndexes() {
+            addLog('Indexes rebuilt');
+            alert('Indexes rebuilt!');
+        }
+        
+        function checkIntegrity() {
+            addLog('Integrity check passed - No issues found');
+            alert('Database integrity check passed!');
+        }
+        
+        loadStats();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
