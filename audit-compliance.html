@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Compliance Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .compliance-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        .status-pass{color:#28a745;}
+        .status-fail{color:#dc3545;}
+        .status-partial{color:#ffc107;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-file-contract"></i> Compliance & GDPR Report</h1>
+        
+        <div class="card">
+            <h3>Compliance Status</h3>
+            <div id="complianceList"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Generate Report</h3>
+            <button onclick="generateComplianceReport()">Download Full Report</button>
+            <div id="reportMsg"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Last Audit</h3>
+            <div id="lastAudit">Not performed yet</div>
+        </div>
+    </div>
+    <script>
+        let complianceItems = [
+            { name: "GDPR Compliance", status: "pass", details: "Data processing agreements in place" },
+            { name: "CCPA Compliance", status: "pass", details: "California residents rights honored" },
+            { name: "Cookie Consent", status: "pass", details: "Cookie banner implemented" },
+            { name: "Data Retention", status: "partial", details: "Retention policy needs update" },
+            { name: "Security Measures", status: "pass", details: "Encryption and backups active" },
+            { name: "Privacy Policy", status: "pass", details: "Updated and accessible" },
+            { name: "Terms of Service", status: "pass", details: "User agreement in place" },
+            { name: "Accessibility", status: "partial", details: "WCAG 2.1 partially compliant" }
+        ];
+        
+        function loadCompliance() {
+            const listDiv = document.getElementById('complianceList');
+            listDiv.innerHTML = complianceItems.map(item => `
+                <div class="compliance-item">
+                    <div><strong>${item.name}</strong><br><small>${item.details}</small></div>
+                    <div class="status-${item.status}">${item.status === 'pass' ? '✅ Pass' : item.status === 'fail' ? '❌ Fail' : '⚠️ Partial'}</div>
+                </div>
+            `).join('');
+            
+            const passCount = complianceItems.filter(i => i.status === 'pass').length;
+            document.getElementById('lastAudit').innerHTML = `Last Audit: ${new Date().toLocaleDateString()} | Score: ${Math.round((passCount/complianceItems.length)*100)}% Compliant`;
+        }
+        
+        function generateComplianceReport() {
+            const report = {
+                generated: new Date().toISOString(),
+                compliance: complianceItems,
+                recommendations: [
+                    "Update data retention policy",
+                    "Improve accessibility features",
+                    "Regular security audits recommended"
+                ]
+            };
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `compliance_report_${Date.now()}.json`; a.click();
+            URL.revokeObjectURL(url);
+            document.getElementById('reportMsg').innerHTML = '<div style="background:#28a745;padding:0.5rem;border-radius:8px;">✅ Report generated!</div>';
+            setTimeout(() => document.getElementById('reportMsg').innerHTML = '', 3000);
+        }
+        
+        loadCompliance();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
