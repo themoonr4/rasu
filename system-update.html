@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - System Update</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:600px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .version-info{background:#1a1a1a;padding:1rem;border-radius:8px;margin-bottom:1rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .changelog{font-size:0.8rem;margin-top:0.5rem;color:#aaa;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-sync-alt"></i> System Update Manager</h1>
+        
+        <div class="card">
+            <div class="version-info">
+                <div><strong>Current Version:</strong> <span id="currentVersion">v2.0.0</span></div>
+                <div><strong>Latest Version:</strong> <span id="latestVersion">v2.1.0</span></div>
+                <div><strong>Last Checked:</strong> <span id="lastChecked">Today</span></div>
+            </div>
+            <button onclick="checkForUpdates()">Check for Updates</button>
+            <button onclick="installUpdate()" style="margin-left:0.5rem;">Install Update</button>
+            <div id="updateMsg"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Update History</h3>
+            <div id="updateHistory"></div>
+        </div>
+        
+        <div class="card">
+            <h3>System Settings</h3>
+            <label><input type="checkbox" id="autoUpdate"> Automatic Updates</label>
+            <label><input type="checkbox" id="betaChannel"> Beta Channel</label>
+        </div>
+    </div>
+    <script>
+        let updateHistory = JSON.parse(localStorage.getItem('updateHistory') || '[{"version":"v2.0.0","date":"2024-04-01","changes":"Initial release"}]');
+        
+        function loadHistory() {
+            const historyDiv = document.getElementById('updateHistory');
+            historyDiv.innerHTML = updateHistory.map(h => `
+                <div class="changelog">
+                    <strong>${h.version}</strong> - ${h.date}<br>
+                    <small>${h.changes}</small>
+                </div>
+            `).join('');
+        }
+        
+        function checkForUpdates() {
+            document.getElementById('updateMsg').innerHTML = '<div style="background:#ffc107;padding:0.5rem;border-radius:8px;">Checking for updates...</div>';
+            setTimeout(() => {
+                document.getElementById('updateMsg').innerHTML = '<div style="background:#28a745;padding:0.5rem;border-radius:8px;">✅ You are running the latest version!</div>';
+                setTimeout(() => document.getElementById('updateMsg').innerHTML = '', 3000);
+            }, 1500);
+        }
+        
+        function installUpdate() {
+            if(confirm('Install latest update? This will refresh the page.')) {
+                updateHistory.unshift({ version: "v2.1.0", date: new Date().toLocaleDateString(), changes: "Added new features and bug fixes" });
+                localStorage.setItem('updateHistory', JSON.stringify(updateHistory));
+                document.getElementById('currentVersion').innerText = 'v2.1.0';
+                loadHistory();
+                alert('Update installed successfully!');
+                location.reload();
+            }
+        }
+        
+        document.getElementById('autoUpdate').checked = localStorage.getItem('autoUpdate') === 'true';
+        document.getElementById('betaChannel').checked = localStorage.getItem('betaChannel') === 'true';
+        document.getElementById('autoUpdate').onchange = () => localStorage.setItem('autoUpdate', document.getElementById('autoUpdate').checked);
+        document.getElementById('betaChannel').onchange = () => localStorage.setItem('betaChannel', document.getElementById('betaChannel').checked);
+        
+        loadHistory();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
