@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - User Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .user-table{width:100%;border-collapse:collapse;}
+        .user-table th,.user-table td{padding:0.75rem;text-align:left;border-bottom:1px solid #222;}
+        .user-table th{color:#aaa;}
+        input,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .badge{display:inline-block;padding:0.25rem 0.5rem;border-radius:20px;font-size:0.7rem;}
+        .badge-admin{background:#dc2626;}
+        .badge-editor{background:#28a745;}
+        .badge-user{background:#6c757d;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-users"></i> User Management</h1>
+        
+        <div class="card">
+            <h3>Add New User</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:0.5rem;">
+                <input type="text" id="userName" placeholder="Name">
+                <input type="email" id="userEmail" placeholder="Email">
+                <select id="userRole">
+                    <option value="user">User</option>
+                    <option value="editor">Editor</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <button onclick="addUser()">Add User</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>User List</h3>
+            <table class="user-table">
+                <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+                <tbody id="userList"></tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h3>User Statistics</h3>
+            <div id="userStats"></div>
+        </div>
+    </div>
+    <script>
+        let users = JSON.parse(localStorage.getItem('users') || '[{"id":1,"name":"Admin User","email":"admin@themoon.news","role":"admin","status":"active","joined":"2024-01-01"}]');
+        
+        function loadUsers() {
+            const tbody = document.getElementById('userList');
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    <td><span class="badge badge-${u.role}">${u.role}</span></td>
+                    <td>${u.status === 'active' ? '✅ Active' : '🔒 Suspended'}</td>
+                    <td>${u.joined}</td>
+                    <td><button onclick="editUser(${u.id})">Edit</button> <button onclick="deleteUser(${u.id})" style="background:#dc3545;">Delete</button></td>
+                </tr>
+            `).join('');
+            
+            const stats = {
+                total: users.length,
+                active: users.filter(u => u.status === 'active').length,
+                admins: users.filter(u => u.role === 'admin').length
+            };
+            document.getElementById('userStats').innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+                    <div class="badge" style="background:#1a1a1a;">Total Users: ${stats.total}</div>
+                    <div class="badge" style="background:#28a745;">Active: ${stats.active}</div>
+                    <div class="badge" style="background:#dc2626;">Admins: ${stats.admins}</div>
+                </div>
+            `;
+        }
+        
+        function addUser() {
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const role = document.getElementById('userRole').value;
+            if(!name || !email) { alert('Enter name and email'); return; }
+            const newId = Math.max(...users.map(u => u.id)) + 1;
+            users.push({ id: newId, name, email, role, status: 'active', joined: new Date().toISOString().split('T')[0] });
+            localStorage.setItem('users', JSON.stringify(users));
+            document.getElementById('userName').value = '';
+            document.getElementById('userEmail').value = '';
+            loadUsers();
+        }
+        
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            const newRole = prompt('Edit role (user/editor/admin):', user.role);
+            if(newRole && ['user','editor','admin'].includes(newRole)) {
+                user.role = newRole;
+                localStorage.setItem('users', JSON.stringify(users));
+                loadUsers();
+            }
+        }
+        
+        function deleteUser(id) {
+            if(confirm('Delete this user?')) {
+                users = users.filter(u => u.id !== id);
+                localStorage.setItem('users', JSON.stringify(users));
+                loadUsers();
+            }
+        }
+        
+        loadUsers();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
