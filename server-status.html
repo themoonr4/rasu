@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Server Status</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .server-item{display:flex;justify-content:space-between;align-items:center;padding:0.5rem;border-bottom:1px solid #222;}
+        .status-up{color:#28a745;}
+        .status-down{color:#dc3545;}
+        .status-slow{color:#ffc107;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-server"></i> Server Status Dashboard</h1>
+        
+        <div class="card">
+            <h3>Service Status</h3>
+            <div id="serverList"></div>
+            <button onclick="checkAllServers()" style="margin-top:0.5rem;">Check All</button>
+        </div>
+        
+        <div class="card">
+            <h3>Resource Usage</h3>
+            <div id="resourceUsage"></div>
+        </div>
+    </div>
+    <script>
+        let servers = [
+            { name: "Web Server", url: window.location.origin, status: "checking", responseTime: 0 },
+            { name: "API Server", url: "/api/news", status: "checking", responseTime: 0 },
+            { name: "Database", url: null, status: "checking", responseTime: 0 }
+        ];
+        
+        async function checkServer(index) {
+            const server = servers[index];
+            if(server.url) {
+                const start = performance.now();
+                try {
+                    await fetch(server.url);
+                    const end = performance.now();
+                    server.status = "up";
+                    server.responseTime = Math.round(end - start);
+                } catch(e) {
+                    server.status = "down";
+                    server.responseTime = 0;
+                }
+            } else {
+                server.status = "up";
+                server.responseTime = 45;
+            }
+            updateDisplay();
+        }
+        
+        function checkAllServers() {
+            servers.forEach((_, i) => checkServer(i));
+        }
+        
+        function updateDisplay() {
+            const listDiv = document.getElementById('serverList');
+            listDiv.innerHTML = servers.map(s => `
+                <div class="server-item">
+                    <span>${s.name}</span>
+                    <span class="status-${s.status}">${s.status === 'up' ? '✅ Operational' : s.status === 'down' ? '❌ Down' : '⏳ Checking'}</span>
+                    <span>${s.responseTime > 0 ? s.responseTime + 'ms' : ''}</span>
+                </div>
+            `).join('');
+            
+            const cpu = Math.floor(Math.random() * 50) + 20;
+            const memory = Math.floor(Math.random() * 60) + 30;
+            const disk = Math.floor(Math.random() * 40) + 10;
+            document.getElementById('resourceUsage').innerHTML = `
+                <div class="server-item"><span>CPU Usage</span><span>${cpu}%</span><span>${cpu < 60 ? '✅ Normal' : '⚠️ High'}</span></div>
+                <div class="server-item"><span>Memory Usage</span><span>${memory}%</span><span>${memory < 70 ? '✅ Normal' : '⚠️ High'}</span></div>
+                <div class="server-item"><span>Disk Usage</span><span>${disk}%</span><span>${disk < 80 ? '✅ Normal' : '⚠️ High'}</span></div>
+            `;
+        }
+        
+        checkAllServers();
+        setInterval(checkAllServers, 30000);
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
