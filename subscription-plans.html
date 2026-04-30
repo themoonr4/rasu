@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Subscription Plans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .plan-card{background:#1a1a1a;border-radius:12px;padding:1rem;margin-bottom:1rem;}
+        .plan-header{display:flex;justify-content:space-between;margin-bottom:0.5rem;}
+        input,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-tags"></i> Subscription Plans Manager</h1>
+        
+        <div class="card">
+            <h3>Add New Plan</h3>
+            <input type="text" id="planName" placeholder="Plan Name (e.g., Premium)">
+            <input type="text" id="planPrice" placeholder="Price (e.g., ₹499)">
+            <input type="text" id="planDuration" placeholder="Duration (e.g., Monthly, Yearly)">
+            <textarea id="planFeatures" rows="3" placeholder="Features (one per line)"></textarea>
+            <button onclick="addPlan()">Add Plan</button>
+        </div>
+        
+        <div class="card">
+            <h3>Active Plans</h3>
+            <div id="plansList"></div>
+        </div>
+    </div>
+    <script>
+        let plans = JSON.parse(localStorage.getItem('subscriptionPlans') || '[{"name":"Free","price":"₹0","duration":"Lifetime","features":["Basic news access","Limited articles","Ads supported"]},{"name":"Premium","price":"₹499","duration":"Monthly","features":["Unlimited news","No ads","Premium content","Priority support"]}]');
+        
+        function loadPlans() {
+            const listDiv = document.getElementById('plansList');
+            listDiv.innerHTML = plans.map((plan, i) => `
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <strong>${plan.name}</strong>
+                        <div>${plan.price} / ${plan.duration}</div>
+                    </div>
+                    <div style="margin-top:0.5rem;">
+                        ${plan.features.map(f => `<div>✓ ${f}</div>`).join('')}
+                    </div>
+                    <button onclick="deletePlan(${i})" style="margin-top:0.5rem;background:#dc3545;">Delete</button>
+                </div>
+            `).join('');
+        }
+        
+        function addPlan() {
+            const name = document.getElementById('planName').value;
+            const price = document.getElementById('planPrice').value;
+            const duration = document.getElementById('planDuration').value;
+            const featuresText = document.getElementById('planFeatures').value;
+            if(!name || !price) { alert('Enter plan name and price'); return; }
+            const features = featuresText.split('\n').filter(f => f.trim());
+            plans.push({ name, price, duration, features });
+            localStorage.setItem('subscriptionPlans', JSON.stringify(plans));
+            document.getElementById('planName').value = '';
+            document.getElementById('planPrice').value = '';
+            document.getElementById('planDuration').value = '';
+            document.getElementById('planFeatures').value = '';
+            loadPlans();
+        }
+        
+        function deletePlan(index) {
+            plans.splice(index, 1);
+            localStorage.setItem('subscriptionPlans', JSON.stringify(plans));
+            loadPlans();
+        }
+        
+        loadPlans();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
