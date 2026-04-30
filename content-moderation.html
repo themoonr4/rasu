@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Content Moderation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .mod-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .flag-count{background:#dc3545;border-radius:50%;padding:0.2rem 0.5rem;font-size:0.7rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-shield-alt"></i> Content Moderation System</h1>
+        
+        <div class="card">
+            <h3>Pending Review</h3>
+            <div id="pendingMod"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Flagged Content</h3>
+            <div id="flaggedList"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Moderation Rules</h3>
+            <div class="mod-item"><span>🚫 Profanity Filter</span><span class="flag-count">Enabled</span></div>
+            <div class="mod-item"><span>🔗 Spam Links Detection</span><span class="flag-count">Active</span></div>
+            <div class="mod-item"><span>📸 NSFW Image Detection</span><span class="flag-count">Pending Setup</span></div>
+        </div>
+    </div>
+    <script>
+        let pending = JSON.parse(localStorage.getItem('pendingModeration') || '[{"id":1,"type":"comment","content":"This is a user comment","reporter":"user@email.com","reason":"Spam"}]');
+        let flagged = JSON.parse(localStorage.getItem('flaggedContent') || '[{"id":2,"type":"news","title":"Suspicious Article","flags":3,"reason":"Misleading"}]');
+        
+        function loadPending() {
+            const div = document.getElementById('pendingMod');
+            if(pending.length === 0) { div.innerHTML = '<p>No pending items</p>'; return; }
+            div.innerHTML = pending.map(p => `
+                <div class="mod-item">
+                    <div><strong>${p.type}</strong><br><small>${p.content}</small><br><span style="color:#aaa;">Reported: ${p.reason}</span></div>
+                    <div><button onclick="approveItem(${p.id})">Approve</button><button onclick="rejectItem(${p.id})" style="background:#dc3545;">Reject</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function loadFlagged() {
+            const div = document.getElementById('flaggedList');
+            if(flagged.length === 0) { div.innerHTML = '<p>No flagged content</p>'; return; }
+            div.innerHTML = flagged.map(f => `
+                <div class="mod-item">
+                    <div><strong>${f.title || f.type}</strong><br><small>Flags: ${f.flags}</small></div>
+                    <div><button onclick="removeFlagged(${f.id})">Review</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function approveItem(id) { pending = pending.filter(p => p.id !== id); localStorage.setItem('pendingModeration', JSON.stringify(pending)); loadPending(); }
+        function rejectItem(id) { pending = pending.filter(p => p.id !== id); localStorage.setItem('pendingModeration', JSON.stringify(pending)); loadPending(); }
+        function removeFlagged(id) { flagged = flagged.filter(f => f.id !== id); localStorage.setItem('flaggedContent', JSON.stringify(flagged)); loadFlagged(); }
+        
+        loadPending();
+        loadFlagged();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
