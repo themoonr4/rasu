@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Webhook Debugger</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,textarea,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .request-log{background:#1a1a1a;padding:0.5rem;border-radius:8px;margin-top:0.5rem;font-family:monospace;font-size:0.7rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-bug"></i> Webhook Debugger Tool</h1>
+        
+        <div class="card">
+            <h3>Send Test Webhook</h3>
+            <input type="text" id="webhookUrl" placeholder="Webhook URL">
+            <select id="webhookMethod">
+                <option value="POST">POST</option>
+                <option value="GET">GET</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+            <textarea id="webhookPayload" rows="5" placeholder='{"event":"test","data":{"message":"Hello"}}'></textarea>
+            <button onclick="sendWebhook()">Send Webhook</button>
+        </div>
+        
+        <div class="card">
+            <h3>Webhook History</h3>
+            <div id="webhookLogs"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Webhook Receiver (Local)</h3>
+            <div class="request-log" id="receivedRequests">Waiting for webhooks...</div>
+        </div>
+    </div>
+    <script>
+        let logs = JSON.parse(localStorage.getItem('webhookLogs') || '[]');
+        
+        async function sendWebhook() {
+            const url = document.getElementById('webhookUrl').value;
+            const method = document.getElementById('webhookMethod').value;
+            const payload = document.getElementById('webhookPayload').value;
+            if(!url) { alert('Enter webhook URL'); return; }
+            try {
+                const options = { method, headers: { 'Content-Type': 'application/json' } };
+                if(method !== 'GET' && payload) options.body = payload;
+                const response = await fetch(url, options);
+                const responseText = await response.text();
+                logs.unshift({ time: new Date().toLocaleString(), url, method, status: response.status, response: responseText.substring(0, 200) });
+                if(logs.length > 20) logs.pop();
+                localStorage.setItem('webhookLogs', JSON.stringify(logs));
+                updateLogs();
+                alert(`Status: ${response.status}`);
+            } catch(e) { alert(`Error: ${e.message}`); }
+        }
+        
+        function updateLogs() {
+            const logDiv = document.getElementById('webhookLogs');
+            logDiv.innerHTML = logs.map(l => `<div class="request-log"><strong>${l.time}</strong> ${l.method} ${l.url}<br>Status: ${l.status}<br>Response: ${l.response}</div>`).join('');
+        }
+        
+        updateLogs();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
