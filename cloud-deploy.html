@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Cloud Deployment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:600px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .provider-icon{font-size:2rem;margin-right:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        .deploy-step{margin:0.5rem 0;padding:0.5rem;background:#1a1a1a;border-radius:8px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-cloud-upload-alt"></i> Cloud Deployment Wizard</h1>
+        
+        <div class="card">
+            <h3>Select Platform</h3>
+            <div>
+                <button onclick="selectProvider('netlify')"><i class="fab fa-netlify"></i> Netlify</button>
+                <button onclick="selectProvider('vercel')"><i class="fab fa-vercel"></i> Vercel</button>
+                <button onclick="selectProvider('aws')"><i class="fab fa-aws"></i> AWS S3</button>
+                <button onclick="selectProvider('cloudflare')"><i class="fab fa-cloudflare"></i> Cloudflare</button>
+            </div>
+        </div>
+        
+        <div class="card" id="deploySteps" style="display:none;">
+            <h3>Deployment Steps</h3>
+            <div id="stepsContent"></div>
+        </div>
+    </div>
+    <script>
+        const steps = {
+            netlify: ['1. Drag and drop your folder to netlify.com/drop', '2. Wait for deployment', '3. Your site will be live at .netlify.app'],
+            vercel: ['1. Run "vercel" in terminal', '2. Follow setup prompts', '3. Deploy with "vercel --prod"'],
+            aws: ['1. Create S3 bucket', '2. Enable static hosting', '3. Upload files and set permissions'],
+            cloudflare: ['1. Create Cloudflare Pages project', '2. Connect GitHub repo', '3. Deploy automatically']
+        };
+        
+        function selectProvider(provider) {
+            const stepsDiv = document.getElementById('deploySteps');
+            const contentDiv = document.getElementById('stepsContent');
+            stepsDiv.style.display = 'block';
+            contentDiv.innerHTML = steps[provider].map(s => `<div class="deploy-step">${s}</div>`).join('');
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
