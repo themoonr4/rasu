@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - SLA Monitor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .metric{display:flex;justify-content:space-between;margin:0.5rem 0;}
+        .uptime-good{color:#28a745;}
+        .uptime-warning{color:#ffc107;}
+        .btn{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> SLA & Uptime Monitor</h1>
+        
+        <div class="card">
+            <h3>Current Status</h3>
+            <div class="metric"><span>Website Uptime</span><span class="uptime-good">99.98%</span></div>
+            <div class="metric"><span>API Uptime</span><span class="uptime-good">99.95%</span></div>
+            <div class="metric"><span>Database Uptime</span><span class="uptime-good">99.99%</span></div>
+            <div class="metric"><span>Avg Response Time</span><span>245ms</span></div>
+        </div>
+        
+        <div class="card">
+            <h3>SLA Targets</h3>
+            <div class="metric"><span>Target Uptime</span><span>99.9%</span></div>
+            <div class="metric"><span>Current Status</span><span class="uptime-good">✅ Meeting SLA</span></div>
+            <div class="metric"><span>Monthly Downtime</span><span>4.3 minutes</span></div>
+        </div>
+        
+        <div class="card">
+            <h3>Incident History</h3>
+            <div id="incidentList"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Check Now</h3>
+            <button class="btn" onclick="checkStatus()">Check All Services</button>
+            <div id="checkResult"></div>
+        </div>
+    </div>
+    <script>
+        let incidents = [
+            { date: "2024-04-25", duration: "5 min", impact: "Minor slowdown", resolved: true },
+            { date: "2024-04-20", duration: "12 min", impact: "API delay", resolved: true }
+        ];
+        
+        function loadIncidents() {
+            const listDiv = document.getElementById('incidentList');
+            if(incidents.length === 0) { listDiv.innerHTML = '<p>No incidents recorded</p>'; return; }
+            listDiv.innerHTML = incidents.map(i => `
+                <div class="metric"><span>${i.date}</span><span>${i.duration}</span><span>${i.impact}</span><span>✅ Resolved</span></div>
+            `).join('');
+        }
+        
+        function checkStatus() {
+            const resultDiv = document.getElementById('checkResult');
+            resultDiv.innerHTML = '<div>Checking services...</div>';
+            setTimeout(() => {
+                const allGood = Math.random() > 0.2;
+                resultDiv.innerHTML = allGood ? 
+                    '<div style="background:#28a745;padding:0.5rem;border-radius:8px;">✅ All services operational</div>' :
+                    '<div style="background:#ffc107;padding:0.5rem;border-radius:8px;">⚠️ Some services experiencing issues</div>';
+            }, 1500);
+        }
+        
+        loadIncidents();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
