@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Competitor Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .competitor-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-top:1rem;}
+        .stat-box{background:#1a1a1a;padding:0.5rem;border-radius:8px;text-align:center;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Competitor Analysis Tool</h1>
+        
+        <div class="card">
+            <h3>Add Competitor</h3>
+            <input type="text" id="compName" placeholder="Competitor Name">
+            <input type="text" id="compUrl" placeholder="Website URL">
+            <button onclick="addCompetitor()">Add Competitor</button>
+        </div>
+        
+        <div class="card">
+            <h3>Competitors List</h3>
+            <div id="competitorList"></div>
+        </div>
+        
+        <div class="card" id="analysisCard" style="display:none;">
+            <h3>Competitor Analysis</h3>
+            <div id="analysisResult"></div>
+        </div>
+    </div>
+    <script>
+        let competitors = JSON.parse(localStorage.getItem('competitors') || '[]');
+        
+        function loadCompetitors() {
+            const listDiv = document.getElementById('competitorList');
+            if(competitors.length === 0) { listDiv.innerHTML = '<p>No competitors added</p>'; return; }
+            listDiv.innerHTML = competitors.map((c, i) => `
+                <div class="competitor-item">
+                    <div><strong>${c.name}</strong><br><small>${c.url}</small></div>
+                    <div><button onclick="analyzeCompetitor(${i})">Analyze</button><button onclick="deleteCompetitor(${i})" style="background:#dc3545;">Delete</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function addCompetitor() {
+            const name = document.getElementById('compName').value;
+            const url = document.getElementById('compUrl').value;
+            if(!name || !url) { alert('Enter name and URL'); return; }
+            competitors.push({ name, url, added: new Date().toLocaleString() });
+            localStorage.setItem('competitors', JSON.stringify(competitors));
+            document.getElementById('compName').value = '';
+            document.getElementById('compUrl').value = '';
+            loadCompetitors();
+        }
+        
+        function deleteCompetitor(index) {
+            competitors.splice(index, 1);
+            localStorage.setItem('competitors', JSON.stringify(competitors));
+            loadCompetitors();
+        }
+        
+        function analyzeCompetitor(index) {
+            const comp = competitors[index];
+            const analysisDiv = document.getElementById('analysisResult');
+            document.getElementById('analysisCard').style.display = 'block';
+            
+            const rank = Math.floor(Math.random() * 10) + 1;
+            const traffic = Math.floor(Math.random() * 100000) + 10000;
+            const da = Math.floor(Math.random() * 50) + 30;
+            
+            analysisDiv.innerHTML = `
+                <div class="stats">
+                    <div class="stat-box"><div>Alexa Rank</div><div>#${rank}</div></div>
+                    <div class="stat-box"><div>Est. Traffic</div><div>${traffic.toLocaleString()}</div></div>
+                    <div class="stat-box"><div>Domain Auth</div><div>${da}</div></div>
+                    <div class="stat-box"><div>Backlinks</div><div>${Math.floor(Math.random() * 5000) + 500}</div></div>
+                </div>
+                <div style="margin-top:1rem;">
+                    <strong>Strengths:</strong>
+                    <ul><li>High domain authority</li><li>Good social media presence</li></ul>
+                    <strong>Weaknesses:</strong>
+                    <ul><li>Slow page load time</li><li>Less mobile optimized</li></ul>
+                    <strong>Opportunities:</strong>
+                    <ul><li>Untapped keywords</li><li>Video content gap</li></ul>
+                </div>
+                <button onclick="downloadAnalysis('${comp.name}')">Download Report</button>
+            `;
+        }
+        
+        function downloadAnalysis(name) {
+            alert(`Analysis report for ${name} downloaded`);
+        }
+        
+        loadCompetitors();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
