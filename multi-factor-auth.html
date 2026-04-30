@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Multi-Factor Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:500px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .qr-code{background:#fff;padding:1rem;border-radius:8px;text-align:center;margin:1rem 0;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .backup-codes{background:#1a1a1a;padding:0.5rem;border-radius:8px;font-family:monospace;margin-top:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        .toggle-switch{position:relative;display:inline-block;width:50px;height:24px;}
+        .toggle-switch input{opacity:0;width:0;height:0;}
+        .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#333;transition:0.3s;border-radius:24px;}
+        .slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:white;transition:0.3s;border-radius:50%;}
+        input:checked+.slider{background-color:#dc2626;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-shield-alt"></i> Multi-Factor Authentication</h1>
+        
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div><strong>Status:</strong> <span id="mfaStatus">Disabled</span></div>
+                <label class="toggle-switch"><input type="checkbox" id="mfaToggle" onchange="toggleMFA()"><span class="slider"></span></label>
+            </div>
+        </div>
+        
+        <div id="mfaSetup" style="display:none;">
+            <div class="card">
+                <h3>Step 1: Scan QR Code</h3>
+                <div class="qr-code" id="qrPlaceholder">
+                    <i class="fas fa-qrcode" style="font-size:3rem;"></i>
+                    <div>THE MOON</div>
+                    <div>Secret: ABCDEFGHIJKLMNOP</div>
+                </div>
+                <p>Scan with Google Authenticator or any authenticator app</p>
+            </div>
+            
+            <div class="card">
+                <h3>Step 2: Verify Code</h3>
+                <input type="text" id="verifyCode" placeholder="Enter 6-digit code">
+                <button onclick="verifyMFA()">Verify & Enable</button>
+                <div id="verifyMsg"></div>
+            </div>
+            
+            <div class="card">
+                <h3>Backup Codes</h3>
+                <div class="backup-codes" id="backupCodes">
+                    1234-5678<br>
+                    9012-3456<br>
+                    7890-1234<br>
+                </div>
+                <button onclick="downloadBackupCodes()">Download Backup Codes</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleMFA() {
+            const isEnabled = document.getElementById('mfaToggle').checked;
+            if(isEnabled) {
+                document.getElementById('mfaSetup').style.display = 'block';
+            } else {
+                document.getElementById('mfaSetup').style.display = 'none';
+                localStorage.setItem('mfaEnabled', 'false');
+                document.getElementById('mfaStatus').innerText = 'Disabled';
+            }
+        }
+        
+        function verifyMFA() {
+            const code = document.getElementById('verifyCode').value;
+            if(code === '123456') {
+                localStorage.setItem('mfaEnabled', 'true');
+                document.getElementById('mfaStatus').innerText = 'Enabled';
+                document.getElementById('verifyMsg').innerHTML = '<div style="background:#28a745;padding:0.5rem;border-radius:8px;">✅ MFA Enabled Successfully!</div>';
+                setTimeout(() => {
+                    document.getElementById('mfaSetup').style.display = 'none';
+                    document.getElementById('verifyMsg').innerHTML = '';
+                }, 2000);
+            } else {
+                document.getElementById('verifyMsg').innerHTML = '<div style="background:#dc3545;padding:0.5rem;border-radius:8px;">❌ Invalid code. Try again.</div>';
+            }
+        }
+        
+        function downloadBackupCodes() {
+            const codes = document.getElementById('backupCodes').innerText;
+            const blob = new Blob([codes], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'backup_codes.txt'; a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        if(localStorage.getItem('mfaEnabled') === 'true') {
+            document.getElementById('mfaToggle').checked = true;
+            document.getElementById('mfaStatus').innerText = 'Enabled';
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
