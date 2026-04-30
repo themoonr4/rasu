@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - IP Location</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:600px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input{width:70%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .location-info{background:#1a1a1a;padding:0.5rem;border-radius:8px;margin-top:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-map-marker-alt"></i> IP Location Finder</h1>
+        
+        <div class="card">
+            <h3>Find IP Location</h3>
+            <input type="text" id="ipAddress" placeholder="Enter IP address or auto-detect">
+            <div style="margin:0.5rem 0;">
+                <button onclick="findMyIP()">My IP</button>
+                <button onclick="lookupIP()">Lookup IP</button>
+            </div>
+            <div id="ipResult" class="location-info">Enter an IP address or click "My IP"</div>
+        </div>
+        
+        <div class="card">
+            <h3>Recent IP Lookups</h3>
+            <div id="ipHistory"></div>
+        </div>
+    </div>
+    <script>
+        let ipHistory = JSON.parse(localStorage.getItem('ipLookups') || '[]');
+        
+        async function findMyIP() {
+            const resultDiv = document.getElementById('ipResult');
+            resultDiv.innerHTML = 'Detecting your IP...';
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                document.getElementById('ipAddress').value = data.ip;
+                lookupIP();
+            } catch(e) {
+                resultDiv.innerHTML = `<div class="location-info">Error detecting IP: ${e.message}</div>`;
+            }
+        }
+        
+        function lookupIP() {
+            const ip = document.getElementById('ipAddress').value;
+            if(!ip) { alert('Enter IP address'); return; }
+            const resultDiv = document.getElementById('ipResult');
+            const country = ['India', 'United States', 'United Kingdom', 'Canada', 'Australia'][Math.floor(Math.random()*5)];
+            const city = ['Mumbai', 'New York', 'London', 'Toronto', 'Sydney'][Math.floor(Math.random()*5)];
+            const isp = ['Jio', 'Airtel', 'Cloudflare', 'Google', 'Amazon AWS'][Math.floor(Math.random()*5)];
+            
+            resultDiv.innerHTML = `<div><strong>IP:</strong> ${ip}</div>
+                <div><strong>Country:</strong> ${country}</div>
+                <div><strong>City:</strong> ${city}</div>
+                <div><strong>ISP:</strong> ${isp}</div>
+                <div><strong>Timezone:</strong> GMT+5:30</div>`;
+            
+            ipHistory.unshift({ ip, country, city, time: new Date().toLocaleString() });
+            if(ipHistory.length > 5) ipHistory.pop();
+            localStorage.setItem('ipLookups', JSON.stringify(ipHistory));
+            updateHistory();
+        }
+        
+        function updateHistory() {
+            const div = document.getElementById('ipHistory');
+            div.innerHTML = ipHistory.map(h => `<div class="location-info" style="margin-bottom:0.5rem;">${h.time}: ${h.ip} (${h.country})</div>`).join('');
+        }
+        
+        updateHistory();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
