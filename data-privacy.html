@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Data Privacy Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:600px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .privacy-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .danger-btn{background:#dc3545;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-user-shield"></i> Data Privacy Center</h1>
+        
+        <div class="card">
+            <h3>Your Data</h3>
+            <div class="privacy-item"><span>Account Information</span><button onclick="viewData()">View</button></div>
+            <div class="privacy-item"><span>Activity History</span><button onclick="viewActivity()">View</button></div>
+            <div class="privacy-item"><span>Download All Data</span><button onclick="downloadData()">Download</button></div>
+        </div>
+        
+        <div class="card">
+            <h3>Privacy Settings</h3>
+            <div class="privacy-item"><span>Share Analytics Data</span><label class="toggle-switch"><input type="checkbox" id="shareAnalytics"><span class="slider"></span></label></div>
+            <div class="privacy-item"><span>Personalized Ads</span><label class="toggle-switch"><input type="checkbox" id="personalizedAds"><span class="slider"></span></label></div>
+        </div>
+        
+        <div class="card">
+            <h3>Data Management</h3>
+            <div class="privacy-item"><span>Clear All Data</span><button class="danger-btn" onclick="clearData()">Clear</button></div>
+            <div class="privacy-item"><span>Delete Account</span><button class="danger-btn" onclick="deleteAccount()">Delete</button></div>
+        </div>
+        
+        <div class="card">
+            <h3>GDPR Request</h3>
+            <button onclick="submitGDPR()">Submit GDPR Request</button>
+            <div id="gdprMsg"></div>
+        </div>
+    </div>
+    <script>
+        function viewData() {
+            const userData = { name: "User", email: "user@themoon.news", joined: new Date().toLocaleDateString() };
+            alert(JSON.stringify(userData, null, 2));
+        }
+        
+        function viewActivity() {
+            const activities = JSON.parse(localStorage.getItem('userActivities') || '[]');
+            alert(`Last 5 activities: ${activities.slice(0,5).map(a => a.action).join(', ')}`);
+        }
+        
+        function downloadData() {
+            const allData = {};
+            for(let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allData[key] = localStorage.getItem(key);
+            }
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'my_data.json'; a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function clearData() {
+            if(confirm('Clear all your data? This cannot be undone.')) {
+                localStorage.clear();
+                alert('Data cleared! Page will refresh.');
+                location.reload();
+            }
+        }
+        
+        function deleteAccount() {
+            if(confirm('Permanently delete your account? This action cannot be undone.')) {
+                localStorage.clear();
+                alert('Account deleted.');
+                window.location.href = '/';
+            }
+        }
+        
+        function submitGDPR() {
+            alert('GDPR request submitted. We will respond within 30 days.');
+        }
+        
+        document.getElementById('shareAnalytics').checked = localStorage.getItem('shareAnalytics') !== 'false';
+        document.getElementById('personalizedAds').checked = localStorage.getItem('personalizedAds') !== 'false';
+        document.getElementById('shareAnalytics').onchange = () => localStorage.setItem('shareAnalytics', document.getElementById('shareAnalytics').checked);
+        document.getElementById('personalizedAds').onchange = () => localStorage.setItem('personalizedAds', document.getElementById('personalizedAds').checked);
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
