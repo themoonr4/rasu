@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - DNS Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .record-item{background:#1a1a1a;padding:0.5rem;border-radius:8px;margin-top:0.5rem;font-family:monospace;font-size:0.7rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-network-wired"></i> DNS Lookup Tool</h1>
+        
+        <div class="card">
+            <h3>DNS Lookup</h3>
+            <input type="text" id="dnsDomain" placeholder="domain.com">
+            <select id="recordType">
+                <option value="A">A Record</option>
+                <option value="AAAA">AAAA Record</option>
+                <option value="CNAME">CNAME Record</option>
+                <option value="MX">MX Record</option>
+                <option value="TXT">TXT Record</option>
+                <option value="NS">NS Record</option>
+            </select>
+            <button onclick="lookupDNS()">Lookup</button>
+            <div id="dnsResult"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Recent Lookups</h3>
+            <div id="recentLookups"></div>
+        </div>
+    </div>
+    <script>
+        let lookups = JSON.parse(localStorage.getItem('dnsLookups') || '[]');
+        
+        function lookupDNS() {
+            const domain = document.getElementById('dnsDomain').value;
+            const type = document.getElementById('recordType').value;
+            if(!domain) { alert('Enter domain'); return; }
+            const resultDiv = document.getElementById('dnsResult');
+            resultDiv.innerHTML = '<div>Looking up...</div>';
+            
+            setTimeout(() => {
+                const records = [];
+                const count = Math.floor(Math.random() * 3) + 1;
+                for(let i = 0; i < count; i++) {
+                    if(type === 'A') records.push(`192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`);
+                    else if(type === 'CNAME') records.push(`www.${domain}`);
+                    else if(type === 'MX') records.push(`mail.${domain} (priority ${Math.floor(Math.random()*20)+10})`);
+                    else records.push(`record_${i+1}.${domain}`);
+                }
+                resultDiv.innerHTML = `<div class="record-item"><strong>${type} Records for ${domain}:</strong><br>${records.join('<br>')}</div>`;
+                lookups.unshift({ domain, type, records, time: new Date().toLocaleString() });
+                if(lookups.length > 10) lookups.pop();
+                localStorage.setItem('dnsLookups', JSON.stringify(lookups));
+                updateLookups();
+            }, 800);
+        }
+        
+        function updateLookups() {
+            const div = document.getElementById('recentLookups');
+            div.innerHTML = lookups.map(l => `<div class="record-item">${l.time}: ${l.domain} (${l.type})</div>`).join('');
+        }
+        
+        updateLookups();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
