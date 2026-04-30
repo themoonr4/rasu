@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Load Testing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .test-result{background:#1a1a1a;padding:0.5rem;border-radius:8px;margin-top:0.5rem;font-family:monospace;font-size:0.7rem;}
+        .progress-bar{height:4px;background:#333;border-radius:2px;margin-top:0.5rem;}
+        .progress-fill{width:0%;height:100%;background:#dc2626;transition:width 0.3s;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Load Testing Tool</h1>
+        
+        <div class="card">
+            <h3>Test Configuration</h3>
+            <input type="text" id="testUrl" value="/api/news" placeholder="Test URL">
+            <input type="number" id="requestCount" value="50" placeholder="Number of requests">
+            <input type="number" id="concurrent" value="5" placeholder="Concurrent requests">
+            <button onclick="runLoadTest()">Run Load Test</button>
+            <div class="progress-bar"><div class="progress-fill" id="loadProgress"></div></div>
+        </div>
+        
+        <div class="card">
+            <h3>Test Results</h3>
+            <div id="loadResults" class="test-result">Not run yet</div>
+        </div>
+        
+        <div class="card">
+            <h3>Previous Tests</h3>
+            <div id="testHistory"></div>
+        </div>
+    </div>
+    <script>
+        let testHistory = JSON.parse(localStorage.getItem('loadTests') || '[]');
+        
+        async function runLoadTest() {
+            const url = document.getElementById('testUrl').value;
+            const count = parseInt(document.getElementById('requestCount').value);
+            const concurrent = parseInt(document.getElementById('concurrent').value);
+            const progress = document.getElementById('loadProgress');
+            const resultsDiv = document.getElementById('loadResults');
+            
+            resultsDiv.innerHTML = 'Running load test...';
+            const times = [];
+            let completed = 0;
+            
+            const runRequest = async () => {
+                const start = performance.now();
+                try {
+                    await fetch(url);
+                    const end = performance.now();
+                    times.push(end - start);
+                } catch(e) {}
+                completed++;
+                progress.style.width = `${(completed/count)*100}%`;
+            };
+            
+            const batches = [];
+            for(let i = 0; i < count; i += concurrent) {
+                const batch = [];
+                for(let j = 0; j < concurrent && i + j < count; j++) {
+                    batch.push(runRequest());
+                }
+                await Promise.all(batch);
+            }
+            
+            const avg = times.reduce((a,b) => a + b, 0) / times.length;
+            const min = Math.min(...times);
+            const max = Math.max(...times);
+            const p95 = times.sort((a,b) => a - b)[Math.floor(times.length * 0.95)];
+            
+            resultsDiv.innerHTML = `✅ Test Complete!<br>
+                Total Requests: ${count}<br>
+                Avg Response: ${avg.toFixed(0)}ms<br>
+                Min Response: ${min.toFixed(0)}ms<br>
+                Max Response: ${max.toFixed(0)}ms<br>
+                P95 Response: ${p95.toFixed(0)}ms`;
+            
+            testHistory.unshift({ date: new Date().toLocaleString(), url, count, avg: avg.toFixed(0), min: min.toFixed(0), max: max.toFixed(0) });
+            if(testHistory.length > 10) testHistory.pop();
+            localStorage.setItem('loadTests', JSON.stringify(testHistory));
+            updateHistory();
+            setTimeout(() => progress.style.width = '0%', 1000);
+        }
+        
+        function updateHistory() {
+            const historyDiv = document.getElementById('testHistory');
+            historyDiv.innerHTML = testHistory.map(t => `<div class="test-result" style="margin-bottom:0.5rem;">${t.date}: ${t.url} - Avg ${t.avg}ms (${t.count} requests)</div>`).join('');
+        }
+        
+        updateHistory();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
