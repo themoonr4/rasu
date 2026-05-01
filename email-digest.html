@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Email Digest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .email-preview{background:#1a1a1a;border-radius:12px;padding:1rem;margin:1rem 0;}
+        input,textarea,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .digest-item{display:flex;justify-content:space-between;align-items:center;padding:0.5rem;border-bottom:1px solid #222;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-envelope-open-text"></i> Email Digest Settings</h1>
+        
+        <div class="card">
+            <h3>Digest Configuration</h3>
+            <select id="digestFrequency">
+                <option value="daily">Daily Digest</option>
+                <option value="weekly">Weekly Digest</option>
+                <option value="monthly">Monthly Digest</option>
+            </select>
+            <input type="time" id="digestTime" value="08:00">
+            <button onclick="saveDigestSettings()">Save Settings</button>
+        </div>
+        
+        <div class="card">
+            <h3>Email Preview</h3>
+            <div class="email-preview" id="emailPreview"></div>
+            <button onclick="sendTestDigest()">Send Test Email</button>
+        </div>
+        
+        <div class="card">
+            <h3>Subscribers</h3>
+            <div id="subscriberList"></div>
+        </div>
+    </div>
+    <script>
+        let subscribers = JSON.parse(localStorage.getItem('emailSubscribers') || '["admin@themoon.news", "user@example.com"]');
+        
+        function updatePreview() {
+            const freq = document.getElementById('digestFrequency').value;
+            const previewDiv = document.getElementById('emailPreview');
+            const news = ['Breaking News 1', 'Top Story 2', 'Latest Update 3'];
+            previewDiv.innerHTML = `<h4>THE MOON ${freq.toUpperCase()} Digest</h4><p>Top stories:</p><ul>${news.map(n => `<li>${n}</li>`).join('')}</ul><p>Read more at themoon.news</p>`;
+        }
+        
+        function saveDigestSettings() {
+            const freq = document.getElementById('digestFrequency').value;
+            const time = document.getElementById('digestTime').value;
+            localStorage.setItem('digestFrequency', freq);
+            localStorage.setItem('digestTime', time);
+            alert('Digest settings saved!');
+        }
+        
+        function sendTestDigest() {
+            const freq = document.getElementById('digestFrequency').value;
+            alert(`Test ${freq} digest sent to admin email!`);
+        }
+        
+        function loadSubscribers() {
+            const listDiv = document.getElementById('subscriberList');
+            listDiv.innerHTML = subscribers.map((s, i) => `<div class="digest-item"><span>${s}</span><button onclick="removeSubscriber(${i})">Remove</button></div>`).join('');
+        }
+        
+        function removeSubscriber(index) { subscribers.splice(index, 1); localStorage.setItem('emailSubscribers', JSON.stringify(subscribers)); loadSubscribers(); }
+        
+        document.getElementById('digestFrequency').addEventListener('change', updatePreview);
+        updatePreview();
+        loadSubscribers();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
