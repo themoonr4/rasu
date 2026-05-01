@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Revenue Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+        .stat-card{background:#111;border:1px solid #222;border-radius:16px;padding:1rem;text-align:center;}
+        .stat-value{font-size:1.8rem;font-weight:700;color:#dc2626;}
+        .chart-card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .revenue-bar{height:8px;background:#333;border-radius:4px;margin:0.5rem 0;}
+        .bar-fill{height:100%;background:#dc2626;border-radius:4px;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Revenue Analytics Dashboard</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><div>Total Revenue</div><div class="stat-value" id="totalRevenue">₹0</div></div>
+            <div class="stat-card"><div>This Month</div><div class="stat-value" id="monthRevenue">₹0</div></div>
+            <div class="stat-card"><div>Active Subscribers</div><div class="stat-value" id="activeSubs">0</div></div>
+            <div class="stat-card"><div>Conversion Rate</div><div class="stat-value" id="convRate">0%</div></div>
+        </div>
+        
+        <div class="chart-card">
+            <h3>Revenue Breakdown</h3>
+            <div id="revenueBreakdown"></div>
+        </div>
+        
+        <div class="chart-card">
+            <h3>Monthly Revenue Trend</h3>
+            <div id="trendChart"></div>
+        </div>
+        
+        <div class="chart-card">
+            <h3>Top Subscribers</h3>
+            <div id="topSubscribers"></div>
+        </div>
+    </div>
+    <script>
+        let revenueData = JSON.parse(localStorage.getItem('revenueData') || '{"total":125000,"month":12500,"subscribers":245,"conversion":2.4}');
+        
+        function updateDashboard() {
+            document.getElementById('totalRevenue').innerHTML = `₹${revenueData.total.toLocaleString()}`;
+            document.getElementById('monthRevenue').innerHTML = `₹${revenueData.month.toLocaleString()}`;
+            document.getElementById('activeSubs').innerHTML = revenueData.subscribers;
+            document.getElementById('convRate').innerHTML = `${revenueData.conversion}%`;
+            
+            const sources = ['Ad Revenue: ₹45,000', 'Subscriptions: ₹65,000', 'Affiliate: ₹15,000'];
+            document.getElementById('revenueBreakdown').innerHTML = sources.map(s => `<div class="revenue-bar"><div class="bar-fill" style="width:${Math.random()*60+20}%"></div><div>${s}</div></div>`).join('');
+            
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            document.getElementById('trendChart').innerHTML = months.map(m => `<div class="revenue-bar"><div>${m}</div><div class="bar-fill" style="width:${Math.floor(Math.random()*70)+20}%"></div><div>₹${Math.floor(Math.random()*15000)+5000}</div></div>`).join('');
+            
+            const topUsers = ['John Doe - Premium', 'Jane Smith - Premium', 'Rajesh K - Premium'];
+            document.getElementById('topSubscribers').innerHTML = topUsers.map(u => `<div class="revenue-bar"><div>👤 ${u}</div></div>`).join('');
+        }
+        
+        updateDashboard();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
