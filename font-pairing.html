@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Font Pairing Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .preview-area{background:#1a1a1a;padding:1rem;border-radius:12px;margin-bottom:1rem;text-align:center;}
+        .preview-heading{font-size:2rem;margin-bottom:0.5rem;}
+        .preview-text{font-size:1rem;line-height:1.5;}
+        select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-font"></i> Font Pairing Tool</h1>
+        
+        <div class="card">
+            <div class="preview-area" id="previewArea">
+                <div class="preview-heading" id="previewHeading">THE MOON</div>
+                <div class="preview-text" id="previewText">World class news platform with AI-powered insights and real-time updates. Stay informed with the latest breaking news.</div>
+            </div>
+            
+            <select id="headingFont">
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'Playfair Display', serif">Playfair Display</option>
+                <option value="'Roboto', sans-serif">Roboto</option>
+                <option value="'Merriweather', serif">Merriweather</option>
+                <option value="'Poppins', sans-serif">Poppins</option>
+            </select>
+            
+            <select id="bodyFont">
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'Playfair Display', serif">Playfair Display</option>
+                <option value="'Roboto', sans-serif">Roboto</option>
+                <option value="'Merriweather', serif">Merriweather</option>
+                <option value="'Poppins', sans-serif">Poppins</option>
+            </select>
+            
+            <button onclick="updateFonts()">Apply Fonts</button>
+            <button onclick="copyFontCSS()">Copy CSS</button>
+        </div>
+        
+        <div class="card">
+            <h3>Recommended Pairings</h3>
+            <button onclick="setPairing('classic')">Classic (Inter + Merriweather)</button>
+            <button onclick="setPairing('modern')">Modern (Poppins + Roboto)</button>
+            <button onclick="setPairing('elegant')">Elegant (Playfair + Inter)</button>
+        </div>
+    </div>
+    <script>
+        function updateFonts() {
+            const headingFont = document.getElementById('headingFont').value;
+            const bodyFont = document.getElementById('bodyFont').value;
+            document.getElementById('previewHeading').style.fontFamily = headingFont;
+            document.getElementById('previewText').style.fontFamily = bodyFont;
+        }
+        
+        function copyFontCSS() {
+            const headingFont = document.getElementById('headingFont').value;
+            const bodyFont = document.getElementById('bodyFont').value;
+            const css = `h1, h2, h3 { font-family: ${headingFont}; }\nbody, p { font-family: ${bodyFont}; }`;
+            navigator.clipboard.writeText(css);
+            alert('CSS copied!');
+        }
+        
+        function setPairing(type) {
+            if(type === 'classic') {
+                document.getElementById('headingFont').value = "'Inter', sans-serif";
+                document.getElementById('bodyFont').value = "'Merriweather', serif";
+            } else if(type === 'modern') {
+                document.getElementById('headingFont').value = "'Poppins', sans-serif";
+                document.getElementById('bodyFont').value = "'Roboto', sans-serif";
+            } else {
+                document.getElementById('headingFont').value = "'Playfair Display', serif";
+                document.getElementById('bodyFont').value = "'Inter', sans-serif";
+            }
+            updateFonts();
+        }
+        
+        updateFonts();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
