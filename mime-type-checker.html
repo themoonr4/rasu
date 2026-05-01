@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - MIME Type Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .drop-zone{border:2px dashed #333;border-radius:16px;padding:2rem;text-align:center;margin-bottom:1rem;cursor:pointer;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .result{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-file-alt"></i> MIME Type Checker</h1>
+        
+        <div class="card">
+            <div class="drop-zone" onclick="document.getElementById('mimeFile').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size:3rem;"></i>
+                <p>Click or drag file to check MIME type</p>
+                <input type="file" id="mimeFile" style="display:none;">
+            </div>
+            <button onclick="checkURLMime()">Check URL</button>
+            <input type="text" id="mimeUrl" placeholder="Or enter file URL">
+            <div id="mimeResult" class="result"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Common MIME Types</h3>
+            <div id="commonMimes"></div>
+        </div>
+    </div>
+    <script>
+        const mimeTypes = [
+            { ext: '.html', mime: 'text/html' },
+            { ext: '.css', mime: 'text/css' },
+            { ext: '.js', mime: 'application/javascript' },
+            { ext: '.json', mime: 'application/json' },
+            { ext: '.jpg/.jpeg', mime: 'image/jpeg' },
+            { ext: '.png', mime: 'image/png' },
+            { ext: '.gif', mime: 'image/gif' },
+            { ext: '.svg', mime: 'image/svg+xml' },
+            { ext: '.pdf', mime: 'application/pdf' },
+            { ext: '.mp4', mime: 'video/mp4' },
+            { ext: '.mp3', mime: 'audio/mpeg' },
+            { ext: '.zip', mime: 'application/zip' }
+        ];
+        
+        document.getElementById('mimeFile').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const resultDiv = document.getElementById('mimeResult');
+                resultDiv.innerHTML = `
+                    <strong>File:</strong> ${file.name}<br>
+                    <strong>MIME Type:</strong> ${file.type || 'Unknown'}<br>
+                    <strong>Size:</strong> ${(file.size / 1024).toFixed(2)} KB<br>
+                    <strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}
+                `;
+            }
+        });
+        
+        function checkURLMime() {
+            const url = document.getElementById('mimeUrl').value;
+            if(!url) { alert('Enter URL'); return; }
+            const extension = url.split('.').pop().toLowerCase();
+            const mimeMap = {
+                'html': 'text/html', 'css': 'text/css', 'js': 'application/javascript',
+                'json': 'application/json', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg',
+                'png': 'image/png', 'gif': 'image/gif', 'svg': 'image/svg+xml',
+                'pdf': 'application/pdf', 'mp4': 'video/mp4', 'mp3': 'audio/mpeg'
+            };
+            const mime = mimeMap[extension] || 'application/octet-stream';
+            document.getElementById('mimeResult').innerHTML = `
+                <strong>URL:</strong> ${url}<br>
+                <strong>Extension:</strong> .${extension}<br>
+                <strong>MIME Type:</strong> ${mime}
+            `;
+        }
+        
+        document.getElementById('commonMimes').innerHTML = mimeTypes.map(m => `<div style="display:inline-block;background:#1a1a1a;margin:0.25rem;padding:0.25rem 0.5rem;border-radius:8px;font-size:0.7rem;">${m.ext}: ${m.mime}</div>`).join('');
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
