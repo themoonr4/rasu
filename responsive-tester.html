@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Responsive Tester</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .iframe-container{background:#1a1a1a;border-radius:12px;padding:1rem;margin-bottom:1rem;}
+        iframe{width:100%;height:500px;border:none;border-radius:8px;background:#fff;}
+        .device-buttons{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+        button{background:#1a1a1a;color:white;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        button.active{background:#dc2626;border-color:#dc2626;}
+        input{width:80px;padding:0.25rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;text-align:center;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-mobile-alt"></i> Responsive Design Tester</h1>
+        
+        <div class="card">
+            <div class="device-buttons">
+                <button onclick="setSize(375, 667)">📱 iPhone SE</button>
+                <button onclick="setSize(390, 844)">📱 iPhone 12/13</button>
+                <button onclick="setSize(768, 1024)">📱 iPad Mini</button>
+                <button onclick="setSize(1024, 768)">💻 iPad Landscape</button>
+                <button onclick="setSize(1280, 720)">💻 Laptop</button>
+                <button onclick="setSize(1920, 1080)">🖥️ Desktop</button>
+            </div>
+            <div style="margin-bottom:1rem;">
+                <label>Custom Width: <input type="number" id="customWidth" placeholder="Width"></label>
+                <label>Height: <input type="number" id="customHeight" placeholder="Height"></label>
+                <button onclick="setCustomSize()">Apply</button>
+                <button onclick="resetSize()">Reset</button>
+            </div>
+            <div class="iframe-container">
+                <iframe id="testFrame" src="https://themoonr4.github.io/the-moon-supreme/"></iframe>
+            </div>
+            <div><input type="text" id="testUrl" placeholder="Enter URL to test" style="width:70%;"><button onclick="loadUrl()">Load</button></div>
+        </div>
+    </div>
+    <script>
+        const iframe = document.getElementById('testFrame');
+        
+        function setSize(width, height) {
+            iframe.style.width = width + 'px';
+            iframe.style.height = height + 'px';
+            document.querySelectorAll('.device-buttons button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        function setCustomSize() {
+            const width = document.getElementById('customWidth').value;
+            const height = document.getElementById('customHeight').value;
+            if(width) iframe.style.width = width + 'px';
+            if(height) iframe.style.height = height + 'px';
+        }
+        
+        function resetSize() {
+            iframe.style.width = '100%';
+            iframe.style.height = '500px';
+        }
+        
+        function loadUrl() {
+            const url = document.getElementById('testUrl').value;
+            if(url) iframe.src = url;
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
