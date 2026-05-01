@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Invoice History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .invoice-table{width:100%;border-collapse:collapse;}
+        .invoice-table th,.invoice-table td{padding:0.75rem;text-align:left;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-file-invoice"></i> Invoice History Manager</h1>
+        
+        <div class="card">
+            <h3>Invoices</h3>
+            <table class="invoice-table">
+                <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="invoiceList"></tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h3>Generate New Invoice</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:0.5rem;">
+                <input type="text" id="invClient" placeholder="Client Name">
+                <input type="number" id="invAmount" placeholder="Amount (₹)">
+                <button onclick="generateInvoice()">Generate</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let invoices = JSON.parse(localStorage.getItem('invoices') || '[{"id":"INV-001","client":"Tech Corp","amount":5000,"date":"2024-04-01","status":"Paid"},{"id":"INV-002","client":"Media Ltd","amount":12000,"date":"2024-04-15","status":"Pending"}]');
+        
+        function loadInvoices() {
+            const tbody = document.getElementById('invoiceList');
+            tbody.innerHTML = invoices.map(inv => `
+                <tr>
+                    <td>${inv.id}</td>
+                    <td>${inv.client}</td>
+                    <td>₹${inv.amount}</td>
+                    <td>${inv.date}</td>
+                    <td style="color:${inv.status === 'Paid' ? '#28a745' : '#ffc107'}">${inv.status}</td>
+                    <td><button onclick="downloadInvoice('${inv.id}')">Download</button> <button onclick="markPaid('${inv.id}')">Mark Paid</button></td>
+                </tr>
+            `).join('');
+        }
+        
+        function generateInvoice() {
+            const client = document.getElementById('invClient').value;
+            const amount = document.getElementById('invAmount').value;
+            if(!client || !amount) { alert('Enter client and amount'); return; }
+            const newId = `INV-${String(invoices.length+1).padStart(3,'0')}`;
+            invoices.unshift({ id: newId, client, amount: parseInt(amount), date: new Date().toISOString().split('T')[0], status: 'Pending' });
+            localStorage.setItem('invoices', JSON.stringify(invoices));
+            document.getElementById('invClient').value = '';
+            document.getElementById('invAmount').value = '';
+            loadInvoices();
+        }
+        
+        function downloadInvoice(id) { alert(`Downloading invoice ${id}`); }
+        function markPaid(id) {
+            const invoice = invoices.find(i => i.id === id);
+            if(invoice) { invoice.status = 'Paid'; localStorage.setItem('invoices', JSON.stringify(invoices)); loadInvoices(); }
+        }
+        
+        loadInvoices();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
