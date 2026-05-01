@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Browser Compatibility</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .browser-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;}
+        .browser-item{background:#1a1a1a;padding:1rem;border-radius:12px;text-align:center;}
+        .supported{color:#28a745;}
+        .partial{color:#ffc107;}
+        .not-supported{color:#dc3545;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-family:monospace;margin-bottom:0.5rem;min-height:150px;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-globe"></i> Browser Compatibility Checker</h1>
+        
+        <div class="card">
+            <h3>Check CSS/JS Feature</h3>
+            <textarea id="featureCode" placeholder="Enter CSS property or JS feature to check compatibility&#10;e.g., display: grid, flexbox, backdrop-filter"></textarea>
+            <button onclick="checkFeature()">Check Compatibility</button>
+            <div id="featureResult"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Common Browser Support</h3>
+            <div class="browser-list">
+                <div class="browser-item"><i class="fab fa-chrome"></i> Chrome<br><span class="supported">✅ Supported</span></div>
+                <div class="browser-item"><i class="fab fa-firefox"></i> Firefox<br><span class="supported">✅ Supported</span></div>
+                <div class="browser-item"><i class="fab fa-safari"></i> Safari<br><span class="supported">✅ Supported</span></div>
+                <div class="browser-item"><i class="fab fa-edge"></i> Edge<br><span class="supported">✅ Supported</span></div>
+                <div class="browser-item"><i class="fab fa-opera"></i> Opera<br><span class="supported">✅ Supported</span></div>
+                <div class="browser-item"><i class="fab fa-internet-explorer"></i> IE 11<br><span class="not-supported">❌ Not Supported</span></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>CSS Grid Support</h3>
+            <div class="browser-item">All modern browsers support CSS Grid (Chrome 57+, Firefox 52+, Safari 10.1+, Edge 16+)</div>
+        </div>
+    </div>
+    <script>
+        function checkFeature() {
+            const feature = document.getElementById('featureCode').value.toLowerCase();
+            const resultDiv = document.getElementById('featureResult');
+            
+            if(!feature) { resultDiv.innerHTML = '<p>Enter a feature to check</p>'; return; }
+            
+            const supportedFeatures = {
+                'grid': '✅ Supported in all modern browsers (Chrome 57+, Firefox 52+, Safari 10.1+, Edge 16+)',
+                'flexbox': '✅ Supported in all modern browsers (Chrome 29+, Firefox 28+, Safari 9+, Edge 12+)',
+                'backdrop-filter': '⚠️ Supported in Chrome 76+, Edge 79+, Safari 9.1+, Firefox (behind flag)',
+                'sticky': '✅ Supported in Chrome 56+, Firefox 32+, Safari 13+, Edge 16+',
+                'variable': '✅ Supported in Chrome 49+, Firefox 31+, Safari 9.1+, Edge 15+',
+                'transform': '✅ Supported in Chrome 36+, Firefox 16+, Safari 9+, Edge 12+',
+                'animation': '✅ Supported in Chrome 43+, Firefox 16+, Safari 9+, Edge 12+',
+                'filter': '✅ Supported in Chrome 53+, Firefox 35+, Safari 9.1+, Edge 13+',
+                'mask': '⚠️ Partial support, use -webkit- prefix for Safari'
+            };
+            
+            let found = false;
+            for(let [key, value] of Object.entries(supportedFeatures)) {
+                if(feature.includes(key)) {
+                    resultDiv.innerHTML = `<div style="padding:0.5rem;background:#1a1a1a;border-radius:8px;">${value}</div>`;
+                    found = true;
+                    break;
+                }
+            }
+            
+            if(!found) {
+                resultDiv.innerHTML = `<div style="padding:0.5rem;background:#1a1a1a;border-radius:8px;">🔍 Feature compatibility: Check CanIUse.com for ${feature}</div>`;
+            }
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
