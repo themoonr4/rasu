@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Color Blindness Simulator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .preview-area{background:#1a1a1a;padding:1rem;border-radius:12px;margin-bottom:1rem;text-align:center;}
+        .color-test{display:flex;gap:1rem;justify-content:center;margin:1rem 0;}
+        .color-box{width:80px;height:80px;border-radius:12px;}
+        .red-box{background:#dc2626;}
+        .green-box{background:#10b981;}
+        .blue-box{background:#3b82f6;}
+        .purple-box{background:#8b5cf6;}
+        select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-eye"></i> Color Blindness Simulator</h1>
+        
+        <div class="card">
+            <h3>Select Type of Color Blindness</h3>
+            <select id="blindnessType">
+                <option value="normal">Normal Vision</option>
+                <option value="protanopia">Protanopia (Red-Blind)</option>
+                <option value="deuteranopia">Deuteranopia (Green-Blind)</option>
+                <option value="tritanopia">Tritanopia (Blue-Blind)</option>
+                <option value="achromatopsia">Achromatopsia (Total)</option>
+            </select>
+            <button onclick="simulate()">Apply Simulation</button>
+        </div>
+        
+        <div class="card">
+            <h3>Color Test</h3>
+            <div class="preview-area" id="colorTest">
+                <div class="color-test">
+                    <div class="color-box red-box"></div>
+                    <div class="color-box green-box"></div>
+                    <div class="color-box blue-box"></div>
+                    <div class="color-box purple-box"></div>
+                </div>
+                <div style="margin-top:1rem;">
+                    <span style="color:#dc2626;">Red Text</span>
+                    <span style="color:#10b981; margin-left:1rem;">Green Text</span>
+                    <span style="color:#3b82f6; margin-left:1rem;">Blue Text</span>
+                </div>
+                <div style="margin-top:1rem;">Can you distinguish all colors?</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Image Simulation</h3>
+            <div class="preview-area" id="imageSimulation">
+                <div style="background:linear-gradient(135deg,#dc2626,#10b981,#3b82f6);padding:2rem;border-radius:12px;color:white;">THE MOON</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function simulate() {
+            const type = document.getElementById('blindnessType').value;
+            const imageDiv = document.getElementById('imageSimulation');
+            const colorTest = document.getElementById('colorTest');
+            
+            let filter = 'none';
+            if(type === 'protanopia') filter = 'url(#protanopia)';
+            else if(type === 'deuteranopia') filter = 'url(#deuteranopia)';
+            else if(type === 'tritanopia') filter = 'url(#tritanopia)';
+            else if(type === 'achromatopsia') filter = 'grayscale(100%)';
+            
+            const svg = `<svg style="position:absolute;width:0;height:0;">
+                <filter id="protanopia"><feColorMatrix type="matrix" values="0.567,0.433,0,0,0  0.558,0.442,0,0,0  0,0.242,0.758,0,0  0,0,0,1,0"/></filter>
+                <filter id="deuteranopia"><feColorMatrix type="matrix" values="0.625,0.375,0,0,0  0.7,0.3,0,0,0  0,0.3,0.7,0,0  0,0,0,1,0"/></filter>
+                <filter id="tritanopia"><feColorMatrix type="matrix" values="0.95,0.05,0,0,0  0,0.433,0.567,0,0  0,0.475,0.525,0,0  0,0,0,1,0"/></filter>
+            </svg>`;
+            document.body.insertAdjacentHTML('beforeend', svg);
+            
+            imageDiv.style.filter = filter;
+            colorTest.style.filter = filter;
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
