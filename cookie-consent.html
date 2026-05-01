@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Cookie Consent</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .cookie-preview{background:#1a1a1a;border-radius:12px;padding:1rem;margin-bottom:1rem;position:fixed;bottom:20px;left:20px;right:20px;max-width:400px;z-index:1000;}
+        .setting-item{display:flex;justify-content:space-between;padding:0.5rem;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-cookie-bite"></i> Cookie Consent Manager</h1>
+        
+        <div class="card">
+            <h3>Cookie Settings</h3>
+            <div class="setting-item"><span>Necessary Cookies</span><span class="status-good">Always Active</span></div>
+            <div class="setting-item"><span>Analytics Cookies</span><label class="toggle-switch"><input type="checkbox" id="analyticsCookies"><span class="slider"></span></label></div>
+            <div class="setting-item"><span>Marketing Cookies</span><label class="toggle-switch"><input type="checkbox" id="marketingCookies"><span class="slider"></span></label></div>
+            <button onclick="saveCookieSettings()">Save Settings</button>
+        </div>
+        
+        <div class="card">
+            <h3>Cookie Consent Preview</h3>
+            <div class="cookie-preview">
+                <div>🍪 We use cookies to enhance your experience.</div>
+                <div style="margin-top:0.5rem;">
+                    <button style="background:#28a745;">Accept All</button>
+                    <button>Reject All</button>
+                    <button>Customize</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Generate Cookie Policy</h3>
+            <button onclick="generateCookiePolicy()">Generate Policy</button>
+            <div id="policyResult"></div>
+        </div>
+    </div>
+    <script>
+        function saveCookieSettings() {
+            localStorage.setItem('analyticsCookies', document.getElementById('analyticsCookies').checked);
+            localStorage.setItem('marketingCookies', document.getElementById('marketingCookies').checked);
+            alert('Cookie settings saved!');
+        }
+        
+        function generateCookiePolicy() {
+            document.getElementById('policyResult').innerHTML = `<div style="background:#1a1a1a;padding:0.5rem;border-radius:8px;">✅ Cookie policy generated - Add to /privacy page</div>`;
+        }
+        
+        document.getElementById('analyticsCookies').checked = localStorage.getItem('analyticsCookies') === 'true';
+        document.getElementById('marketingCookies').checked = localStorage.getItem('marketingCookies') === 'true';
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
