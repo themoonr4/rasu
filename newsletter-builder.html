@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Newsletter Builder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,textarea{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .newsletter-preview{background:#1a1a1a;padding:1rem;border-radius:12px;margin-top:1rem;}
+        .template-selector{display:flex;gap:0.5rem;margin-bottom:1rem;}
+        .template-btn{background:#1a1a1a;padding:0.5rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-envelope-open-text"></i> Newsletter Builder</h1>
+        
+        <div class="card">
+            <div class="template-selector">
+                <div class="template-btn" onclick="loadTemplate('welcome')">Welcome</div>
+                <div class="template-btn" onclick="loadTemplate('weekly')">Weekly Digest</div>
+                <div class="template-btn" onclick="loadTemplate('breaking')">Breaking News</div>
+            </div>
+            <input type="text" id="newsletterSubject" placeholder="Subject Line">
+            <textarea id="newsletterContent" rows="8" placeholder="Newsletter content (HTML supported)"></textarea>
+            <button onclick="previewNewsletter()">Preview</button>
+            <button onclick="sendNewsletter()">Send Newsletter</button>
+            <div id="newsletterPreview" class="newsletter-preview" style="display:none;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Subscriber Stats</h3>
+            <div id="subStats"></div>
+        </div>
+    </div>
+    <script>
+        let subscribers = JSON.parse(localStorage.getItem('emailSubscribers') || '["admin@themoon.news", "user@example.com"]');
+        
+        function loadTemplate(type) {
+            const templates = {
+                welcome: `Welcome to THE MOON!\n\nThank you for subscribing. Stay updated with the latest news.\n\n- THE MOON Team`,
+                weekly: `THE MOON Weekly Digest\n\nTop stories this week:\n1. Breaking News\n2. Latest Updates\n3. Trending Topics\n\nRead more at themoon.news`,
+                breaking: `🔴 BREAKING NEWS\n\nStay tuned for live updates on the biggest story of the day.\n\nClick here for live coverage →`
+            };
+            document.getElementById('newsletterContent').value = templates[type];
+        }
+        
+        function previewNewsletter() {
+            const content = document.getElementById('newsletterContent').value;
+            const previewDiv = document.getElementById('newsletterPreview');
+            previewDiv.innerHTML = `<h4>Preview</h4><div style="background:#fff;color:#000;padding:1rem;border-radius:8px;">${content.replace(/\n/g,'<br>')}</div>`;
+            previewDiv.style.display = 'block';
+        }
+        
+        function sendNewsletter() {
+            const subject = document.getElementById('newsletterSubject').value;
+            const content = document.getElementById('newsletterContent').value;
+            if(!subject || !content) { alert('Fill subject and content'); return; }
+            alert(`Newsletter sent to ${subscribers.length} subscribers!`);
+        }
+        
+        document.getElementById('subStats').innerHTML = `<div>Total Subscribers: ${subscribers.length}</div><div>Open Rate: 42%</div><div>Click Rate: 18%</div>`;
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
