@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Post Scheduler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,textarea,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .scheduled-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        .calendar-view{display:grid;grid-template-columns:repeat(7,1fr);gap:0.25rem;margin-top:1rem;}
+        .calendar-day{background:#1a1a1a;padding:0.5rem;text-align:center;border-radius:8px;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-calendar-alt"></i> Advanced Post Scheduler</h1>
+        
+        <div class="card">
+            <h3>Schedule Post</h3>
+            <input type="text" id="scheduleTitle" placeholder="Post Title">
+            <textarea id="scheduleContent" rows="4" placeholder="Post Content"></textarea>
+            <select id="scheduleCategory">
+                <option value="tech">Technology</option>
+                <option value="sports">Sports</option>
+                <option value="business">Business</option>
+                <option value="politics">Politics</option>
+            </select>
+            <input type="datetime-local" id="scheduleDateTime">
+            <button onclick="addScheduledPost()">Schedule Post</button>
+        </div>
+        
+        <div class="card">
+            <h3>Scheduled Posts</h3>
+            <div id="scheduledList"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Calendar View</h3>
+            <div id="calendarView" class="calendar-view"></div>
+        </div>
+    </div>
+    <script>
+        let scheduled = JSON.parse(localStorage.getItem('scheduledPosts') || '[]');
+        
+        function loadScheduled() {
+            const listDiv = document.getElementById('scheduledList');
+            if(scheduled.length === 0) { listDiv.innerHTML = '<p>No scheduled posts</p>'; return; }
+            listDiv.innerHTML = scheduled.map((s, i) => `
+                <div class="scheduled-item">
+                    <div><strong>${s.title}</strong><br><small>${s.category} | ${s.scheduledTime}</small></div>
+                    <div><button onclick="editSchedule(${i})">Edit</button><button onclick="deleteSchedule(${i})" style="background:#dc3545;">Delete</button></div>
+                </div>
+            `).join('');
+            
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const calendarDiv = document.getElementById('calendarView');
+            calendarDiv.innerHTML = days.map(d => `<div class="calendar-day">${d}</div>`).join('');
+            for(let i=0; i<28; i++) calendarDiv.innerHTML += `<div class="calendar-day">${i+1}</div>`;
+        }
+        
+        function addScheduledPost() {
+            const title = document.getElementById('scheduleTitle').value;
+            const content = document.getElementById('scheduleContent').value;
+            const category = document.getElementById('scheduleCategory').value;
+            const time = document.getElementById('scheduleDateTime').value;
+            if(!title || !content || !time) { alert('Fill all fields'); return; }
+            scheduled.push({ title, content, category, scheduledTime: time, createdAt: new Date().toISOString() });
+            localStorage.setItem('scheduledPosts', JSON.stringify(scheduled));
+            document.getElementById('scheduleTitle').value = '';
+            document.getElementById('scheduleContent').value = '';
+            document.getElementById('scheduleDateTime').value = '';
+            loadScheduled();
+        }
+        
+        function editSchedule(index) { alert('Edit feature - Modify scheduled post'); }
+        function deleteSchedule(index) { scheduled.splice(index, 1); localStorage.setItem('scheduledPosts', JSON.stringify(scheduled)); loadScheduled(); }
+        
+        loadScheduled();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
