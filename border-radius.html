@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Border Radius Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .preview-box{width:200px;height:200px;background:linear-gradient(135deg,#dc2626,#4f46e5);margin:0 auto 1rem;transition:all 0.2s;}
+        .controls{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem;}
+        .control-group{text-align:center;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
+        label{display:block;margin-bottom:0.25rem;font-size:0.7rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .code-block{background:#1a1a1a;padding:0.75rem;border-radius:8px;font-family:monospace;font-size:0.7rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-border-all"></i> Border Radius Generator</h1>
+        
+        <div class="card">
+            <div class="preview-box" id="previewBox"></div>
+            
+            <div class="controls">
+                <div class="control-group"><label>Top-Left</label><input type="range" id="tl" min="0" max="100" value="20"><span id="tlVal">20px</span></div>
+                <div class="control-group"><label>Top-Right</label><input type="range" id="tr" min="0" max="100" value="20"><span id="trVal">20px</span></div>
+                <div class="control-group"><label>Bottom-Right</label><input type="range" id="br" min="0" max="100" value="20"><span id="brVal">20px</span></div>
+                <div class="control-group"><label>Bottom-Left</label><input type="range" id="bl" min="0" max="100" value="20"><span id="blVal">20px</span></div>
+            </div>
+            
+            <div style="text-align:center;">
+                <button onclick="applyAll()">Apply to All</button>
+                <button onclick="copyRadiusCode()">Copy CSS</button>
+                <button onclick="resetRadius()">Reset</button>
+            </div>
+            
+            <div id="radiusCode" class="code-block" style="margin-top:1rem;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Presets</h3>
+            <button onclick="setPreset('square')">Square (0px)</button>
+            <button onclick="setPreset('rounded')">Rounded (20px)</button>
+            <button onclick="setPreset('circle')">Circle (100px)</button>
+            <button onclick="setPreset('pill')">Pill (50px)</button>
+        </div>
+    </div>
+    <script>
+        function updateRadius() {
+            const tl = document.getElementById('tl').value;
+            const tr = document.getElementById('tr').value;
+            const br = document.getElementById('br').value;
+            const bl = document.getElementById('bl').value;
+            
+            document.getElementById('tlVal').innerText = tl + 'px';
+            document.getElementById('trVal').innerText = tr + 'px';
+            document.getElementById('brVal').innerText = br + 'px';
+            document.getElementById('blVal').innerText = bl + 'px';
+            
+            const borderRadius = `${tl}px ${tr}px ${br}px ${bl}px`;
+            document.getElementById('previewBox').style.borderRadius = borderRadius;
+            document.getElementById('radiusCode').innerHTML = `border-radius: ${borderRadius};`;
+        }
+        
+        function applyAll() {
+            const val = document.getElementById('tl').value;
+            document.getElementById('tr').value = val;
+            document.getElementById('br').value = val;
+            document.getElementById('bl').value = val;
+            updateRadius();
+        }
+        
+        function copyRadiusCode() {
+            const code = document.getElementById('radiusCode').innerText;
+            navigator.clipboard.writeText(code);
+            alert('CSS copied!');
+        }
+        
+        function resetRadius() {
+            document.getElementById('tl').value = 0;
+            document.getElementById('tr').value = 0;
+            document.getElementById('br').value = 0;
+            document.getElementById('bl').value = 0;
+            updateRadius();
+        }
+        
+        function setPreset(type) {
+            const presets = { square: 0, rounded: 20, circle: 100, pill: 50 };
+            const val = presets[type];
+            document.getElementById('tl').value = val;
+            document.getElementById('tr').value = val;
+            document.getElementById('br').value = val;
+            document.getElementById('bl').value = val;
+            updateRadius();
+        }
+        
+        document.getElementById('tl').addEventListener('input', updateRadius);
+        document.getElementById('tr').addEventListener('input', updateRadius);
+        document.getElementById('br').addEventListener('input', updateRadius);
+        document.getElementById('bl').addEventListener('input', updateRadius);
+        
+        updateRadius();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
