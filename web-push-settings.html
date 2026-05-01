@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Web Push Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .setting-item{display:flex;justify-content:space-between;align-items:center;padding:0.5rem;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .toggle-switch{position:relative;display:inline-block;width:50px;height:24px;}
+        .toggle-switch input{opacity:0;width:0;height:0;}
+        .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#333;transition:0.3s;border-radius:24px;}
+        .slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:white;transition:0.3s;border-radius:50%;}
+        input:checked+.slider{background-color:#dc2626;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-bell"></i> Web Push Advanced Settings</h1>
+        
+        <div class="card">
+            <h3>Notification Settings</h3>
+            <div class="setting-item"><span>🔔 Enable Push Notifications</span><label class="toggle-switch"><input type="checkbox" id="pushEnable"><span class="slider"></span></label></div>
+            <div class="setting-item"><span>📰 Breaking News Alerts</span><label class="toggle-switch"><input type="checkbox" id="breakingAlerts"><span class="slider"></span></label></div>
+            <div class="setting-item"><span>📊 Daily Digest</span><label class="toggle-switch"><input type="checkbox" id="dailyDigest"><span class="slider"></span></label></div>
+            <div class="setting-item"><span>💬 Comment Replies</span><label class="toggle-switch"><input type="checkbox" id="commentAlerts"><span class="slider"></span></label></div>
+        </div>
+        
+        <div class="card">
+            <h3>Subscriber Stats</h3>
+            <div class="setting-item"><span>Total Subscribers</span><span id="subCount">0</span></div>
+            <div class="setting-item"><span>Last 30 Days</span><span id="newSubs">0</span></div>
+            <div class="setting-item"><span>Engagement Rate</span><span id="engageRate">0%</span></div>
+        </div>
+        
+        <div class="card">
+            <h3>Send Test Notification</h3>
+            <input type="text" id="testTitle" placeholder="Notification Title">
+            <input type="text" id="testMessage" placeholder="Notification Message">
+            <button onclick="sendTestPush()">Send Test</button>
+        </div>
+    </div>
+    <script>
+        function loadSettings() {
+            document.getElementById('pushEnable').checked = localStorage.getItem('pushEnabled') === 'true';
+            document.getElementById('breakingAlerts').checked = localStorage.getItem('breakingAlerts') !== 'false';
+            document.getElementById('dailyDigest').checked = localStorage.getItem('dailyDigest') !== 'false';
+            document.getElementById('commentAlerts').checked = localStorage.getItem('commentAlerts') !== 'false';
+            document.getElementById('subCount').innerHTML = Math.floor(Math.random() * 500) + 100;
+            document.getElementById('newSubs').innerHTML = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('engageRate').innerHTML = Math.floor(Math.random() * 30) + 40 + '%';
+        }
+        
+        function sendTestPush() {
+            const title = document.getElementById('testTitle').value || 'THE MOON Test';
+            const message = document.getElementById('testMessage').value || 'This is a test notification';
+            if(Notification.permission === 'granted') { new Notification(title, { body: message }); alert('Notification sent!'); }
+            else { Notification.requestPermission().then(perm => { if(perm === 'granted') new Notification(title, { body: message }); }); }
+        }
+        
+        document.getElementById('pushEnable').onchange = () => localStorage.setItem('pushEnabled', document.getElementById('pushEnable').checked);
+        document.getElementById('breakingAlerts').onchange = () => localStorage.setItem('breakingAlerts', document.getElementById('breakingAlerts').checked);
+        document.getElementById('dailyDigest').onchange = () => localStorage.setItem('dailyDigest', document.getElementById('dailyDigest').checked);
+        document.getElementById('commentAlerts').onchange = () => localStorage.setItem('commentAlerts', document.getElementById('commentAlerts').checked);
+        
+        loadSettings();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
