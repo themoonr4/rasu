@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Sitemap Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .url-item{display:flex;justify-content:space-between;align-items:center;padding:0.5rem;border-bottom:1px solid #222;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .code-block{background:#1a1a1a;padding:0.5rem;border-radius:8px;font-family:monospace;font-size:0.6rem;overflow-x:auto;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-sitemap"></i> Visual Sitemap Generator</h1>
+        
+        <div class="card">
+            <h3>Add Pages</h3>
+            <div style="display:flex;gap:0.5rem;">
+                <input type="text" id="pageUrl" placeholder="Page URL (e.g., /about)">
+                <button onclick="addPage()">Add Page</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Sitemap URLs</h3>
+            <div id="urlList"></div>
+            <button onclick="generateXML()">Generate XML Sitemap</button>
+            <div id="sitemapXml" class="code-block" style="margin-top:1rem;"></div>
+        </div>
+    </div>
+    <script>
+        let pages = JSON.parse(localStorage.getItem('sitemapPages') || '["/","/news","/tech","/sports","/business","/politics","/study","/contact","/about"]');
+        
+        function loadPages() {
+            const listDiv = document.getElementById('urlList');
+            listDiv.innerHTML = pages.map((p, i) => `
+                <div class="url-item">
+                    <span>${p}</span>
+                    <button onclick="removePage(${i})" style="background:#dc3545;">Remove</button>
+                </div>
+            `).join('');
+        }
+        
+        function addPage() {
+            const url = document.getElementById('pageUrl').value;
+            if(!url) { alert('Enter URL'); return; }
+            pages.push(url);
+            localStorage.setItem('sitemapPages', JSON.stringify(pages));
+            document.getElementById('pageUrl').value = '';
+            loadPages();
+        }
+        
+        function removePage(index) {
+            pages.splice(index, 1);
+            localStorage.setItem('sitemapPages', JSON.stringify(pages));
+            loadPages();
+        }
+        
+        function generateXML() {
+            const domain = 'https://themoonr4.github.io/the-moon-supreme';
+            const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${pages.map(p => `    <url>
+        <loc>${domain}${p}</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>${p === '/' ? '1.0' : '0.7'}</priority>
+    </url>`).join('\n')}
+</urlset>`;
+            document.getElementById('sitemapXml').innerHTML = xml;
+        }
+        
+        loadPages();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
