@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Announcement Banner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .banner-preview{background:#dc2626;color:#fff;padding:1rem;border-radius:12px;margin-bottom:1rem;text-align:center;}
+        input,textarea,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .banner-item{display:flex;justify-content:space-between;align-items:center;padding:0.5rem;border-bottom:1px solid #222;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-bullhorn"></i> Announcement Banner Manager</h1>
+        
+        <div class="card">
+            <h3>Create Banner</h3>
+            <input type="text" id="bannerText" placeholder="Announcement text">
+            <select id="bannerType">
+                <option value="info">Info</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+            </select>
+            <input type="text" id="bannerLink" placeholder="Link URL (optional)">
+            <div class="banner-preview" id="bannerPreview">Preview will appear here</div>
+            <button onclick="createBanner()">Publish Banner</button>
+        </div>
+        
+        <div class="card">
+            <h3>Active Banners</h3>
+            <div id="bannerList"></div>
+        </div>
+    </div>
+    <script>
+        let banners = JSON.parse(localStorage.getItem('announcementBanners') || '[]');
+        
+        document.getElementById('bannerText').addEventListener('input', updatePreview);
+        document.getElementById('bannerType').addEventListener('change', updatePreview);
+        
+        function updatePreview() {
+            const text = document.getElementById('bannerText').value;
+            const type = document.getElementById('bannerType').value;
+            const colors = { info: '#17a2b8', success: '#28a745', warning: '#ffc107', danger: '#dc2626' };
+            document.getElementById('bannerPreview').style.background = colors[type];
+            document.getElementById('bannerPreview').innerHTML = text || 'Preview will appear here';
+        }
+        
+        function loadBanners() {
+            const listDiv = document.getElementById('bannerList');
+            if(banners.length === 0) { listDiv.innerHTML = '<p>No active banners</p>'; return; }
+            listDiv.innerHTML = banners.map((b, i) => `
+                <div class="banner-item">
+                    <div><strong>${b.text}</strong><br><small>${b.type} | ${b.date}</small></div>
+                    <div><button onclick="removeBanner(${i})">Remove</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function createBanner() {
+            const text = document.getElementById('bannerText').value;
+            const type = document.getElementById('bannerType').value;
+            const link = document.getElementById('bannerLink').value;
+            if(!text) { alert('Enter banner text'); return; }
+            banners.push({ text, type, link, date: new Date().toLocaleString(), active: true });
+            localStorage.setItem('announcementBanners', JSON.stringify(banners));
+            document.getElementById('bannerText').value = '';
+            document.getElementById('bannerLink').value = '';
+            loadBanners();
+        }
+        
+        function removeBanner(index) { banners.splice(index, 1); localStorage.setItem('announcementBanners', JSON.stringify(banners)); loadBanners(); }
+        
+        loadBanners();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
