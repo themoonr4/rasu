@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Image Compare Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .compare-container{position:relative;width:100%;height:400px;overflow:hidden;border-radius:12px;}
+        .compare-image{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
+        .compare-after{clip-path:inset(0 50% 0 0);}
+        .compare-slider{position:absolute;top:0;bottom:0;width:4px;background:#fff;left:50%;cursor:ew-resize;z-index:10;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-images"></i> Image Slider Compare Tool</h1>
+        
+        <div class="card">
+            <h3>Before Image</h3>
+            <input type="text" id="beforeImage" placeholder="Before image URL">
+            <h3>After Image</h3>
+            <input type="text" id="afterImage" placeholder="After image URL">
+            <button onclick="loadCompareImages()">Load Images</button>
+            <div class="compare-container" id="compareContainer">
+                <img id="beforeImg" class="compare-image" src="" alt="Before">
+                <img id="afterImg" class="compare-image compare-after" src="" alt="After">
+                <div class="compare-slider" id="compareSlider"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let isDragging = false;
+        const container = document.getElementById('compareContainer');
+        const slider = document.getElementById('compareSlider');
+        const afterImg = document.getElementById('afterImg');
+        
+        function loadCompareImages() {
+            const beforeUrl = document.getElementById('beforeImage').value;
+            const afterUrl = document.getElementById('afterImage').value;
+            if(beforeUrl) document.getElementById('beforeImg').src = beforeUrl;
+            if(afterUrl) document.getElementById('afterImg').src = afterUrl;
+        }
+        
+        function updateSlider(e) {
+            if(!isDragging) return;
+            const rect = container.getBoundingClientRect();
+            let x = (e.clientX - rect.left) / rect.width;
+            x = Math.max(0, Math.min(1, x));
+            slider.style.left = (x * 100) + '%';
+            afterImg.style.clipPath = `inset(0 ${(1 - x) * 100}% 0 0)`;
+        }
+        
+        slider.addEventListener('mousedown', () => { isDragging = true; });
+        window.addEventListener('mouseup', () => { isDragging = false; });
+        window.addEventListener('mousemove', updateSlider);
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
