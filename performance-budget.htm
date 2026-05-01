@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Performance Budget</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .budget-item{display:flex;justify-content:space-between;padding:0.5rem;border-bottom:1px solid #222;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .status-pass{color:#28a745;}
+        .status-fail{color:#dc3545;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Performance Budget Calculator</h1>
+        
+        <div class="card">
+            <h3>Enter Page Resources</h3>
+            <input type="number" id="htmlSize" placeholder="HTML size (KB)">
+            <input type="number" id="cssSize" placeholder="CSS size (KB)">
+            <input type="number" id="jsSize" placeholder="JavaScript size (KB)">
+            <input type="number" id="imageSize" placeholder="Images size (KB)">
+            <button onclick="calculateBudget()">Calculate Budget</button>
+            <div id="budgetResult"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Recommended Budgets</h3>
+            <div id="recommendations"></div>
+        </div>
+    </div>
+    <script>
+        function calculateBudget() {
+            const html = parseFloat(document.getElementById('htmlSize').value) || 0;
+            const css = parseFloat(document.getElementById('cssSize').value) || 0;
+            const js = parseFloat(document.getElementById('jsSize').value) || 0;
+            const images = parseFloat(document.getElementById('imageSize').value) || 0;
+            
+            const total = html + css + js + images;
+            const resultDiv = document.getElementById('budgetResult');
+            
+            const budgets = [
+                { name: 'HTML', value: html, limit: 50, status: html <= 50 },
+                { name: 'CSS', value: css, limit: 100, status: css <= 100 },
+                { name: 'JavaScript', value: js, limit: 300, status: js <= 300 },
+                { name: 'Images', value: images, limit: 500, status: images <= 500 },
+                { name: 'Total', value: total, limit: 1000, status: total <= 1000 }
+            ];
+            
+            resultDiv.innerHTML = budgets.map(b => `
+                <div class="budget-item">
+                    <span>${b.name}</span>
+                    <span>${b.value} KB / ${b.limit} KB <span class="${b.status ? 'status-pass' : 'status-fail'}">${b.status ? '✅ Pass' : '❌ Fail'}</span></span>
+                </div>
+            `).join('');
+            
+            document.getElementById('recommendations').innerHTML = `
+                <div class="budget-item"><span>📄 HTML:</span><span>&lt; 50 KB</span></div>
+                <div class="budget-item"><span>🎨 CSS:</span><span>&lt; 100 KB</span></div>
+                <div class="budget-item"><span>⚡ JavaScript:</span><span>&lt; 300 KB</span></div>
+                <div class="budget-item"><span>🖼️ Images:</span><span>&lt; 500 KB</span></div>
+                <div class="budget-item"><span>📦 Total:</span><span>&lt; 1 MB (First Load)</span></div>
+            `;
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
