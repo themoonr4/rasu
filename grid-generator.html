@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - CSS Grid Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .grid-preview{background:#1a1a1a;border-radius:12px;padding:1rem;margin-bottom:1rem;display:grid;gap:0.5rem;min-height:200px;}
+        .grid-item{background:#dc2626;color:white;padding:0.75rem;border-radius:6px;text-align:center;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .code-block{background:#1a1a1a;padding:0.75rem;border-radius:8px;font-family:monospace;font-size:0.7rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-th"></i> CSS Grid Generator</h1>
+        
+        <div class="card">
+            <div class="grid-preview" id="gridPreview"></div>
+            
+            <label>Columns (e.g., 1fr 1fr 1fr or repeat(3,1fr))</label>
+            <input type="text" id="gridColumns" value="repeat(3, 1fr)" placeholder="grid-template-columns">
+            
+            <label>Rows (e.g., 100px auto)</label>
+            <input type="text" id="gridRows" value="auto" placeholder="grid-template-rows">
+            
+            <label>Gap</label>
+            <input type="text" id="gridGap" value="10px" placeholder="gap">
+            
+            <button onclick="updateGrid()">Update</button>
+            <button onclick="copyGridCode()">Copy CSS</button>
+            <button onclick="resetGrid()">Reset</button>
+            
+            <div id="gridCode" class="code-block" style="margin-top:1rem;"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Presets</h3>
+            <button onclick="setPreset('3col')">3 Columns</button>
+            <button onclick="setPreset('responsive')">Responsive</button>
+            <button onclick="setPreset('dashboard')">Dashboard</button>
+        </div>
+    </div>
+    <script>
+        function updateGrid() {
+            const columns = document.getElementById('gridColumns').value;
+            const rows = document.getElementById('gridRows').value;
+            const gap = document.getElementById('gridGap').value;
+            
+            const preview = document.getElementById('gridPreview');
+            preview.style.gridTemplateColumns = columns;
+            preview.style.gridTemplateRows = rows;
+            preview.style.gap = gap;
+            
+            const itemCount = columns.includes('2') ? 4 : columns.includes('3') ? 6 : 4;
+            preview.innerHTML = '';
+            for(let i = 1; i <= itemCount; i++) {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.innerText = i;
+                preview.appendChild(item);
+            }
+            
+            document.getElementById('gridCode').innerHTML = `.grid-container {\n    display: grid;\n    grid-template-columns: ${columns};\n    grid-template-rows: ${rows};\n    gap: ${gap};\n}`;
+        }
+        
+        function copyGridCode() {
+            const code = document.getElementById('gridCode').innerText;
+            navigator.clipboard.writeText(code);
+            alert('CSS copied!');
+        }
+        
+        function resetGrid() {
+            document.getElementById('gridColumns').value = 'repeat(3, 1fr)';
+            document.getElementById('gridRows').value = 'auto';
+            document.getElementById('gridGap').value = '10px';
+            updateGrid();
+        }
+        
+        function setPreset(type) {
+            if(type === '3col') {
+                document.getElementById('gridColumns').value = 'repeat(3, 1fr)';
+                document.getElementById('gridRows').value = 'auto';
+                document.getElementById('gridGap').value = '10px';
+            } else if(type === 'responsive') {
+                document.getElementById('gridColumns').value = 'repeat(auto-fit, minmax(200px, 1fr))';
+                document.getElementById('gridRows').value = 'auto';
+                document.getElementById('gridGap').value = '15px';
+            } else {
+                document.getElementById('gridColumns').value = '250px 1fr';
+                document.getElementById('gridRows').value = '100px 1fr';
+                document.getElementById('gridGap').value = '10px';
+            }
+            updateGrid();
+        }
+        
+        updateGrid();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
