@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Flexbox Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .flex-preview{background:#1a1a1a;border-radius:12px;padding:1rem;margin-bottom:1rem;min-height:200px;display:flex;flex-wrap:wrap;}
+        .flex-item{background:#dc2626;color:white;padding:0.75rem;margin:0.25rem;border-radius:6px;min-width:60px;text-align:center;}
+        .controls{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;}
+        select,input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .code-block{background:#1a1a1a;padding:0.75rem;border-radius:8px;font-family:monospace;font-size:0.7rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-align-center"></i> Flexbox Generator</h1>
+        
+        <div class="card">
+            <div class="flex-preview" id="flexPreview">
+                <div class="flex-item">1</div>
+                <div class="flex-item">2</div>
+                <div class="flex-item">3</div>
+            </div>
+            
+            <div class="controls">
+                <div><label>flex-direction</label><select id="flexDirection">
+                    <option value="row">row</option>
+                    <option value="row-reverse">row-reverse</option>
+                    <option value="column">column</option>
+                    <option value="column-reverse">column-reverse</option>
+                </select></div>
+                <div><label>justify-content</label><select id="justifyContent">
+                    <option value="flex-start">flex-start</option>
+                    <option value="flex-end">flex-end</option>
+                    <option value="center">center</option>
+                    <option value="space-between">space-between</option>
+                    <option value="space-around">space-around</option>
+                </select></div>
+                <div><label>align-items</label><select id="alignItems">
+                    <option value="stretch">stretch</option>
+                    <option value="flex-start">flex-start</option>
+                    <option value="flex-end">flex-end</option>
+                    <option value="center">center</option>
+                </select></div>
+                <div><label>flex-wrap</label><select id="flexWrap">
+                    <option value="nowrap">nowrap</option>
+                    <option value="wrap">wrap</option>
+                    <option value="wrap-reverse">wrap-reverse</option>
+                </select></div>
+            </div>
+            
+            <button onclick="updateFlex()">Update</button>
+            <button onclick="copyFlexCode()">Copy CSS</button>
+            
+            <div id="flexCode" class="code-block" style="margin-top:1rem;"></div>
+        </div>
+    </div>
+    <script>
+        function updateFlex() {
+            const direction = document.getElementById('flexDirection').value;
+            const justify = document.getElementById('justifyContent').value;
+            const align = document.getElementById('alignItems').value;
+            const wrap = document.getElementById('flexWrap').value;
+            
+            const preview = document.getElementById('flexPreview');
+            preview.style.flexDirection = direction;
+            preview.style.justifyContent = justify;
+            preview.style.alignItems = align;
+            preview.style.flexWrap = wrap;
+            
+            document.getElementById('flexCode').innerHTML = `.flex-container {\n    display: flex;\n    flex-direction: ${direction};\n    justify-content: ${justify};\n    align-items: ${align};\n    flex-wrap: ${wrap};\n}`;
+        }
+        
+        function copyFlexCode() {
+            const code = document.getElementById('flexCode').innerText;
+            navigator.clipboard.writeText(code);
+            alert('CSS copied!');
+        }
+        
+        document.getElementById('flexDirection').addEventListener('change', updateFlex);
+        document.getElementById('justifyContent').addEventListener('change', updateFlex);
+        document.getElementById('alignItems').addEventListener('change', updateFlex);
+        document.getElementById('flexWrap').addEventListener('change', updateFlex);
+        
+        updateFlex();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
