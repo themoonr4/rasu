@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Content Sync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .sync-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .progress-bar{height:4px;background:#333;border-radius:2px;margin-top:0.5rem;}
+        .progress-fill{width:0%;height:100%;background:#28a745;transition:width 0.3s;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-sync-alt"></i> Content Sync Manager</h1>
+        
+        <div class="card">
+            <h3>Sync to Social Media</h3>
+            <div class="sync-item"><span>📘 Facebook</span><button onclick="syncToFacebook()">Sync Now</button></div>
+            <div class="sync-item"><span>🐦 Twitter</span><button onclick="syncToTwitter()">Sync Now</button></div>
+            <div class="sync-item"><span>📸 Instagram</span><button onclick="syncToInstagram()">Sync Now</button></div>
+            <div class="sync-item"><span>📨 Telegram</span><button onclick="syncToTelegram()">Sync Now</button></div>
+        </div>
+        
+        <div class="card">
+            <h3>Sync Status</h3>
+            <div class="sync-item"><span>Last Sync</span><span id="lastSync">Never</span></div>
+            <div class="sync-item"><span>Pending Items</span><span id="pendingCount">0</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="syncProgress"></div></div>
+        </div>
+    </div>
+    <script>
+        function syncToFacebook() { simulateSync('Facebook'); }
+        function syncToTwitter() { simulateSync('Twitter'); }
+        function syncToInstagram() { simulateSync('Instagram'); }
+        function syncToTelegram() { simulateSync('Telegram'); }
+        
+        function simulateSync(platform) {
+            const progress = document.getElementById('syncProgress');
+            progress.style.width = '50%';
+            setTimeout(() => {
+                progress.style.width = '100%';
+                setTimeout(() => progress.style.width = '0%', 1000);
+                document.getElementById('lastSync').innerHTML = new Date().toLocaleString();
+                document.getElementById('pendingCount').innerHTML = Math.floor(Math.random() * 10);
+                alert(`Synced to ${platform}!`);
+            }, 1000);
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
