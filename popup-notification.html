@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Popup Notification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .popup-preview{background:#1a1a1a;border-radius:12px;padding:1rem;margin:1rem 0;text-align:center;border:1px solid #333;}
+        input,textarea,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-window-maximize"></i> Popup Notification Builder</h1>
+        
+        <div class="card">
+            <h3>Popup Settings</h3>
+            <input type="text" id="popupTitle" placeholder="Popup Title">
+            <textarea id="popupContent" rows="3" placeholder="Popup message..."></textarea>
+            <input type="text" id="popupButton" placeholder="Button Text (e.g., Learn More)">
+            <input type="text" id="popupLink" placeholder="Button Link URL">
+            <select id="popupDelay">
+                <option value="0">Immediate</option>
+                <option value="5">5 seconds</option>
+                <option value="10">10 seconds</option>
+                <option value="30">30 seconds</option>
+            </select>
+            <button onclick="previewPopup()">Preview</button>
+            <button onclick="publishPopup()">Publish Popup</button>
+            <div id="popupPreview" class="popup-preview"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Active Popups</h3>
+            <div id="popupList"></div>
+        </div>
+    </div>
+    <script>
+        let popups = JSON.parse(localStorage.getItem('popupNotifications') || '[]');
+        
+        function previewPopup() {
+            const title = document.getElementById('popupTitle').value;
+            const content = document.getElementById('popupContent').value;
+            const button = document.getElementById('popupButton').value;
+            const previewDiv = document.getElementById('popupPreview');
+            previewDiv.innerHTML = `<h4>${title || 'Popup Title'}</h4><p>${content || 'Popup message here'}</p>${button ? `<button style="background:#dc2626;">${button}</button>` : ''}`;
+        }
+        
+        function publishPopup() {
+            const title = document.getElementById('popupTitle').value;
+            const content = document.getElementById('popupContent').value;
+            const button = document.getElementById('popupButton').value;
+            const link = document.getElementById('popupLink').value;
+            const delay = document.getElementById('popupDelay').value;
+            if(!title || !content) { alert('Enter title and content'); return; }
+            popups.push({ title, content, button, link, delay, date: new Date().toLocaleString() });
+            localStorage.setItem('popupNotifications', JSON.stringify(popups));
+            document.getElementById('popupTitle').value = '';
+            document.getElementById('popupContent').value = '';
+            document.getElementById('popupButton').value = '';
+            document.getElementById('popupLink').value = '';
+            loadPopups();
+        }
+        
+        function loadPopups() {
+            const listDiv = document.getElementById('popupList');
+            if(popups.length === 0) { listDiv.innerHTML = '<p>No active popups</p>'; return; }
+            listDiv.innerHTML = popups.map((p, i) => `<div class="popup-preview"><h4>${p.title}</h4><p>${p.content}</p><button onclick="removePopup(${i})">Remove</button></div>`).join('');
+        }
+        
+        function removePopup(index) { popups.splice(index, 1); localStorage.setItem('popupNotifications', JSON.stringify(popups)); loadPopups(); }
+        
+        loadPopups();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
