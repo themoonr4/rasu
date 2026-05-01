@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Team Collaboration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .team-member{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        .task-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        input,textarea,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .status-completed{color:#28a745;}
+        .status-pending{color:#ffc107;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-users"></i> Team Collaboration Hub</h1>
+        
+        <div class="card">
+            <h3>Team Members</h3>
+            <div id="teamList"></div>
+            <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                <input type="text" id="memberName" placeholder="Member Name">
+                <select id="memberRole">
+                    <option value="Admin">Admin</option>
+                    <option value="Editor">Editor</option>
+                    <option value="Contributor">Contributor</option>
+                </select>
+                <button onclick="addTeamMember()">Add Member</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Tasks</h3>
+            <div id="taskList"></div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem;">
+                <input type="text" id="taskName" placeholder="Task name">
+                <input type="date" id="taskDeadline">
+                <select id="taskAssignee"></select>
+                <button onclick="addTask()">Add Task</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Activity Feed</h3>
+            <div id="activityFeed"></div>
+        </div>
+    </div>
+    <script>
+        let team = JSON.parse(localStorage.getItem('teamMembers') || '[{"name":"Admin User","role":"Admin"}]');
+        let tasks = JSON.parse(localStorage.getItem('teamTasks') || '[]');
+        
+        function loadTeam() {
+            const teamDiv = document.getElementById('teamList');
+            teamDiv.innerHTML = team.map((m, i) => `<div class="team-member"><span><i class="fas fa-user-circle"></i> ${m.name} (${m.role})</span><button onclick="removeMember(${i})">Remove</button></div>`).join('');
+            const assigneeSelect = document.getElementById('taskAssignee');
+            assigneeSelect.innerHTML = team.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+        }
+        
+        function loadTasks() {
+            const taskDiv = document.getElementById('taskList');
+            if(tasks.length === 0) { taskDiv.innerHTML = '<p>No tasks yet</p>'; return; }
+            taskDiv.innerHTML = tasks.map((t, i) => `
+                <div class="task-item">
+                    <div><strong>${t.name}</strong><br><small>Assigned to: ${t.assignee} | Due: ${t.deadline}</small></div>
+                    <div><span class="status-${t.status}">${t.status === 'completed' ? '✅ Completed' : '⏳ Pending'}</span><button onclick="toggleTask(${i})" style="margin-left:0.5rem;">Complete</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function loadActivity() {
+            const activityDiv = document.getElementById('activityFeed');
+            const activities = JSON.parse(localStorage.getItem('teamActivities') || '[{"action":"Team created","time":"2024-01-01"}]');
+            activityDiv.innerHTML = activities.map(a => `<div class="task-item"><span>📌 ${a.action}</span><small>${a.time}</small></div>`).join('');
+        }
+        
+        function addTeamMember() {
+            const name = document.getElementById('memberName').value;
+            const role = document.getElementById('memberRole').value;
+            if(!name) { alert('Enter name'); return; }
+            team.push({ name, role });
+            localStorage.setItem('teamMembers', JSON.stringify(team));
+            document.getElementById('memberName').value = '';
+            loadTeam();
+        }
+        
+        function addTask() {
+            const name = document.getElementById('taskName').value;
+            const deadline = document.getElementById('taskDeadline').value;
+            const assignee = document.getElementById('taskAssignee').value;
+            if(!name) { alert('Enter task name'); return; }
+            tasks.push({ name, deadline, assignee, status: 'pending' });
+            localStorage.setItem('teamTasks', JSON.stringify(tasks));
+            document.getElementById('taskName').value = '';
+            loadTasks();
+        }
+        
+        function toggleTask(index) { tasks[index].status = 'completed'; localStorage.setItem('teamTasks', JSON.stringify(tasks)); loadTasks(); }
+        function removeMember(index) { team.splice(index, 1); localStorage.setItem('teamMembers', JSON.stringify(team)); loadTeam(); }
+        
+        loadTeam();
+        loadTasks();
+        loadActivity();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
