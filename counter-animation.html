@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Counter Animation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .counter-preview{background:#1a1a1a;padding:2rem;border-radius:12px;text-align:center;margin-bottom:1rem;}
+        .counter-number{font-size:4rem;font-weight:700;color:#dc2626;}
+        input{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;margin-right:0.5rem;}
+        .code-block{background:#1a1a1a;padding:0.75rem;border-radius:8px;font-family:monospace;font-size:0.7rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Counter Animation Builder</h1>
+        
+        <div class="card">
+            <div class="counter-preview">
+                <div class="counter-number" id="counterDisplay">0</div>
+                <div id="counterLabel">Total Users</div>
+            </div>
+            
+            <input type="number" id="targetNumber" placeholder="Target Number" value="1000">
+            <input type="text" id="counterLabelInput" placeholder="Label (e.g., Total Users)" value="Total Users">
+            <select id="duration">
+                <option value="1000">1 Second</option>
+                <option value="2000">2 Seconds</option>
+                <option value="3000">3 Seconds</option>
+                <option value="5000">5 Seconds</option>
+            </select>
+            
+            <button onclick="startCounter()">Start Animation</button>
+            <button onclick="copyCounterCode()">Copy Code</button>
+            
+            <div id="counterCode" class="code-block" style="margin-top:1rem;"></div>
+        </div>
+    </div>
+    <script>
+        let animation = null;
+        
+        function startCounter() {
+            if(animation) clearInterval(animation);
+            const target = parseInt(document.getElementById('targetNumber').value);
+            const duration = parseInt(document.getElementById('duration').value);
+            const label = document.getElementById('counterLabelInput').value;
+            document.getElementById('counterLabel').innerText = label;
+            
+            let start = 0;
+            const increment = target / (duration / 16);
+            const display = document.getElementById('counterDisplay');
+            
+            animation = setInterval(() => {
+                start += increment;
+                if(start >= target) {
+                    display.innerText = target.toLocaleString();
+                    clearInterval(animation);
+                } else {
+                    display.innerText = Math.floor(start).toLocaleString();
+                }
+            }, 16);
+        }
+        
+        function copyCounterCode() {
+            const target = document.getElementById('targetNumber').value;
+            const duration = document.getElementById('duration').value;
+            const label = document.getElementById('counterLabelInput').value;
+            const code = `// Counter Animation
+function animateCounter(target, duration, element) {
+    let start = 0;
+    const increment = target / (duration / 16);
+    const timer = setInterval(() => {
+        start += increment;
+        if(start >= target) {
+            element.innerText = target.toLocaleString();
+            clearInterval(timer);
+        } else {
+            element.innerText = Math.floor(start).toLocaleString();
+        }
+    }, 16);
+}
+animateCounter(${target}, ${duration}, document.getElementById('counter'));`;
+            navigator.clipboard.writeText(code);
+            alert('Code copied!');
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
