@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Meta Tag Validator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;min-height:200px;}
+        .meta-item{display:flex;justify-content:space-between;padding:0.5rem;border-bottom:1px solid #222;}
+        .valid{color:#28a745;}
+        .warning{color:#ffc107;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-tags"></i> Meta Tag Validator</h1>
+        
+        <div class="card">
+            <h3>Enter HTML Code</h3>
+            <textarea id="htmlMeta" placeholder='<head><title>THE MOON</title><meta name="description" content="News platform"></head>'></textarea>
+            <button onclick="validateMeta()">Validate Meta Tags</button>
+            <div id="metaResult"></div>
+        </div>
+        
+        <div class="card">
+            <h3>SEO Best Practices</h3>
+            <div id="seoPractices"></div>
+        </div>
+    </div>
+    <script>
+        function validateMeta() {
+            const html = document.getElementById('htmlMeta').value;
+            if(!html) { alert('Enter HTML code'); return; }
+            const resultDiv = document.getElementById('metaResult');
+            
+            const hasTitle = html.includes('<title>') && html.includes('</title>');
+            const titleMatch = html.match(/<title>(.*?)<\/title>/);
+            const titleLength = titleMatch ? titleMatch[1].length : 0;
+            
+            const hasDescription = html.includes('name="description"');
+            const descMatch = html.match(/name="description"\s+content="([^"]*)"/);
+            const descLength = descMatch ? descMatch[1].length : 0;
+            
+            const hasKeywords = html.includes('name="keywords"');
+            const hasViewport = html.includes('name="viewport"');
+            const hasRobots = html.includes('name="robots"');
+            const hasOG = html.includes('property="og:');
+            
+            resultDiv.innerHTML = `
+                <div class="meta-item"><span>📄 Title Tag</span><span class="${hasTitle && titleLength >= 30 && titleLength <= 60 ? 'valid' : 'warning'}">${hasTitle ? `✅ ${titleLength} chars (${titleLength >= 30 && titleLength <= 60 ? 'Good' : 'Optimal: 30-60'})` : '❌ Missing'}</span></div>
+                <div class="meta-item"><span>📝 Meta Description</span><span class="${hasDescription && descLength >= 120 && descLength <= 160 ? 'valid' : 'warning'}">${hasDescription ? `✅ ${descLength} chars (${descLength >= 120 && descLength <= 160 ? 'Good' : 'Optimal: 120-160'})` : '❌ Missing'}</span></div>
+                <div class="meta-item"><span>🔑 Meta Keywords</span><span class="${hasKeywords ? 'valid' : 'warning'}">${hasKeywords ? '✅ Present' : '⚠️ Optional but recommended'}</span></div>
+                <div class="meta-item"><span>📱 Viewport</span><span class="${hasViewport ? 'valid' : 'warning'}">${hasViewport ? '✅ Present' : '❌ Missing (required for mobile)'}</span></div>
+                <div class="meta-item"><span>🤖 Robots</span><span class="${hasRobots ? 'valid' : 'warning'}">${hasRobots ? '✅ Present' : 'ℹ️ Optional'}</span></div>
+                <div class="meta-item"><span>📘 Open Graph</span><span class="${hasOG ? 'valid' : 'warning'}">${hasOG ? '✅ Present' : '⚠️ Recommended for social sharing'}</span></div>
+            `;
+        }
+        
+        document.getElementById('seoPractices').innerHTML = `
+            <div>📌 Title: 50-60 characters, include primary keyword</div>
+            <div>📌 Description: 150-160 characters, compelling and unique</div>
+            <div>📌 Use Open Graph tags for social media</div>
+            <div>📌 Include viewport meta for mobile responsiveness</div>
+        `;
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
