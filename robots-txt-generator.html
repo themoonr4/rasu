@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Robots.txt Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;font-family:monospace;min-height:150px;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-robot"></i> Robots.txt Generator</h1>
+        
+        <div class="card">
+            <h3>Select Options</h3>
+            <div>
+                <label><input type="checkbox" id="blockAdmin"> Block Admin Pages</label>
+                <label><input type="checkbox" id="blockApi"> Block API Pages</label>
+                <label><input type="checkbox" id="allowAll"> Allow All Crawlers</label>
+            </div>
+            <button onclick="generateRobots()">Generate robots.txt</button>
+            <textarea id="robotsOutput" readonly></textarea>
+            <button onclick="copyRobots()">Copy Code</button>
+            <button onclick="downloadRobots()">Download robots.txt</button>
+        </div>
+        
+        <div class="card">
+            <h3>What is robots.txt?</h3>
+            <div>Directs search engine crawlers which pages to index or ignore.</div>
+        </div>
+    </div>
+    <script>
+        function generateRobots() {
+            const blockAdmin = document.getElementById('blockAdmin').checked;
+            const blockApi = document.getElementById('blockApi').checked;
+            const allowAll = document.getElementById('allowAll').checked;
+            
+            let content = '';
+            if(allowAll) {
+                content = 'User-agent: *\nAllow: /\n\nSitemap: https://themoon.news/sitemap.xml';
+            } else {
+                content = 'User-agent: *\nDisallow: /admin/\nDisallow: /dashboard/\n';
+                if(blockApi) content += 'Disallow: /api/\n';
+                content += '\nSitemap: https://themoon.news/sitemap.xml';
+            }
+            
+            document.getElementById('robotsOutput').value = content;
+        }
+        
+        function copyRobots() {
+            const content = document.getElementById('robotsOutput').value;
+            navigator.clipboard.writeText(content);
+            alert('Copied to clipboard!');
+        }
+        
+        function downloadRobots() {
+            const content = document.getElementById('robotsOutput').value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'robots.txt'; a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        generateRobots();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
