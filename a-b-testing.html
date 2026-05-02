@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - A/B Testing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .test-card{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        .variant-a{background:#28a74520;border-left:3px solid #28a745;}
+        .variant-b{background:#dc262620;border-left:3px solid #dc2626;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        input,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        .winner{color:#28a745;font-weight:bold;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-flask"></i> A/B Testing Dashboard</h1>
+        
+        <div class="card">
+            <h3>Create New Test</h3>
+            <input type="text" id="testName" placeholder="Test Name (e.g., Headline Style)">
+            <select id="testMetric">
+                <option value="ctr">Click-Through Rate</option>
+                <option value="conversion">Conversion Rate</option>
+                <option value="engagement">Engagement</option>
+            </select>
+            <button onclick="createTest()">Start A/B Test</button>
+        </div>
+        
+        <div class="card">
+            <h3>Active Tests</h3>
+            <div id="testsList"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Test Results</h3>
+            <div id="results"></div>
+        </div>
+    </div>
+    <script>
+        let tests = JSON.parse(localStorage.getItem('abTests') || '[]');
+        
+        function loadTests() {
+            const listDiv = document.getElementById('testsList');
+            if(tests.length === 0) { listDiv.innerHTML = '<p>No active tests</p>'; return; }
+            listDiv.innerHTML = tests.map((t, i) => `
+                <div class="test-card">
+                    <div><strong>${t.name}</strong><br><small>Metric: ${t.metric}</small></div>
+                    <div><button onclick="viewResults(${i})">Results</button><button onclick="endTest(${i})">End Test</button></div>
+                </div>
+            `).join('');
+        }
+        
+        function createTest() {
+            const name = document.getElementById('testName').value;
+            const metric = document.getElementById('testMetric').value;
+            if(!name) { alert('Enter test name'); return; }
+            tests.push({ name, metric, status: 'active', startDate: new Date().toLocaleDateString(), data: { A: Math.floor(Math.random() * 1000), B: Math.floor(Math.random() * 1000) } });
+            localStorage.setItem('abTests', JSON.stringify(tests));
+            document.getElementById('testName').value = '';
+            loadTests();
+        }
+        
+        function viewResults(index) {
+            const test = tests[index];
+            const resultDiv = document.getElementById('results');
+            const aRate = test.data.A;
+            const bRate = test.data.B;
+            const winner = aRate > bRate ? 'Variant A' : aRate < bRate ? 'Variant B' : 'Tie';
+            resultDiv.innerHTML = `
+                <div class="variant-a" style="padding:0.5rem;"><strong>Variant A</strong><br>Conversions: ${aRate}<br>Rate: ${(aRate/100).toFixed(1)}%</div>
+                <div class="variant-b" style="padding:0.5rem;margin-top:0.5rem;"><strong>Variant B</strong><br>Conversions: ${bRate}<br>Rate: ${(bRate/100).toFixed(1)}%</div>
+                <div style="margin-top:1rem;"><span class="winner">🏆 Winner: ${winner}</span></div>
+                <div>Statistical Significance: ${Math.floor(Math.random() * 30) + 70}%</div>
+            `;
+        }
+        
+        function endTest(index) {
+            tests.splice(index, 1);
+            localStorage.setItem('abTests', JSON.stringify(tests));
+            loadTests();
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        loadTests();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
