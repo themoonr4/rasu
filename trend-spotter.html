@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Trend Spotter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .trend-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid #222;}
+        .trend-up{color:#28a745;}
+        .trend-down{color:#dc3545;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Trend Spotting Tool</h1>
+        
+        <div class="card">
+            <h3>Emerging Topics</h3>
+            <div id="emergingTopics"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Keyword Trends</h3>
+            <div id="keywordTrends"></div>
+            <button onclick="refreshTrends()">Refresh Trends</button>
+        </div>
+        
+        <div class="card">
+            <h3>Trending Hashtags</h3>
+            <div id="hashtagTrends"></div>
+        </div>
+    </div>
+    <script>
+        function refreshTrends() {
+            const topics = [
+                { name: 'Artificial Intelligence', growth: '+245%' },
+                { name: 'Climate Change', growth: '+189%' },
+                { name: 'Electric Vehicles', growth: '+156%' },
+                { name: 'Web3', growth: '+98%' }
+            ];
+            document.getElementById('emergingTopics').innerHTML = topics.map(t => `<div class="trend-item"><span>🔥 ${t.name}</span><span class="trend-up">${t.growth}</span></div>`).join('');
+            
+            const keywords = [
+                { word: 'ChatGPT', volume: '1.2M', trend: 'up' },
+                { word: 'IPL 2026', volume: '890K', trend: 'up' },
+                { word: 'Budget 2026', volume: '567K', trend: 'down' },
+                { word: 'iPhone 17', volume: '456K', trend: 'up' }
+            ];
+            document.getElementById('keywordTrends').innerHTML = keywords.map(k => `<div class="trend-item"><span>📊 ${k.word}</span><span>${k.volume} <span class="${k.trend === 'up' ? 'trend-up' : 'trend-down'}">${k.trend === 'up' ? '↑' : '↓'}</span></span></div>`).join('');
+            
+            const hashtags = ['#IPL2026', '#AIRevolution', '#ClimateAction', '#Budget2026'];
+            document.getElementById('hashtagTrends').innerHTML = hashtags.map(h => `<div class="trend-item"><span>🏷️ ${h}</span><span>Trending</span></div>`).join('');
+        }
+        
+        refreshTrends();
+        setInterval(refreshTrends, 30000);
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
