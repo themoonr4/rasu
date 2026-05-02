@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Readability Score</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;min-height:200px;}
+        .score-value{font-size:2rem;font-weight:700;margin:1rem 0;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-book-open"></i> Readability Score Checker</h1>
+        
+        <div class="card">
+            <h3>Enter Text to Analyze</h3>
+            <textarea id="readabilityText" placeholder="Paste your article content here..."></textarea>
+            <button onclick="checkReadability()">Check Readability Score</button>
+            <div id="readabilityResult"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Improvement Tips</h3>
+            <div id="improvementTips"></div>
+        </div>
+    </div>
+    <script>
+        function checkReadability() {
+            const text = document.getElementById('readabilityText').value;
+            if(!text) { alert('Enter text to analyze'); return; }
+            const resultDiv = document.getElementById('readabilityResult');
+            
+            const words = text.trim().split(/\s+/).length;
+            const sentences = text.split(/[.!?]+/).length;
+            const syllables = text.toLowerCase().replace(/[^a-z]/g, '').length;
+            const avgWordsPerSentence = words / sentences;
+            const fleschScore = 206.835 - 1.015 * avgWordsPerSentence - 84.6 * (syllables / words);
+            
+            let grade = '';
+            if(fleschScore >= 90) grade = 'Very Easy (5th grade)';
+            else if(fleschScore >= 80) grade = 'Easy (6th grade)';
+            else if(fleschScore >= 70) grade = 'Fairly Easy (7th grade)';
+            else if(fleschScore >= 60) grade = 'Standard (8th-9th grade)';
+            else if(fleschScore >= 50) grade = 'Fairly Difficult (10th-12th grade)';
+            else grade = 'Difficult (College level)';
+            
+            resultDiv.innerHTML = `
+                <div class="score-value">Score: ${Math.round(fleschScore)}/100</div>
+                <div>Reading Level: ${grade}</div>
+                <div>Words: ${words} | Sentences: ${sentences} | Avg Words/Sentence: ${avgWordsPerSentence.toFixed(1)}</div>
+                <div>Reading Time: ${Math.ceil(words / 200)} minutes</div>
+            `;
+            
+            document.getElementById('improvementTips').innerHTML = `
+                <div>📖 Keep sentences short (15-20 words)</div>
+                <div>📖 Use simple words</div>
+                <div>📖 Break long paragraphs</div>
+                <div>📖 Aim for 8th-9th grade reading level for general audience</div>
+            `;
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
