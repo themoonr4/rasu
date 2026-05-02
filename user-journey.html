@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - User Journey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .journey-flow{display:flex;justify-content:space-between;margin:2rem 0;flex-wrap:wrap;}
+        .step{background:#1a1a1a;padding:1rem;border-radius:12px;text-align:center;flex:1;margin:0.25rem;}
+        .step-number{background:#dc2626;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.5rem;}
+        .percentage{color:#28a745;}
+        .funnel-item{display:flex;justify-content:space-between;padding:0.5rem;border-bottom:1px solid #222;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-route"></i> User Journey Analytics</h1>
+        
+        <div class="card">
+            <h3>Conversion Funnel</h3>
+            <div class="journey-flow">
+                <div class="step"><div class="step-number">1</div>Visit<br><span class="percentage" id="visitPercent">100%</span></div>
+                <div class="step"><div class="step-number">2</div>Signup<br><span class="percentage" id="signupPercent">0%</span></div>
+                <div class="step"><div class="step-number">3</div>Active<br><span class="percentage" id="activePercent">0%</span></div>
+                <div class="step"><div class="step-number">4</div>Subscribe<br><span class="percentage" id="subscribePercent">0%</span></div>
+            </div>
+            <button onclick="refreshFunnel()">Refresh Data</button>
+        </div>
+        
+        <div class="card">
+            <h3>User Path Analysis</h3>
+            <div id="userPaths"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Drop-off Points</h3>
+            <div id="dropoffPoints"></div>
+        </div>
+    </div>
+    <script>
+        function refreshFunnel() {
+            const visitors = Math.floor(Math.random() * 10000) + 5000;
+            const signups = Math.floor(visitors * (Math.random() * 0.3 + 0.1));
+            const active = Math.floor(signups * (Math.random() * 0.7 + 0.2));
+            const subscribers = Math.floor(active * (Math.random() * 0.5 + 0.1));
+            
+            document.getElementById('visitPercent').innerHTML = '100%';
+            document.getElementById('signupPercent').innerHTML = Math.round((signups/visitors)*100) + '%';
+            document.getElementById('activePercent').innerHTML = Math.round((active/signups)*100) + '%';
+            document.getElementById('subscribePercent').innerHTML = Math.round((subscribers/active)*100) + '%';
+            
+            const paths = [
+                { path: 'Home → News → Article → Share', count: Math.floor(Math.random() * 1000) + 500 },
+                { path: 'Search → Category → Article', count: Math.floor(Math.random() * 800) + 300 },
+                { path: 'Home → Login → Dashboard', count: Math.floor(Math.random() * 400) + 100 }
+            ];
+            document.getElementById('userPaths').innerHTML = paths.map(p => `<div class="funnel-item"><span>📊 ${p.path}</span><span>${p.count} users</span></div>`).join('');
+            
+            const dropoffs = [
+                { point: 'Homepage', rate: '35%' },
+                { point: 'Article Page', rate: '28%' },
+                { point: 'Checkout', rate: '42%' }
+            ];
+            document.getElementById('dropoffPoints').innerHTML = dropoffs.map(d => `<div class="funnel-item"><span>⚠️ ${d.point}</span><span>Drop-off: ${d.rate}</span></div>`).join('');
+        }
+        
+        refreshFunnel();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
