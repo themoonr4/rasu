@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Canonical Tag Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:800px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;min-height:200px;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .valid{color:#28a745;}
+        .warning{color:#ffc107;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-link"></i> Canonical Tag Checker</h1>
+        
+        <div class="card">
+            <h3>Enter HTML Code</h3>
+            <textarea id="canonicalHtml" placeholder='<head><link rel="canonical" href="https://themoon.news/article"></head>'></textarea>
+            <button onclick="checkCanonical()">Check Canonical Tag</button>
+            <div id="canonicalResult"></div>
+        </div>
+        
+        <div class="card">
+            <h3>SEO Best Practices</h3>
+            <div id="canonicalTips"></div>
+        </div>
+    </div>
+    <script>
+        function checkCanonical() {
+            const html = document.getElementById('canonicalHtml').value;
+            if(!html) { alert('Enter HTML code'); return; }
+            const resultDiv = document.getElementById('canonicalResult');
+            
+            const canonicalMatch = html.match(/<link rel="canonical" href="([^"]+)"/i);
+            const hasCanonical = !!canonicalMatch;
+            const canonicalUrl = hasCanonical ? canonicalMatch[1] : 'Not found';
+            
+            resultDiv.innerHTML = `
+                <div class="valid">${hasCanonical ? '✅ Canonical tag present' : '❌ Missing canonical tag'}</div>
+                <div>Canonical URL: ${canonicalUrl}</div>
+                <div class="warning">${!hasCanonical ? '⚠️ Add canonical tag to prevent duplicate content issues' : ''}</div>
+            `;
+        }
+        
+        document.getElementById('canonicalTips').innerHTML = `
+            <div>🔗 Always add canonical tags to each page</div>
+            <div>🔗 Use absolute URLs (https://example.com/page)</div>
+            <div>🔗 Point to the preferred version of duplicate content</div>
+            <div>🔗 Self-referencing canonical is recommended</div>
+        `;
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
