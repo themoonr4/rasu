@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Predictive Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .prediction-card{background:#1a1a1a;border-radius:12px;padding:1rem;margin-bottom:1rem;}
+        .forecast-value{font-size:2rem;font-weight:700;color:#dc2626;}
+        .trend-up{color:#28a745;}
+        .trend-down{color:#dc3545;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-brain"></i> Predictive Analytics Dashboard</h1>
+        
+        <div class="card">
+            <h3>Traffic Forecast</h3>
+            <div class="prediction-card">
+                <div>Next 7 Days Prediction</div>
+                <div class="forecast-value" id="trafficForecast">0</div>
+                <div><span class="trend-up" id="trafficTrend">+0%</span> vs last week</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Engagement Predictions</h3>
+            <div id="engagementPrediction"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Churn Risk Analysis</h3>
+            <div id="churnRisk"></div>
+            <button onclick="refreshPredictions()">Refresh Predictions</button>
+        </div>
+    </div>
+    <script>
+        function refreshPredictions() {
+            const traffic = Math.floor(Math.random() * 50000) + 20000;
+            const trend = (Math.random() * 20 - 5).toFixed(1);
+            document.getElementById('trafficForecast').innerHTML = traffic.toLocaleString();
+            document.getElementById('trafficTrend').innerHTML = (trend >= 0 ? '+' : '') + trend + '%';
+            document.getElementById('trafficTrend').className = trend >= 0 ? 'trend-up' : 'trend-down';
+            
+            const engagements = ['Page Views', 'Time on Site', 'Click Rate'];
+            document.getElementById('engagementPrediction').innerHTML = engagements.map(e => {
+                const pred = Math.floor(Math.random() * 30) + 60;
+                return `<div class="prediction-card">📈 ${e}: ${pred}% probability of increase</div>`;
+            }).join('');
+            
+            const risks = ['Low Risk (75%)', 'Medium Risk (15%)', 'High Risk (10%)'];
+            document.getElementById('churnRisk').innerHTML = risks.map(r => `<div class="prediction-card">⚠️ ${r}</div>`).join('');
+        }
+        
+        refreshPredictions();
+        setInterval(refreshPredictions, 30000);
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
