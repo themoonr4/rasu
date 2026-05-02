@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - API Test Console</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .endpoint-select{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;}
+        .method{display:inline-block;padding:0.25rem 0.5rem;border-radius:4px;font-weight:bold;}
+        .get{background:#28a745;}
+        .post{background:#dc2626;}
+        .put{background:#ffc107;color:#000;}
+        .delete{background:#dc3545;}
+        input,textarea,select{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;font-family:monospace;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .response{background:#1a1a1a;padding:0.5rem;border-radius:8px;font-family:monospace;font-size:0.7rem;min-height:100px;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-vial"></i> API Test Console</h1>
+        
+        <div class="card">
+            <div class="endpoint-select">
+                <select id="apiMethod">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+                <input type="text" id="apiUrl" placeholder="https://api.themoon.news/v1/news" style="flex:1;">
+                <button onclick="sendApiRequest()">Send Request</button>
+            </div>
+            
+            <h3>Request Body (JSON)</h3>
+            <textarea id="apiBody" rows="5" placeholder='{"title":"Test News","content":"Content here"}'></textarea>
+            
+            <h3>Response</h3>
+            <div id="apiResponse" class="response">Response will appear here...</div>
+            <button onclick="copyResponse()">Copy Response</button>
+        </div>
+        
+        <div class="card">
+            <h3>Saved Endpoints</h3>
+            <button onclick="loadEndpoint('/api/news')">GET /api/news</button>
+            <button onclick="loadEndpoint('/api/news/1')">GET /api/news/1</button>
+            <button onclick="loadEndpoint('/api/categories')">GET /api/categories</button>
+        </div>
+    </div>
+    <script>
+        async function sendApiRequest() {
+            const method = document.getElementById('apiMethod').value;
+            const url = document.getElementById('apiUrl').value;
+            const body = document.getElementById('apiBody').value;
+            const responseDiv = document.getElementById('apiResponse');
+            
+            if(!url) { responseDiv.innerHTML = '<span style="color:#dc3545;">❌ Enter URL</span>'; return; }
+            
+            responseDiv.innerHTML = '<span style="color:#ffc107;">⏳ Loading...</span>';
+            
+            try {
+                const options = { method, headers: { 'Content-Type': 'application/json' } };
+                if(method !== 'GET' && body) options.body = body;
+                const response = await fetch(url, options);
+                const data = await response.text();
+                responseDiv.innerHTML = `<span style="color:#28a745;">✅ Status: ${response.status}</span><br><br>${data.substring(0, 500)}`;
+            } catch(e) {
+                responseDiv.innerHTML = `<span style="color:#dc3545;">❌ Error: ${e.message}</span>`;
+            }
+        }
+        
+        function loadEndpoint(endpoint) {
+            document.getElementById('apiUrl').value = endpoint;
+        }
+        
+        function copyResponse() {
+            const response = document.getElementById('apiResponse').innerText;
+            navigator.clipboard.writeText(response);
+            alert('Response copied!');
+        }
+        
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
