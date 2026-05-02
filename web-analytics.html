@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Web Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+        .stat-card{background:#1a1a1a;padding:1rem;border-radius:12px;text-align:center;}
+        .stat-value{font-size:1.5rem;font-weight:700;color:#dc2626;}
+        .chart-container{height:200px;background:#1a1a1a;border-radius:12px;padding:1rem;}
+        .bar{height:30px;background:#dc2626;border-radius:4px;margin:0.5rem 0;transition:width 0.5s;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-chart-line"></i> Web Analytics Dashboard</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><div>Page Views</div><div class="stat-value" id="pageViews">0</div></div>
+            <div class="stat-card"><div>Visitors</div><div class="stat-value" id="visitors">0</div></div>
+            <div class="stat-card"><div>Bounce Rate</div><div class="stat-value" id="bounceRate">0%</div></div>
+            <div class="stat-card"><div>Avg Session</div><div class="stat-value" id="avgSession">0</div></div>
+        </div>
+        
+        <div class="card">
+            <h3>Traffic Sources</h3>
+            <div id="trafficSources"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Daily Traffic</h3>
+            <div class="chart-container" id="dailyTraffic"></div>
+        </div>
+        
+        <div class="card">
+            <h3>Device Breakdown</h3>
+            <div id="deviceBreakdown"></div>
+        </div>
+    </div>
+    <script>
+        function loadAnalytics() {
+            document.getElementById('pageViews').innerHTML = Math.floor(Math.random() * 50000) + 10000;
+            document.getElementById('visitors').innerHTML = Math.floor(Math.random() * 10000) + 2000;
+            document.getElementById('bounceRate').innerHTML = Math.floor(Math.random() * 40) + 30 + '%';
+            document.getElementById('avgSession').innerHTML = Math.floor(Math.random() * 5) + 1 + 'm';
+            
+            const sources = ['Direct', 'Search', 'Social', 'Referral'];
+            const trafficDiv = document.getElementById('trafficSources');
+            trafficDiv.innerHTML = sources.map(s => {
+                const percent = Math.floor(Math.random() * 40) + 10;
+                return `<div>${s}: <div class="bar" style="width:${percent}%;background:#28a745;"></div>${percent}%</div>`;
+            }).join('');
+            
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const trafficDiv2 = document.getElementById('dailyTraffic');
+            trafficDiv2.innerHTML = days.map(d => {
+                const height = Math.floor(Math.random() * 100) + 20;
+                return `<div style="display:inline-block;width:14%;text-align:center;"><div style="height:${height}px;background:#dc2626;border-radius:4px;"></div><div>${d}</div></div>`;
+            }).join('');
+            
+            const devices = ['Desktop', 'Mobile', 'Tablet'];
+            document.getElementById('deviceBreakdown').innerHTML = devices.map(d => {
+                const percent = d === 'Desktop' ? 45 : d === 'Mobile' ? 48 : 7;
+                return `<div>${d}: <div class="bar" style="width:${percent}%;background:#17a2b8;"></div>${percent}%</div>`;
+            }).join('');
+        }
+        
+        loadAnalytics();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
