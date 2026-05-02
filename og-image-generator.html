@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - OG Image Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:2rem;}
+        [data-theme="light"]{background:#f5f5f5;color:#1a1a1a;}
+        .container{max-width:700px;margin:0 auto;}
+        h1{margin-bottom:1rem;color:#dc2626;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        .preview-card{background:#1a1a1a;border-radius:12px;overflow:hidden;margin-top:1rem;}
+        .og-preview{background:linear-gradient(135deg,#dc2626,#4f46e5);padding:1rem;text-align:center;color:#fff;}
+        .og-title{font-size:1.2rem;font-weight:bold;margin:0.5rem 0;}
+        input,textarea{width:100%;padding:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .code-block{background:#1a1a1a;padding:0.5rem;border-radius:8px;font-family:monospace;font-size:0.6rem;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <h1><i class="fas fa-image"></i> Open Graph Image Generator</h1>
+        
+        <div class="card">
+            <h3>Image Details</h3>
+            <input type="text" id="ogTitle" placeholder="Title (e.g., Breaking News: Major Event)">
+            <input type="text" id="ogSite" placeholder="Site Name" value="THE MOON">
+            
+            <div class="preview-card">
+                <div class="og-preview">
+                    <div class="og-title" id="previewTitle">THE MOON</div>
+                    <div id="previewSite">themoon.news</div>
+                </div>
+            </div>
+            
+            <button onclick="generateOGCard()">Generate Preview</button>
+            <div id="ogCode" class="code-block" style="margin-top:1rem;"></div>
+            <button onclick="copyOGCodes()">Copy Meta Tags</button>
+        </div>
+        
+        <div class="card">
+            <h3>Recommended Sizes</h3>
+            <div>📐 1200 x 630 pixels (1.91:1 ratio)</div>
+            <div>📐 Minimum 600 x 315 pixels</div>
+            <div>📐 Max file size: 8MB</div>
+        </div>
+    </div>
+    <script>
+        function generateOGCard() {
+            const title = document.getElementById('ogTitle').value;
+            const site = document.getElementById('ogSite').value;
+            
+            document.getElementById('previewTitle').innerHTML = title || 'THE MOON';
+            document.getElementById('previewSite').innerHTML = site || 'themoon.news';
+            
+            const metaTags = `<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://themoon.news/">
+<meta property="og:title" content="${title || 'THE MOON - World Class News'}">
+<meta property="og:description" content="Latest news and updates">
+<meta property="og:image" content="https://themoon.news/og-image.jpg">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://themoon.news/">
+<meta property="twitter:title" content="${title || 'THE MOON'}">
+<meta property="twitter:description" content="Latest news and updates">
+<meta property="twitter:image" content="https://themoon.news/og-image.jpg">`;
+            
+            document.getElementById('ogCode').innerHTML = metaTags;
+        }
+        
+        function copyOGCodes() {
+            const code = document.getElementById('ogCode').innerText;
+            navigator.clipboard.writeText(code);
+            alert('Meta tags copied!');
+        }
+        
+        generateOGCard();
+        if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
+    </script>
+</body>
+</html>
