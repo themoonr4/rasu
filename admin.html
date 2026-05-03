@@ -3,113 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - Admin Login</title>
+    <title>THE MOON - Admin Panel</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .login-box {
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 16px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 400px;
-        }
-        h2 {
-            color: #dc2626;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 1rem;
-        }
-        button {
-            width: 100%;
-            padding: 0.75rem;
-            background: #dc2626;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background: #b91c1c;
-        }
-        .message {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .error { background: #dc3545; }
-        .success { background: #28a745; }
-        .loading { background: #ffc107; color: #000; }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#0a0a0a;color:#fff;padding:1rem;}
+        .login-box,.dashboard{max-width:600px;margin:2rem auto;background:#111;padding:2rem;border-radius:16px;border:1px solid #222;}
+        h2{color:#dc2626;margin-bottom:1rem;}
+        input,textarea,select{width:100%;padding:0.75rem;margin-bottom:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
+        button{background:#dc2626;color:white;border:none;padding:0.75rem;border-radius:8px;cursor:pointer;width:100%;font-size:1rem;}
+        .success{background:#28a745;padding:0.5rem;border-radius:8px;margin-top:1rem;}
+        .error{background:#dc3545;padding:0.5rem;border-radius:8px;margin-top:1rem;}
+        .nav{display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;}
+        .nav-btn{background:#1a1a1a;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
+        .nav-btn.active{background:#dc2626;}
+        .hide{display:none;}
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <h2>🌙 THE MOON</h2>
-        <h2>Admin Login</h2>
+    <div id="loginScreen" class="login-box">
+        <h2>🌙 THE MOON - Admin Login</h2>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Password">
         <button onclick="login()">Login / Sign Up</button>
-        <div id="message"></div>
+        <div id="loginMsg"></div>
     </div>
 
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <div id="dashboardScreen" class="dashboard hide">
+        <h2>🌙 THE MOON - Dashboard</h2>
+        <div class="nav">
+            <div class="nav-btn active" onclick="showTab('create')">➕ Create News</div>
+            <div class="nav-btn" onclick="showTab('list')">📰 All News</div>
+        </div>
+        
+        <div id="createTab">
+            <input type="text" id="title" placeholder="Title">
+            <select id="category">
+                <option value="tech">Technology</option>
+                <option value="sports">Sports</option>
+                <option value="business">Business</option>
+                <option value="politics">Politics</option>
+                <option value="study">Study</option>
+            </select>
+            <input type="text" id="imageUrl" placeholder="Image URL (optional)">
+            <textarea id="content" rows="6" placeholder="News content..."></textarea>
+            <button onclick="publishNews()">📰 Publish News</button>
+            <div id="publishMsg"></div>
+        </div>
+        
+        <div id="listTab" class="hide">
+            <div id="newsList"></div>
+        </div>
+    </div>
+
     <script>
-        // 🔐 YOUR CORRECT CREDENTIALS (ALREADY ADDED) 🔐
         const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
-
         const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let currentUser = null;
 
         async function login() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const msgDiv = document.getElementById('message');
-
-            if (!email || !password) {
-                msgDiv.innerHTML = '<div class="message error">Please enter email and password</div>';
-                return;
-            }
-
-            msgDiv.innerHTML = '<div class="message loading">Connecting...</div>';
-
-            // Sign Up and Sign In
+            const msgDiv = document.getElementById('loginMsg');
+            if (!email || !password) { msgDiv.innerHTML = '<div class="error">Enter email and password</div>'; return; }
+            msgDiv.innerHTML = '<div class="success">Connecting...</div>';
             await supabase.auth.signUp({ email, password });
             const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                msgDiv.innerHTML = `<div class="message error">❌ Error: ${error.message}</div>`;
-            } else {
-                msgDiv.innerHTML = '<div class="message success">✅ Login Successful! Redirecting...</div>';
-                // Redirect to admin dashboard or home page
-                setTimeout(() => {
-                    window.location.href = 'https://themoonr4.github.io/rasu/dashboard.html';
-                }, 1500);
+            if (error) { msgDiv.innerHTML = `<div class="error">${error.message}</div>`; }
+            else {
+                msgDiv.innerHTML = '<div class="success">✅ Login Successful!</div>';
+                currentUser = email;
+                document.getElementById('loginScreen').classList.add('hide');
+                document.getElementById('dashboardScreen').classList.remove('hide');
+                loadNewsList();
             }
+        }
+
+        async function publishNews() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const category = document.getElementById('category').value;
+            const image = document.getElementById('imageUrl').value;
+            const msgDiv = document.getElementById('publishMsg');
+            if (!title || !content) { msgDiv.innerHTML = '<div class="error">Fill title and content</div>'; return; }
+            const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            const catId = { tech:1, sports:2, business:3, politics:4, study:5 }[category];
+            const { error } = await supabase.from('news').insert({
+                title, slug, content, category_id: catId, featured_image: image || null,
+                excerpt: content.substring(0,150), status: 'published', published_at: new Date()
+            });
+            if (error) { msgDiv.innerHTML = `<div class="error">${error.message}</div>`; }
+            else {
+                msgDiv.innerHTML = '<div class="success">✅ News published!</div>';
+                document.getElementById('title').value = '';
+                document.getElementById('content').value = '';
+                document.getElementById('imageUrl').value = '';
+                loadNewsList();
+                setTimeout(() => msgDiv.innerHTML = '', 3000);
+            }
+        }
+
+        async function loadNewsList() {
+            const { data } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+            const listDiv = document.getElementById('newsList');
+            if (!data || data.length === 0) { listDiv.innerHTML = '<div>No news yet</div>'; return; }
+            listDiv.innerHTML = data.map(n => `<div style="background:#1a1a1a;padding:0.75rem;margin-bottom:0.5rem;border-radius:8px;"><strong>${n.title}</strong><br><small>${n.excerpt?.substring(0,100)}</small></div>`).join('');
+        }
+
+        function showTab(tab) {
+            document.getElementById('createTab').classList.toggle('hide', tab !== 'create');
+            document.getElementById('listTab').classList.toggle('hide', tab !== 'list');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if (tab === 'list') loadNewsList();
         }
     </script>
 </body>
