@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>THE MOON - Login Test</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        body{font-family:sans-serif;background:#0a0a0a;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;}
+        .box{background:#111;padding:2rem;border-radius:16px;width:300px;}
+        input,button{width:100%;padding:0.5rem;margin-bottom:0.5rem;border-radius:8px;}
+        button{background:#dc2626;color:#fff;border:none;cursor:pointer;}
+        .error{color:#dc3545;margin-top:0.5rem;}
+        .success{color:#28a745;}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🌙 THE MOON - Test Login</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="testLogin()">Test Login</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!email || !password) {
+                resultDiv.innerHTML = '<div class="error">Please enter email and password</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div>Connecting...</div>';
+            
+            // Try sign up first
+            await supabase.auth.signUp({ email, password });
+            
+            // Try sign in
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            
+            if (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            } else {
+                resultDiv.innerHTML = '<div class="success">✅ LOGIN SUCCESSFUL! User ID: ' + data.user.id.substring(0,10) + '...</div>';
+            }
+        }
+    </script>
+</body>
+</html>
