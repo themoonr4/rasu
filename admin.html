@@ -3,151 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <title>THE MOON - Admin Login</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;}
-        .sidebar{position:fixed;left:0;top:0;width:260px;height:100%;background:#111;border-right:1px solid #222;padding:2rem 1rem;overflow-y:auto;}
-        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#dc2626,#b91c1c);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:2rem;text-align:center;}
-        .nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;color:#aaa;border-radius:8px;margin-bottom:0.25rem;cursor:pointer;}
-        .nav-item:hover,.nav-item.active{background:#1a1a1a;color:#fff;}
-        .main{margin-left:260px;padding:2rem;}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2rem;}
-        .stat-card{background:#111;border:1px solid #222;border-radius:12px;padding:1.5rem;}
-        .stat-label{color:#aaa;font-size:0.8rem;}
-        .stat-value{font-size:2rem;font-weight:700;margin-top:0.5rem;}
-        .form-card{background:#111;border:1px solid #222;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
-        .form-group{margin-bottom:1rem;}
-        label{display:block;margin-bottom:0.5rem;font-weight:500;color:#aaa;}
-        input,textarea,select{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:0.9rem;}
-        textarea{resize:vertical;min-height:200px;}
-        button{background:#dc2626;color:white;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:600;}
-        button:hover{background:#b91c1c;}
-        .news-list{background:#111;border-radius:12px;overflow:hidden;}
-        .news-item{padding:1rem;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center;}
-        .edit-btn{background:#28a745;padding:0.3rem 0.8rem;font-size:0.8rem;}
-        .delete-btn{background:#dc3545;padding:0.3rem 0.8rem;font-size:0.8rem;}
-        .success{background:#28a745;padding:0.75rem;border-radius:8px;margin-top:1rem;}
-        .error{background:#dc3545;padding:0.75rem;border-radius:8px;margin-top:1rem;}
-        .image-preview{max-width:200px;margin-top:0.5rem;border-radius:8px;}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform 0.3s;z-index:1000;}.sidebar.open{transform:translateX(0);}.main{margin-left:0;padding:1rem;}}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-box {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+        }
+        h2 {
+            color: #dc2626;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #b91c1c;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .error { background: #dc3545; }
+        .success { background: #28a745; }
+        .loading { background: #ffc107; color: #000; }
     </style>
 </head>
 <body>
-    <div class="sidebar" id="sidebar">
-        <div class="logo">🌙 THE MOON</div>
-        <div class="nav-item active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
-        <div class="nav-item" data-page="news"><i class="fas fa-newspaper"></i> All News</div>
-        <div class="nav-item" data-page="create"><i class="fas fa-plus-circle"></i> Create News</div>
-        <div class="nav-item" data-page="categories"><i class="fas fa-folder"></i> Categories</div>
-        <div class="nav-item" data-page="subcategories"><i class="fas fa-tags"></i> Sub Categories</div>
-        <div class="nav-item" data-page="settings"><i class="fas fa-cog"></i> Settings</div>
-        <div class="nav-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</div>
+    <div class="login-box">
+        <h2>🌙 THE MOON</h2>
+        <h2>Admin Login</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login / Sign Up</button>
+        <div id="message"></div>
     </div>
-    <div class="main" id="mainContent"></div>
 
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
+        // 🔐 YOUR CORRECT CREDENTIALS (ALREADY ADDED) 🔐
         const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+
         const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        let currentUser = null;
-
-        async function checkAuth() {
-            const { data } = await supabase.auth.getSession();
-            if (!data.session) { showLogin(); return false; }
-            currentUser = data.session.user;
-            return true;
-        }
-
-        function showLogin() {
-            document.getElementById('mainContent').innerHTML = `
-                <div style="max-width:400px;margin:4rem auto;">
-                    <div style="background:#111;border-radius:16px;padding:2rem;">
-                        <h2 style="margin-bottom:1.5rem;">Admin Login</h2>
-                        <input type="email" id="email" placeholder="Email" style="margin-bottom:1rem;">
-                        <input type="password" id="password" placeholder="Password" style="margin-bottom:1rem;">
-                        <button onclick="login()" style="width:100%;">Login / Sign Up</button>
-                        <div id="loginMsg" style="margin-top:1rem;"></div>
-                    </div>
-                </div>
-            `;
-        }
 
         async function login() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const msgDiv = document.getElementById('loginMsg');
-            if (!email || !password) { msgDiv.innerHTML = '<div class="error">Please enter email and password</div>'; return; }
+            const msgDiv = document.getElementById('message');
+
+            if (!email || !password) {
+                msgDiv.innerHTML = '<div class="message error">Please enter email and password</div>';
+                return;
+            }
+
+            msgDiv.innerHTML = '<div class="message loading">Connecting...</div>';
+
+            // Sign Up and Sign In
             await supabase.auth.signUp({ email, password });
             const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) { msgDiv.innerHTML = `<div class="error">${error.message}</div>`; }
-            else { location.reload(); }
+
+            if (error) {
+                msgDiv.innerHTML = `<div class="message error">❌ Error: ${error.message}</div>`;
+            } else {
+                msgDiv.innerHTML = '<div class="message success">✅ Login Successful! Redirecting...</div>';
+                // Redirect to admin dashboard or home page
+                setTimeout(() => {
+                    window.location.href = '/rasu/';
+                }, 1500);
+            }
         }
-
-        async function loadPage(page) {
-            const main = document.getElementById('mainContent');
-            if (page === 'dashboard') {
-                const { count: newsCount } = await supabase.from('news').select('*', { count: 'exact', head: true });
-                const { count: categoryCount } = await supabase.from('categories').select('*', { count: 'exact', head: true });
-                const { data: newsViews } = await supabase.from('news').select('views');
-                const totalViews = newsViews?.reduce((a,b) => a + (b.views || 0), 0) || 0;
-                main.innerHTML = `<h1 style="margin-bottom:2rem;">Dashboard</h1><div class="stats-grid"><div class="stat-card"><div class="stat-label">📰 Total News</div><div class="stat-value">${newsCount || 0}</div></div><div class="stat-card"><div class="stat-label">📁 Categories</div><div class="stat-value">${categoryCount || 0}</div></div><div class="stat-card"><div class="stat-label">👁️ Total Views</div><div class="stat-value">${totalViews.toLocaleString()}</div></div><div class="stat-card"><div class="stat-label">👤 Admin</div><div class="stat-value">${currentUser?.email || 'Active'}</div></div></div>`;
-            }
-            else if (page === 'create') {
-                const { data: categories } = await supabase.from('categories').select('*');
-                main.innerHTML = `<h1 style="margin-bottom:2rem;">Create News</h1><div class="form-card"><div class="form-group"><label>Title</label><input type="text" id="title" placeholder="News title"></div><div class="form-group"><label>Category</label><select id="category_id"><option value="">Select Category</option>${categories?.map(c => `<option value="${c.id}">${c.icon || '📰'} ${c.name}</option>`).join('')}</select></div><div class="form-group"><label>Featured Image URL</label><input type="text" id="featured_image" placeholder="https://example.com/image.jpg"><div id="imagePreview"></div></div><div class="form-group"><label>Excerpt (Short description)</label><textarea id="excerpt" rows="3" placeholder="Brief summary..."></textarea></div><div class="form-group"><label>Content (Full article)</label><textarea id="content" rows="12" placeholder="Write your news here..."></textarea></div><div class="form-group"><label>Tags (comma separated)</label><input type="text" id="tags" placeholder="tech, sports, cricket"></div><button onclick="publishNews()">📰 Publish News</button><div id="publishMsg"></div></div>`;
-                document.getElementById('featured_image').addEventListener('input', (e) => { const preview = document.getElementById('imagePreview'); if (e.target.value) { preview.innerHTML = `<img src="${e.target.value}" class="image-preview" onerror="this.style.display='none'">`; } else { preview.innerHTML = ''; } });
-            }
-            else if (page === 'news') {
-                const { data: news } = await supabase.from('news').select('*, categories(*)').order('created_at', { ascending: false }).limit(50);
-                main.innerHTML = `<h1 style="margin-bottom:2rem;">Manage News</h1><div class="news-list">${news?.map(n => `<div class="news-item"><div><div class="news-title">${n.title}</div><div class="news-meta">${n.categories?.name} | ${new Date(n.created_at).toLocaleDateString()} | 👁️ ${n.views || 0}</div></div><div class="news-actions"><button class="edit-btn" onclick="editNews('${n.id}')">Edit</button><button class="delete-btn" onclick="deleteNews('${n.id}')">Delete</button></div></div>`).join('') || '<div style="padding:2rem;text-align:center;">No news found</div>'}</div>`;
-            }
-            else if (page === 'categories') {
-                const { data: categories } = await supabase.from('categories').select('*').order('id');
-                main.innerHTML = `<h1 style="margin-bottom:2rem;">Categories</h1><div class="form-card"><h3 style="margin-bottom:1rem;">Add New Category</h3><div class="form-group"><input type="text" id="cat_name" placeholder="Category Name"></div><div class="form-group"><input type="text" id="cat_slug" placeholder="Slug (url-friendly)"></div><div class="form-group"><input type="text" id="cat_icon" placeholder="Icon (emoji)"></div><button onclick="addCategory()">Add Category</button><div id="catMsg"></div></div><div class="news-list">${categories?.map(c => `<div class="news-item"><span>${c.icon || '📁'} ${c.name} (${c.slug})</span><button class="delete-btn" onclick="deleteCategory('${c.id}')">Delete</button></div>`).join('')}</div>`;
-            }
-            else if (page === 'subcategories') {
-                const { data: categories } = await supabase.from('categories').select('*');
-                const { data: subcategories } = await supabase.from('subcategories').select('*, categories(*)');
-                main.innerHTML = `<h1 style="margin-bottom:2rem;">Sub Categories</h1><div class="form-card"><h3 style="margin-bottom:1rem;">Add New Sub Category</h3><div class="form-group"><select id="sub_parent_id"><option value="">Select Parent Category</option>${categories?.map(c => `<option value="${c.id}">${c.icon || '📁'} ${c.name}</option>`).join('')}</select></div><div class="form-group"><input type="text" id="sub_name" placeholder="Sub Category Name"></div><div class="form-group"><input type="text" id="sub_slug" placeholder="Slug"></div><div class="form-group"><input type="text" id="sub_icon" placeholder="Icon (emoji)"></div><button onclick="addSubCategory()">Add Sub Category</button><div id="subMsg"></div></div><div class="news-list">${subcategories?.map(s => `<div class="news-item"><span>${s.icon || '📌'} ${s.name} → ${s.categories?.name}</span><button class="delete-btn" onclick="deleteSubCategory('${s.id}')">Delete</button></div>`).join('')}</div>`;
-            }
-            else if (page === 'settings') {
-                main.innerHTML = `<h1 style="margin-bottom:2rem;">Settings</h1><div class="form-card"><h3>Site Settings</h3><div class="form-group"><label>Site Name</label><input type="text" id="site_name" value="THE MOON"></div><div class="form-group"><label>Site URL</label><input type="text" id="site_url" value="https://themoonr4.github.io/rasu/"></div><button onclick="saveSettings()">Save Settings</button></div><div class="form-card"><h3>Danger Zone</h3><button class="btn-danger" onclick="clearCache()">Clear Cache</button></div>`;
-            }
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            document.querySelector(`[data-page="${page}"]`).classList.add('active');
-        }
-
-        async function publishNews() {
-            const title = document.getElementById('title').value;
-            const category_id = document.getElementById('category_id').value;
-            const content = document.getElementById('content').value;
-            const featured_image = document.getElementById('featured_image').value;
-            const excerpt = document.getElementById('excerpt').value || content.substring(0, 150);
-            const tags = document.getElementById('tags').value.split(',').map(t => t.trim());
-            const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-            const msgDiv = document.getElementById('publishMsg');
-            if (!title || !category_id || !content) { msgDiv.innerHTML = '<div class="error">Please fill title, category and content</div>'; return; }
-            const { error } = await supabase.from('news').insert({ title, slug, content, category_id, featured_image, excerpt, tags, status: 'published', published_at: new Date().toISOString() });
-            if (error) { msgDiv.innerHTML = `<div class="error">${error.message}</div>`; }
-            else { msgDiv.innerHTML = '<div class="success">✅ News published successfully!</div>'; setTimeout(() => loadPage('news'), 1500); }
-        }
-
-        async function deleteNews(id) { if (confirm('Delete this news?')) { await supabase.from('news').delete().eq('id', id); loadPage('news'); } }
-        async function addCategory() { const name = document.getElementById('cat_name').value; const slug = document.getElementById('cat_slug').value || name.toLowerCase().replace(/ /g, '-'); const icon = document.getElementById('cat_icon').value; const msgDiv = document.getElementById('catMsg'); if (!name) { msgDiv.innerHTML = '<div class="error">Enter category name</div>'; return; } const { error } = await supabase.from('categories').insert({ name, slug, icon }); if (error) { msgDiv.innerHTML = `<div class="error">${error.message}</div>`; } else { msgDiv.innerHTML = '<div class="success">Category added!</div>'; setTimeout(() => loadPage('categories'), 1000); } }
-        async function deleteCategory(id) { if (confirm('Delete category? All subcategories will be deleted.')) { await supabase.from('subcategories').delete().eq('parent_id', id); await supabase.from('categories').delete().eq('id', id); loadPage('categories'); } }
-        async function addSubCategory() { const name = document.getElementById('sub_name').value; const slug = document.getElementById('sub_slug').value || name.toLowerCase().replace(/ /g, '-'); const icon = document.getElementById('sub_icon').value; const parent_id = document.getElementById('sub_parent_id').value; const msgDiv = document.getElementById('subMsg'); if (!name || !parent_id) { msgDiv.innerHTML = '<div class="error">Enter name and select parent category</div>'; return; } const { data: parent } = await supabase.from('categories').select('slug').eq('id', parent_id).single(); const { error } = await supabase.from('subcategories').insert({ name, slug, icon, parent_id, parent_slug: parent?.slug }); if (error) { msgDiv.innerHTML = `<div class="error">${error.message}</div>`; } else { msgDiv.innerHTML = '<div class="success">Sub category added!</div>'; setTimeout(() => loadPage('subcategories'), 1000); } }
-        async function deleteSubCategory(id) { if (confirm('Delete sub category?')) { await supabase.from('subcategories').delete().eq('id', id); loadPage('subcategories'); } }
-        function editNews(id) { alert('Edit feature coming soon. Use database directly for now.'); }
-        function saveSettings() { localStorage.setItem('siteName', document.getElementById('site_name').value); alert('Settings saved'); }
-        function clearCache() { localStorage.clear(); alert('Cache cleared'); }
-        async function logout() { await supabase.auth.signOut(); location.reload(); }
-
-        document.getElementById('logoutBtn').addEventListener('click', logout);
-        document.querySelectorAll('.nav-item[data-page]').forEach(nav => { nav.addEventListener('click', () => { const page = nav.getAttribute('data-page'); checkAuth().then(ok => ok && loadPage(page)); }); });
-        checkAuth().then(ok => ok && loadPage('dashboard'));
     </script>
 </body>
 </html>
