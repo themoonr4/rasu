@@ -6,36 +6,42 @@
     <title>THE MOON - Admin Panel</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:Arial;background:#0a0a0a;color:#fff;padding:1rem;}
-        .box{max-width:500px;margin:2rem auto;background:#111;padding:2rem;border-radius:16px;}
-        input,textarea,select{width:100%;padding:0.5rem;margin-bottom:0.5rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
-        button{background:#dc2626;color:#fff;border:none;padding:0.5rem;border-radius:8px;cursor:pointer;}
-        .success{background:#28a745;padding:0.5rem;border-radius:8px;margin-top:0.5rem;}
-        .error{background:#dc3545;padding:0.5rem;border-radius:8px;margin-top:0.5rem;}
-        .nav{display:flex;gap:0.5rem;margin-bottom:1rem;}
-        .nav-btn{background:#1a1a1a;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
-        .nav-btn.active{background:#dc2626;}
+        .container{max-width:600px;margin:0 auto;}
+        h1{color:#dc2626;margin-bottom:1rem;text-align:center;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+        input,textarea,select{width:100%;padding:0.75rem;margin-bottom:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:1rem;}
+        button{background:#dc2626;color:#fff;border:none;padding:0.75rem;border-radius:8px;cursor:pointer;font-size:1rem;font-weight:bold;}
+        button:hover{background:#b91c1c;}
+        .success{background:#28a745;padding:0.75rem;border-radius:8px;margin-top:1rem;text-align:center;}
+        .error{background:#dc3545;padding:0.75rem;border-radius:8px;margin-top:1rem;text-align:center;}
+        .info{background:#17a2b8;padding:0.5rem;border-radius:8px;margin-bottom:1rem;text-align:center;}
+        label{font-weight:bold;margin-bottom:0.25rem;display:block;color:#aaa;}
         .hide{display:none;}
     </style>
 </head>
 <body>
-    <div id="loginBox" class="box">
-        <h2>🌙 THE MOON - Admin Login</h2>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Login / Sign Up</button>
-        <div id="loginMsg"></div>
-    </div>
-
-    <div id="dashboardBox" class="box hide">
-        <h2>🌙 Admin Dashboard</h2>
-        <div class="nav">
-            <div class="nav-btn active" onclick="showTab('create')">➕ Create</div>
-            <div class="nav-btn" onclick="showTab('list')">📰 News</div>
+    <div class="container">
+        <h1>🌙 THE MOON - Admin Panel</h1>
+        
+        <!-- Login Form -->
+        <div id="loginBox" class="card">
+            <h2 style="margin-bottom:1rem;">🔐 Admin Login</h2>
+            <input type="password" id="adminPassword" placeholder="Enter Admin Password">
+            <button onclick="checkLogin()">Login</button>
+            <div id="loginMsg"></div>
+            <div class="info">🔒 Only authorized admins can post news</div>
         </div>
         
-        <div id="createTab">
-            <input type="text" id="title" placeholder="Title">
+        <!-- Post Form (Hidden until login) -->
+        <div id="postBox" class="card hide">
+            <div class="info">✅ Logged in as Admin</div>
+            
+            <label>📰 News Title</label>
+            <input type="text" id="title" placeholder="Enter news title...">
+            
+            <label>📁 Category</label>
             <select id="category">
                 <option value="1">💻 Technology</option>
                 <option value="2">🏏 Sports</option>
@@ -43,14 +49,23 @@
                 <option value="4">🏛️ Politics</option>
                 <option value="5">📚 Study</option>
             </select>
-            <input type="text" id="image" placeholder="Image URL (optional)">
-            <textarea id="content" rows="5" placeholder="Content..."></textarea>
-            <button onclick="publish()">📰 Publish News</button>
-            <div id="publishMsg"></div>
+            
+            <label>🖼️ Featured Image URL (Optional)</label>
+            <input type="text" id="image" placeholder="https://example.com/image.jpg">
+            
+            <label>📝 News Content</label>
+            <textarea id="content" rows="8" placeholder="Write your news content here..."></textarea>
+            
+            <button onclick="publishNews()">📰 PUBLISH NEWS</button>
+            <button onclick="logout()" style="background:#6c757d;margin-top:0.5rem;">🚪 Logout</button>
+            
+            <div id="result"></div>
         </div>
         
-        <div id="listTab" class="hide">
-            <div id="newsList"></div>
+        <!-- Recent News -->
+        <div class="card">
+            <h3 style="margin-bottom:1rem;">📋 Recent News</h3>
+            <div id="newsList">Loading...</div>
         </div>
     </div>
 
@@ -58,43 +73,69 @@
         const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
         const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Admin Password (Change this to your own password)
+        const ADMIN_PASSWORD = 'TheMoon@2024';
 
-        async function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        function checkLogin() {
+            const password = document.getElementById('adminPassword').value;
             const msgDiv = document.getElementById('loginMsg');
             
-            if (!email || !password) {
-                msgDiv.innerHTML = '<div class="error">Enter email and password</div>';
-                return;
-            }
-            
-            msgDiv.innerHTML = '<div>Please wait...</div>';
-            
-            await supabase.auth.signUp({ email, password });
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            
-            if (error) {
-                msgDiv.innerHTML = `<div class="error">${error.message}</div>`;
-            } else {
-                msgDiv.innerHTML = '<div class="success">✅ Login Successful!</div>';
+            if (password === ADMIN_PASSWORD) {
                 document.getElementById('loginBox').classList.add('hide');
-                document.getElementById('dashboardBox').classList.remove('hide');
-                loadNewsList();
+                document.getElementById('postBox').classList.remove('hide');
+                msgDiv.innerHTML = '';
+                loadNews();
+            } else {
+                msgDiv.innerHTML = '<div class="error">❌ Wrong Password! Access Denied.</div>';
             }
         }
 
-        async function publish() {
+        function logout() {
+            document.getElementById('loginBox').classList.remove('hide');
+            document.getElementById('postBox').classList.add('hide');
+            document.getElementById('adminPassword').value = '';
+        }
+
+        async function loadNews() {
+            const { data, error } = await supabase
+                .from('news')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(10);
+            
+            const newsDiv = document.getElementById('newsList');
+            if (error) {
+                newsDiv.innerHTML = '<div class="error">Error loading news</div>';
+                return;
+            }
+            
+            if (!data || data.length === 0) {
+                newsDiv.innerHTML = '<div class="info">No news yet. Login to post news!</div>';
+                return;
+            }
+            
+            newsDiv.innerHTML = data.map(n => `
+                <div style="background:#1a1a1a;padding:0.75rem;margin-bottom:0.5rem;border-radius:8px;">
+                    <strong>📰 ${n.title}</strong>
+                    <br><small>${n.excerpt?.substring(0, 100)}...</small>
+                </div>
+            `).join('');
+        }
+
+        async function publishNews() {
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
             const category_id = document.getElementById('category').value;
             const image = document.getElementById('image').value;
-            const msgDiv = document.getElementById('publishMsg');
+            const resultDiv = document.getElementById('result');
             
             if (!title || !content) {
-                msgDiv.innerHTML = '<div class="error">Title and content required</div>';
+                resultDiv.innerHTML = '<div class="error">❌ Please enter Title and Content!</div>';
                 return;
             }
+            
+            resultDiv.innerHTML = '<div class="success">⏳ Publishing...</div>';
             
             const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
             
@@ -106,38 +147,22 @@
                 featured_image: image || null,
                 excerpt: content.substring(0, 150),
                 status: 'published',
-                published_at: new Date()
+                published_at: new Date().toISOString()
             });
             
             if (error) {
-                msgDiv.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
             } else {
-                msgDiv.innerHTML = '<div class="success">✅ News Published!</div>';
+                resultDiv.innerHTML = '<div class="success">✅ NEWS PUBLISHED SUCCESSFULLY! 🎉</div>';
                 document.getElementById('title').value = '';
                 document.getElementById('content').value = '';
                 document.getElementById('image').value = '';
-                loadNewsList();
-                setTimeout(() => msgDiv.innerHTML = '', 3000);
+                loadNews();
+                setTimeout(() => resultDiv.innerHTML = '', 3000);
             }
         }
-
-        async function loadNewsList() {
-            const { data } = await supabase.from('news').select('*').order('created_at', { ascending: false });
-            const listDiv = document.getElementById('newsList');
-            if (!data || data.length === 0) {
-                listDiv.innerHTML = '<div>No news yet. Create your first news!</div>';
-                return;
-            }
-            listDiv.innerHTML = data.map(n => `<div style="background:#1a1a1a;padding:0.5rem;margin-bottom:0.5rem;border-radius:8px;"><strong>📰 ${n.title}</strong><br><small>${n.excerpt?.substring(0,100)}...</small></div>`).join('');
-        }
-
-        function showTab(tab) {
-            document.getElementById('createTab').classList.toggle('hide', tab !== 'create');
-            document.getElementById('listTab').classList.toggle('hide', tab !== 'list');
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            if (tab === 'list') loadNewsList();
-        }
+        
+        loadNews();
     </script>
 </body>
 </html>
