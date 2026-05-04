@@ -2,117 +2,155 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>THE MOON - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Admin Panel</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         body{background:#0a0a0a;font-family:Arial;color:#fff;padding:20px;}
-        .container{max-width:500px;margin:50px auto;}
-        .card{background:#111;border:1px solid #222;border-radius:16px;padding:25px;}
-        h2{color:#dc2626;text-align:center;}
-        input,textarea,select{width:100%;padding:10px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
-        button{background:#dc2626;color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold;}
+        .container{max-width:600px;margin:0 auto;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:25px;margin-bottom:20px;}
+        h2{color:#dc2626;text-align:center;margin-bottom:20px;}
+        input,textarea,select{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px;}
+        button{background:#dc2626;color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-size:16px;font-weight:bold;}
+        button:hover{background:#b91c1c;}
         .success{background:#28a745;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
         .error{background:#dc3545;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
+        .info{background:#17a2b8;padding:10px;border-radius:8px;margin-bottom:15px;text-align:center;}
         .hide{display:none;}
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="loginCard" class="card">
-            <h2>🔐 Admin Login</h2>
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="login()">Login</button>
-            <div id="loginMsg"></div>
+        <!-- Password Screen -->
+        <div id="passwordScreen" class="card">
+            <h2>🔐 Admin Access</h2>
+            <input type="password" id="adminPassword" placeholder="Enter Admin Password">
+            <button onclick="checkPassword()">Enter</button>
+            <div id="passwordMsg"></div>
         </div>
 
-        <div id="adminCard" class="card hide">
-            <h2>🌙 Post News</h2>
-            <input type="text" id="title" placeholder="Title">
-            <select id="category">
-                <option value="1">Technology</option>
-                <option value="2">Sports</option>
-                <option value="3">Business</option>
-                <option value="4">Politics</option>
-                <option value="5">Study</option>
-            </select>
-            <input type="text" id="image" placeholder="Image URL">
-            <textarea id="content" rows="6" placeholder="Content..."></textarea>
-            <button onclick="publishNews()">Publish</button>
-            <button onclick="logout()" style="background:#6c757d;margin-top:10px;">Logout</button>
-            <div id="result"></div>
+        <!-- Admin Panel (Hidden until correct password) -->
+        <div id="adminScreen" class="hide">
+            <div class="card">
+                <h2>🌙 THE MOON - Post News</h2>
+                <div class="info">✅ Authorized Admin</div>
+                
+                <input type="text" id="title" placeholder="News Title">
+                
+                <select id="category">
+                    <option value="1">💻 Technology</option>
+                    <option value="2">🏏 Sports</option>
+                    <option value="3">📊 Business</option>
+                    <option value="4">🏛️ Politics</option>
+                    <option value="5">📚 Study</option>
+                </select>
+                
+                <input type="text" id="image" placeholder="Image URL (optional)">
+                
+                <textarea id="content" rows="8" placeholder="Write your news content here..."></textarea>
+                
+                <button onclick="publishNews()">📰 PUBLISH NEWS</button>
+                <button onclick="logout()" style="background:#6c757d; margin-top: 10px;">🚪 Logout</button>
+                
+                <div id="result"></div>
+            </div>
+            
+            <div class="card">
+                <h3>📋 Recent News</h3>
+                <div id="newsList">Loading...</div>
+            </div>
         </div>
     </div>
 
     <script>
+        // 🔐 YOUR SECRET PASSWORD (Change this to anything)
+        const SECRET_PASSWORD = 'TheMoon2024';
+        
+        // Supabase Configuration
         const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
         const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const msgDiv = document.getElementById('loginMsg');
+        function checkPassword() {
+            const pass = document.getElementById('adminPassword').value;
+            const msgDiv = document.getElementById('passwordMsg');
             
-            if (!email || !password) {
-                msgDiv.innerHTML = '<div class="error">Enter email and password</div>';
-                return;
-            }
-            
-            msgDiv.innerHTML = '<div class="success">Connecting...</div>';
-            
-            // Direct sign in (user already exists)
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            
-            if (error) {
-                msgDiv.innerHTML = `<div class="error">❌ ${error.message}</div>`;
-            } else if (data?.user) {
-                msgDiv.innerHTML = '<div class="success">✅ Login Successful!</div>';
-                document.getElementById('loginCard').classList.add('hide');
-                document.getElementById('adminCard').classList.remove('hide');
+            if (pass === SECRET_PASSWORD) {
+                document.getElementById('passwordScreen').classList.add('hide');
+                document.getElementById('adminScreen').classList.remove('hide');
+                loadNews();
+                msgDiv.innerHTML = '';
+            } else {
+                msgDiv.innerHTML = '<div class="error">❌ Wrong Password! Access Denied.</div>';
             }
         }
 
-        async function logout() {
-            await supabase.auth.signOut();
-            document.getElementById('loginCard').classList.remove('hide');
-            document.getElementById('adminCard').classList.add('hide');
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
+        function logout() {
+            document.getElementById('passwordScreen').classList.remove('hide');
+            document.getElementById('adminScreen').classList.add('hide');
+            document.getElementById('adminPassword').value = '';
+        }
+
+        async function loadNews() {
+            const { data, error } = await supabase
+                .from('news')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(10);
+            
+            const newsDiv = document.getElementById('newsList');
+            if (error) {
+                newsDiv.innerHTML = '<div class="error">Error loading news</div>';
+                return;
+            }
+            if (!data || data.length === 0) {
+                newsDiv.innerHTML = '<div class="info">No news yet. Create your first news!</div>';
+                return;
+            }
+            newsDiv.innerHTML = data.map(n => `
+                <div style="background:#1a1a1a;padding:12px;margin-bottom:10px;border-radius:8px;">
+                    <strong>📰 ${n.title}</strong>
+                    <br><small>${n.excerpt?.substring(0, 100)}...</small>
+                </div>
+            `).join('');
         }
 
         async function publishNews() {
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
-            const catId = document.getElementById('category').value;
+            const categoryId = document.getElementById('category').value;
             const image = document.getElementById('image').value;
-            const msgDiv = document.getElementById('result');
+            const resultDiv = document.getElementById('result');
             
             if (!title || !content) {
-                msgDiv.innerHTML = '<div class="error">Title and content required</div>';
+                resultDiv.innerHTML = '<div class="error">❌ Title and Content required!</div>';
                 return;
             }
             
-            msgDiv.innerHTML = '<div class="success">Publishing...</div>';
-            const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            resultDiv.innerHTML = '<div class="success">⏳ Publishing...</div>';
+            
+            const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
             
             const { error } = await supabase.from('news').insert({
-                title, slug, content,
-                category_id: parseInt(catId),
+                title: title,
+                slug: slug,
+                content: content,
+                category_id: parseInt(categoryId),
                 featured_image: image || null,
-                excerpt: content.substring(0,150),
+                excerpt: content.substring(0, 150),
                 status: 'published',
                 published_at: new Date().toISOString()
             });
             
             if (error) {
-                msgDiv.innerHTML = `<div class="error">${error.message}</div>`;
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
             } else {
-                msgDiv.innerHTML = '<div class="success">✅ News published!</div>';
+                resultDiv.innerHTML = '<div class="success">✅ NEWS PUBLISHED SUCCESSFULLY! 🎉</div>';
                 document.getElementById('title').value = '';
                 document.getElementById('content').value = '';
                 document.getElementById('image').value = '';
-                setTimeout(() => msgDiv.innerHTML = '', 2000);
+                loadNews();
+                setTimeout(() => resultDiv.innerHTML = '', 3000);
             }
         }
     </script>
