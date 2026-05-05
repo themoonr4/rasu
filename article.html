@@ -5,323 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MOON - Read Article</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #fff;
-            transition: all 0.3s;
-        }
-
-        [data-theme="light"] {
-            background: #f5f5f5;
-            color: #1a1a1a;
-        }
-
-        .header {
-            position: sticky;
-            top: 0;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            z-index: 100;
-            background: #111;
-            border-bottom: 1px solid #222;
-        }
-
-        [data-theme="light"] .header {
-            background: #fff;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .header-content {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-decoration: none;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .article-category {
-            display: inline-block;
-            background: #dc2626;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .article-title {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .article-meta {
-            display: flex;
-            gap: 1rem;
-            color: #aaa;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #222;
-        }
-
-        [data-theme="light"] .article-meta {
-            border-bottom-color: #e0e0e0;
-        }
-
-        .article-image {
-            width: 100%;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-        }
-
-        .article-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        .article-content p {
-            margin-bottom: 1rem;
-        }
-
-        .article-content h2 {
-            margin: 1.5rem 0 0.5rem;
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 0.5rem;
-            margin: 2rem 0;
-            padding-top: 1rem;
-            border-top: 1px solid #222;
-            flex-wrap: wrap;
-        }
-
-        [data-theme="light"] .share-buttons {
-            border-top-color: #e0e0e0;
-        }
-
-        .share-btn {
-            background: #1a1a1a;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        [data-theme="light"] .share-btn {
-            background: #e0e0e0;
-            color: #1a1a1a;
-        }
-
-        .share-btn:hover {
-            background: #dc2626;
-            color: white;
-        }
-
-        .comments-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #222;
-        }
-
-        [data-theme="light"] .comments-section {
-            border-top-color: #e0e0e0;
-        }
-
-        .comments-title {
-            margin-bottom: 1rem;
-        }
-
-        .comment-form {
-            margin-bottom: 2rem;
-        }
-
-        .comment-form input,
-        .comment-form textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
-
-        [data-theme="light"] .comment-form input,
-        [data-theme="light"] .comment-form textarea {
-            background: #fff;
-            border: 1px solid #ddd;
-            color: #1a1a1a;
-        }
-
-        .comment-item {
-            padding: 1rem;
-            background: #111;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-        }
-
-        [data-theme="light"] .comment-item {
-            background: #f0f0f0;
-        }
-
-        .comment-name {
-            font-weight: bold;
-            margin-bottom: 0.25rem;
-        }
-
-        .comment-date {
-            font-size: 0.7rem;
-            color: #aaa;
-            margin-bottom: 0.5rem;
-        }
-
-        .loader {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #222;
-            border-top-color: #dc2626;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        button {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #b91c1c;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: transparent;
-            border: 1px solid #333;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            text-decoration: none;
-            color: #fff;
-        }
-
-        [data-theme="light"] .back-btn {
-            border-color: #ddd;
-            color: #1a1a1a;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid #222;
-            margin-top: 2rem;
-            color: #666;
-            font-size: 0.8rem;
-        }
-
-        [data-theme="light"] .footer {
-            border-top-color: #e0e0e0;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            .article-title {
-                font-size: 1.5rem;
-            }
-            .share-buttons {
-                gap: 0.5rem;
-            }
-            .share-btn {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.7rem;
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;padding:0;margin:0;}
+        .header{background:#111;border-bottom:1px solid #222;padding:1rem 2rem;text-align:center;}
+        .logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#dc2626,#b91c1c);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;}
+        .container{max-width:800px;margin:2rem auto;padding:0 1rem;}
+        .article-category{display:inline-block;background:#dc2626;color:#fff;padding:4px 12px;border-radius:20px;font-size:0.8rem;margin-bottom:1rem;}
+        .article-title{font-size:2rem;margin-bottom:0.5rem;}
+        .article-meta{color:#aaa;font-size:0.8rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid #222;}
+        .article-image{width:100%;border-radius:12px;margin:1rem 0;}
+        .article-content{font-size:1.1rem;line-height:1.6;color:#ddd;}
+        .article-content p{margin-bottom:1rem;}
+        .loader{text-align:center;padding:2rem;color:#dc2626;}
+        .back-btn{display:inline-block;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;color:#fff;text-decoration:none;}
+        .footer{text-align:center;padding:2rem;border-top:1px solid #222;margin-top:2rem;color:#666;font-size:0.8rem;}
+        @media (max-width:768px){.article-title{font-size:1.5rem;}}
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="header-content">
-            <a href="/" class="logo">🌙 THE MOON</a>
-            <button id="themeToggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">🌙</button>
-        </div>
+        <a href="/" class="logo">🌙 THE MOON</a>
     </div>
 
     <div class="container" id="articleContainer">
-        <div class="loader"><div class="spinner"></div></div>
+        <div class="loader">⏳ Loading article...</div>
     </div>
 
     <div class="footer">
         <p>© 2026 THE MOON. All rights reserved.</p>
     </div>
 
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
-        // ✅ CORRECT SUPABASE CREDENTIALS - YOUR CURRENT PROJECT
+        // 🔑 YOUR CORRECT SUPABASE CREDENTIALS
         const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
-        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Get article ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const articleId = urlParams.get('id');
 
-        // Category names mapping
-        const categoryNames = {
-            1: 'Technology',
-            2: 'Sports',
-            3: 'Business',
-            4: 'Politics',
-            5: 'Study'
-        };
+        const categoryNames = {1:'Technology',2:'Sports',3:'Business',4:'Politics',5:'Study'};
 
         async function loadArticle() {
             const container = document.getElementById('articleContainer');
-            
             if (!articleId) {
                 container.innerHTML = '<div style="text-align:center;padding:2rem;">❌ Article not found</div>';
                 return;
@@ -339,14 +67,8 @@
                     return;
                 }
 
-                // Get category name
                 const categoryName = categoryNames[article.category_id] || 'News';
-
-                // Format content with paragraphs
-                let formattedContent = article.content || article.excerpt || '';
-                if (formattedContent && !formattedContent.includes('<p>')) {
-                    formattedContent = formattedContent.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
-                }
+                const formattedContent = (article.content || article.excerpt || '').split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
 
                 container.innerHTML = `
                     <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
@@ -354,80 +76,28 @@
                         <span class="article-category">${categoryName}</span>
                         <h1 class="article-title">${escapeHtml(article.title)}</h1>
                         <div class="article-meta">
-                            <span><i class="far fa-calendar"></i> ${new Date(article.published_at || article.created_at).toLocaleDateString()}</span>
-                            <span><i class="far fa-eye"></i> ${article.views || 0} views</span>
+                            📅 ${new Date(article.published_at || article.created_at).toLocaleDateString()} &nbsp;|&nbsp;
+                            👁️ ${article.views || 0} views
                         </div>
-                        ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" alt="${escapeHtml(article.title)}" onerror="this.style.display='none'">` : ''}
+                        ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" alt="${article.title}">` : ''}
                         <div class="article-content">${formattedContent}</div>
-                        
-                        <div class="share-buttons">
-                            <div class="share-btn" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</div>
-                            <div class="share-btn" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> Twitter</div>
-                            <div class="share-btn" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</div>
-                            <div class="share-btn" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i> Telegram</div>
-                            <div class="share-btn" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</div>
-                        </div>
                     </div>
                 `;
-            } catch (error) {
+            } catch (err) {
                 container.innerHTML = '<div style="text-align:center;padding:2rem;">❌ Error loading article</div>';
             }
         }
 
-        // Helper function to escape HTML
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
         }
 
-        // Share functions
-        function shareOnWhatsApp() {
-            window.open(`https://wa.me/?text=${encodeURIComponent(window.location.href)}`, '_blank');
-        }
-
-        function shareOnTwitter() {
-            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`, '_blank');
-        }
-
-        function shareOnFacebook() {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
-        }
-
-        function shareOnTelegram() {
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}`, '_blank');
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText(window.location.href);
-            alert('🔗 Link copied to clipboard!');
-        }
-
-        // Theme toggle
-        function toggleTheme() {
-            const body = document.body;
-            const btn = document.getElementById('themeToggle');
-            if (body.hasAttribute('data-theme')) {
-                body.removeAttribute('data-theme');
-                btn.innerHTML = '🌙';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-                btn.innerHTML = '☀️';
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'light') {
-            document.body.setAttribute('data-theme', 'light');
-            document.getElementById('themeToggle').innerHTML = '☀️';
-        }
-
-        // Load article
         loadArticle();
     </script>
 </body>
