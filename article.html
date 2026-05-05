@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - Article</title>
+    <title>THE MOON - Read Article</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
@@ -17,6 +17,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0a0a0a;
             color: #fff;
+            transition: all 0.3s;
         }
 
         [data-theme="light"] {
@@ -31,6 +32,13 @@
             border-bottom: 1px solid var(--border);
             padding: 1rem 2rem;
             z-index: 100;
+            background: #111;
+            border-bottom: 1px solid #222;
+        }
+
+        [data-theme="light"] .header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .header-content {
@@ -83,6 +91,10 @@
             border-bottom: 1px solid #222;
         }
 
+        [data-theme="light"] .article-meta {
+            border-bottom-color: #e0e0e0;
+        }
+
         .article-image {
             width: 100%;
             border-radius: 16px;
@@ -108,6 +120,11 @@
             margin: 2rem 0;
             padding-top: 1rem;
             border-top: 1px solid #222;
+            flex-wrap: wrap;
+        }
+
+        [data-theme="light"] .share-buttons {
+            border-top-color: #e0e0e0;
         }
 
         .share-btn {
@@ -118,14 +135,24 @@
             transition: all 0.2s;
         }
 
+        [data-theme="light"] .share-btn {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
         .share-btn:hover {
             background: #dc2626;
+            color: white;
         }
 
         .comments-section {
             margin-top: 2rem;
             padding-top: 2rem;
             border-top: 1px solid #222;
+        }
+
+        [data-theme="light"] .comments-section {
+            border-top-color: #e0e0e0;
         }
 
         .comments-title {
@@ -147,11 +174,22 @@
             margin-bottom: 0.5rem;
         }
 
+        [data-theme="light"] .comment-form input,
+        [data-theme="light"] .comment-form textarea {
+            background: #fff;
+            border: 1px solid #ddd;
+            color: #1a1a1a;
+        }
+
         .comment-item {
             padding: 1rem;
             background: #111;
             border-radius: 12px;
             margin-bottom: 1rem;
+        }
+
+        [data-theme="light"] .comment-item {
+            background: #f0f0f0;
         }
 
         .comment-name {
@@ -193,13 +231,40 @@
             cursor: pointer;
         }
 
+        button:hover {
+            background: #b91c1c;
+        }
+
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             background: transparent;
             border: 1px solid #333;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             margin-bottom: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        [data-theme="light"] .back-btn {
+            border-color: #ddd;
+            color: #1a1a1a;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #222;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        [data-theme="light"] .footer {
+            border-top-color: #e0e0e0;
         }
 
         @media (max-width: 768px) {
@@ -208,6 +273,13 @@
             }
             .article-title {
                 font-size: 1.5rem;
+            }
+            .share-buttons {
+                gap: 0.5rem;
+            }
+            .share-btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -224,138 +296,112 @@
         <div class="loader"><div class="spinner"></div></div>
     </div>
 
+    <div class="footer">
+        <p>© 2026 THE MOON. All rights reserved.</p>
+    </div>
+
     <script>
-        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        // ✅ CORRECT SUPABASE CREDENTIALS - YOUR CURRENT PROJECT
+        const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
         const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Get article ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const articleId = urlParams.get('id');
 
+        // Category names mapping
+        const categoryNames = {
+            1: 'Technology',
+            2: 'Sports',
+            3: 'Business',
+            4: 'Politics',
+            5: 'Study'
+        };
+
         async function loadArticle() {
+            const container = document.getElementById('articleContainer');
+            
             if (!articleId) {
-                document.getElementById('articleContainer').innerHTML = '<p>Article not found</p>';
+                container.innerHTML = '<div style="text-align:center;padding:2rem;">❌ Article not found</div>';
                 return;
             }
 
-            const { data: article, error } = await supabase
-                .from('news')
-                .select('*, categories(*)')
-                .eq('id', articleId)
-                .single();
+            try {
+                const { data: article, error } = await supabase
+                    .from('news')
+                    .select('*')
+                    .eq('id', articleId)
+                    .single();
 
-            if (error || !article) {
-                document.getElementById('articleContainer').innerHTML = '<p>Article not found</p>';
-                return;
-            }
+                if (error || !article) {
+                    container.innerHTML = '<div style="text-align:center;padding:2rem;">❌ Article not found</div>';
+                    return;
+                }
 
-            // Update view count
-            await supabase.rpc('increment_views', { news_id: articleId });
+                // Get category name
+                const categoryName = categoryNames[article.category_id] || 'News';
 
-            document.getElementById('articleContainer').innerHTML = `
-                <a href="/" class="back-btn" onclick="location.href='/'"><i class="fas fa-arrow-left"></i> Back to Home</a>
-                <div>
-                    <span class="article-category">${article.categories?.name || 'News'}</span>
-                    <h1 class="article-title">${article.title}</h1>
-                    <div class="article-meta">
-                        <span><i class="far fa-calendar"></i> ${new Date(article.published_at).toLocaleDateString()}</span>
-                        <span><i class="far fa-eye"></i> ${article.views || 0} views</span>
-                        <span><i class="far fa-heart"></i> ${article.likes || 0} likes</span>
-                    </div>
-                    ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" alt="${article.title}">` : ''}
-                    <div class="article-content">${article.content || article.excerpt}</div>
-                    
-                    <div class="share-buttons">
-                        <div class="share-btn" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</div>
-                        <div class="share-btn" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> Twitter</div>
-                        <div class="share-btn" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</div>
-                        <div class="share-btn" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i> Telegram</div>
-                        <div class="share-btn" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</div>
-                    </div>
-                    
-                    <div class="comments-section">
-                        <h3 class="comments-title"><i class="far fa-comment"></i> Comments</h3>
-                        <div class="comment-form">
-                            <input type="text" id="commentName" placeholder="Your Name">
-                            <textarea id="commentContent" rows="3" placeholder="Write a comment..."></textarea>
-                            <button onclick="postComment()">Post Comment</button>
+                // Format content with paragraphs
+                let formattedContent = article.content || article.excerpt || '';
+                if (formattedContent && !formattedContent.includes('<p>')) {
+                    formattedContent = formattedContent.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
+                }
+
+                container.innerHTML = `
+                    <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+                    <div>
+                        <span class="article-category">${categoryName}</span>
+                        <h1 class="article-title">${escapeHtml(article.title)}</h1>
+                        <div class="article-meta">
+                            <span><i class="far fa-calendar"></i> ${new Date(article.published_at || article.created_at).toLocaleDateString()}</span>
+                            <span><i class="far fa-eye"></i> ${article.views || 0} views</span>
                         </div>
-                        <div id="commentsList"></div>
+                        ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" alt="${escapeHtml(article.title)}" onerror="this.style.display='none'">` : ''}
+                        <div class="article-content">${formattedContent}</div>
+                        
+                        <div class="share-buttons">
+                            <div class="share-btn" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+                            <div class="share-btn" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> Twitter</div>
+                            <div class="share-btn" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</div>
+                            <div class="share-btn" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i> Telegram</div>
+                            <div class="share-btn" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</div>
+                        </div>
                     </div>
-                </div>
-            `;
-
-            loadComments();
-        }
-
-        async function loadComments() {
-            const { data: comments } = await supabase
-                .from('comments')
-                .select('*')
-                .eq('news_id', articleId)
-                .eq('status', 'approved')
-                .order('created_at', { ascending: false });
-
-            const commentsDiv = document.getElementById('commentsList');
-            if (!comments || comments.length === 0) {
-                commentsDiv.innerHTML = '<p style="color: #aaa;">No comments yet. Be the first to comment!</p>';
-                return;
-            }
-
-            commentsDiv.innerHTML = comments.map(c => `
-                <div class="comment-item">
-                    <div class="comment-name">${c.user_name}</div>
-                    <div class="comment-date">${new Date(c.created_at).toLocaleDateString()}</div>
-                    <div>${c.content}</div>
-                </div>
-            `).join('');
-        }
-
-        async function postComment() {
-            const name = document.getElementById('commentName').value;
-            const content = document.getElementById('commentContent').value;
-
-            if (!name || !content) {
-                alert('Please enter your name and comment');
-                return;
-            }
-
-            const { error } = await supabase.from('comments').insert({
-                news_id: articleId,
-                user_name: name,
-                content: content,
-                status: 'pending'
-            });
-
-            if (error) {
-                alert('Error posting comment: ' + error.message);
-            } else {
-                alert('Comment posted! Awaiting approval.');
-                document.getElementById('commentContent').value = '';
-                loadComments();
+                `;
+            } catch (error) {
+                container.innerHTML = '<div style="text-align:center;padding:2rem;">❌ Error loading article</div>';
             }
         }
 
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Share functions
         function shareOnWhatsApp() {
-            window.open(`https://wa.me/?text=${encodeURIComponent(window.location.href)}`);
+            window.open(`https://wa.me/?text=${encodeURIComponent(window.location.href)}`, '_blank');
         }
 
         function shareOnTwitter() {
-            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`);
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`, '_blank');
         }
 
         function shareOnFacebook() {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
         }
 
         function shareOnTelegram() {
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}`);
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}`, '_blank');
         }
 
         function copyLink() {
             navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
+            alert('🔗 Link copied to clipboard!');
         }
 
         // Theme toggle
@@ -375,11 +421,13 @@
 
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
+        // Load saved theme
         if (localStorage.getItem('theme') === 'light') {
             document.body.setAttribute('data-theme', 'light');
             document.getElementById('themeToggle').innerHTML = '☀️';
         }
 
+        // Load article
         loadArticle();
     </script>
 </body>
