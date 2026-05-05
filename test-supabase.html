@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>THE MOON - Test Supabase</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        body{background:#0a0a0a;color:#fff;font-family:Arial;padding:20px;}
+        .success{color:#28a745;background:#1a1a1a;padding:15px;border-radius:8px;}
+        .error{color:#dc3545;background:#1a1a1a;padding:15px;border-radius:8px;}
+        pre{background:#1a1a1a;padding:10px;border-radius:8px;overflow-x:auto;}
+    </style>
+</head>
+<body>
+    <h1>🔌 Supabase Connection Test</h1>
+    <div id="result">Testing...</div>
+
+    <script>
+        const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function testConnection() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                // Try to fetch news
+                const { data, error } = await supabase
+                    .from('news')
+                    .select('*')
+                    .limit(3);
+                
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+                    return;
+                }
+                
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Connection Successful!</div>
+                    <div>Total articles fetched: ${data.length}</div>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch(err) {
+                resultDiv.innerHTML = `<div class="error">❌ Connection Failed: ${err.message}</div>`;
+            }
+        }
+        
+        testConnection();
+    </script>
+</body>
+</html>
