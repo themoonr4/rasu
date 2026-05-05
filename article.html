@@ -5,185 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MOON - Read Article</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #fff;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .back-btn {
-            display: inline-block;
-            background: #dc2626;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            margin-bottom: 20px;
-        }
-        .article-card {
-            background: #111;
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid #222;
-        }
-        .category {
-            display: inline-block;
-            background: #dc2626;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-        .meta {
-            color: #aaa;
-            font-size: 13px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #222;
-        }
-        .article-image {
-            width: 100%;
-            border-radius: 12px;
-            margin: 15px 0;
-        }
-        .content {
-            line-height: 1.6;
-            color: #ddd;
-            font-size: 16px;
-        }
-        .loader {
-            text-align: center;
-            padding: 50px;
-            color: #dc2626;
-            font-size: 18px;
-        }
-        .error {
-            text-align: center;
-            padding: 50px;
-            color: #dc3545;
-            font-size: 18px;
-        }
-        @media (max-width: 600px) {
-            body { padding: 15px; }
-            h1 { font-size: 22px; }
-            .article-card { padding: 18px; }
-        }
+        body{background:#0a0a0a;font-family:Arial;color:#fff;padding:20px;}
+        .container{max-width:800px;margin:0 auto;}
+        .back-btn{display:inline-block;background:#dc2626;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;margin-bottom:20px;}
+        .article-card{background:#111;border:1px solid #222;border-radius:16px;padding:25px;}
+        .category{display:inline-block;background:#dc2626;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:15px;}
+        h1{font-size:28px;margin-bottom:10px;}
+        .meta{color:#aaa;font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #222;}
+        .article-image{width:100%;border-radius:12px;margin:15px 0;}
+        .content{line-height:1.6;color:#ddd;}
+        .loader{text-align:center;padding:50px;color:#ffc107;}
+        .error{text-align:center;padding:50px;color:#dc3545;}
+        @media(max-width:600px){body{padding:15px;}h1{font-size:22px;}}
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="/" class="back-btn">← Back to Home</a>
-        <div id="articleCard" class="article-card">
-            <div class="loader">📡 Loading article...</div>
-        </div>
+<div class="container">
+    <a href="/" class="back-btn">← Back to Home</a>
+    <div id="articleCard" class="article-card">
+        <div class="loader">⏳ Loading article...</div>
     </div>
+</div>
 
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script>
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+<script>
+    // Direct fetch without supabase-js library
+    const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+    
+    const categories = {1:'Technology',2:'Sports',3:'Business',4:'Politics',5:'Study'};
+    
+    async function loadArticle() {
+        const card = document.getElementById('articleCard');
         
-        // Initialize Supabase client
-        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
+        if (!articleId) {
+            card.innerHTML = '<div class="error">❌ No article ID found</div>';
+            return;
+        }
         
-        // Get article ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const articleId = urlParams.get('id');
-        
-        // Category mapping
-        const categories = {
-            1: 'Technology',
-            2: 'Sports', 
-            3: 'Business',
-            4: 'Politics',
-            5: 'Study'
-        };
-        
-        async function loadArticle() {
-            const cardDiv = document.getElementById('articleCard');
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
             
-            // Check if article ID exists
-            if (!articleId) {
-                cardDiv.innerHTML = '<div class="error">❌ No article ID provided. Please go back to homepage.</div>';
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (!data || data.length === 0) {
+                card.innerHTML = '<div class="error">❌ Article not found</div>';
                 return;
             }
             
-            try {
-                // Fetch article from Supabase
-                const { data, error } = await supabase
-                    .from('news')
-                    .select('*')
-                    .eq('id', parseInt(articleId))
-                    .single();
-                
-                if (error) {
-                    console.error('Supabase error:', error);
-                    cardDiv.innerHTML = `<div class="error">❌ Database error: ${error.message}</div>`;
-                    return;
-                }
-                
-                if (!data) {
-                    cardDiv.innerHTML = '<div class="error">❌ Article not found. The article may have been deleted.</div>';
-                    return;
-                }
-                
-                // Get category name
-                const categoryName = categories[data.category_id] || 'News';
-                
-                // Format date
-                const publishDate = new Date(data.published_at || data.created_at);
-                const formattedDate = publishDate.toLocaleDateString('en-IN');
-                
-                // Format content with paragraphs
-                let contentHtml = data.content || data.excerpt || 'No content available';
-                if (!contentHtml.includes('<p>')) {
-                    contentHtml = contentHtml.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
-                }
-                
-                // Display article
-                cardDiv.innerHTML = `
-                    <span class="category">${categoryName}</span>
-                    <h1>${escapeHtml(data.title)}</h1>
-                    <div class="meta">
-                        📅 ${formattedDate} &nbsp;|&nbsp;
-                        👁️ ${data.views || 0} views
-                    </div>
-                    ${data.featured_image ? `<img class="article-image" src="${data.featured_image}" alt="${escapeHtml(data.title)}" onerror="this.style.display='none'">` : ''}
-                    <div class="content">${contentHtml}</div>
-                `;
-                
-            } catch (err) {
-                console.error('Error:', err);
-                cardDiv.innerHTML = `<div class="error">❌ Connection error: ${err.message}</div>`;
-            }
+            const article = data[0];
+            const category = categories[article.category_id] || 'News';
+            const formattedDate = new Date(article.created_at).toLocaleDateString();
+            
+            card.innerHTML = `
+                <span class="category">${category}</span>
+                <h1>${escapeHtml(article.title)}</h1>
+                <div class="meta">📅 ${formattedDate} | 👁️ ${article.views || 0} views</div>
+                ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" onerror="this.style.display='none'">` : ''}
+                <div class="content">${formatContent(article.content || article.excerpt || '')}</div>
+            `;
+            
+        } catch(err) {
+            card.innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
         }
-        
-        // Helper function to escape HTML
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // Load article when page loads
-        loadArticle();
-    </script>
+    }
+    
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    function formatContent(content) {
+        if (!content) return 'No content available';
+        return content.split('\n').filter(p => p.trim()).map(p => `<p>${escapeHtml(p)}</p>`).join('');
+    }
+    
+    loadArticle();
+</script>
 </body>
 </html>
