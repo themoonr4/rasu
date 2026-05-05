@@ -682,29 +682,18 @@
         <a href="#"><i class="fab fa-youtube"></i></a>
     </div>
     <div class="copyright">
-        <p>© 2024 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
+        <p>© 2026 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
     </div>
 </footer>
 
-<!-- Login Modal -->
-<div class="modal" id="loginModal">
-    <div class="modal-content" style="background: var(--bg-primary);border-radius: var(--radius-xl);padding: 1.5rem;max-width: 400px;margin: auto;">
-        <h2 style="margin-bottom: 1rem;">Welcome Back</h2>
-        <input type="email" id="loginEmail" placeholder="Email" style="width:100%;padding:0.75rem;margin-bottom:0.75rem;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-primary);">
-        <input type="password" id="loginPassword" placeholder="Password" style="width:100%;padding:0.75rem;margin-bottom:1rem;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-primary);">
-        <button id="doLogin" style="width:100%;padding:0.75rem;background:var(--brand-red);color:white;border:none;border-radius:var(--radius-md);cursor:pointer;">Login</button>
-        <button id="closeModal" style="margin-top:1rem;width:100%;padding:0.5rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;">Cancel</button>
-    </div>
-</div>
-
 <script>
     // ============================================
-    // THE MOON - Core JavaScript
+    // THE MOON - Main JavaScript
     // All Devices Supported
     // ============================================
     
-    const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+    const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
     
     let currentCategory = 'all';
     let currentPage = 1;
@@ -929,26 +918,11 @@
         });
     }
     
-    // Login Modal
+    // Login Modal (Simplified)
     function initLogin() {
         const loginBtn = document.getElementById('loginBtn');
-        const modal = document.getElementById('loginModal');
-        const closeModal = document.getElementById('closeModal');
-        
         loginBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
-        
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-        
-        const doLogin = document.getElementById('doLogin');
-        doLogin.addEventListener('click', async () => {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            alert('Login feature coming soon. Use admin.html for full access.');
-            modal.style.display = 'none';
+            window.location.href = '/admin.html';
         });
     }
     
