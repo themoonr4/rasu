@@ -559,7 +559,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             
-            <a href="/" class="logo">🌙 THE MOON</a>
+            <a href="/rasu/" class="logo">🌙 THE MOON</a>
             
             <div class="nav-desktop">
                 <a href="#" data-category="all" class="active">All</a>
@@ -747,8 +747,8 @@
             }
             
             grid.innerHTML = news.map(article => `
-                <div class="news-card" onclick="location.href='/article.html?id=${article.id}'">
-                    ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="width:100%;height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
+                <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                    ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
                     <div class="news-content">
                         <span class="news-category">${article.categories?.name || 'News'}</span>
                         <h3 class="news-title">${article.title}</h3>
@@ -775,7 +775,7 @@
             const news = await response.json();
             
             trendingDiv.innerHTML = news.map((item, index) => `
-                <div class="trending-item" onclick="location.href='/article.html?id=${item.id}'">
+                <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
                     <div class="trending-rank">#${index + 1}</div>
                     <div class="trending-title">${item.title}</div>
                     <div class="trending-views">👁️ ${item.views || 0} views</div>
@@ -877,8 +877,8 @@
                     grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results found</div>';
                 } else {
                     grid.innerHTML = filtered.map(article => `
-                        <div class="news-card" onclick="location.href='/article.html?id=${article.id}'">
-                            ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="width:100%;height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
+                        <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                            ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
                             <div class="news-content">
                                 <span class="news-category">${article.categories?.name || 'News'}</span>
                                 <h3 class="news-title">${article.title}</h3>
@@ -922,7 +922,7 @@
     function initLogin() {
         const loginBtn = document.getElementById('loginBtn');
         loginBtn.addEventListener('click', () => {
-            window.location.href = '/admin.html';
+            window.location.href = '/rasu/admin.html';
         });
     }
     
