@@ -576,7 +576,11 @@
                     <button id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
                 <button id="themeToggle"><i class="fas fa-moon"></i></button>
-                <button id="loginBtn"><i class="fas fa-user-circle"></i></button>
+                <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;">
+                    <button style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px; border-radius: var(--radius-md);">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                </a>
             </div>
         </div>
     </div>
@@ -919,14 +923,6 @@
         });
     }
     
-    // Login Modal (Simplified)
-    function initLogin() {
-        const loginBtn = document.getElementById('loginBtn');
-        loginBtn.addEventListener('click', () => {
-            window.location.href = '/rasu/admin.html';
-        });
-    }
-    
     // Newsletter
     function initNewsletter() {
         const subscribeBtn = document.getElementById('subscribeBtn');
@@ -954,7 +950,6 @@
     getWeather();
     initSearch();
     initSidebar();
-    initLogin();
     initNewsletter();
 </script>
 </body>
