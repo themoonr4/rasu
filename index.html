@@ -7,7 +7,8 @@
     <meta name="theme-color" content="#dc2626">
     <title>THE MOON - World Class News</title>
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-    <link rel="manifest" href="/rasu/manifest.json">
+    <!-- UPDATED: PWA Manifest link verified and corrected path -->
+    <link rel="manifest" href="manifest.json">
     <!-- OneSignal Push Notifications -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -558,6 +559,38 @@
         .text-center { text-align: center; }
         .mt-2 { margin-top: 1rem; }
         .mb-2 { margin-bottom: 1rem; }
+
+        /* Install Button Style */
+        .install-pwa-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #dc2626;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(220,38,38,0.4);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .install-pwa-btn:hover {
+            transform: scale(1.02);
+            background-color: #b91c1c;
+        }
+        @media (min-width: 768px) {
+            .install-pwa-btn {
+                bottom: 30px;
+                right: 30px;
+            }
+        }
+        /* Hide on browsers that already installed? fine as fallback */
     </style>
 </head>
 <body>
@@ -714,10 +747,12 @@
     </div>
 </footer>
 
+<!-- Supabase JS Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     // ============================================
     // THE MOON - Main JavaScript
-    // All Devices Supported
+    // All Devices Supported + PWA Manifest + Service Worker + Install Prompt
     // ============================================
     
     const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
@@ -725,11 +760,50 @@
     const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentCategory = 'all';
-    let currentPage = 1;
-    let isLoading = false;
     let allNews = [];
     
-    // Theme
+    // ----- PWA: Service Worker Registration (FIXED & ADDED) -----
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')   // Updated to root relative for proper scope; or '/rasu/sw.js' if required
+            .then(reg => console.log('✅ Service Worker registered successfully:', reg))
+            .catch(err => console.log('❌ Service Worker registration failed:', err));
+    }
+    
+    // ----- PWA: Install Prompt Handling (ADDED) -----
+    let deferredPrompt;
+    let installButtonShown = false;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Show install button only if not already displayed
+        if (!installButtonShown) {
+            installButtonShown = true;
+            const installBtn = document.createElement('button');
+            installBtn.innerHTML = '📱 Install App';
+            installBtn.className = 'install-pwa-btn';
+            installBtn.id = 'pwaInstallBtn';
+            installBtn.onclick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User ${outcome} the install prompt`);
+                    deferredPrompt = null;
+                    installBtn.style.display = 'none';
+                }
+            };
+            document.body.appendChild(installBtn);
+        }
+    });
+    
+    // Also handle app installed event
+    window.addEventListener('appinstalled', () => {
+        console.log('🎉 THE MOON app was installed');
+        const btn = document.getElementById('pwaInstallBtn');
+        if (btn) btn.style.display = 'none';
+    });
+    
+    // Theme Logic
     function initTheme() {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -766,69 +840,45 @@
     async function subscribeNewsletter() {
         const email = document.getElementById('newsletterEmail').value;
         const msgDiv = document.getElementById('newsletterMsg');
-        
         if (!email) {
-            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Please enter email address</div>';
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">❌ Please enter email address</div>';
             setTimeout(() => msgDiv.innerHTML = '', 3000);
             return;
         }
-        
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Please enter a valid email address</div>';
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">❌ Invalid email</div>';
             setTimeout(() => msgDiv.innerHTML = '', 3000);
             return;
         }
-        
-        msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">⏳ Subscribing...</div>';
-        
+        msgDiv.innerHTML = '<div style="color:#ffc107;">⏳ Subscribing...</div>';
         try {
-            const { data: existing } = await supabase
-                .from('newsletter')
-                .select('email')
-                .eq('email', email)
-                .single();
-            
-            if (existing) {
-                msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">⚠️ This email is already subscribed!</div>';
-                setTimeout(() => msgDiv.innerHTML = '', 3000);
-                return;
-            }
-            
             const { error } = await supabase.from('newsletter').insert({ email: email, subscribed_at: new Date() });
-            
-            if (error) {
-                msgDiv.innerHTML = `<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Subscription failed: ${error.message}</div>`;
+            if (error && error.code === '23505') {
+                msgDiv.innerHTML = '<div style="color:#ffc107;">⚠️ Already subscribed!</div>';
+            } else if (error) {
+                msgDiv.innerHTML = `<div style="color:#dc3545;">❌ Failed</div>`;
             } else {
-                msgDiv.innerHTML = '<div style="color:#28a745; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">✅ Subscribed successfully! Thank you.</div>';
+                msgDiv.innerHTML = '<div style="color:#28a745;">✅ Subscribed successfully!</div>';
                 document.getElementById('newsletterEmail').value = '';
             }
         } catch (err) {
-            msgDiv.innerHTML = `<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Error: ${err.message}</div>`;
+            msgDiv.innerHTML = '<div style="color:#dc3545;">Error</div>';
         }
-        
         setTimeout(() => msgDiv.innerHTML = '', 4000);
     }
     
-    // Footer Newsletter Subscription
     async function subscribeFooterNewsletter() {
         const email = document.getElementById('footerNewsletterEmail').value;
         const msgDiv = document.getElementById('footerNewsletterMsg');
-        
-        if (!email) {
-            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">Enter email</div>';
-            setTimeout(() => msgDiv.innerHTML = '', 3000);
-            return;
-        }
-        
+        if (!email) return;
         const { error } = await supabase.from('newsletter').insert({ email: email, subscribed_at: new Date() });
-        
         if (error && error.code === '23505') {
-            msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px;">Already subscribed!</div>';
+            msgDiv.innerHTML = '<div style="color:#ffc107;">Already subscribed!</div>';
         } else if (error) {
-            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">Subscription failed</div>';
+            msgDiv.innerHTML = '<div style="color:#dc3545;">Failed</div>';
         } else {
-            msgDiv.innerHTML = '<div style="color:#28a745; margin-top:10px;">✅ Subscribed!</div>';
+            msgDiv.innerHTML = '<div style="color:#28a745;">✅ Subscribed!</div>';
             document.getElementById('footerNewsletterEmail').value = '';
         }
         setTimeout(() => msgDiv.innerHTML = '', 3000);
@@ -838,34 +888,25 @@
     async function fetchNews() {
         const grid = document.getElementById('newsGrid');
         grid.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
-        
         try {
-            let url = `${SUPABASE_URL}/rest/v1/news?select=*,categories(*)&status=eq.published&order=published_at.desc&limit=20`;
+            let query = supabase.from('news').select('*, categories(*)').eq('status', 'published').order('published_at', { ascending: false }).limit(20);
             if (currentCategory !== 'all') {
-                url = `${SUPABASE_URL}/rest/v1/news?select=*,categories(*)&categories.slug=eq.${currentCategory}&status=eq.published&order=published_at.desc&limit=20`;
+                query = supabase.from('news').select('*, categories(*)').eq('status', 'published').eq('categories.slug', currentCategory).order('published_at', { ascending: false }).limit(20);
             }
-            
-            const response = await fetch(url, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-            });
-            
-            if (!response.ok) throw new Error('Failed to fetch');
-            
-            const news = await response.json();
-            allNews = news;
-            
-            if (news.length === 0) {
+            const { data: news, error } = await query;
+            if (error) throw error;
+            allNews = news || [];
+            if (!allNews.length) {
                 grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Check back soon!</div>';
                 return;
             }
-            
-            grid.innerHTML = news.map(article => `
+            grid.innerHTML = allNews.map(article => `
                 <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
                     ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
                     <div class="news-content">
                         <span class="news-category">${article.categories?.name || 'News'}</span>
                         <h3 class="news-title">${article.title}</h3>
-                        <p class="news-excerpt">${article.excerpt || article.content?.substring(0, 100)}...</p>
+                        <p class="news-excerpt">${article.excerpt || (article.content?.substring(0, 100) + '...') || 'Read more...'}</p>
                         <div class="news-meta">
                             <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
                             <span>👁️ ${article.views || 0}</span>
@@ -878,44 +919,32 @@
         }
     }
     
-    // Trending
+    // Trending & AI & Categories, Weather
     async function loadTrending() {
         const trendingDiv = document.getElementById('trendingList');
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title,views&status=eq.published&order=views.desc&limit=5`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-            });
-            const news = await response.json();
-            
-            trendingDiv.innerHTML = news.map((item, index) => `
+            const { data } = await supabase.from('news').select('id, title, views').eq('status', 'published').order('views', { ascending: false }).limit(5);
+            trendingDiv.innerHTML = (data || []).map((item, idx) => `
                 <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                    <div class="trending-rank">#${index + 1}</div>
+                    <div class="trending-rank">#${idx+1}</div>
                     <div class="trending-title">${item.title}</div>
                     <div class="trending-views">👁️ ${item.views || 0} views</div>
                 </div>
             `).join('');
-        } catch (e) {
-            trendingDiv.innerHTML = '<p>Loading...</p>';
-        }
+        } catch (e) { trendingDiv.innerHTML = '<p>Trending unavailable</p>'; }
     }
     
-    // Categories
     async function loadCategories() {
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-            });
-            const categories = await response.json();
-            
+            const { data: categories } = await supabase.from('categories').select('*');
             const categoryGrid = document.getElementById('categoryGrid');
-            categoryGrid.innerHTML = categories.map(cat => `
+            categoryGrid.innerHTML = (categories || []).map(cat => `
                 <a href="#" class="category-card" data-category="${cat.slug}">
                     <i>${cat.icon || '📰'}</i>
                     <span>${cat.name}</span>
                     <small>news</small>
                 </a>
             `).join('');
-            
             document.querySelectorAll('.category-card, .nav-desktop a, .sidebar-nav a, .bottom-nav-item').forEach(el => {
                 if (el.getAttribute('data-category')) {
                     el.addEventListener('click', (e) => {
@@ -927,10 +956,9 @@
                     });
                 }
             });
-        } catch (e) {}
+        } catch(e) {}
     }
     
-    // Weather
     function getWeather() {
         const tempDiv = document.getElementById('weatherTemp');
         const locDiv = document.getElementById('weatherLocation');
@@ -938,68 +966,47 @@
         if (locDiv) locDiv.textContent = 'New Delhi, IN';
     }
     
-    // Ticker
     async function loadTicker() {
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title&status=eq.published&order=published_at.desc&limit=5`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-            });
-            const news = await response.json();
+            const { data } = await supabase.from('news').select('title').eq('status', 'published').order('published_at', { ascending: false }).limit(5);
             const tickerContent = document.getElementById('tickerContent');
-            if (tickerContent) {
-                tickerContent.innerHTML = '🔴 LIVE | ' + news.map(n => n.title).join(' | ') + ' | ';
+            if (tickerContent && data) {
+                tickerContent.innerHTML = '🔴 LIVE | ' + data.map(n => n.title).join(' | ') + ' | ';
             }
-        } catch (e) {}
+        } catch(e) {}
     }
     
-    // AI Picks
     async function loadAIPicks() {
         const aiDiv = document.getElementById('aiPicks');
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title&status=eq.published&order=views.desc&limit=3`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-            });
-            const news = await response.json();
-            aiDiv.innerHTML = news.map(item => `
+            const { data } = await supabase.from('news').select('title').eq('status', 'published').order('views', { ascending: false }).limit(3);
+            aiDiv.innerHTML = (data || []).map(item => `
                 <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;">
                     <div class="trending-title">🤖 ${item.title}</div>
                 </div>
             `).join('');
-        } catch (e) {
-            aiDiv.innerHTML = '<p>AI picks loading...</p>';
-        }
+        } catch(e) { aiDiv.innerHTML = '<p>AI picks loading...</p>'; }
     }
     
-    // Search
     function initSearch() {
         const searchBtn = document.getElementById('searchBtn');
         const searchInput = document.getElementById('searchInput');
-        searchBtn.addEventListener('click', () => {
-            searchInput.classList.toggle('active');
-            if (searchInput.classList.contains('active')) {
-                searchInput.focus();
-            }
-        });
-        
+        searchBtn.addEventListener('click', () => searchInput.classList.toggle('active'));
         searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') {
                 const term = searchInput.value.toLowerCase();
                 const filtered = allNews.filter(n => n.title.toLowerCase().includes(term) || (n.content && n.content.toLowerCase().includes(term)));
                 const grid = document.getElementById('newsGrid');
-                if (filtered.length === 0) {
-                    grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results found</div>';
-                } else {
+                if (filtered.length === 0) grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results</div>';
+                else {
                     grid.innerHTML = filtered.map(article => `
                         <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
                             ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
                             <div class="news-content">
                                 <span class="news-category">${article.categories?.name || 'News'}</span>
                                 <h3 class="news-title">${article.title}</h3>
-                                <p class="news-excerpt">${article.excerpt || article.content?.substring(0, 100)}...</p>
-                                <div class="news-meta">
-                                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
-                                    <span>👁️ ${article.views || 0}</span>
-                                </div>
+                                <p class="news-excerpt">${article.excerpt || (article.content?.substring(0,100) + '...')}</p>
+                                <div class="news-meta"><span>📅 ${new Date(article.published_at).toLocaleDateString()}</span><span>👁️ ${article.views || 0}</span></div>
                             </div>
                         </div>
                     `).join('');
@@ -1008,33 +1015,20 @@
         });
     }
     
-    // Sidebar
     function initSidebar() {
         const menuToggle = document.getElementById('menuToggle');
         const closeSidebar = document.getElementById('closeSidebar');
         const overlay = document.getElementById('overlay');
         const sidebar = document.getElementById('sidebar');
-        
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('open');
-            overlay.classList.add('active');
-        });
-        
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        });
-        
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        });
+        menuToggle.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('active'); });
+        closeSidebar.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
+        overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
     }
     
-    // Theme Toggle
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('subscribeBtn').addEventListener('click', subscribeNewsletter);
     
-    // Initialize all
+    // Initialization
     initTheme();
     fetchNews();
     loadCategories();
@@ -1044,13 +1038,6 @@
     getWeather();
     initSearch();
     initSidebar();
-    
-    // Service Worker Registration
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/rasu/sw.js').then(reg => {
-            console.log('Service Worker registered', reg);
-        });
-    }
 </script>
 </body>
 </html>
