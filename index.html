@@ -678,6 +678,7 @@
                     <input type="email" id="newsletterEmail" placeholder="Your email address">
                     <button id="subscribeBtn">Subscribe</button>
                 </div>
+                <div id="newsletterMsg"></div>
             </div>
         </div>
     </div>
@@ -685,6 +686,14 @@
 
 <!-- Footer -->
 <footer class="footer">
+    <div class="footer-newsletter" style="margin-bottom: 20px;">
+        <h4>Subscribe to our Newsletter</h4>
+        <div style="display: flex; gap: 10px; max-width: 400px; margin: 0 auto;">
+            <input type="email" id="footerNewsletterEmail" placeholder="Your email" style="flex:1; padding: 10px; border-radius: 8px; border: none;">
+            <button onclick="subscribeFooterNewsletter()" style="background: #dc2626; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Subscribe</button>
+        </div>
+        <div id="footerNewsletterMsg"></div>
+    </div>
     <div class="footer-links">
         <a href="#">About</a>
         <a href="#">Privacy</a>
@@ -713,6 +722,7 @@
     
     const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentCategory = 'all';
     let currentPage = 1;
@@ -750,6 +760,78 @@
         } else {
             alert('OneSignal not loaded yet. Please refresh the page.');
         }
+    }
+    
+    // Newsletter Subscription (Sidebar)
+    async function subscribeNewsletter() {
+        const email = document.getElementById('newsletterEmail').value;
+        const msgDiv = document.getElementById('newsletterMsg');
+        
+        if (!email) {
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Please enter email address</div>';
+            setTimeout(() => msgDiv.innerHTML = '', 3000);
+            return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Please enter a valid email address</div>';
+            setTimeout(() => msgDiv.innerHTML = '', 3000);
+            return;
+        }
+        
+        msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">⏳ Subscribing...</div>';
+        
+        try {
+            const { data: existing } = await supabase
+                .from('newsletter')
+                .select('email')
+                .eq('email', email)
+                .single();
+            
+            if (existing) {
+                msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">⚠️ This email is already subscribed!</div>';
+                setTimeout(() => msgDiv.innerHTML = '', 3000);
+                return;
+            }
+            
+            const { error } = await supabase.from('newsletter').insert({ email: email, subscribed_at: new Date() });
+            
+            if (error) {
+                msgDiv.innerHTML = `<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Subscription failed: ${error.message}</div>`;
+            } else {
+                msgDiv.innerHTML = '<div style="color:#28a745; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">✅ Subscribed successfully! Thank you.</div>';
+                document.getElementById('newsletterEmail').value = '';
+            }
+        } catch (err) {
+            msgDiv.innerHTML = `<div style="color:#dc3545; margin-top:10px; padding:8px; background:#1a1a1a; border-radius:6px;">❌ Error: ${err.message}</div>`;
+        }
+        
+        setTimeout(() => msgDiv.innerHTML = '', 4000);
+    }
+    
+    // Footer Newsletter Subscription
+    async function subscribeFooterNewsletter() {
+        const email = document.getElementById('footerNewsletterEmail').value;
+        const msgDiv = document.getElementById('footerNewsletterMsg');
+        
+        if (!email) {
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">Enter email</div>';
+            setTimeout(() => msgDiv.innerHTML = '', 3000);
+            return;
+        }
+        
+        const { error } = await supabase.from('newsletter').insert({ email: email, subscribed_at: new Date() });
+        
+        if (error && error.code === '23505') {
+            msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px;">Already subscribed!</div>';
+        } else if (error) {
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">Subscription failed</div>';
+        } else {
+            msgDiv.innerHTML = '<div style="color:#28a745; margin-top:10px;">✅ Subscribed!</div>';
+            document.getElementById('footerNewsletterEmail').value = '';
+        }
+        setTimeout(() => msgDiv.innerHTML = '', 3000);
     }
     
     // Fetch News
@@ -949,20 +1031,6 @@
         });
     }
     
-    // Newsletter
-    function initNewsletter() {
-        const subscribeBtn = document.getElementById('subscribeBtn');
-        subscribeBtn.addEventListener('click', () => {
-            const email = document.getElementById('newsletterEmail').value;
-            if (email) {
-                alert(`Subscribed with ${email}!`);
-                document.getElementById('newsletterEmail').value = '';
-            } else {
-                alert('Please enter email');
-            }
-        });
-    }
-    
     // Theme Toggle
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     
@@ -976,7 +1044,13 @@
     getWeather();
     initSearch();
     initSidebar();
-    initNewsletter();
+    
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/rasu/sw.js').then(reg => {
+            console.log('Service Worker registered', reg);
+        });
+    }
 </script>
 </body>
 </html>
