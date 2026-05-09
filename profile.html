@@ -63,13 +63,13 @@
 <body>
 <div class="header">
     <div class="header-content">
-        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+        <a href="./" class="logo">🌙 THE MOON</a>
         <button id="themeToggle" style="background:none;border:none;font-size:1.2rem;cursor:pointer;">🌙</button>
     </div>
 </div>
 
 <div class="container">
-    <a href="/rasu/" class="back-btn">← Back to Home</a>
+    <a href="./" class="back-btn">← Back to Home</a>
 
     <div id="loginSection" class="card">
         <h2>🔐 Login / Sign Up</h2>
@@ -331,14 +331,14 @@
         if (!bookmarks || bookmarks.length === 0) {
             bookmarksDiv.innerHTML = '<div class="info">No bookmarks yet</div>';
         } else {
-            bookmarksDiv.innerHTML = bookmarks.map(b => `<div class="bookmark-item" onclick="location.href='/rasu/article.html?id=${b.news.id}'">📰 ${b.news.title}<div style="font-size:12px;color:#aaa;">${new Date(b.created_at).toLocaleDateString()}</div></div>`).join('');
+            bookmarksDiv.innerHTML = bookmarks.map(b => `<div class="bookmark-item" onclick="location.href='article.html?id=${b.news.id}'">📰 ${b.news.title}<div style="font-size:12px;color:#aaa;">${new Date(b.created_at).toLocaleDateString()}</div></div>`).join('');
         }
         
         const historyDiv = document.getElementById('historyList');
         if (!history || history.length === 0) {
             historyDiv.innerHTML = '<div class="info">No reading history yet</div>';
         } else {
-            historyDiv.innerHTML = history.map(h => `<div class="history-item" onclick="location.href='/rasu/article.html?id=${h.news.id}'">📖 ${h.news.title}<div style="font-size:12px;color:#aaa;">${new Date(h.read_at).toLocaleDateString()}</div></div>`).join('');
+            historyDiv.innerHTML = history.map(h => `<div class="history-item" onclick="location.href='article.html?id=${h.news.id}'">📖 ${h.news.title}<div style="font-size:12px;color:#aaa;">${new Date(h.read_at).toLocaleDateString()}</div></div>`).join('');
         }
         
         document.getElementById('displayName').value = localStorage.getItem('displayName') || '';

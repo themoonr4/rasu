@@ -70,7 +70,7 @@
                 </div>
                 <div class="form-group">
                     <label>Click URL (optional)</label>
-                    <input type="text" id="notifyUrl" placeholder="/rasu/">
+                    <input type="text" id="notifyUrl" placeholder="/">
                 </div>
                 <button id="sendNotifyBtn" onclick="sendNotificationFromAdmin()">📤 Send Notification</button>
                 <div id="notifyResult"></div>
@@ -230,7 +230,7 @@
                     // Auto send notification after publishing news
                     const notifyTitle = document.getElementById('notifyTitle').value || title;
                     const notifyMessage = document.getElementById('notifyMessage').value || content.substring(0, 100);
-                    const notifyUrl = document.getElementById('notifyUrl').value || `/rasu/`;
+                    const notifyUrl = document.getElementById('notifyUrl').value || `/`;
                     
                     await sendPushNotification(notifyTitle, notifyMessage, notifyUrl);
                     loadSubscribers();
@@ -280,7 +280,7 @@
         async function sendNotificationFromAdmin() {
             const title = document.getElementById('notifyTitle').value;
             const message = document.getElementById('notifyMessage').value;
-            const url = document.getElementById('notifyUrl').value || '/rasu/';
+            const url = document.getElementById('notifyUrl').value || '/';
             const resultDiv = document.getElementById('notifyResult');
             
             if (!title || !message) {

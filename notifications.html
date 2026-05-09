@@ -45,8 +45,8 @@
         function sendTestNotification() {
             const title = document.getElementById('testTitle').value || 'Test Notification';
             const body = document.getElementById('testBody').value || 'This is a test notification from THE MOON';
-            if(Notification.permission === 'granted') { new Notification(title, { body: body, icon: '/assets/logo.svg' }); alert('Notification sent!'); }
-            else if(Notification.permission !== 'denied') { Notification.requestPermission().then(perm => { if(perm === 'granted') { new Notification(title, { body: body, icon: '/assets/logo.svg' }); alert('Notification sent!'); } }); }
+            if(Notification.permission === 'granted') { new Notification(title, { body: body, icon: 'assets/logo.svg' }); alert('Notification sent!'); }
+            else if(Notification.permission !== 'denied') { Notification.requestPermission().then(perm => { if(perm === 'granted') { new Notification(title, { body: body, icon: 'assets/logo.svg' }); alert('Notification sent!'); } }); }
             else { alert('Please enable notifications in browser settings'); }
         }
         

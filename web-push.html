@@ -20,7 +20,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="back-btn" onclick="location.href='/admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
+        <div class="back-btn" onclick="location.href='admin.html'"><i class="fas fa-arrow-left"></i> Back</div>
         <h1><i class="fas fa-bell"></i> Web Push Notifications</h1>
         
         <div class="card">
@@ -58,7 +58,7 @@
         
         function testNotification() {
             if(Notification.permission === 'granted') {
-                new Notification('THE MOON Test', { body: 'This is a test notification from THE MOON', icon: '/assets/logo.svg' });
+                new Notification('THE MOON Test', { body: 'This is a test notification from THE MOON', icon: 'assets/logo.svg' });
             } else { alert('Enable notifications first'); }
         }
         
@@ -68,7 +68,7 @@
             const url = document.getElementById('pushUrl').value;
             if(!body) { alert('Enter message'); return; }
             if(Notification.permission === 'granted') {
-                new Notification(title, { body: body, icon: '/assets/logo.svg', data: { url: url } });
+                new Notification(title, { body: body, icon: 'assets/logo.svg', data: { url: url } });
                 document.getElementById('pushMsg').innerHTML = '<div style="color:#28a745;margin-top:0.5rem;">✅ Notification sent to current tab</div>';
                 setTimeout(() => document.getElementById('pushMsg').innerHTML = '', 3000);
             } else { alert('No subscribers. Request permission first.'); }

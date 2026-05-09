@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#dc2626">
     <title>THE MOON - World Class News</title>
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-    <link rel="manifest" href="/rasu/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <!-- OneSignal Push Notifications -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -540,7 +540,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             
-            <a href="/rasu/" class="logo">🌙 THE MOON</a>
+            <a href="./" class="logo">🌙 THE MOON</a>
             
             <div class="nav-desktop">
                 <a href="#" data-category="all" class="active">All</a>
@@ -558,7 +558,7 @@
                 </div>
                 <button id="themeToggle"><i class="fas fa-moon"></i></button>
                 <button id="notifyBtn" onclick="subscribeToNotifications()"><i class="fas fa-bell"></i></button>
-                <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none;">
+                <a href="profile.html" style="color: var(--text-primary); text-decoration: none;">
                     <button style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px; border-radius: var(--radius-md);">
                         <i class="fas fa-user-circle"></i>
                     </button>
@@ -580,7 +580,7 @@
         <a href="#" data-category="business">📊 Business</a>
         <a href="#" data-category="politics">🏛️ Politics</a>
         <a href="#" data-category="study">📚 Study</a>
-        <a href="/rasu/profile.html">👤 Profile</a>
+        <a href="profile.html">👤 Profile</a>
         <a href="#" data-page="bookmarks">🔖 Bookmarks</a>
         <a href="#" data-page="settings">⚙️ Settings</a>
     </div>
@@ -593,7 +593,7 @@
     <a href="#" class="bottom-nav-item" data-category="tech"><i class="fas fa-microchip"></i><span>Tech</span></a>
     <a href="#" class="bottom-nav-item" data-category="sports"><i class="fas fa-futbol"></i><span>Sports</span></a>
     <a href="#" class="bottom-nav-item" id="mobileSearchBtn"><i class="fas fa-search"></i><span>Search</span></a>
-    <a href="/rasu/profile.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a href="profile.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
 </div>
 
 <main class="container">
@@ -825,7 +825,7 @@
             }
             
             grid.innerHTML = allNews.map(article => `
-                <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                <div class="news-card" onclick="location.href='article.html?id=${article.id}'">
                     ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
                     <div class="news-content">
                         <span class="news-category">${article.categories?.name || 'News'}</span>
@@ -856,7 +856,7 @@
                 
             if (data && data.length > 0) {
                 trendingDiv.innerHTML = data.map((item, index) => `
-                    <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                    <div class="trending-item" onclick="location.href='article.html?id=${item.id}'">
                         <div class="trending-rank">#${index + 1}</div>
                         <div class="trending-title">${item.title}</div>
                         <div class="trending-views">👁️ ${item.views || 0} views</div>
@@ -947,7 +947,7 @@
                 
             if (data && data.length > 0) {
                 aiDiv.innerHTML = data.map(item => `
-                    <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                    <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;" onclick="location.href='article.html?id=${item.id}'">
                         <div class="trending-title">🤖 ${item.title}</div>
                     </div>
                 `).join('');
@@ -979,7 +979,7 @@
                     grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results found</div>';
                 } else {
                     grid.innerHTML = filtered.map(article => `
-                        <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                        <div class="news-card" onclick="location.href='article.html?id=${article.id}'">
                             ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
                             <div class="news-content">
                                 <span class="news-category">${article.categories?.name || 'News'}</span>
