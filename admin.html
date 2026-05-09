@@ -7,13 +7,19 @@
         body{background:#0a0a0a;font-family:Arial;color:#fff;padding:20px;}
         .container{max-width:600px;margin:0 auto;}
         .card{background:#111;border:1px solid #222;border-radius:16px;padding:25px;margin-bottom:20px;}
-        h2{color:#dc2626;text-align:center;}
-        input,textarea,select{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
+        h2{color:#dc2626;text-align:center;margin-bottom:20px;}
+        h3{color:#dc2626;margin-bottom:15px;font-size:18px;}
+        input,textarea,select{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px;}
         button{background:#dc2626;color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold;}
+        button:hover{background:#b91c1c;}
         .success{background:#28a745;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
         .error{background:#dc3545;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
         .info{background:#17a2b8;padding:10px;border-radius:8px;margin-bottom:15px;text-align:center;}
         .hide{display:none;}
+        .form-group{margin-bottom:15px;}
+        label{display:block;margin-bottom:5px;color:#aaa;font-size:13px;}
+        .btn-secondary{background:#6c757d;margin-top:10px;}
+        .btn-secondary:hover{background:#5a6268;}
     </style>
 </head>
 <body>
@@ -28,6 +34,7 @@
 
         <!-- Admin Panel -->
         <div id="adminPanel" class="hide">
+            <!-- Post News Section -->
             <div class="card">
                 <h2>🌙 Post News</h2>
                 <div class="info">✅ Authorized Admin</div>
@@ -43,9 +50,30 @@
                 <input type="text" id="image" placeholder="Image URL">
                 <textarea id="content" rows="8" placeholder="Content..."></textarea>
                 <button onclick="postNews()">📰 PUBLISH</button>
-                <button onclick="logout()" style="background:#6c757d; margin-top:10px;">🚪 Logout</button>
                 <div id="result"></div>
             </div>
+
+            <!-- Push Notification Section -->
+            <div class="card">
+                <h3><i class="fas fa-bell"></i> 🔔 Send Push Notification</h3>
+                <div class="form-group">
+                    <label>Notification Title</label>
+                    <input type="text" id="notifyTitle" placeholder="e.g., Breaking News">
+                </div>
+                <div class="form-group">
+                    <label>Notification Message</label>
+                    <textarea id="notifyMessage" rows="3" placeholder="e.g., Click to read the full story..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Click URL (optional)</label>
+                    <input type="text" id="notifyUrl" placeholder="/rasu/">
+                </div>
+                <button id="sendNotifyBtn" onclick="sendNotificationFromAdmin()">📤 Send Notification</button>
+                <div id="notifyResult"></div>
+            </div>
+
+            <!-- Logout Button -->
+            <button onclick="logout()" class="btn-secondary">🚪 Logout</button>
         </div>
     </div>
 
@@ -53,10 +81,15 @@
         // 🔐 Password
         const SECRET_PASSWORD = 'TheMoon2024';
 
-        // 🔑 Supabase (YOUR credentials - already correct)
+        // 🔑 Supabase (YOUR credentials)
         const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
 
+        // 🔔 OneSignal Configuration
+        const ONESIGNAL_APP_ID = '60154f61-182d-45c0-99f1-fef13b3f9d1c';
+        const ONESIGNAL_REST_API_KEY = 'YOUR_REST_API_KEY_HERE';  // 🔑 OneSignal Dashboard se copy karo
+
+        // Check Password
         function checkPassword() {
             const pass = document.getElementById('adminPass').value;
             const msgDiv = document.getElementById('passMsg');
@@ -70,12 +103,14 @@
             }
         }
 
+        // Logout
         function logout() {
             document.getElementById('passwordScreen').style.display = 'block';
             document.getElementById('adminPanel').style.display = 'none';
             document.getElementById('adminPass').value = '';
         }
 
+        // Post News to Supabase
         async function postNews() {
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
@@ -117,6 +152,14 @@
                     document.getElementById('title').value = '';
                     document.getElementById('content').value = '';
                     document.getElementById('image').value = '';
+                    
+                    // Auto send notification after publishing news
+                    const notifyTitle = document.getElementById('notifyTitle').value || title;
+                    const notifyMessage = document.getElementById('notifyMessage').value || content.substring(0, 100);
+                    const notifyUrl = document.getElementById('notifyUrl').value || `/rasu/`;
+                    
+                    await sendPushNotification(notifyTitle, notifyMessage, notifyUrl);
+                    
                     setTimeout(() => resultDiv.innerHTML = '', 3000);
                 } else {
                     const error = await response.json();
@@ -125,6 +168,69 @@
             } catch (err) {
                 resultDiv.innerHTML = `<div class="error">❌ Connection error: ${err.message}</div>`;
             }
+        }
+
+        // Send Push Notification via OneSignal REST API
+        async function sendPushNotification(title, message, url) {
+            if (!ONESIGNAL_REST_API_KEY || ONESIGNAL_REST_API_KEY === 'YOUR_REST_API_KEY_HERE') {
+                console.log('REST API key not configured');
+                return false;
+            }
+            
+            try {
+                const response = await fetch('https://onesignal.com/api/v1/notifications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Basic ${ONESIGNAL_REST_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        app_id: ONESIGNAL_APP_ID,
+                        headings: { en: title },
+                        contents: { en: message },
+                        url: url,
+                        included_segments: ['Subscribed Users']
+                    })
+                });
+                
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Notification error:', error);
+                return { error: error.message };
+            }
+        }
+
+        // Send notification from admin panel button
+        async function sendNotificationFromAdmin() {
+            const title = document.getElementById('notifyTitle').value;
+            const message = document.getElementById('notifyMessage').value;
+            const url = document.getElementById('notifyUrl').value || '/rasu/';
+            const resultDiv = document.getElementById('notifyResult');
+            
+            if (!title || !message) {
+                resultDiv.innerHTML = '<div class="error">❌ Please enter both title and message</div>';
+                setTimeout(() => resultDiv.innerHTML = '', 3000);
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="success">⏳ Sending notification...</div>';
+            
+            const response = await sendPushNotification(title, message, url);
+            
+            if (response.errors) {
+                resultDiv.innerHTML = `<div class="error">❌ Failed: ${response.errors}</div>`;
+            } else if (response.id) {
+                resultDiv.innerHTML = `<div class="success">✅ Notification sent successfully! (ID: ${response.id})</div>`;
+                document.getElementById('notifyTitle').value = '';
+                document.getElementById('notifyMessage').value = '';
+            } else {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${JSON.stringify(response)}</div>`;
+            }
+            
+            setTimeout(() => {
+                if (resultDiv.innerHTML) resultDiv.innerHTML = '';
+            }, 4000);
         }
     </script>
 </body>
