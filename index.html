@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#dc2626">
     <title>THE MOON - World Class News</title>
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/rasu/manifest.json">
     <!-- OneSignal Push Notifications -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -32,15 +32,44 @@
             --border: #e2e8f0;
             --brand-red: #dc2626;
             --brand-red-dark: #b91c1c;
+            --brand-red-light: #ef4444;
+            
+            --tech: #3b82f6;
+            --sports: #10b981;
+            --business: #f59e0b;
+            --politics: #8b5cf6;
+            --study: #06b6d4;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --text-xs: clamp(0.7rem, 0.65rem + 0.5vw, 0.8rem);
+            --text-sm: clamp(0.8rem, 0.75rem + 0.7vw, 0.9rem);
+            --text-base: clamp(0.9rem, 0.85rem + 0.8vw, 1rem);
+            --text-lg: clamp(1rem, 0.95rem + 1vw, 1.15rem);
+            --text-xl: clamp(1.15rem, 1.05rem + 1.2vw, 1.3rem);
+            --text-2xl: clamp(1.3rem, 1.2rem + 1.5vw, 1.6rem);
+            --text-3xl: clamp(1.6rem, 1.4rem + 2vw, 2rem);
+            --text-4xl: clamp(2rem, 1.6rem + 2.5vw, 2.5rem);
+            
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
             --radius-sm: 0.375rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            
             --transition-fast: 150ms ease;
             --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
         }
 
         [data-theme="dark"] {
@@ -51,13 +80,20 @@
             --text-secondary: #cbd5e1;
             --text-tertiary: #64748b;
             --border: #2a2a2a;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -87,7 +123,7 @@
         @media (min-width: 768px) { .header-content { height: 70px; gap: 2rem; } }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: var(--text-xl);
             font-weight: 800;
             background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
             -webkit-background-clip: text;
@@ -251,7 +287,7 @@
             display: flex;
             flex-direction: column;
             gap: 2rem;
-            padding-bottom: 80px;
+            padding-bottom: 70px;
         }
         @media (min-width: 768px) { .layout-main { padding-bottom: 0; } }
         @media (min-width: 1024px) {
@@ -272,8 +308,8 @@
         @media (min-width: 768px) {
             .hero { padding: 2rem; text-align: left; }
         }
-        .hero h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        .hero p { font-size: 0.9rem; opacity: 0.9; }
+        .hero h1 { font-size: var(--text-2xl); margin-bottom: 0.5rem; }
+        .hero p { font-size: var(--text-sm); opacity: 0.9; }
 
         .ticker {
             background: var(--bg-secondary);
@@ -286,7 +322,7 @@
         .ticker-content {
             display: inline-block;
             animation: ticker-scroll 20s linear infinite;
-            font-size: 0.9rem;
+            font-size: var(--text-sm);
         }
         @keyframes ticker-scroll {
             0% { transform: translateX(100%); }
@@ -308,11 +344,11 @@
             text-align: center;
             text-decoration: none;
             transition: var(--transition-fast);
-            cursor: pointer;
         }
         .category-card:hover { transform: translateY(-2px); }
         .category-card i { font-size: 1.5rem; margin-bottom: 0.25rem; display: block; }
-        .category-card span { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; }
+        .category-card span { font-size: var(--text-xs); color: var(--text-primary); font-weight: 500; }
+        .category-card small { font-size: 0.6rem; color: var(--text-tertiary); }
 
         .news-grid {
             display: grid;
@@ -335,6 +371,15 @@
         }
         .news-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
+        .news-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        @media (min-width: 768px) {
+            .news-image { width: 120px; height: 120px; }
+        }
+
         .news-content { padding: 0.75rem; flex: 1; }
         .news-category {
             display: inline-block;
@@ -346,14 +391,14 @@
             margin-bottom: 0.5rem;
         }
         .news-title {
-            font-size: 1rem;
+            font-size: var(--text-sm);
             font-weight: 600;
             margin-bottom: 0.25rem;
             line-height: 1.4;
         }
         .news-excerpt {
             color: var(--text-secondary);
-            font-size: 0.8rem;
+            font-size: var(--text-xs);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -379,7 +424,7 @@
             padding: 1rem;
         }
         .widget h3 {
-            font-size: 1rem;
+            font-size: var(--text-base);
             margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
@@ -398,7 +443,7 @@
             font-weight: bold;
         }
         .trending-title {
-            font-size: 0.85rem;
+            font-size: var(--text-sm);
             margin: 0.25rem 0;
         }
         .trending-views {
@@ -408,7 +453,7 @@
 
         .weather-info { text-align: center; }
         .weather-temp { font-size: 2rem; font-weight: bold; }
-        .weather-location { font-size: 0.85rem; color: var(--text-secondary); }
+        .weather-location { font-size: var(--text-sm); color: var(--text-secondary); }
 
         .newsletter-input {
             display: flex;
@@ -438,9 +483,6 @@
             padding: 2rem 1rem;
             margin-top: 2rem;
             text-align: center;
-            position: relative;
-            bottom: 0;
-            width: 100%;
         }
         .footer-links {
             display: flex;
@@ -452,7 +494,7 @@
         .footer-links a {
             text-decoration: none;
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: var(--text-sm);
         }
         .footer-social {
             display: flex;
@@ -485,6 +527,8 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .text-center { text-align: center; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
     </style>
 </head>
 <body>
@@ -496,7 +540,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             
-            <a href="#" class="logo">🌙 THE MOON</a>
+            <a href="/rasu/" class="logo">🌙 THE MOON</a>
             
             <div class="nav-desktop">
                 <a href="#" data-category="all" class="active">All</a>
@@ -537,6 +581,8 @@
         <a href="#" data-category="politics">🏛️ Politics</a>
         <a href="#" data-category="study">📚 Study</a>
         <a href="/rasu/profile.html">👤 Profile</a>
+        <a href="#" data-page="bookmarks">🔖 Bookmarks</a>
+        <a href="#" data-page="settings">⚙️ Settings</a>
     </div>
 </div>
 
@@ -560,7 +606,7 @@
             
             <div class="ticker" id="ticker">
                 <div class="ticker-content" id="tickerContent">
-                    🔴 LIVE | Loading latest news...
+                    🔴 LIVE | Breaking news will appear here
                 </div>
             </div>
             
@@ -635,11 +681,14 @@
 <script>
     const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
-    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // ✅ FIXED: API key properly set in headers (YAHI EK CHANGE HAI)
+    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        global: { headers: { 'apikey': SUPABASE_ANON_KEY } }
+    });
     
     let currentCategory = 'all';
     let allNews = [];
-    let categoriesData = [];
     
     function initTheme() {
         const savedTheme = localStorage.getItem('theme');
@@ -665,10 +714,10 @@
         if (window.OneSignalDeferred) {
             await window.OneSignalDeferred.push(async function(OneSignal) {
                 await OneSignal.Notifications.requestPermission();
-                alert('🔔 Notifications enabled!');
+                alert('🔔 Notifications enabled! You will receive breaking news alerts.');
             });
         } else {
-            alert('OneSignal not loaded yet.');
+            alert('OneSignal not loaded yet. Please refresh the page.');
         }
     }
     
@@ -677,7 +726,14 @@
         const msgDiv = document.getElementById('newsletterMsg');
         
         if (!email) {
-            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">❌ Enter email</div>';
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">❌ Please enter email address</div>';
+            setTimeout(() => msgDiv.innerHTML = '', 3000);
+            return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">❌ Please enter a valid email address</div>';
             setTimeout(() => msgDiv.innerHTML = '', 3000);
             return;
         }
@@ -685,19 +741,31 @@
         msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px;">⏳ Subscribing...</div>';
         
         try {
+            const { data: existing } = await supabase
+                .from('newsletter')
+                .select('email')
+                .eq('email', email)
+                .single();
+            
+            if (existing) {
+                msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px;">⚠️ This email is already subscribed!</div>';
+                setTimeout(() => msgDiv.innerHTML = '', 3000);
+                return;
+            }
+            
             const { error } = await supabase.from('newsletter').insert({ email: email, subscribed_at: new Date() });
-            if (error && error.code === '23505') {
-                msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px;">⚠️ Already subscribed!</div>';
-            } else if (error) {
-                msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">❌ Failed</div>';
+            
+            if (error) {
+                msgDiv.innerHTML = `<div style="color:#dc3545; margin-top:10px;">❌ Subscription failed: ${error.message}</div>`;
             } else {
-                msgDiv.innerHTML = '<div style="color:#28a745; margin-top:10px;">✅ Subscribed!</div>';
+                msgDiv.innerHTML = '<div style="color:#28a745; margin-top:10px;">✅ Subscribed successfully! Thank you.</div>';
                 document.getElementById('newsletterEmail').value = '';
             }
-        } catch(err) {
-            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">❌ Error</div>';
+        } catch (err) {
+            msgDiv.innerHTML = `<div style="color:#dc3545; margin-top:10px;">❌ Error: ${err.message}</div>`;
         }
-        setTimeout(() => msgDiv.innerHTML = '', 3000);
+        
+        setTimeout(() => msgDiv.innerHTML = '', 4000);
     }
     
     async function subscribeFooterNewsletter() {
@@ -711,10 +779,11 @@
         }
         
         const { error } = await supabase.from('newsletter').insert({ email: email, subscribed_at: new Date() });
+        
         if (error && error.code === '23505') {
             msgDiv.innerHTML = '<div style="color:#ffc107; margin-top:10px;">Already subscribed!</div>';
         } else if (error) {
-            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">Failed</div>';
+            msgDiv.innerHTML = '<div style="color:#dc3545; margin-top:10px;">Subscription failed</div>';
         } else {
             msgDiv.innerHTML = '<div style="color:#28a745; margin-top:10px;">✅ Subscribed!</div>';
             document.getElementById('footerNewsletterEmail').value = '';
@@ -727,41 +796,48 @@
         grid.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
         
         try {
-            let query = supabase.from('news').select('*').eq('status', 'published');
-            
+            let query = supabase
+                .from('news')
+                .select('*, categories(*)')
+                .eq('status', 'published')
+                .order('published_at', { ascending: false })
+                .limit(20);
+                
             if (currentCategory !== 'all') {
-                const cat = categoriesData.find(c => c.slug === currentCategory);
-                if (cat) {
-                    query = supabase.from('news').select('*').eq('status', 'published').eq('category_id', cat.id);
-                }
+                query = supabase
+                    .from('news')
+                    .select('*, categories(*)')
+                    .eq('status', 'published')
+                    .eq('categories.slug', currentCategory)
+                    .order('published_at', { ascending: false })
+                    .limit(20);
             }
             
             const { data: news, error } = await query;
+            
             if (error) throw error;
             
-            if (!news || news.length === 0) {
+            allNews = news || [];
+            
+            if (allNews.length === 0) {
                 grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Check back soon!</div>';
                 return;
             }
             
-            allNews = news;
-            
-            grid.innerHTML = news.map(article => {
-                const cat = categoriesData.find(c => c.id === article.category_id);
-                return `
-                    <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-                        <div class="news-content">
-                            <span class="news-category">${cat?.name || 'News'}</span>
-                            <h3 class="news-title">${escapeHtml(article.title)}</h3>
-                            <p class="news-excerpt">${escapeHtml(article.excerpt || (article.content?.substring(0, 100) + '...') || 'Click to read more')}</p>
-                            <div class="news-meta">
-                                <span>📅 ${new Date(article.published_at || article.created_at).toLocaleDateString()}</span>
-                                <span>👁️ ${article.views || 0}</span>
-                            </div>
+            grid.innerHTML = allNews.map(article => `
+                <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                    ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
+                    <div class="news-content">
+                        <span class="news-category">${article.categories?.name || 'News'}</span>
+                        <h3 class="news-title">${article.title}</h3>
+                        <p class="news-excerpt">${article.excerpt || (article.content?.substring(0, 100) + '...') || 'Click to read more'}</p>
+                        <div class="news-meta">
+                            <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                            <span>👁️ ${article.views || 0}</span>
                         </div>
                     </div>
-                `;
-            }).join('');
+                </div>
+            `).join('');
         } catch (error) {
             console.error(error);
             grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
@@ -769,37 +845,42 @@
     }
     
     async function loadTrending() {
-        if (allNews.length === 0) return;
-        const trending = [...allNews].sort((a,b) => (b.views||0) - (a.views||0)).slice(0,5);
-        document.getElementById('trendingList').innerHTML = trending.map((item, index) => `
-            <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                <div class="trending-rank">#${index + 1}</div>
-                <div class="trending-title">${escapeHtml(item.title)}</div>
-                <div class="trending-views">👁️ ${item.views || 0} views</div>
-            </div>
-        `).join('');
-    }
-    
-    async function loadAIPicks() {
-        if (allNews.length === 0) return;
-        const topPicks = [...allNews].sort((a,b) => (b.views||0) - (a.views||0)).slice(0,3);
-        document.getElementById('aiPicks').innerHTML = topPicks.map(item => `
-            <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                <div class="trending-title">🤖 ${escapeHtml(item.title)}</div>
-            </div>
-        `).join('');
+        const trendingDiv = document.getElementById('trendingList');
+        try {
+            const { data } = await supabase
+                .from('news')
+                .select('id, title, views')
+                .eq('status', 'published')
+                .order('views', { ascending: false })
+                .limit(5);
+                
+            if (data && data.length > 0) {
+                trendingDiv.innerHTML = data.map((item, index) => `
+                    <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                        <div class="trending-rank">#${index + 1}</div>
+                        <div class="trending-title">${item.title}</div>
+                        <div class="trending-views">👁️ ${item.views || 0} views</div>
+                    </div>
+                `).join('');
+            } else {
+                trendingDiv.innerHTML = '<p>No trending data</p>';
+            }
+        } catch (e) {
+            trendingDiv.innerHTML = '<p>Loading...</p>';
+        }
     }
     
     async function loadCategories() {
         try {
             const { data: categories } = await supabase.from('categories').select('*');
+            
             if (categories && categories.length > 0) {
-                categoriesData = categories;
                 const categoryGrid = document.getElementById('categoryGrid');
                 categoryGrid.innerHTML = categories.map(cat => `
                     <a href="#" class="category-card" data-category="${cat.slug}">
                         <i>${cat.icon || '📰'}</i>
                         <span>${cat.name}</span>
+                        <small>news</small>
                     </a>
                 `).join('');
                 
@@ -824,10 +905,7 @@
         const category = this.getAttribute('data-category');
         if (category) {
             currentCategory = category;
-            fetchNews().then(() => {
-                loadTrending();
-                loadAIPicks();
-            });
+            fetchNews();
             document.querySelectorAll('.nav-desktop a, .bottom-nav-item, .sidebar-nav a').forEach(nav => {
                 nav.classList.remove('active');
                 if (nav.getAttribute('data-category') === category) {
@@ -844,21 +922,41 @@
     
     async function loadTicker() {
         try {
-            const { data } = await supabase.from('news').select('title').eq('status', 'published').limit(5);
+            const { data } = await supabase
+                .from('news')
+                .select('title')
+                .eq('status', 'published')
+                .order('published_at', { ascending: false })
+                .limit(5);
+                
             if (data && data.length > 0) {
                 document.getElementById('tickerContent').innerHTML = '🔴 LIVE | ' + data.map(n => n.title).join(' | ') + ' | ';
             }
         } catch(e) {}
     }
     
-    function escapeHtml(text) {
-        if (!text) return '';
-        return text.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
+    async function loadAIPicks() {
+        const aiDiv = document.getElementById('aiPicks');
+        try {
+            const { data } = await supabase
+                .from('news')
+                .select('id, title')
+                .eq('status', 'published')
+                .order('views', { ascending: false })
+                .limit(3);
+                
+            if (data && data.length > 0) {
+                aiDiv.innerHTML = data.map(item => `
+                    <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                        <div class="trending-title">🤖 ${item.title}</div>
+                    </div>
+                `).join('');
+            } else {
+                aiDiv.innerHTML = '<p>AI picks loading...</p>';
+            }
+        } catch(e) {
+            aiDiv.innerHTML = '<p>AI picks loading...</p>';
+        }
     }
     
     function initSearch() {
@@ -880,22 +978,20 @@
                 if (filtered.length === 0) {
                     grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results found</div>';
                 } else {
-                    grid.innerHTML = filtered.map(article => {
-                        const cat = categoriesData.find(c => c.id === article.category_id);
-                        return `
-                            <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-                                <div class="news-content">
-                                    <span class="news-category">${cat?.name || 'News'}</span>
-                                    <h3 class="news-title">${escapeHtml(article.title)}</h3>
-                                    <p class="news-excerpt">${escapeHtml(article.excerpt || (article.content?.substring(0, 100) + '...'))}</p>
-                                    <div class="news-meta">
-                                        <span>📅 ${new Date(article.published_at || article.created_at).toLocaleDateString()}</span>
-                                        <span>👁️ ${article.views || 0}</span>
-                                    </div>
+                    grid.innerHTML = filtered.map(article => `
+                        <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                            ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
+                            <div class="news-content">
+                                <span class="news-category">${article.categories?.name || 'News'}</span>
+                                <h3 class="news-title">${article.title}</h3>
+                                <p class="news-excerpt">${article.excerpt || (article.content?.substring(0, 100) + '...')}</p>
+                                <div class="news-meta">
+                                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                                    <span>👁️ ${article.views || 0}</span>
                                 </div>
                             </div>
-                        `;
-                    }).join('');
+                        </div>
+                    `).join('');
                 }
                 searchInput.value = '';
                 searchInput.classList.remove('active');
@@ -929,15 +1025,11 @@
     document.getElementById('subscribeBtn').addEventListener('click', subscribeNewsletter);
     
     initTheme();
-    
-    (async function init() {
-        await loadCategories();
-        await fetchNews();
-        await loadTrending();
-        await loadTicker();
-        await loadAIPicks();
-    })();
-    
+    fetchNews();
+    loadCategories();
+    loadTrending();
+    loadTicker();
+    loadAIPicks();
     getWeather();
     initSearch();
     initSidebar();
