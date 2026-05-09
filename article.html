@@ -55,13 +55,13 @@
 
 <div class="header">
     <div class="header-content">
-        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+        <a href="./" class="logo">🌙 THE MOON</a>
         <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
     </div>
 </div>
 
 <div class="container">
-    <a href="/rasu/" class="back-btn">← Back to Home</a>
+    <a href="./" class="back-btn">← Back to Home</a>
     <div id="articleCard" class="article-card">
         <div class="loader">⏳ Loading article...</div>
     </div>
@@ -197,7 +197,7 @@
     async function toggleBookmark(newsId) {
         if (!currentUserId) {
             alert('Please login to bookmark');
-            window.location.href = '/rasu/profile.html';
+            window.location.href = 'profile.html';
             return;
         }
         
