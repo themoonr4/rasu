@@ -7,6 +7,17 @@
     <meta name="theme-color" content="#dc2626">
     <title>THE MOON - World Class News</title>
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    <link rel="manifest" href="/rasu/manifest.json">
+    <!-- OneSignal Push Notifications -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c",
+        });
+      });
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         /* ============================================
@@ -576,6 +587,9 @@
                     <button id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
                 <button id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button id="notifyBtn" onclick="subscribeToNotifications()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-primary);padding:0.5rem;min-width:40px;min-height:40px;border-radius:var(--radius-md);">
+                    <i class="fas fa-bell"></i>
+                </button>
                 <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;">
                     <button style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px; border-radius: var(--radius-md);">
                         <i class="fas fa-user-circle"></i>
@@ -723,6 +737,18 @@
             document.body.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
             document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    }
+    
+    // Push Notification Subscribe
+    async function subscribeToNotifications() {
+        if (window.OneSignalDeferred) {
+            await window.OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.Notifications.requestPermission();
+                alert('🔔 Notifications enabled! You will receive breaking news alerts.');
+            });
+        } else {
+            alert('OneSignal not loaded yet. Please refresh the page.');
         }
     }
     
