@@ -1,24 +1,20 @@
-const CACHE_NAME = 'the-moon-v1';
+const CACHE_NAME = 'the-moon-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/admin.html',
-  '/dashboard.html',
-  '/categories.html',
-  '/article.html',
-  '/settings.html',
-  '/bookmarks.html',
-  '/search.html',
-  '/profile.html',
-  '/privacy.html',
-  '/terms.html',
-  '/manifest.json'
+  '/rasu/',
+  '/rasu/index.html',
+  '/rasu/article.html',
+  '/rasu/profile.html',
+  '/rasu/admin.html',
+  '/rasu/assets/logo.svg'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
       .then(() => self.skipWaiting())
   );
 });
@@ -30,32 +26,33 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        return fetch(event.request)
-          .then(response => {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
+        const fetchRequest = event.request.clone();
+        return fetch(fetchRequest).then(response => {
+          if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
-          });
+          }
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          return response;
+        });
       })
   );
 });
 
 self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map(cache => {
-          if (cache !== CACHE_NAME) {
-            return caches.delete(cache);
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
