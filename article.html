@@ -4,39 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MOON - Read Article</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
-        body{background:#0a0a0a;font-family:Arial;color:#fff;padding:20px;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        :root{--bg-primary:#0a0a0a;--bg-secondary:#111;--border:#222;--text-primary:#fff;--text-secondary:#aaa;--brand-red:#dc2626;}
+        [data-theme="light"]{--bg-primary:#f5f5f5;--bg-secondary:#fff;--border:#ddd;--text-primary:#1a1a1a;--text-secondary:#666;}
+        body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg-primary);color:var(--text-primary);padding:20px;transition:all 0.3s;}
         .container{max-width:800px;margin:0 auto;}
-        .back-btn{display:inline-block;background:#dc2626;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;margin-bottom:20px;}
-        .article-card{background:#111;border:1px solid #222;border-radius:16px;padding:25px;}
-        .category{display:inline-block;background:#dc2626;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:15px;}
+        .header{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:1rem;margin-bottom:20px;border-radius:12px;}
+        .header-content{display:flex;justify-content:space-between;align-items:center;max-width:800px;margin:0 auto;}
+        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#dc2626,#b91c1c);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;}
+        .theme-toggle{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-primary);padding:8px;}
+        .back-btn{display:inline-block;background:var(--brand-red);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;margin-bottom:20px;}
+        .article-card{background:var(--bg-secondary);border:1px solid var(--border);border-radius:16px;padding:25px;}
+        .category{display:inline-block;background:var(--brand-red);color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:15px;}
         h1{font-size:28px;margin-bottom:10px;}
-        .meta{color:#aaa;font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #222;}
+        .meta{color:var(--text-secondary);font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid var(--border);}
         .article-image{width:100%;border-radius:12px;margin:15px 0;}
-        .content{line-height:1.6;color:#ddd;}
+        .content{line-height:1.6;color:var(--text-primary);}
+        .content p{margin-bottom:15px;}
+        .action-buttons{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;}
+        .bookmark-btn{background:#1a1a1a;border:none;color:#fff;padding:10px 20px;border-radius:30px;cursor:pointer;font-size:14px;}
+        .share-btn{background:#1a1a1a;border:none;color:#fff;padding:10px 20px;border-radius:30px;cursor:pointer;font-size:14px;}
+        .bookmark-btn.bookmarked{background:var(--brand-red);}
+        .share-dropdown{position:relative;display:inline-block;}
+        .share-content{display:none;position:absolute;background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:10px;min-width:180px;z-index:10;}
+        .share-content a{display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text-primary);border-radius:8px;}
+        .share-content a:hover{background:var(--bg-primary);}
         .loader{text-align:center;padding:50px;color:#ffc107;}
         .error{text-align:center;padding:50px;color:#dc3545;}
-        .bookmark-btn{background:#1a1a1a;border:none;color:#fff;padding:8px 15px;border-radius:20px;cursor:pointer;margin-top:15px;}
-        .bookmark-btn.bookmarked{background:#dc2626;}
         
-        /* Comments Section Styles */
-        .comments-section{margin-top:30px;border-top:1px solid #222;padding-top:20px;}
-        .comment-item{background:#1a1a1a;padding:15px;margin-bottom:15px;border-radius:8px;}
+        /* Comments Section */
+        .comments-section{margin-top:30px;border-top:1px solid var(--border);padding-top:20px;}
+        .comment-item{background:var(--bg-primary);padding:15px;margin-bottom:15px;border-radius:8px;border:1px solid var(--border);}
         .comment-header{display:flex;justify-content:space-between;margin-bottom:5px;}
-        .comment-name{font-weight:bold;color:#dc2626;}
-        .comment-date{color:#aaa;font-size:12px;}
+        .comment-name{font-weight:bold;color:var(--brand-red);}
+        .comment-date{color:var(--text-secondary);font-size:12px;}
         .comment-text{margin:10px 0;line-height:1.5;}
-        .comment-like{background:none;border:none;color:#aaa;cursor:pointer;font-size:12px;}
-        .comment-like:hover{color:#dc2626;}
+        .comment-like{background:none;border:none;color:var(--text-secondary);cursor:pointer;font-size:12px;}
+        .comment-like:hover{color:var(--brand-red);}
         .add-comment{margin-top:20px;}
-        .add-comment textarea{width:100%;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:10px;resize:vertical;}
-        .add-comment button{background:#dc2626;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;}
+        .add-comment textarea{width:100%;padding:10px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);margin-bottom:10px;resize:vertical;}
+        .add-comment button{background:var(--brand-red);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;}
         
         @media(max-width:600px){body{padding:15px;}h1{font-size:22px;}}
     </style>
 </head>
 <body>
+
+<div class="header">
+    <div class="header-content">
+        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+</div>
+
 <div class="container">
     <a href="/rasu/" class="back-btn">← Back to Home</a>
     <div id="articleCard" class="article-card">
@@ -55,27 +78,102 @@
     let currentUserId = null;
     let isBookmarked = false;
 
-    // Check login status
+    // ========== THEME ==========
+    function initTheme(){
+        const savedTheme = localStorage.getItem('theme');
+        if(savedTheme === 'light') document.body.setAttribute('data-theme', 'light');
+        const btn = document.getElementById('themeToggle');
+        btn.innerHTML = savedTheme === 'light' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    }
+    function toggleTheme(){
+        if(document.body.hasAttribute('data-theme')){
+            document.body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.body.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    }
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    initTheme();
+
+    // ========== CHECK LOGIN ==========
     async function checkLogin() {
         const { data } = await supabase.auth.getSession();
         if (data.session) {
             currentUserId = data.session.user.id;
         }
+        return currentUserId;
     }
 
-    // Save reading history
+    // ========== UPDATE READING STREAK ==========
+    async function updateReadingStreak() {
+        const today = new Date().toDateString();
+        const lastRead = localStorage.getItem('lastReadDate');
+        let streak = parseInt(localStorage.getItem('readingStreak') || 0);
+        
+        if (lastRead !== today) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (lastRead === yesterday.toDateString()) {
+                streak++;
+            } else {
+                streak = 1;
+            }
+            localStorage.setItem('readingStreak', streak);
+            localStorage.setItem('lastReadDate', today);
+            
+            if (currentUserId) {
+                await supabase.from('profiles').upsert({ 
+                    id: currentUserId, 
+                    reading_streak: streak,
+                    updated_at: new Date()
+                });
+            }
+        }
+    }
+
+    // ========== SAVE READING HISTORY ==========
     async function saveReadingHistory(newsId) {
         if (!currentUserId) return;
         try {
-            await supabase.from('reading_history').insert({
-                user_id: currentUserId,
-                news_id: parseInt(newsId),
-                read_at: new Date()
-            });
+            const { data: existing } = await supabase
+                .from('reading_history')
+                .select('id')
+                .eq('user_id', currentUserId)
+                .eq('news_id', parseInt(newsId))
+                .single();
+            
+            if (!existing) {
+                await supabase.from('reading_history').insert({
+                    user_id: currentUserId,
+                    news_id: parseInt(newsId),
+                    read_at: new Date()
+                });
+            }
         } catch(e) { console.log('History error:', e); }
     }
 
-    // Check if bookmarked
+    // ========== UPDATE VIEW COUNT ==========
+    async function updateViewCount(newsId) {
+        try {
+            const { data: article } = await supabase
+                .from('news')
+                .select('views')
+                .eq('id', parseInt(newsId))
+                .single();
+            
+            const newViews = (article?.views || 0) + 1;
+            await supabase
+                .from('news')
+                .update({ views: newViews })
+                .eq('id', parseInt(newsId));
+        } catch(e) { console.log('View count error:', e); }
+    }
+
+    // ========== CHECK BOOKMARK ==========
     async function checkBookmark(newsId) {
         if (!currentUserId) return false;
         const { data } = await supabase
@@ -87,7 +185,7 @@
         return !!data;
     }
 
-    // Toggle bookmark
+    // ========== TOGGLE BOOKMARK ==========
     async function toggleBookmark(newsId) {
         if (!currentUserId) {
             alert('Please login to bookmark');
@@ -100,7 +198,7 @@
             isBookmarked = false;
             showToast('Removed from bookmarks', 'info');
         } else {
-            await supabase.from('user_bookmarks').insert({ user_id: currentUserId, news_id: parseInt(newsId) });
+            await supabase.from('user_bookmarks').insert({ user_id: currentUserId, news_id: parseInt(newsId), created_at: new Date() });
             isBookmarked = true;
             showToast('Bookmarked!', 'success');
         }
@@ -120,6 +218,28 @@
         }
     }
 
+    // ========== SHARE FUNCTION ==========
+    function shareArticle(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent(document.querySelector('h1')?.innerText || 'THE MOON News');
+        let shareUrl = '';
+        if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${title}%20${url}`;
+        else if(platform === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${title}`;
+        else if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${title}&url=${url}`;
+        else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        if(shareUrl) window.open(shareUrl, '_blank');
+        
+        // Update share count for achievements
+        let shares = parseInt(localStorage.getItem('totalShares') || 0);
+        shares++;
+        localStorage.setItem('totalShares', shares);
+    }
+
+    function toggleShareDropdown() {
+        const dropdown = document.getElementById('shareDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
     function showToast(msg, type) {
         const toast = document.createElement('div');
         toast.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:${type === 'success' ? '#28a745' : '#17a2b8'};color:#fff;padding:10px 20px;border-radius:8px;z-index:9999;`;
@@ -129,13 +249,11 @@
     }
 
     // ========== COMMENTS FUNCTIONS ==========
-    
     async function loadComments() {
         const { data } = await supabase
             .from('comments')
             .select('*')
             .eq('news_id', parseInt(articleId))
-            .eq('status', 'approved')
             .order('created_at', { ascending: false });
         
         const commentCount = document.getElementById('commentCount');
@@ -145,7 +263,7 @@
         if (!commentList) return;
         
         if (!data || data.length === 0) {
-            commentList.innerHTML = '<div style="color:#aaa; text-align:center; padding:20px;">No comments yet. Be the first to comment!</div>';
+            commentList.innerHTML = '<div style="color:var(--text-secondary); text-align:center; padding:20px;">No comments yet. Be the first to comment!</div>';
             return;
         }
         
@@ -177,7 +295,8 @@
             user_id: session?.session?.user?.id || null,
             user_name: userName,
             content: content,
-            status: 'approved'
+            status: 'approved',
+            created_at: new Date()
         });
         
         document.getElementById('commentContent').value = '';
@@ -200,6 +319,12 @@
         });
     }
 
+    function formatContent(content) {
+        if (!content) return '<p>No content available</p>';
+        return content.split('\n').filter(p => p.trim()).map(p => `<p>${escapeHtml(p)}</p>`).join('');
+    }
+
+    // ========== LOAD ARTICLE ==========
     async function loadArticle() {
         const card = document.getElementById('articleCard');
         if (!articleId) {
@@ -220,21 +345,35 @@
             }
             
             const article = data[0];
-            const category = categories[article.category_id] || 'News';
-            const formattedDate = new Date(article.created_at).toLocaleDateString();
+            const category = categories[article.category_id] || article.categories?.name || 'News';
+            const formattedDate = new Date(article.published_at || article.created_at).toLocaleDateString();
             
+            // Update view count and save history
+            await updateViewCount(articleId);
             await saveReadingHistory(articleId);
+            await updateReadingStreak();
             isBookmarked = await checkBookmark(articleId);
             
             card.innerHTML = `
                 <span class="category">${category}</span>
                 <h1>${escapeHtml(article.title)}</h1>
-                <div class="meta">📅 ${formattedDate} | 👁️ ${article.views || 0} views</div>
+                <div class="meta">📅 ${formattedDate} | 👁️ ${(article.views || 0) + 1} views</div>
                 ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" onerror="this.style.display='none'">` : ''}
                 <div class="content">${formatContent(article.content || article.excerpt || '')}</div>
-                <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark(${article.id})">
-                    <i class="${isBookmarked ? 'fas fa-bookmark' : 'far fa-bookmark'}"></i> ${isBookmarked ? 'Bookmarked' : 'Save Bookmark'}
-                </button>
+                <div class="action-buttons">
+                    <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark(${article.id})">
+                        <i class="${isBookmarked ? 'fas fa-bookmark' : 'far fa-bookmark'}"></i> ${isBookmarked ? 'Bookmarked' : 'Save Bookmark'}
+                    </button>
+                    <div class="share-dropdown">
+                        <button class="share-btn" onclick="toggleShareDropdown()"><i class="fas fa-share-alt"></i> Share</button>
+                        <div id="shareDropdown" class="share-content">
+                            <a href="#" onclick="shareArticle('whatsapp');return false;"><i class="fab fa-whatsapp" style="color:#25D366;"></i> WhatsApp</a>
+                            <a href="#" onclick="shareArticle('telegram');return false;"><i class="fab fa-telegram" style="color:#0088cc;"></i> Telegram</a>
+                            <a href="#" onclick="shareArticle('twitter');return false;"><i class="fab fa-twitter" style="color:#1DA1F2;"></i> Twitter</a>
+                            <a href="#" onclick="shareArticle('facebook');return false;"><i class="fab fa-facebook" style="color:#1877F2;"></i> Facebook</a>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Comments Section -->
                 <div class="comments-section">
@@ -249,14 +388,17 @@
             updateBookmarkButton();
             loadComments();
             
+            // Close share dropdown on click outside
+            document.addEventListener('click', function(e){
+                if(!e.target.closest('.share-dropdown')){
+                    const dropdown = document.getElementById('shareDropdown');
+                    if(dropdown) dropdown.style.display = 'none';
+                }
+            });
+            
         } catch(err) {
             card.innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
         }
-    }
-    
-    function formatContent(content) {
-        if (!content) return 'No content available';
-        return content.split('\n').filter(p => p.trim()).map(p => `<p>${escapeHtml(p)}</p>`).join('');
     }
     
     loadArticle();
