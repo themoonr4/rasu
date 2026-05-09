@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MOON - Read Article</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
         :root{--bg-primary:#0a0a0a;--bg-secondary:#111;--border:#222;--text-primary:#fff;--text-secondary:#aaa;--brand-red:#dc2626;}
@@ -74,9 +74,9 @@
     
     const urlParams = new URLSearchParams(window.location.search);
     const articleId = urlParams.get('id');
-    const categories = {1:'Technology',2:'Sports',3:'Business',4:'Politics',5:'Study'};
     let currentUserId = null;
     let isBookmarked = false;
+    let categoriesData = [];
 
     // ========== THEME ==========
     function initTheme(){
@@ -98,6 +98,14 @@
     }
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     initTheme();
+
+    // ========== LOAD CATEGORIES FIRST ==========
+    async function loadCategories() {
+        const { data } = await supabase.from('categories').select('*');
+        if (data && data.length) {
+            categoriesData = data;
+        }
+    }
 
     // ========== CHECK LOGIN ==========
     async function checkLogin() {
@@ -229,7 +237,6 @@
         else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
         if(shareUrl) window.open(shareUrl, '_blank');
         
-        // Update share count for achievements
         let shares = parseInt(localStorage.getItem('totalShares') || 0);
         shares++;
         localStorage.setItem('totalShares', shares);
@@ -324,7 +331,7 @@
         return content.split('\n').filter(p => p.trim()).map(p => `<p>${escapeHtml(p)}</p>`).join('');
     }
 
-    // ========== LOAD ARTICLE ==========
+    // ========== LOAD ARTICLE (FIXED JOIN) ==========
     async function loadArticle() {
         const card = document.getElementById('articleCard');
         if (!articleId) {
@@ -332,30 +339,32 @@
             return;
         }
         
+        await loadCategories();
         await checkLogin();
         
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            });
-            const data = await response.json();
-            if (!data || data.length === 0) {
+            const { data: article, error } = await supabase
+                .from('news')
+                .select('*')
+                .eq('id', parseInt(articleId))
+                .single();
+            
+            if (error || !article) {
                 card.innerHTML = '<div class="error">❌ Article not found</div>';
                 return;
             }
             
-            const article = data[0];
-            const category = categories[article.category_id] || article.categories?.name || 'News';
+            const category = categoriesData.find(c => c.id === article.category_id);
+            const categoryName = category?.name || 'News';
             const formattedDate = new Date(article.published_at || article.created_at).toLocaleDateString();
             
-            // Update view count and save history
             await updateViewCount(articleId);
             await saveReadingHistory(articleId);
             await updateReadingStreak();
             isBookmarked = await checkBookmark(articleId);
             
             card.innerHTML = `
-                <span class="category">${category}</span>
+                <span class="category">${categoryName}</span>
                 <h1>${escapeHtml(article.title)}</h1>
                 <div class="meta">📅 ${formattedDate} | 👁️ ${(article.views || 0) + 1} views</div>
                 ${article.featured_image ? `<img class="article-image" src="${article.featured_image}" onerror="this.style.display='none'">` : ''}
@@ -375,7 +384,6 @@
                     </div>
                 </div>
                 
-                <!-- Comments Section -->
                 <div class="comments-section">
                     <h3>💬 Comments (<span id="commentCount">0</span>)</h3>
                     <div id="commentList"></div>
@@ -388,7 +396,6 @@
             updateBookmarkButton();
             loadComments();
             
-            // Close share dropdown on click outside
             document.addEventListener('click', function(e){
                 if(!e.target.closest('.share-dropdown')){
                     const dropdown = document.getElementById('shareDropdown');
