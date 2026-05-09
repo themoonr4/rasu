@@ -20,6 +20,10 @@
         label{display:block;margin-bottom:5px;color:#aaa;font-size:13px;}
         .btn-secondary{background:#6c757d;margin-top:10px;}
         .btn-secondary:hover{background:#5a6268;}
+        .subscriber-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #222;}
+        .subscriber-email{font-weight:bold;}
+        .subscriber-date{font-size:11px;color:#aaa;}
+        .delete-sub-btn{background:#dc3545;padding:4px 8px;width:auto;font-size:12px;}
     </style>
 </head>
 <body>
@@ -72,11 +76,23 @@
                 <div id="notifyResult"></div>
             </div>
 
+            <!-- Subscriber List Section -->
+            <div class="card">
+                <h3><i class="fas fa-users"></i> 📧 Newsletter Subscribers</h3>
+                <div id="subscriberList" style="max-height: 300px; overflow-y: auto;">
+                    <div class="info">Loading subscribers...</div>
+                </div>
+                <button onclick="exportSubscribers()" style="margin-top: 10px; background: #28a745;">
+                    📥 Export Subscribers (CSV)
+                </button>
+            </div>
+
             <!-- Logout Button -->
             <button onclick="logout()" class="btn-secondary">🚪 Logout</button>
         </div>
     </div>
 
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // 🔐 Password
         const SECRET_PASSWORD = 'TheMoon2024';
@@ -84,6 +100,7 @@
         // 🔑 Supabase (YOUR credentials)
         const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // 🔔 OneSignal Configuration
         const ONESIGNAL_APP_ID = '60154f61-182d-45c0-99f1-fef13b3f9d1c';
@@ -98,6 +115,7 @@
                 document.getElementById('passwordScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 msgDiv.innerHTML = '';
+                loadSubscribers();
             } else {
                 msgDiv.innerHTML = '<div class="error">❌ Wrong Password!</div>';
             }
@@ -108,6 +126,62 @@
             document.getElementById('passwordScreen').style.display = 'block';
             document.getElementById('adminPanel').style.display = 'none';
             document.getElementById('adminPass').value = '';
+        }
+
+        // Load Subscribers
+        async function loadSubscribers() {
+            const { data, error } = await supabase
+                .from('newsletter')
+                .select('*')
+                .order('subscribed_at', { ascending: false });
+            
+            const listDiv = document.getElementById('subscriberList');
+            
+            if (error || !data || data.length === 0) {
+                listDiv.innerHTML = '<div class="info">No subscribers yet</div>';
+                return;
+            }
+            
+            listDiv.innerHTML = data.map(sub => `
+                <div class="subscriber-item">
+                    <div>
+                        <div class="subscriber-email">${sub.email}</div>
+                        <div class="subscriber-date">📅 ${new Date(sub.subscribed_at).toLocaleDateString()}</div>
+                    </div>
+                    <button class="delete-sub-btn" onclick="deleteSubscriber('${sub.id}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Delete Subscriber
+        async function deleteSubscriber(id) {
+            if (confirm('Remove this subscriber?')) {
+                await supabase.from('newsletter').delete().eq('id', id);
+                loadSubscribers();
+            }
+        }
+
+        // Export Subscribers to CSV
+        async function exportSubscribers() {
+            const { data } = await supabase.from('newsletter').select('*').order('subscribed_at', { ascending: false });
+            
+            if (!data || data.length === 0) {
+                alert('No subscribers to export');
+                return;
+            }
+            
+            let csv = 'Email,Subscribed Date\n';
+            data.forEach(sub => {
+                csv += `"${sub.email}","${new Date(sub.subscribed_at).toLocaleString()}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `subscribers_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         // Post News to Supabase
@@ -159,6 +233,7 @@
                     const notifyUrl = document.getElementById('notifyUrl').value || `/rasu/`;
                     
                     await sendPushNotification(notifyTitle, notifyMessage, notifyUrl);
+                    loadSubscribers();
                     
                     setTimeout(() => resultDiv.innerHTML = '', 3000);
                 } else {
