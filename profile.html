@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="THE MOON - My Profile | Manage bookmarks, history, and settings">
+    <meta name="theme-color" content="#dc2626">
+    <title>My Profile 🌙 | THE MOON</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #222222;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #64748b;
+            --border: #2a2a2a;
+            --brand-red: #dc2626;
+            --brand-red-dark: #b91c1c;
+            --brand-red-light: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.4);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.5);
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--brand-red);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            min-width: 40px;
+            min-height: 40px;
+            border-radius: var(--radius-md);
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .header-btn:hover { background: var(--bg-tertiary); color: var(--brand-red); }
+
+        /* ============ MAIN CONTAINER ============ */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ============ PROFILE HEADER CARD ============ */
+        .profile-header {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-red), var(--purple), var(--info), var(--success));
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 3rem;
+            color: white;
+            border: 4px solid var(--bg-primary);
+            box-shadow: var(--shadow-lg);
+        }
+        .profile-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+        .profile-email {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+        .profile-badge {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .profile-badge.premium {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        /* ============ STATS GRID ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        
+        .stat-card {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 1rem 0.75rem;
+            text-align: center;
+            transition: var(--transition-fast);
+            cursor: default;
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* ============ ACHIEVEMENTS ============ */
+        .achievements-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.75rem;
+        }
+        .achievement-card {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            transition: var(--transition-fast);
+            border: 2px solid transparent;
+        }
+        .achievement-card.earned {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05));
+        }
+        .achievement-card.locked {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .achievement-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .achievement-points {
+            font-size: 0.65rem;
+            color: var(--warning);
+            font-weight: 700;
+        }
+        .achievement-desc {
+            font-size: 0.6rem;
+            color: var(--text-tertiary);
+        }
+        .progress-bar {
+            background: var(--bg-primary);
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* ============ TABS ============ */
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 0.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: var(--transition-fast);
+            white-space: nowrap;
+            min-width: fit-content;
+            font-family: inherit;
+        }
+        .tab-btn.active {
+            background: var(--brand-red);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-btn:hover:not(.active) { color: var(--text-primary); }
+
+        /* ============ TAB CONTENT ============ */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ============ CARDS ============ */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1rem;
+        }
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ============ LIST ITEMS ============ */
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .list-item:hover {
+            background: var(--bg-primary);
+            transform: translateX(5px);
+            border-left: 3px solid var(--brand-red);
+        }
+        .list-icon {
+            font-size: 1.5rem;
+            min-width: 40px;
+            text-align: center;
+        }
+        .list-content { flex: 1; }
+        .list-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        .list-meta {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+        .list-action {
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            transition: var(--transition-fast);
+        }
+        .list-action:hover { color: var(--brand-red); }
+
+        /* ============ SETTINGS ============ */
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .setting-desc {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+        input[type="text"], input[type="email"], select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+        select { cursor: pointer; }
+
+        /* ============ BUTTONS ============ */
+        .btn {
+            padding: 0.65rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition-fast);
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--brand-red);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--brand-red-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+        }
+        .btn-outline:hover { border-color: var(--brand-red); color: var(--brand-red); }
+        .btn-danger {
+            background: transparent;
+            border: 2px solid var(--brand-red);
+            color: var(--brand-red);
+        }
+        .btn-danger:hover { background: var(--brand-red); color: white; }
+        .btn-sm { padding: 0.4rem 1rem; font-size: 0.75rem; }
+
+        /* ============ MESSAGES ============ */
+        .msg {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .msg-success { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+        .msg-error { background: rgba(220,38,38,0.15); color: var(--brand-red); border: 1px solid rgba(220,38,38,0.3); }
+        .msg-info { background: rgba(59,130,246,0.15); color: var(--info); border: 1px solid rgba(59,130,246,0.3); }
+
+        /* ============ LOGIN SECTION ============ */
+        .login-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-2xl);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        .login-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .login-container p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--brand-red);
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-tertiary);
+        }
+        .empty-state i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .empty-state h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============ HIDDEN ============ */
+        .hidden { display: none !important; }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; margin: 1rem auto; }
+            .profile-header { padding: 1.5rem; }
+            .avatar { width: 80px; height: 80px; font-size: 2.5rem; }
+            .profile-name { font-size: 1.3rem; }
+            .tabs { gap: 0; }
+            .tab-btn { padding: 0.6rem 0.75rem; font-size: 0.75rem; }
+            .achievements-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-content">
+        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+        <div class="header-actions">
+            <a href="/rasu/" class="header-btn" title="Home"><i class="fas fa-home"></i></a>
+            <a href="/rasu/bookmarks.html" class="header-btn" title="Bookmarks"><i class="fas fa-bookmark"></i></a>
+            <button class="header-btn" id="themeToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <!-- ============ LOGIN SECTION ============ -->
+    <div id="loginSection" class="login-container">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🌙</div>
+        <h2>Welcome to THE MOON</h2>
+        <p>Sign in to track your reading, earn achievements, and bookmark stories.</p>
+        
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="loginEmail" placeholder="you@example.com">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••">
+        </div>
+        
+        <button class="btn btn-primary" onclick="handleLogin()" style="width: 100%; margin-bottom: 0.75rem;">
+            <i class="fas fa-sign-in-alt"></i> Continue
+        </button>
+        <p style="font-size: 0.75rem; color: var(--text-tertiary);">
+            New here? Just enter your email and password — we'll create your account.
+        </p>
+        
+        <div id="loginMsg"></div>
+    </div>
+
+    <!-- ============ PROFILE SECTION ============ -->
+    <div id="profileSection" class="hidden">
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="avatar"><i class="fas fa-user-circle"></i></div>
+            <h1 class="profile-name" id="displayName">News Reader</h1>
+            <p class="profile-email" id="displayEmail">reader@themoon.com</p>
+            <span class="profile-badge" id="memberBadge">🌟 Member</span>
+            <p style="font-size: 0.8rem; color: var(--text-tertiary);">
+                <span id="memberSince"></span>
+            </p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📰</div>
+                <div class="stat-number" id="statArticles">0</div>
+                <div class="stat-label">Articles Read</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔖</div>
+                <div class="stat-number" id="statBookmarks">0</div>
+                <div class="stat-label">Bookmarks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-number" id="statTime">0</div>
+                <div class="stat-label">Min Read</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-number" id="statStreak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="achievements-section">
+            <div class="section-title">🏆 Achievements</div>
+            <div class="achievements-grid" id="achievementsGrid"></div>
+            <div id="achievementSummary" style="text-align: center; margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-secondary);"></div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('bookmarks')">🔖 Bookmarks</button>
+            <button class="tab-btn" onclick="switchTab('history')">📖 History</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+
+        <!-- Bookmarks Tab -->
+        <div class="tab-content active" id="tabBookmarks">
+            <div class="card">
+                <h3>🔖 Your Bookmarked Stories</h3>
+                <div id="bookmarksList">
+                    <div class="empty-state">
+                        <i class="fas fa-bookmark"></i>
+                        <h4>No Bookmarks Yet</h4>
+                        <p>Start saving stories you want to read later!</p>
+                        <a href="/rasu/" class="btn btn-outline btn-sm" style="display: inline-block; margin-top: 0.75rem; text-decoration: none;">Browse News →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div class="tab-content" id="tabHistory">
+            <div class="card">
+                <h3>📖 Reading History</h3>
+                <div id="historyList">
+                    <div class="empty-state">
+                        <i class="fas fa-book-open"></i>
+                        <h4>No Reading History</h4>
+                        <p>Articles you read will appear here.</p>
+                        <a href="/rasu/" class="btn btn-outline btn-sm" style="display: inline-block; margin-top: 0.75rem; text-decoration: none;">Read Something →</a>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="clearHistory()" style="margin-top: 1rem;" id="clearHistoryBtn">🗑️ Clear History</button>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="tabSettings">
+            <div class="card">
+                <h3>⚙️ Profile Settings</h3>
+                
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Display Name</div>
+                        <div class="setting-desc">How your name appears on the site</div>
+                    </div>
+                    <input type="text" id="settingsName" placeholder="Your name" style="width: 200px;">
+                </div>
+                
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Theme Preference</div>
+                        <div class="setting-desc">Choose light or dark mode</div>
+                    </div>
+                    <select id="settingsTheme" style="width: 150px;">
+                        <option value="dark">🌙 Dark Mode</option>
+                        <option value="light">☀️ Light Mode</option>
+                    </select>
+                </div>
+                
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Notifications</div>
+                        <div class="setting-desc">Breaking news alerts</div>
+                    </div>
+                    <select id="settingsNotifications" style="width: 150px;">
+                        <option value="enabled">🔔 Enabled</option>
+                        <option value="disabled">🔕 Disabled</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveSettings()" style="margin-top: 1rem;">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+                <div id="settingsMsg"></div>
+            </div>
+
+            <div class="card" style="border-color: var(--brand-red);">
+                <h3 style="color: var(--brand-red);">⚠️ Danger Zone</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Once you delete your data, it cannot be recovered.
+                </p>
+                <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Clear All My Data</button>
+                <button class="btn btn-danger btn-sm" onclick="handleLogout()" style="margin-left: 0.5rem;">🚪 Logout</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ============ SUPABASE CONFIG ============
+const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+
+let supabase;
+try {
+    supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch (e) {
+    console.error('Supabase init error:', e);
+}
+
+let currentUser = null;
+
+// ============ ACHIEVEMENTS DEFINITION ============
+const achievements = [
+    { id: 'first_read', name: 'First Article', icon: '📖', desc: 'Read your first article', condition: (s) => s.articlesRead >= 1, points: 10 },
+    { id: 'bookmarker', name: 'Bookmarker', icon: '🔖', desc: 'Save 5 bookmarks', condition: (s) => s.bookmarks >= 5, points: 20 },
+    { id: 'news_junkie', name: 'News Junkie', icon: '📰', desc: 'Read 25 articles', condition: (s) => s.articlesRead >= 25, points: 50 },
+    { id: 'super_reader', name: 'Super Reader', icon: '⭐', desc: 'Read 100 articles', condition: (s) => s.articlesRead >= 100, points: 100 },
+    { id: 'weekly_warrior', name: 'Weekly Warrior', icon: '⚡', desc: '7 day streak', condition: (s) => s.streak >= 7, points: 40 },
+    { id: 'news_master', name: 'News Master', icon: '👑', desc: 'Read 250 articles', condition: (s) => s.articlesRead >= 250, points: 200 },
+    { id: 'legend', name: 'Legend', icon: '🏆', desc: 'Read 500 articles', condition: (s) => s.articlesRead >= 500, points: 500 },
+    { id: 'collector', name: 'Collector', icon: '💎', desc: 'Save 50 bookmarks', condition: (s) => s.bookmarks >= 50, points: 150 },
+];
+
+// ============ INIT ============
+function init() {
+    loadTheme();
+    updateThemeIcon();
+    checkSession();
+}
+
+function loadTheme() {
+    const saved = localStorage.getItem('theme') || 'dark';
+    if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+}
+
+function updateThemeIcon() {
+    const isLight = document.documentElement.hasAttribute('data-theme');
+    document.getElementById('themeToggle').innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+}
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+    if (document.documentElement.hasAttribute('data-theme')) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+    updateThemeIcon();
+    showMsg('settingsMsg', 'Theme updated! 🎨', 'success');
+});
+
+// ============ SESSION CHECK ============
+async function checkSession() {
+    if (!supabase) {
+        showLogin();
+        return;
+    }
+    try {
+        const { data } = await supabase.auth.getSession();
+        if (data?.session?.user) {
+            currentUser = data.session.user;
+            showProfile();
+            await loadUserData();
+            await loadAchievements();
+        } else {
+            showLogin();
+        }
+    } catch (e) {
+        console.error('Session check error:', e);
+        showLogin();
+    }
+}
+
+function showLogin() {
+    document.getElementById('loginSection').classList.remove('hidden');
+    document.getElementById('profileSection').classList.add('hidden');
+}
+
+function showProfile() {
+    document.getElementById('loginSection').classList.add('hidden');
+    document.getElementById('profileSection').classList.remove('hidden');
+}
+
+// ============ LOGIN / SIGNUP ============
+async function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    const msgDiv = document.getElementById('loginMsg');
+
+    if (!email || !password) {
+        msgDiv.innerHTML = '<div class="msg msg-error">Please enter both email and password.</div>';
+        return;
+    }
+
+    msgDiv.innerHTML = '<div class="msg msg-info">Connecting to your account...</div>';
+
+    try {
+        // Try sign in
+        let { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+        // If user doesn't exist, sign up first
+        if (error && error.message.includes('Invalid login credentials')) {
+            const { error: signUpError } = await supabase.auth.signUp({ email, password });
+            if (signUpError) {
+                msgDiv.innerHTML = `<div class="msg msg-error">${signUpError.message}</div>`;
+                return;
+            }
+            // Try sign in again after signup
+            const retry = await supabase.auth.signInWithPassword({ email, password });
+            data = retry.data;
+            error = retry.error;
+        }
+
+        if (error) {
+            msgDiv.innerHTML = `<div class="msg msg-error">${error.message}</div>`;
+            return;
+        }
+
+        if (data?.user) {
+            currentUser = data.user;
+            
+            // Save/update profile in Supabase
+            try {
+                await supabase.from('profiles').upsert({
+                    id: currentUser.id,
+                    email: currentUser.email,
+                    full_name: email.split('@')[0],
+                    updated_at: new Date().toISOString()
+                });
+            } catch (profileErr) {
+                console.log('Profile upsert note:', profileErr.message);
+            }
+
+            msgDiv.innerHTML = '<div class="msg msg-success">✅ Welcome back! Loading your profile...</div>';
+            
+            setTimeout(() => {
+                showProfile();
+                loadUserData();
+                loadAchievements();
+            }, 500);
+        }
+    } catch (err) {
+        msgDiv.innerHTML = `<div class="msg msg-error">Connection error. Please try again.</div>`;
+        console.error('Login error:', err);
+    }
+}
+
+// ============ LOAD USER DATA ============
+async function loadUserData() {
+    if (!currentUser) return;
+
+    // Display name & email
+    const savedName = localStorage.getItem('displayName') || currentUser.email?.split('@')[0] || 'Reader';
+    document.getElementById('displayName').textContent = savedName;
+    document.getElementById('displayEmail').textContent = currentUser.email || '';
+    
+    // Member since
+    const createdAt = currentUser.created_at || new Date().toISOString();
+    document.getElementById('memberSince').textContent = 'Member since ' + new Date(createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+
+    // Load bookmarks from localStorage
+    const bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
+    document.getElementById('statBookmarks').textContent = bookmarks.length;
+
+    // Load reading history
+    const history = JSON.parse(localStorage.getItem('readingHistory')) || [];
+    document.getElementById('statArticles').textContent = history.length;
+    document.getElementById('statTime').textContent = history.length * 3;
+    document.getElementById('statStreak').textContent = calculateStreak();
+
+    // Load into settings form
+    document.getElementById('settingsName').value = savedName;
+    document.getElementById('settingsTheme').value = localStorage.getItem('theme') || 'dark';
+    document.getElementById('settingsNotifications').value = localStorage.getItem('notifications') || 'enabled';
+
+    // Display bookmarks list
+    renderBookmarks(bookmarks, history);
+    renderHistory(history);
+}
+
+// ============ CALCULATE STREAK ============
+function calculateStreak() {
+    const history = JSON.parse(localStorage.getItem('readingHistory')) || [];
+    if (history.length === 0) return 0;
+    
+    const dates = history.map(h => new Date(h.timestamp).toDateString());
+    const uniqueDates = [...new Set(dates)].sort().reverse();
+    
+    let streak = 0;
+    const today = new Date().toDateString();
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    
+    if (uniqueDates[0] !== today && uniqueDates[0] !== yesterday) return 0;
+    
+    for (let i = 0; i < uniqueDates.length; i++) {
+        const expectedDate = new Date(Date.now() - (i * 86400000)).toDateString();
+        if (uniqueDates[i] === expectedDate) streak++;
+        else break;
+    }
+    
+    localStorage.setItem('readingStreak', streak);
+    return streak;
+}
+
+// ============ ACHIEVEMENTS ============
+async function loadAchievements() {
+    const bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
+    const history = JSON.parse(localStorage.getItem('readingHistory')) || [];
+    const streak = calculateStreak();
+    
+    const stats = {
+        articlesRead: history.length,
+        bookmarks: bookmarks.length,
+        streak: streak
+    };
+
+    let totalPoints = 0;
+    let earnedCount = 0;
+
+    const grid = document.getElementById('achievementsGrid');
+    grid.innerHTML = achievements.map(ach => {
+        const earned = ach.condition(stats);
+        if (earned) {
+            earnedCount++;
+            totalPoints += ach.points;
+        }
+        return `
+            <div class="achievement-card ${earned ? 'earned' : 'locked'}">
+                <div class="achievement-icon">${ach.icon}</div>
+                <div class="achievement-name">${ach.name}</div>
+                <div class="achievement-desc">${ach.desc}</div>
+                ${earned 
+                    ? `<div class="achievement-points">✅ +${ach.points} pts</div>`
+                    : `<div class="achievement-points" style="color: var(--text-tertiary);">🔒 Locked</div>`
+                }
+            </div>
+        `;
+    }).join('');
+
+    // Achievement summary
+    const totalAchievements = achievements.length;
+    document.getElementById('achievementSummary').innerHTML = `
+        🏅 <strong>${earnedCount}/${totalAchievements}</strong> achievements unlocked • 
+        ⭐ <strong>${totalPoints}</strong> total points earned
+    `;
+
+    // Update member badge
+    if (totalPoints >= 500) {
+        const badge = document.getElementById('memberBadge');
+        badge.textContent = '👑 Premium Member';
+        badge.classList.add('premium');
+    }
+}
+
+// ============ RENDER BOOKMARKS ============
+function renderBookmarks(bookmarks, history) {
+    const container = document.getElementById('bookmarksList');
+    
+    if (!bookmarks || bookmarks.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-bookmark"></i>
+                <h4>No Bookmarks Yet</h4>
+                <p>Start saving stories you want to read later!</p>
+                <a href="/rasu/" class="btn btn-outline btn-sm" style="display: inline-block; margin-top: 0.75rem; text-decoration: none;">Browse News →</a>
+            </div>
+        `;
+        return;
+    }
+
+    // We'll show bookmarked article IDs with links
+    container.innerHTML = bookmarks.map(id => {
+        const article = history.find(h => h.id === id);
+        return `
+            <div class="list-item" onclick="window.location.href='/rasu/article.html?id=${id}'">
+                <div class="list-icon">📰</div>
+                <div class="list-content">
+                    <div class="list-title">${article?.title || 'Article #' + id}</div>
+                    <div class="list-meta">Bookmarked • ${article?.timestamp ? new Date(article.timestamp).toLocaleDateString() : 'Recently'}</div>
+                </div>
+                <div class="list-action" onclick="event.stopPropagation(); removeBookmark(${id})" title="Remove">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+        `;
+    }).join('') + `
+        <button class="btn btn-outline btn-sm" onclick="clearAllBookmarks()" style="margin-top: 0.75rem;">
+            🗑️ Clear All Bookmarks (${bookmarks.length})
+        </button>
+    `;
+}
+
+function removeBookmark(id) {
+    let bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
+    bookmarks = bookmarks.filter(b => b !== id);
+    localStorage.setItem('moonBookmarks', JSON.stringify(bookmarks));
+    loadUserData();
+    loadAchievements();
+    showMsg('settingsMsg', 'Bookmark removed!', 'info');
+}
+
+function clearAllBookmarks() {
+    if (confirm('Remove all bookmarks? This cannot be undone.')) {
+        localStorage.removeItem('moonBookmarks');
+        loadUserData();
+        loadAchievements();
+        showMsg('settingsMsg', 'All bookmarks cleared.', 'info');
+    }
+}
+
+// ============ RENDER HISTORY ============
+function renderHistory(history) {
+    const container = document.getElementById('historyList');
+    
+    if (!history || history.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-book-open"></i>
+                <h4>No Reading History</h4>
+                <p>Articles you read will appear here.</p>
+                <a href="/rasu/" class="btn btn-outline btn-sm" style="display: inline-block; margin-top: 0.75rem; text-decoration: none;">Read Something →</a>
+            </div>
+        `;
+        document.getElementById('clearHistoryBtn').style.display = 'none';
+        return;
+    }
+
+    document.getElementById('clearHistoryBtn').style.display = 'inline-block';
+    
+    container.innerHTML = history.slice(0, 50).map(h => `
+        <div class="list-item" onclick="window.location.href='/rasu/article.html?id=${h.id}'">
+            <div class="list-icon">📖</div>
+            <div class="list-content">
+                <div class="list-title">${h.title || 'Article #' + h.id}</div>
+                <div class="list-meta">Read on ${new Date(h.timestamp).toLocaleString()}</div>
+            </div>
+            <div class="list-action">→</div>
+        </div>
+    `).join('');
+}
+
+function clearHistory() {
+    if (confirm('Clear all reading history? This cannot be undone.')) {
+        localStorage.removeItem('readingHistory');
+        loadUserData();
+        loadAchievements();
+        showMsg('settingsMsg', 'Reading history cleared.', 'info');
+    }
+}
+
+// ============ TAB SWITCHING ============
+function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    if (tab === 'bookmarks') {
+        document.getElementById('tabBookmarks').classList.add('active');
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+    } else if (tab === 'history') {
+        document.getElementById('tabHistory').classList.add('active');
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+    } else if (tab === 'settings') {
+        document.getElementById('tabSettings').classList.add('active');
+        document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
+    }
+}
+
+// ============ SETTINGS ============
+function saveSettings() {
+    const name = document.getElementById('settingsName').value.trim();
+    const theme = document.getElementById('settingsTheme').value;
+    const notifications = document.getElementById('settingsNotifications').value;
+
+    if (name) {
+        localStorage.setItem('displayName', name);
+        document.getElementById('displayName').textContent = name;
+    }
+    
+    localStorage.setItem('theme', theme);
+    if (theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+    updateThemeIcon();
+    
+    localStorage.setItem('notifications', notifications);
+    
+    showMsg('settingsMsg', '✅ Settings saved successfully!', 'success');
+    
+    setTimeout(() => {
+        document.getElementById('settingsMsg').innerHTML = '';
+    }, 3000);
+}
+
+function showMsg(elementId, message, type) {
+    const el = document.getElementById(elementId);
+    el.innerHTML = `<div class="msg msg-${type}">${message}</div>`;
+    setTimeout(() => { el.innerHTML = ''; }, 3000);
+}
+
+// ============ LOGOUT & CLEAR DATA ============
+async function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        if (supabase) {
+            await supabase.auth.signOut();
+        }
+        currentUser = null;
+        showLogin();
+        document.getElementById('loginMsg').innerHTML = '<div class="msg msg-info">👋 You have been logged out.</div>';
+    }
+}
+
+function clearAllData() {
+    if (confirm('⚠️ This will delete ALL your local data (bookmarks, history, settings). This cannot be undone. Continue?')) {
+        localStorage.removeItem('moonBookmarks');
+        localStorage.removeItem('readingHistory');
+        localStorage.removeItem('readingStreak');
+        localStorage.removeItem('displayName');
+        // Keep theme and notifications
+        loadUserData();
+        loadAchievements();
+        showMsg('settingsMsg', 'All your data has been cleared.', 'error');
+    }
+}
+
+// ============ START APP ============
+init();
+console.log('🌙 THE MOON - Profile Page Ready');
+</script>
+</body>
+</html>
