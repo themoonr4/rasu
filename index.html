@@ -682,10 +682,7 @@
     const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
     
-    // ✅ FIXED: API key properly set in headers (YAHI EK CHANGE HAI)
-    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        global: { headers: { 'apikey': SUPABASE_ANON_KEY } }
-    });
+    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentCategory = 'all';
     let allNews = [];
@@ -866,7 +863,8 @@
                 trendingDiv.innerHTML = '<p>No trending data</p>';
             }
         } catch (e) {
-            trendingDiv.innerHTML = '<p>Loading...</p>';
+            console.error('Trending load failed:', e);
+            trendingDiv.innerHTML = '<p>Trending unavailable</p>';
         }
     }
     
@@ -887,7 +885,9 @@
                 attachCategoryEvents();
             }
         } catch(e) {
-            console.error(e);
+            console.error('Categories load failed:', e);
+            const categoryGrid = document.getElementById('categoryGrid');
+            if (categoryGrid) categoryGrid.innerHTML = '<p style="color:var(--text-secondary);">Categories unavailable</p>';
         }
     }
     
@@ -932,7 +932,10 @@
             if (data && data.length > 0) {
                 document.getElementById('tickerContent').innerHTML = '🔴 LIVE | ' + data.map(n => n.title).join(' | ') + ' | ';
             }
-        } catch(e) {}
+        } catch(e) {
+            console.error('Ticker load failed:', e);
+            document.getElementById('tickerContent').textContent = '🔴 LIVE | Updates temporarily unavailable';
+        }
     }
     
     async function loadAIPicks() {
@@ -955,7 +958,8 @@
                 aiDiv.innerHTML = '<p>AI picks loading...</p>';
             }
         } catch(e) {
-            aiDiv.innerHTML = '<p>AI picks loading...</p>';
+            console.error('AI picks load failed:', e);
+            aiDiv.innerHTML = '<p>AI picks unavailable</p>';
         }
     }
     
