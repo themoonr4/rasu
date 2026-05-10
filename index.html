@@ -962,6 +962,7 @@
     function initSearch() {
         const searchBtn = document.getElementById('searchBtn');
         const searchInput = document.getElementById('searchInput');
+        if (!searchBtn || !searchInput) return;
         
         searchBtn.addEventListener('click', () => {
             searchInput.classList.toggle('active');
@@ -1005,6 +1006,11 @@
         const overlay = document.getElementById('overlay');
         const sidebar = document.getElementById('sidebar');
         
+        if (!menuToggle || !closeSidebar || !overlay || !sidebar) {
+            console.warn('Sidebar elements missing, skipping sidebar init');
+            return;
+        }
+        
         menuToggle.addEventListener('click', () => {
             sidebar.classList.add('open');
             overlay.classList.add('active');
@@ -1021,21 +1027,36 @@
         });
     }
     
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    document.getElementById('subscribeBtn').addEventListener('click', subscribeNewsletter);
+    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+    document.getElementById('subscribeBtn')?.addEventListener('click', subscribeNewsletter);
     
     initTheme();
-    fetchNews();
-    loadCategories();
-    loadTrending();
-    loadTicker();
-    loadAIPicks();
+    fetchNews().catch(() => {
+        const grid = document.getElementById('newsGrid');
+        if (grid) grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">News service temporarily unavailable.</div>';
+    });
+    loadCategories().catch(() => {
+        const categoryGrid = document.getElementById('categoryGrid');
+        if (categoryGrid) categoryGrid.innerHTML = '<p style="color:var(--text-secondary);">Categories unavailable</p>';
+    });
+    loadTrending().catch(() => {
+        const trendingDiv = document.getElementById('trendingList');
+        if (trendingDiv) trendingDiv.innerHTML = '<p>Trending unavailable</p>';
+    });
+    loadTicker().catch(() => {
+        const ticker = document.getElementById('tickerContent');
+        if (ticker) ticker.textContent = '🔴 LIVE | Service temporarily unavailable';
+    });
+    loadAIPicks().catch(() => {
+        const aiDiv = document.getElementById('aiPicks');
+        if (aiDiv) aiDiv.innerHTML = '<p>AI picks unavailable</p>';
+    });
     getWeather();
     initSearch();
     initSidebar();
     
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
     }
 </script>
 </body>
