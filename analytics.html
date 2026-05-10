@@ -33,8 +33,8 @@
         <div class="chart-card"><h3>🔥 Top Performing News</h3><table id="topNewsTable"><thead><tr><th>Title</th><th>Views</th><th>Date</th></tr></thead><tbody id="topNewsBody"></tbody></table></div>
     </div>
     <script>
-        const SUPABASE_URL = 'https://cjyfmhsodmbudjbxjbek.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_RPIMDVsM_8kpbqSlTUmnVw_m7k7K4Cv';
+        const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
         const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         async function loadAnalytics() {
             const { data: news } = await supabase.from('news').select('*, categories(*)');
