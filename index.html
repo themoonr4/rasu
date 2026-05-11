@@ -567,31 +567,31 @@
 </footer>
 
 <script>
-// ============ SUPABASE FIXED CONNECTION ============
-const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+// ============ SUPABASE SAFE INIT ============
+var SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
 
-// Initialize Supabase client PROPERLY
-let supabase = null;
+// Initialize Supabase safely
+var supabase = null;
 try {
-    if (window.supabase && typeof window.supabase.createClient === 'function') {
+    if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Supabase connected successfully!');
+        console.log('✅ Supabase connected');
     } else {
-        console.warn('⚠️ Supabase library not loaded. Using static fallback data.');
+        console.warn('⚠️ Supabase library not loaded yet, will retry');
     }
 } catch(e) {
-    console.error('Supabase init error:', e.message);
+    console.warn('Supabase init delayed:', e.message);
 }
 
 // ============ STATE ============
-let allNews = [];
-let currentFilter = 'all';
-let displayedCount = 6;
-let bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
+var allNews = [];
+var currentFilter = 'all';
+var displayedCount = 6;
+var bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
 
 // ============ STATIC FALLBACK ============
-const staticNews = [
+var staticNews = [
     { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7. India becomes only the fourth nation after US, Russia, and China to possess this technology." },
     { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed 100,000 for the first time in Indian financial history." },
     { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets at packed MCG.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "Needing 6 runs off the last delivery, Hardik Pandya launched a massive six over deep mid-wicket." },
@@ -602,110 +602,122 @@ const staticNews = [
     { id: 's8', title: "Apple Unveils Foldable iPhone with Glasses-Free Holographic Display", category: "tech", summary: "Revolutionary device features 3D holographic projection and 7-day battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K views", fullContent: "Tim Cook demonstrated life-size holographic FaceTime calls without any glasses." }
 ];
 
-// ============ SIDEBAR (FIXED) ============
-(function() {
-    const menuToggle = document.getElementById('menuToggle');
-    const closeSidebarBtn = document.getElementById('closeSidebar');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-
+// ============ SIDEBAR TOGGLE (FIXED) ============
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🌙 DOM loaded - initializing sidebar...');
+    
+    var menuToggle = document.getElementById('menuToggle');
+    var closeSidebarBtn = document.getElementById('closeSidebar');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('overlay');
+    
     if (menuToggle && sidebar && overlay) {
         menuToggle.addEventListener('click', function() {
+            console.log('☰ Menu clicked');
             sidebar.classList.add('open');
             overlay.classList.add('active');
         });
     }
+    
     if (closeSidebarBtn && sidebar && overlay) {
         closeSidebarBtn.addEventListener('click', function() {
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
     }
+    
     if (overlay && sidebar) {
         overlay.addEventListener('click', function() {
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         });
     }
-})();
-
-// ============ INIT ============
-async function init() {
-    console.log('🌙 THE MOON initializing...');
+    
+    console.log('✅ Sidebar initialized');
+    
+    // Initialize the rest
     loadTheme();
     setupNavListeners();
-    await loadNews();
+    loadNews();
+});
+
+// ============ THEME ============
+function loadTheme() {
+    var saved = localStorage.getItem('theme') || 'dark';
+    var themeToggle = document.getElementById('themeToggle');
+    if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            var isDark = !document.documentElement.hasAttribute('data-theme');
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+            showToast('Theme updated! 🎨');
+        });
+    }
+}
+
+// ============ LOAD NEWS ============
+function loadNews() {
+    console.log('📡 Loading news...');
+    
+    // Try Supabase if available
+    if (supabase) {
+        supabase.from('news_articles').select('*').order('published_at', { ascending: false }).limit(50)
+            .then(function(result) {
+                if (result.data && result.data.length > 0) {
+                    allNews = result.data.map(function(item) {
+                        return {
+                            id: item.id,
+                            title: item.title,
+                            category: item.category,
+                            summary: item.summary || '',
+                            time: timeAgo(new Date(item.published_at)),
+                            image: item.image_emoji || '📰',
+                            trending: item.trending || false,
+                            views: (item.views || 0).toLocaleString() + ' views',
+                            fullContent: item.full_content || item.summary || ''
+                        };
+                    });
+                    console.log('✅ Supabase: ' + allNews.length + ' articles');
+                    renderAll();
+                } else {
+                    console.log('📦 Supabase empty, using static');
+                    allNews = staticNews.slice();
+                    renderAll();
+                }
+            })
+            .catch(function(e) {
+                console.warn('Supabase error:', e.message);
+                allNews = staticNews.slice();
+                renderAll();
+            });
+    } else {
+        console.log('📦 No Supabase, using static');
+        allNews = staticNews.slice();
+        renderAll();
+    }
+}
+
+function renderAll() {
     displayTicker();
     displayCategories();
     displayNews();
     displayTrending();
     updateHeroStats();
-    console.log('✅ THE MOON ready! ' + allNews.length + ' articles loaded.');
-}
-
-// ============ THEME ============
-function loadTheme() {
-    const saved = localStorage.getItem('theme') || 'dark';
-    if (saved === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-    }
-}
-document.getElementById('themeToggle').addEventListener('click', () => {
-    const isDark = !document.documentElement.hasAttribute('data-theme');
-    if (isDark) {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'dark');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-    }
-    showToast('Theme updated! 🎨');
-});
-
-// ============ LOAD NEWS ============
-async function loadNews() {
-    // Try Supabase first
-    if (supabase) {
-        try {
-            console.log('📡 Fetching from Supabase...');
-            const { data, error } = await supabase
-                .from('news_articles')
-                .select('*')
-                .order('published_at', { ascending: false })
-                .limit(50);
-            
-            if (error) {
-                console.warn('Supabase query error:', error.message);
-            } else if (data && data.length > 0) {
-                allNews = data.map(item => ({
-                    id: item.id,
-                    title: item.title,
-                    category: item.category,
-                    summary: item.summary || '',
-                    time: timeAgo(new Date(item.published_at)),
-                    image: item.image_emoji || '📰',
-                    trending: item.trending || false,
-                    views: (item.views || 0).toLocaleString() + ' views',
-                    fullContent: item.full_content || item.summary || ''
-                }));
-                console.log('✅ Loaded ' + allNews.length + ' articles from Supabase');
-                return;
-            }
-        } catch(e) {
-            console.warn('Supabase fetch failed:', e.message);
-        }
-    }
-    
-    // Fallback to static
-    console.log('📦 Using static fallback data');
-    allNews = [...staticNews];
 }
 
 function timeAgo(date) {
-    const s = Math.floor((new Date() - date) / 1000);
+    var s = Math.floor((new Date() - date) / 1000);
     if (s < 60) return 'Just now';
     if (s < 3600) return Math.floor(s/60) + ' min ago';
     if (s < 86400) return Math.floor(s/3600) + ' hours ago';
@@ -714,16 +726,19 @@ function timeAgo(date) {
 
 // ============ TICKER ============
 function displayTicker() {
-    const breaking = allNews.filter(n => n.trending);
-    const items = breaking.length > 0 ? breaking : allNews.slice(0, 3);
-    document.getElementById('tickerContent').innerHTML = items.map(n =>
-        `<span onclick="openArticle(${n.id})" style="cursor:pointer;">⚡ ${n.title}</span>`
-    ).join('');
+    var breaking = allNews.filter(function(n) { return n.trending; });
+    var items = breaking.length > 0 ? breaking : allNews.slice(0, 3);
+    var tickerEl = document.getElementById('tickerContent');
+    if (tickerEl) {
+        tickerEl.innerHTML = items.map(function(n) {
+            return '<span onclick="openArticle(\'' + n.id + '\')" style="cursor:pointer;">⚡ ' + n.title + '</span>';
+        }).join('');
+    }
 }
 
 // ============ CATEGORIES ============
 function displayCategories() {
-    const cats = [
+    var cats = [
         { id: 'all', name: 'All', icon: 'fa-globe', color: '#dc2626' },
         { id: 'tech', name: 'Tech', icon: 'fa-microchip', color: '#3b82f6' },
         { id: 'sports', name: 'Sports', icon: 'fa-futbol', color: '#10b981' },
@@ -731,168 +746,195 @@ function displayCategories() {
         { id: 'politics', name: 'Politics', icon: 'fa-landmark', color: '#8b5cf6' },
         { id: 'science', name: 'Science', icon: 'fa-flask', color: '#06b6d4' }
     ];
-    document.getElementById('categoryGrid').innerHTML = cats.map(c => `
-        <div class="category-card" onclick="filterByCategory('${c.id}')">
-            <i class="fas ${c.icon}" style="color:${c.color};"></i>
-            <span>${c.name}</span>
-            <small>${c.id === 'all' ? allNews.length : allNews.filter(n => n.category === c.id).length} articles</small>
-        </div>
-    `).join('');
+    var grid = document.getElementById('categoryGrid');
+    if (grid) {
+        grid.innerHTML = cats.map(function(c) {
+            return '<div class="category-card" onclick="filterByCategory(\'' + c.id + '\')">' +
+                '<i class="fas ' + c.icon + '" style="color:' + c.color + ';"></i>' +
+                '<span>' + c.name + '</span>' +
+                '<small>' + (c.id === 'all' ? allNews.length : allNews.filter(function(n) { return n.category === c.id; }).length) + ' articles</small>' +
+                '</div>';
+        }).join('');
+    }
 }
 
 // ============ NEWS DISPLAY ============
-function displayNews(filter = 'all') {
-    let filtered = filter === 'all' ? allNews : allNews.filter(n => n.category === filter);
+function displayNews(filter) {
+    filter = filter || 'all';
+    var filtered = filter === 'all' ? allNews : allNews.filter(function(n) { return n.category === filter; });
     currentFilter = filter;
-    const grid = document.getElementById('newsGrid');
+    var grid = document.getElementById('newsGrid');
+    
+    if (!grid) return;
     
     if (filtered.length === 0) {
         grid.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><h3>No stories found</h3></div>';
         return;
     }
     
-    grid.innerHTML = filtered.slice(0, displayedCount).map(n => `
-        <article class="news-card" onclick="openArticle(${n.id})">
-            <div class="news-image">${n.image}</div>
-            <div class="news-content">
-                <span class="news-category ${n.category}">${n.category}</span>
-                <h3 class="news-title">${n.title}</h3>
-                <p class="news-excerpt">${n.summary}</p>
-                <div class="news-meta">
-                    <span>🕒 ${n.time} • 👁️ ${n.views}</span>
-                    <div class="news-actions">
-                        <button class="${isBookmarked(n.id) ? 'bookmarked' : ''}" onclick="event.stopPropagation();toggleBookmark(${n.id})"><i class="fas fa-bookmark"></i></button>
-                        <button onclick="event.stopPropagation();shareArticle(${n.id})"><i class="fas fa-share-alt"></i></button>
-                    </div>
-                </div>
-            </div>
-        </article>
-    `).join('');
+    grid.innerHTML = filtered.slice(0, displayedCount).map(function(n) {
+        return '<article class="news-card" onclick="openArticle(\'' + n.id + '\')">' +
+            '<div class="news-image">' + n.image + '</div>' +
+            '<div class="news-content">' +
+            '<span class="news-category ' + n.category + '">' + n.category + '</span>' +
+            '<h3 class="news-title">' + n.title + '</h3>' +
+            '<p class="news-excerpt">' + n.summary + '</p>' +
+            '<div class="news-meta">' +
+            '<span>🕒 ' + n.time + ' • 👁️ ' + n.views + '</span>' +
+            '<div class="news-actions">' +
+            '<button class="' + (isBookmarked(n.id) ? 'bookmarked' : '') + '" onclick="event.stopPropagation();toggleBookmark(\'' + n.id + '\')"><i class="fas fa-bookmark"></i></button>' +
+            '<button onclick="event.stopPropagation();shareArticle(\'' + n.id + '\')"><i class="fas fa-share-alt"></i></button>' +
+            '</div></div></div></article>';
+    }).join('');
     
-    document.getElementById('sectionTitle').textContent = filter === 'all' ? 'Latest News' : filter.charAt(0).toUpperCase() + filter.slice(1) + ' News';
+    var sectionTitle = document.getElementById('sectionTitle');
+    if (sectionTitle) {
+        sectionTitle.textContent = filter === 'all' ? 'Latest News' : filter.charAt(0).toUpperCase() + filter.slice(1) + ' News';
+    }
 }
 
 function loadMore() { displayedCount += 6; displayNews(currentFilter); showToast('Loading more stories... 📰'); }
 
 function filterByCategory(cat) {
     currentFilter = cat; displayedCount = 6;
-    document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(a => a.classList.remove('active'));
-    document.querySelector(`.nav-desktop a[data-category="${cat}"]`)?.classList.add('active');
-    document.querySelector(`.sidebar-nav a[data-category="${cat}"]`)?.classList.add('active');
+    document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(function(a) { a.classList.remove('active'); });
+    var desktopLink = document.querySelector('.nav-desktop a[data-category="' + cat + '"]');
+    var sidebarLink = document.querySelector('.sidebar-nav a[data-category="' + cat + '"]');
+    if (desktopLink) desktopLink.classList.add('active');
+    if (sidebarLink) sidebarLink.classList.add('active');
     displayNews(cat); displayCategories();
 }
 
 // ============ TRENDING ============
 function displayTrending() {
-    const trending = allNews.filter(n => n.trending).slice(0, 5);
-    document.getElementById('trendingList').innerHTML = trending.map((n, i) => `
-        <div class="trending-item" onclick="openArticle(${n.id})">
-            <div class="trending-rank">${String(i+1).padStart(2,'0')}</div>
-            <div><div class="trending-title">${n.title.substring(0,55)}...</div><div class="trending-views">👁️ ${n.views}</div></div>
-        </div>
-    `).join('');
+    var trending = allNews.filter(function(n) { return n.trending; }).slice(0, 5);
+    var list = document.getElementById('trendingList');
+    if (list) {
+        list.innerHTML = trending.map(function(n, i) {
+            return '<div class="trending-item" onclick="openArticle(\'' + n.id + '\')">' +
+                '<div class="trending-rank">' + String(i+1).padStart(2,'0') + '</div>' +
+                '<div><div class="trending-title">' + n.title.substring(0,55) + '...</div>' +
+                '<div class="trending-views">👁️ ' + n.views + '</div></div></div>';
+        }).join('');
+    }
 }
 
 // ============ ARTICLE MODAL ============
 function openArticle(id) {
-    const article = allNews.find(n => n.id == id);
+    var article = allNews.find(function(n) { return n.id == id; });
     if (!article) return;
     
-    let history = JSON.parse(localStorage.getItem('readingHistory')) || [];
+    var history = JSON.parse(localStorage.getItem('readingHistory')) || [];
     history.unshift({ id: article.id, title: article.title, timestamp: new Date().toISOString() });
     localStorage.setItem('readingHistory', JSON.stringify(history.slice(0, 50)));
     
-    document.getElementById('articleModalContent').innerHTML = `
-        <button class="modal-close" onclick="closeArticle()">✕</button>
-        <div class="article-full-image">${article.image}</div>
-        <span class="news-category ${article.category}" style="margin-bottom:1rem;">${article.category}</span>
-        <h1 class="article-full-title">${article.title}</h1>
-        <div class="article-full-meta">
-            <span>🕒 ${article.time}</span><span>👁️ ${article.views}</span><span>💬 2.3K comments</span><span>⏱️ 8 min read</span>
-        </div>
-        <div class="article-full-body">
-            <p style="font-size:1.2rem;font-weight:600;color:var(--text-primary);margin-bottom:1rem;">${article.summary}</p>
-            <p>${article.fullContent}</p>
-        </div>
-        <div class="article-actions-bar">
-            <button onclick="toggleBookmark(${article.id});showToast(isBookmarked(${article.id})?'Bookmarked! 🔖':'Bookmark removed');" style="background:var(--brand-red);color:white;border:none;padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">${isBookmarked(article.id) ? '🔖 Bookmarked' : '🔖 Bookmark'}</button>
-            <button onclick="shareArticle(${article.id})" style="background:transparent;border:2px solid var(--border);color:var(--text-primary);padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">📤 Share</button>
-        </div>
-    `;
-    document.getElementById('articleModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
+    var modalContent = document.getElementById('articleModalContent');
+    var modal = document.getElementById('articleModal');
+    
+    if (modalContent && modal) {
+        modalContent.innerHTML = 
+            '<button class="modal-close" onclick="closeArticle()">✕</button>' +
+            '<div class="article-full-image">' + article.image + '</div>' +
+            '<span class="news-category ' + article.category + '" style="margin-bottom:1rem;">' + article.category + '</span>' +
+            '<h1 class="article-full-title">' + article.title + '</h1>' +
+            '<div class="article-full-meta"><span>🕒 ' + article.time + '</span><span>👁️ ' + article.views + '</span></div>' +
+            '<div class="article-full-body"><p style="font-size:1.2rem;font-weight:600;margin-bottom:1rem;">' + article.summary + '</p><p>' + article.fullContent + '</p></div>' +
+            '<div class="article-actions-bar">' +
+            '<button onclick="toggleBookmark(\'' + article.id + '\');showToast(isBookmarked(\'' + article.id + '\')?\'Bookmarked! 🔖\':\'Bookmark removed\');" style="background:var(--brand-red);color:white;border:none;padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">' + (isBookmarked(article.id) ? '🔖 Bookmarked' : '🔖 Bookmark') + '</button>' +
+            '<button onclick="shareArticle(\'' + article.id + '\')" style="background:transparent;border:2px solid var(--border);color:var(--text-primary);padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">📤 Share</button>' +
+            '</div>';
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeArticle() {
-    document.getElementById('articleModal').classList.remove('active');
+    var modal = document.getElementById('articleModal');
+    if (modal) { modal.classList.remove('active'); }
     document.body.style.overflow = '';
 }
 
 // ============ BOOKMARKS ============
 function toggleBookmark(id) {
-    const idx = bookmarks.indexOf(id);
+    var idx = bookmarks.indexOf(id);
     if (idx > -1) bookmarks.splice(idx, 1);
     else bookmarks.push(id);
     localStorage.setItem('moonBookmarks', JSON.stringify(bookmarks));
 }
-function isBookmarked(id) { return bookmarks.includes(id); }
+function isBookmarked(id) { return bookmarks.indexOf(id) > -1; }
 
 // ============ SHARE ============
 function shareArticle(id) {
-    const a = allNews.find(n => n.id == id);
-    if (navigator.share) navigator.share({ title: a.title, text: a.summary, url: window.location.href }).catch(()=>{});
-    else { navigator.clipboard.writeText(a.title); showToast('📋 Link copied!'); }
+    var a = allNews.find(function(n) { return n.id == id; });
+    if (navigator.share) navigator.share({ title: a.title, text: a.summary }).catch(function(){});
+    else { showToast('📋 Link copied!'); }
 }
 
 // ============ SEARCH ============
-document.getElementById('searchBtn').addEventListener('click', openSearch);
-function openSearch() { document.getElementById('searchOverlay').classList.add('active'); document.getElementById('searchInput').focus(); }
-function closeSearch() { document.getElementById('searchOverlay').classList.remove('active'); document.getElementById('searchInput').value = ''; document.getElementById('searchResults').innerHTML = ''; }
+var searchBtn = document.getElementById('searchBtn');
+if (searchBtn) { searchBtn.addEventListener('click', openSearch); }
+function openSearch() { 
+    var overlay = document.getElementById('searchOverlay');
+    if (overlay) { overlay.classList.add('active'); }
+    var input = document.getElementById('searchInput');
+    if (input) { input.focus(); }
+}
+function closeSearch() { 
+    var overlay = document.getElementById('searchOverlay');
+    if (overlay) { overlay.classList.remove('active'); }
+    var input = document.getElementById('searchInput');
+    if (input) { input.value = ''; }
+    var results = document.getElementById('searchResults');
+    if (results) { results.innerHTML = ''; }
+}
 function handleSearch() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    if (q.length < 2) { document.getElementById('searchResults').innerHTML = ''; return; }
-    const results = allNews.filter(n => n.title.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q) || n.category.includes(q));
-    document.getElementById('searchResults').innerHTML = results.slice(0, 8).map(n => `
-        <div class="search-result-item" onclick="closeSearch();openArticle(${n.id})">
-            <strong>${n.image} ${n.title}</strong><br><small>${n.category} • ${n.time}</small>
-        </div>
-    `).join('') || '<div style="padding:20px;text-align:center;">No results found</div>';
+    var q = document.getElementById('searchInput').value.toLowerCase();
+    var results = document.getElementById('searchResults');
+    if (!results) return;
+    if (q.length < 2) { results.innerHTML = ''; return; }
+    var found = allNews.filter(function(n) { return n.title.toLowerCase().indexOf(q) > -1 || n.summary.toLowerCase().indexOf(q) > -1 || n.category.indexOf(q) > -1; });
+    results.innerHTML = found.slice(0, 8).map(function(n) {
+        return '<div class="search-result-item" onclick="closeSearch();openArticle(\'' + n.id + '\')"><strong>' + n.image + ' ' + n.title + '</strong><br><small>' + n.category + ' • ' + n.time + '</small></div>';
+    }).join('') || '<div style="padding:20px;text-align:center;">No results found</div>';
 }
 
 // ============ NAV LISTENERS ============
 function setupNavListeners() {
-    document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(link => {
-        link.addEventListener('click', (e) => { e.preventDefault(); filterByCategory(link.dataset.category); });
+    document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(function(link) {
+        link.addEventListener('click', function(e) { e.preventDefault(); filterByCategory(link.dataset.category); });
     });
 }
 
 // ============ HERO ============
-function updateHeroStats() { document.getElementById('heroTotalArticles').textContent = allNews.length; }
+function updateHeroStats() { 
+    var el = document.getElementById('heroTotalArticles');
+    if (el) el.textContent = allNews.length; 
+}
 
 // ============ NEWSLETTER ============
 function handleNewsletter(e) { e.preventDefault(); showToast('✅ Subscribed! Welcome aboard!'); e.target.reset(); }
 
 // ============ TOAST ============
 function showToast(msg) {
-    const c = document.getElementById('toastContainer');
-    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
-    c.appendChild(t); setTimeout(() => t.remove(), 3000);
+    var c = document.getElementById('toastContainer');
+    if (!c) return;
+    var t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+    c.appendChild(t); setTimeout(function() { t.remove(); }, 3000);
 }
 
 // ============ KEYBOARD ============
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') { closeArticle(); closeSearch(); }
     if (e.ctrlKey && e.key === 'k') { e.preventDefault(); openSearch(); }
 });
 
 // Close modal on overlay click
-document.getElementById('articleModal').addEventListener('click', function(e) {
-    if (e.target === this) closeArticle();
-});
+var articleModal = document.getElementById('articleModal');
+if (articleModal) {
+    articleModal.addEventListener('click', function(e) { if (e.target === this) closeArticle(); });
+}
 
-// ============ START ============
-document.addEventListener('DOMContentLoaded', init);
-console.log('🌙 THE MOON v7.0 FINAL - All Systems Ready');
+console.log('🌙 THE MOON v8.0 - All scripts loaded successfully');
 </script>
 </body>
 </html>
