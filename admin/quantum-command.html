@@ -57,7 +57,7 @@
         <span style="font-weight:900;letter-spacing:2px;color:var(--accent);">QUANTUM COMMAND</span>
     </div>
     <div style="display:flex;gap:1rem;align-items:center;">
-        <span style="font-size:0.7rem;color:var(--success);">🟢 SUPABASE CONNECTED</span>
+        <span id="connStatus" style="font-size:0.7rem;color:var(--success);">🟢 CONNECTED</span>
         <button class="btn btn-outline btn-sm" onclick="window.open('/rasu/')">🌍 VIEW SITE</button>
     </div>
 </div>
@@ -121,9 +121,9 @@
         <div class="panel" id="panel-sync">
             <h2 style="margin-bottom:1rem;">🔄 SYNC WITH SUPABASE</h2>
             <div class="qcard">
-                <p style="margin-bottom:1rem;">✅ Connected to: <strong>crmbbmwekdlfjgekjnll.supabase.co</strong></p>
+                <p style="margin-bottom:1rem;">Connected to: <strong>crmbbmwekdlfjgekjnll.supabase.co</strong></p>
                 <button class="btn btn-primary" onclick="syncFromSupabase()">📥 Pull All Articles</button>
-                <button class="btn btn-success" onclick="pushToSupabase()" style="margin-left:0.5rem;">📤 Push Local to Supabase</button>
+                <button class="btn btn-success" onclick="pushToSupabase()" style="margin-left:0.5rem;">📤 Push Local</button>
                 <div id="syncStatus" style="margin-top:1rem;"></div>
             </div>
         </div>
@@ -135,20 +135,45 @@
 <script>
 const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let supabaseAdmin = null;
+try {
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+        supabaseAdmin = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase Admin connected!');
+    }
+} catch(e) {
+    console.error('Supabase Admin init error:', e.message);
+    document.getElementById('connStatus').innerHTML = '🔴 OFFLINE';
+}
 
 let articles = [];
 
 async function init() {
-    await syncFromSupabase();
+    if (supabaseAdmin) {
+        await syncFromSupabase();
+    } else {
+        loadLocalArticles();
+    }
     updateDashboard();
 }
 
 async function syncFromSupabase() {
-    document.getElementById('syncStatus').innerHTML = '<p style="color:var(--accent);">Syncing...</p>';
+    if (!supabaseAdmin) {
+        document.getElementById('syncStatus').innerHTML = '<p style="color:var(--red);">❌ Supabase not connected</p>';
+        loadLocalArticles();
+        return;
+    }
+    
+    document.getElementById('syncStatus').innerHTML = '<p style="color:var(--accent);">⏳ Syncing...</p>';
     try {
-        const { data, error } = await supabase.from('news_articles').select('*').order('published_at', { ascending: false });
+        const { data, error } = await supabaseAdmin
+            .from('news_articles')
+            .select('*')
+            .order('published_at', { ascending: false });
+        
         if (error) throw error;
+        
         if (data) {
             articles = data;
             localStorage.setItem('quantumArticles', JSON.stringify(data));
@@ -156,12 +181,25 @@ async function syncFromSupabase() {
         }
     } catch(e) {
         document.getElementById('syncStatus').innerHTML = '<p style="color:var(--red);">❌ ' + e.message + '</p>';
+        loadLocalArticles();
     }
     updateDashboard();
     loadArticlesList();
 }
 
+function loadLocalArticles() {
+    articles = JSON.parse(localStorage.getItem('quantumArticles')) || [];
+    console.log('📦 Loaded ' + articles.length + ' local articles');
+    updateDashboard();
+    loadArticlesList();
+}
+
 async function publishArticle() {
+    if (!supabaseAdmin) {
+        showToast('❌ Supabase not connected!', 'error');
+        return;
+    }
+    
     const title = document.getElementById('cmpTitle').value.trim();
     const category = document.getElementById('cmpCategory').value;
     const summary = document.getElementById('cmpSummary').value.trim();
@@ -175,7 +213,7 @@ async function publishArticle() {
         return;
     }
 
-    const { error } = await supabase.from('news_articles').insert({
+    const { error } = await supabaseAdmin.from('news_articles').insert({
         title, category, summary, full_content: content || summary,
         image_emoji: emoji, trending, breaking, views: 0
     });
@@ -191,7 +229,7 @@ async function publishArticle() {
 
 function loadArticlesList() {
     const list = document.getElementById('articlesList');
-    if (!articles.length) { list.innerHTML = '<p>No articles yet. Publish your first one!</p>'; return; }
+    if (!articles.length) { list.innerHTML = '<p style="text-align:center;padding:2rem;">No articles yet. Publish your first one!</p>'; return; }
     list.innerHTML = articles.slice(0, 20).map(a => `
         <div class="article-row">
             <div style="font-size:1.5rem;">${a.image_emoji||'📰'}</div>
@@ -205,26 +243,29 @@ function loadArticlesList() {
 }
 
 async function deleteArticle(id) {
+    if (!supabaseAdmin) return;
     if (!confirm('Delete this article?')) return;
-    await supabase.from('news_articles').delete().eq('id', id);
+    await supabaseAdmin.from('news_articles').delete().eq('id', id);
     showToast('🗑️ Deleted!', 'error');
     syncFromSupabase();
 }
 
 async function pushToSupabase() {
+    if (!supabaseAdmin) {
+        showToast('❌ Supabase not connected!', 'error');
+        return;
+    }
     const local = JSON.parse(localStorage.getItem('quantumArticles')) || [];
     let count = 0;
     for (const a of local) {
-        if (a.id < 1000000) {
-            const { error } = await supabase.from('news_articles').insert({
-                title: a.title, category: a.category, summary: a.summary,
-                full_content: a.content || a.summary, image_emoji: a.emoji || '📰',
-                trending: a.trending, breaking: a.breaking
-            });
-            if (!error) count++;
-        }
+        const { error } = await supabaseAdmin.from('news_articles').insert({
+            title: a.title, category: a.category, summary: a.summary,
+            full_content: a.content || a.summary, image_emoji: a.emoji || '📰',
+            trending: a.trending, breaking: a.breaking
+        });
+        if (!error) count++;
     }
-    showToast('📤 Pushed ' + count + ' articles to Supabase!', 'success');
+    showToast('📤 Pushed ' + count + ' articles!', 'success');
     syncFromSupabase();
 }
 
