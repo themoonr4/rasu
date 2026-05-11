@@ -5,30 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="THE MOON - World's Most Advanced AI-Powered News Platform. Real-time breaking news, curated content, and comprehensive global coverage.">
     <meta name="theme-color" content="#dc2626">
-    <meta property="og:title" content="THE MOON - World Class News">
+    <meta property="og:title" content="THE MOON - World's Best News Platform">
     <meta property="og:description" content="World's Most Advanced News Platform | AI-Powered | Real-Time">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://themoonr4.github.io/rasu/assets/og-image.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <title>THE MOON 🌙 | World's Most Advanced News Platform | Breaking News & Live Updates</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
     <link rel="manifest" href="/rasu/manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- OneSignal Push Notifications -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c",
-        });
+        await OneSignal.init({ appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c" });
       });
     </script>
     
+    <!-- Google Translate -->
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'hi,en,es,fr,de,zh-CN,ar,ja,ko,pt,ru,bn,ta,te,mr,gu,pa,ur',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -40,24 +50,22 @@
             --brand-red: #dc2626;
             --brand-red-dark: #b91c1c;
             --brand-red-light: #ef4444;
-            
             --tech: #3b82f6;
             --sports: #10b981;
             --business: #f59e0b;
             --politics: #8b5cf6;
             --study: #06b6d4;
-            
+            --science: #8b5cf6;
+            --world: #ef4444;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            
             --radius-sm: 0.375rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
             --radius-2xl: 1.5rem;
-            
             --transition-fast: 150ms ease;
             --transition-normal: 250ms ease;
             --transition-slow: 350ms ease;
@@ -74,7 +82,10 @@
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
@@ -85,548 +96,347 @@
             -moz-osx-font-smoothing: grayscale;
             padding-bottom: 70px;
         }
+        @media (min-width: 768px) { body { padding-bottom: 0; } }
 
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        @media (min-width: 768px) { 
-            .container { padding: 0 1.5rem; }
-            body { padding-bottom: 0; }
-        }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
+        @media (min-width: 768px) { .container { padding: 0 1.5rem; } }
         @media (min-width: 1024px) { .container { padding: 0 2rem; } }
 
-        /* Header */
+        /* ============ HEADER ============ */
         .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--bg-primary);
-            border-bottom: 2px solid var(--brand-red);
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg-primary); border-bottom: 2px solid var(--brand-red);
             backdrop-filter: blur(10px);
         }
         .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 60px;
-            gap: 1rem;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 60px; gap: 1rem;
         }
         @media (min-width: 768px) { .header-content { height: 70px; gap: 2rem; } }
 
         .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
+            font-size: 1.4rem; font-weight: 800;
             background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-decoration: none;
-            white-space: nowrap;
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent; text-decoration: none; white-space: nowrap;
         }
 
         /* Desktop Navigation */
-        .nav-desktop {
-            display: none;
-            flex: 1;
-            justify-content: center;
-            gap: 0.25rem;
-            flex-wrap: wrap;
-        }
+        .nav-desktop { display: none; flex: 1; justify-content: center; gap: 0.25rem; flex-wrap: wrap; }
         @media (min-width: 768px) { .nav-desktop { display: flex; } }
-
         .nav-desktop a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
+            text-decoration: none; color: var(--text-secondary); font-weight: 500;
+            padding: 0.5rem 0.75rem; border-radius: var(--radius-md); font-size: 0.85rem;
             transition: var(--transition-fast);
-            padding: 0.5rem 0.75rem;
-            border-radius: var(--radius-md);
-            font-size: 0.85rem;
         }
-        .nav-desktop a:hover,
-        .nav-desktop a.active { 
-            color: white;
-            background: var(--brand-red);
-        }
+        .nav-desktop a:hover, .nav-desktop a.active { color: white; background: var(--brand-red); }
 
         /* Header Actions */
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
+        .header-actions { display: flex; align-items: center; gap: 0.25rem; }
+        .header-actions button, .header-actions .icon-link {
+            background: none; border: none; font-size: 1.1rem; cursor: pointer;
+            color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px;
+            border-radius: var(--radius-md); transition: var(--transition-fast);
+            display: flex; align-items: center; justify-content: center; text-decoration: none;
         }
-        .header-actions button {
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-            cursor: pointer;
-            color: var(--text-primary);
-            padding: 0.5rem;
-            min-width: 40px;
-            min-height: 40px;
-            border-radius: var(--radius-md);
-            transition: var(--transition-fast);
+        .header-actions button:hover, .header-actions .icon-link:hover {
+            background: var(--bg-secondary); color: var(--brand-red);
         }
-        .header-actions button:hover { background: var(--bg-secondary); color: var(--brand-red); }
 
-        /* Search */
-        .search-container {
-            position: relative;
-            display: flex;
-            align-items: center;
+        /* Search Overlay */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9); z-index: 10000;
+            display: none; align-items: flex-start; justify-content: center;
+            padding-top: 80px;
         }
-        .search-input {
-            width: 0;
-            opacity: 0;
-            transition: all var(--transition-normal);
-            border: 2px solid var(--border);
-            background: var(--bg-secondary);
-            padding: 0.5rem;
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
-            font-size: 0.9rem;
+        .search-overlay.active { display: flex; }
+        .search-modal { width: 90%; max-width: 650px; }
+        .search-modal input {
+            width: 100%; padding: 1rem 1.5rem; font-size: 1.2rem;
+            border: none; border-radius: var(--radius-lg); background: white;
+            color: #0f172a; font-family: inherit;
         }
-        .search-input.active {
-            width: 180px;
-            opacity: 1;
-            padding: 0.5rem 1rem;
+        .search-results {
+            background: white; border-radius: var(--radius-lg); margin-top: 0.5rem;
+            max-height: 400px; overflow-y: auto; color: #0f172a;
         }
-        @media (min-width: 768px) { .search-input.active { width: 250px; } }
+        .search-result-item {
+            padding: 1rem 1.5rem; border-bottom: 1px solid #e0e0e0;
+            cursor: pointer; transition: background 0.15s;
+        }
+        .search-result-item:hover { background: #f5f5f5; }
+        .search-result-item strong { font-size: 0.95rem; }
+        .search-result-item small { color: #6c757d; font-size: 0.75rem; }
 
-        /* Mobile Bottom Navigation */
+        /* ============ SIDEBAR (Mobile) ============ */
+        .sidebar {
+            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
+            background: var(--bg-primary); z-index: 200; transition: left var(--transition-normal);
+            box-shadow: var(--shadow-xl); overflow-y: auto;
+        }
+        .sidebar.open { left: 0; }
+        .sidebar-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+        }
+        .sidebar-nav { padding: 0.5rem; }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.75rem 1rem; text-decoration: none; color: var(--text-secondary);
+            border-radius: var(--radius-md); font-weight: 500; transition: var(--transition-fast);
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background: var(--brand-red); color: white; }
+        .sidebar-nav hr { border-color: var(--border); margin: 0.5rem 0; }
+
+        /* Overlay */
+        .overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 199; display: none;
+        }
+        .overlay.active { display: block; }
+
+        /* ============ MOBILE BOTTOM NAV ============ */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-primary);
-            border-top: 2px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.4rem 0.5rem;
-            z-index: 99;
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--bg-primary); border-top: 2px solid var(--border);
+            display: flex; justify-content: space-around; padding: 0.4rem 0.5rem; z-index: 99;
         }
         @media (min-width: 768px) { .bottom-nav { display: none; } }
-
         .bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.65rem;
-            min-width: 50px;
-            padding: 0.25rem;
-            border-radius: var(--radius-md);
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+            text-decoration: none; color: var(--text-secondary); font-size: 0.65rem;
+            padding: 0.25rem; border-radius: var(--radius-md); min-width: 50px;
             transition: var(--transition-fast);
         }
         .bottom-nav-item.active { color: var(--brand-red); }
         .bottom-nav-item i { font-size: 1.1rem; }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
-            background: var(--bg-primary);
-            z-index: 200;
-            transition: left var(--transition-normal);
-            box-shadow: var(--shadow-xl);
-            overflow-y: auto;
-        }
-        .sidebar.open { left: 0; }
-
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-nav {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .sidebar-nav a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius-md);
-            transition: var(--transition-fast);
-            font-weight: 500;
-        }
-        .sidebar-nav a:hover,
-        .sidebar-nav a.active {
-            background: var(--brand-red);
-            color: white;
-        }
-
-        /* Overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 199;
-            display: none;
-        }
-        .overlay.active { display: block; }
-
-        /* Main Layout */
+        /* ============ MAIN LAYOUT ============ */
         .layout-main {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            display: flex; flex-direction: column; gap: 1.5rem;
             padding: 1rem 0;
         }
         @media (min-width: 1024px) {
-            .layout-main {
-                display: grid;
-                grid-template-columns: 1fr 320px;
-                gap: 2rem;
-            }
+            .layout-main { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
         }
 
-        /* Hero Section */
+        /* ============ HERO ============ */
         .hero {
             background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
-            border-radius: var(--radius-xl);
-            padding: 1.5rem;
-            color: white;
-            text-align: center;
-            grid-column: 1 / -1;
+            border-radius: var(--radius-xl); padding: 1.5rem; color: white;
+            text-align: center; grid-column: 1 / -1;
         }
-        @media (min-width: 768px) {
-            .hero { padding: 2.5rem; text-align: left; }
-        }
-        .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 0.5rem; font-weight: 900; }
+        @media (min-width: 768px) { .hero { padding: 2.5rem; text-align: left; } }
+        .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 0.5rem; }
         .hero p { font-size: 0.95rem; opacity: 0.9; }
+        .hero-stats { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        @media (min-width: 768px) { .hero-stats { justify-content: flex-start; } }
+        .hero-stat { text-align: center; }
+        .hero-stat .number { font-size: 2rem; font-weight: 900; }
+        .hero-stat .label { font-size: 0.75rem; opacity: 0.8; }
 
-        /* Breaking Ticker */
+        /* ============ TICKER ============ */
         .ticker {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 0.6rem 1rem;
-            overflow: hidden;
-            white-space: nowrap;
-            border: 1px solid var(--border);
+            background: var(--bg-secondary); border-radius: var(--radius-lg);
+            padding: 0.6rem 1rem; overflow: hidden; white-space: nowrap;
+            border: 1px solid var(--border); margin-bottom: 0.5rem;
         }
         .ticker-content {
-            display: inline-block;
-            animation: ticker-scroll 30s linear infinite;
-            font-size: 0.85rem;
-            color: var(--brand-red);
-            font-weight: 500;
+            display: inline-block; animation: ticker 30s linear infinite;
+            font-size: 0.85rem; color: var(--brand-red); font-weight: 500;
         }
         .ticker-content:hover { animation-play-state: paused; }
-        .ticker-content span { margin-right: 3rem; }
-        @keyframes ticker-scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+        .ticker-content span { margin-right: 3rem; cursor: pointer; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* Category Grid */
+        /* ============ CATEGORY GRID ============ */
         .category-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem;
         }
         @media (min-width: 640px) { .category-grid { grid-template-columns: repeat(6, 1fr); } }
-
         .category-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 0.75rem;
-            text-align: center;
-            text-decoration: none;
-            transition: var(--transition-fast);
-            border: 2px solid transparent;
-            cursor: pointer;
+            background: var(--bg-secondary); border-radius: var(--radius-lg);
+            padding: 0.75rem; text-align: center; cursor: pointer;
+            border: 2px solid transparent; transition: var(--transition-fast); text-decoration: none;
         }
-        .category-card:hover { 
-            transform: translateY(-3px); 
-            border-color: var(--brand-red);
-            box-shadow: var(--shadow-md);
-        }
+        .category-card:hover { border-color: var(--brand-red); transform: translateY(-3px); box-shadow: var(--shadow-md); }
         .category-card i { font-size: 1.5rem; margin-bottom: 0.25rem; display: block; }
         .category-card span { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; display: block; }
         .category-card small { font-size: 0.65rem; color: var(--text-tertiary); }
 
-        /* News Grid */
-        .news-grid {
-            display: grid;
-            gap: 1rem;
-        }
+        /* ============ NEWS GRID ============ */
+        .news-grid { display: grid; gap: 1rem; }
         @media (min-width: 640px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
-
         .news-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            border: 1px solid var(--border);
+            background: var(--bg-secondary); border-radius: var(--radius-lg);
+            overflow: hidden; cursor: pointer; transition: var(--transition-fast);
+            border: 1px solid var(--border); display: flex; flex-direction: column;
         }
-        .news-card:hover { 
-            transform: translateY(-3px); 
-            box-shadow: var(--shadow-lg);
-            border-color: var(--brand-red);
-        }
-
+        .news-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--brand-red); }
         .news-image {
-            width: 100%;
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            height: 160px; display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; background: linear-gradient(135deg, #1a1a2e, #16213e);
         }
-        [data-theme="light"] .news-image {
-            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-        }
-
+        [data-theme="light"] .news-image { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
         .news-content { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
         .news-category {
-            display: inline-block;
-            background: var(--brand-red);
-            color: white;
-            font-size: 0.65rem;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            align-self: flex-start;
+            display: inline-block; background: var(--brand-red); color: white;
+            font-size: 0.65rem; padding: 3px 10px; border-radius: 20px; margin-bottom: 0.5rem;
+            font-weight: 600; text-transform: uppercase; align-self: flex-start;
         }
         .news-category.tech { background: var(--tech); }
         .news-category.sports { background: var(--sports); }
         .news-category.business { background: var(--business); }
         .news-category.politics { background: var(--politics); }
-        .news-category.study { background: var(--study); }
-        
-        .news-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-            flex: 1;
-        }
+        .news-category.study, .news-category.science { background: var(--study); }
+        .news-category.world { background: var(--world); }
+        .news-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4; flex: 1; }
         .news-excerpt {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            color: var(--text-secondary); font-size: 0.85rem;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
             margin-bottom: 0.75rem;
         }
         .news-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-            color: var(--text-tertiary);
-            border-top: 1px solid var(--border);
-            padding-top: 0.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.7rem; color: var(--text-tertiary);
+            border-top: 1px solid var(--border); padding-top: 0.5rem; margin-top: auto;
         }
-        .news-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
+        .news-actions { display: flex; gap: 0.5rem; }
         .news-actions button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-tertiary);
-            font-size: 1rem;
-            padding: 0.25rem;
-            transition: var(--transition-fast);
+            background: none; border: none; cursor: pointer; color: var(--text-tertiary);
+            font-size: 1rem; padding: 0.25rem; transition: var(--transition-fast);
         }
         .news-actions button:hover { color: var(--brand-red); }
         .news-actions button.bookmarked { color: var(--brand-red); }
 
-        /* Sidebar Widgets */
-        .sidebar-right {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        /* ============ ARTICLE MODAL ============ */
+        .article-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 10001;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .article-modal.active { display: flex; }
+        .article-modal-content {
+            background: var(--bg-secondary); border-radius: var(--radius-xl);
+            max-width: 850px; width: 100%; max-height: 90vh; overflow-y: auto;
+            padding: 2.5rem; position: relative; border: 1px solid var(--border);
+        }
+        .modal-close {
+            position: sticky; top: 10px; float: right;
+            background: var(--bg-tertiary); border: none; font-size: 1.5rem;
+            cursor: pointer; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1; color: var(--text-primary);
+        }
+        .article-full-image {
+            font-size: 6rem; text-align: center; padding: 2rem;
+            background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+        }
+        .article-full-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 900; margin-bottom: 1rem; line-height: 1.2; }
+        .article-full-meta {
+            display: flex; gap: 1.5rem; color: var(--text-tertiary);
+            margin-bottom: 1.5rem; flex-wrap: wrap; font-size: 0.85rem;
+        }
+        .article-full-body { font-size: 1.05rem; line-height: 1.9; color: var(--text-secondary); }
+        .article-actions-bar {
+            display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem;
+            border-top: 1px solid var(--border); flex-wrap: wrap;
         }
 
+        /* ============ SIDEBAR WIDGETS ============ */
+        .sidebar-right { display: flex; flex-direction: column; gap: 1rem; }
         .widget {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 1.25rem;
-            border: 1px solid var(--border);
+            background: var(--bg-secondary); border-radius: var(--radius-lg);
+            padding: 1.25rem; border: 1px solid var(--border);
         }
         .widget h3 {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border);
+            font-size: 1rem; margin-bottom: 1rem; padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 0.5rem;
         }
-
         .trending-item {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
+            padding: 0.75rem 0; border-bottom: 1px solid var(--border);
+            cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start;
             transition: var(--transition-fast);
-            display: flex;
-            gap: 0.75rem;
-            align-items: flex-start;
         }
-        .trending-item:last-child { border-bottom: none; }
         .trending-item:hover { padding-left: 0.5rem; }
-        .trending-rank {
-            font-size: 1.2rem;
-            color: var(--brand-red);
-            font-weight: 900;
-            min-width: 25px;
-        }
-        .trending-title {
-            font-size: 0.85rem;
-            font-weight: 500;
-            line-height: 1.3;
-        }
-        .trending-views {
-            font-size: 0.65rem;
-            color: var(--text-tertiary);
-            margin-top: 0.25rem;
-        }
+        .trending-rank { font-size: 1.2rem; color: var(--brand-red); font-weight: 900; min-width: 25px; }
+        .trending-title { font-size: 0.85rem; font-weight: 500; line-height: 1.3; }
+        .trending-views { font-size: 0.65rem; color: var(--text-tertiary); margin-top: 0.25rem; }
 
-        /* Weather Widget */
+        /* Weather */
         .weather-info { text-align: center; }
         .weather-icon-display { font-size: 3rem; margin-bottom: 0.5rem; }
         .weather-temp { font-size: 2.5rem; font-weight: 900; }
         .weather-location { font-size: 0.85rem; color: var(--text-secondary); }
-        .weather-desc { font-size: 0.8rem; color: var(--text-tertiary); }
 
         /* Newsletter */
-        .newsletter-input {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        .newsletter-box {
+            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+            color: white; border-radius: var(--radius-lg); padding: 1.5rem; text-align: center;
         }
-        .newsletter-input input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-md);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 0.9rem;
+        .newsletter-box h3 { color: white; border-bottom-color: rgba(255,255,255,0.3); }
+        .newsletter-form { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+        .newsletter-form input {
+            padding: 0.75rem; border: none; border-radius: var(--radius-md);
+            font-size: 0.9rem; font-family: inherit;
         }
-        .newsletter-input input:focus { outline: none; border-color: var(--brand-red); }
-        .newsletter-input button {
-            background: var(--brand-red);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition-fast);
+        .newsletter-form button {
+            background: white; color: var(--brand-red); font-weight: 700;
+            padding: 0.75rem; border: none; border-radius: var(--radius-md);
+            cursor: pointer; font-size: 0.9rem; transition: var(--transition-fast);
         }
-        .newsletter-input button:hover { background: var(--brand-red-dark); }
+        .newsletter-form button:hover { transform: scale(1.02); }
 
-        /* Toast */
+        /* ============ TOAST ============ */
         .toast-container {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            position: fixed; bottom: 80px; right: 20px; z-index: 9999;
+            display: flex; flex-direction: column; gap: 0.5rem;
         }
         @media (min-width: 768px) { .toast-container { bottom: 20px; } }
         .toast {
-            background: #10b981;
-            color: white;
-            padding: 0.75rem 1.25rem;
-            border-radius: var(--radius-md);
-            font-weight: 500;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-lg);
-            animation: slideIn 0.3s ease;
+            background: var(--success); color: white; padding: 0.75rem 1.25rem;
+            border-radius: var(--radius-md); font-weight: 500; font-size: 0.9rem;
+            box-shadow: var(--shadow-lg); animation: slideIn 0.3s ease;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        /* Footer */
+        /* ============ FOOTER ============ */
         .footer {
-            background: var(--bg-secondary);
-            border-top: 2px solid var(--border);
-            padding: 2rem 1rem;
-            margin-top: 2rem;
-            text-align: center;
+            background: var(--bg-secondary); border-top: 2px solid var(--border);
+            padding: 2rem 1rem; text-align: center; margin-top: 2rem;
         }
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        .footer-links a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            transition: var(--transition-fast);
-        }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+        .footer-links a { text-decoration: none; color: var(--text-secondary); font-size: 0.85rem; transition: var(--transition-fast); }
         .footer-links a:hover { color: var(--brand-red); }
-        .footer-social {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        .footer-social a {
-            color: var(--text-secondary);
-            font-size: 1.3rem;
-            transition: var(--transition-fast);
-        }
+        .footer-social { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+        .footer-social a { color: var(--text-secondary); font-size: 1.3rem; transition: var(--transition-fast); }
         .footer-social a:hover { color: var(--brand-red); transform: translateY(-2px); }
-        .copyright {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-        }
+        .copyright { font-size: 0.75rem; color: var(--text-tertiary); }
 
-        /* No results */
-        .no-results {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-tertiary);
-        }
+        /* Translate Widget */
+        #google_translate_element { position: fixed; bottom: 70px; right: 10px; z-index: 9998; }
+        @media (min-width: 768px) { #google_translate_element { bottom: 10px; } }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0 !important; }
+
+        /* No Results */
+        .no-results { text-align: center; padding: 3rem; color: var(--text-tertiary); }
         .no-results i { font-size: 3rem; display: block; margin-bottom: 1rem; }
+
+        /* Hamburger */
+        .hamburger { display: flex; }
+        @media (min-width: 768px) { .hamburger { display: none; } }
     </style>
 </head>
 <body>
 
-<!-- Header -->
+<!-- HEADER -->
 <header class="header">
     <div class="container">
         <div class="header-content">
-            <button class="menu-toggle" id="menuToggle" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-primary);min-width:44px;min-height:44px;">
+            <button class="hamburger" id="menuToggle" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-primary);min-width:44px;min-height:44px;">
                 <i class="fas fa-bars"></i>
             </button>
             
@@ -638,35 +448,34 @@
                 <a href="#" data-category="sports">Sports</a>
                 <a href="#" data-category="business">Business</a>
                 <a href="#" data-category="politics">Politics</a>
-                <a href="#" data-category="study">Study</a>
+                <a href="#" data-category="science">Science</a>
+                <a href="#" data-category="world">World</a>
             </div>
             
             <div class="header-actions">
-                <div class="search-container">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search news..." onkeyup="handleSearch()">
-                    <button id="searchBtn" title="Search"><i class="fas fa-search"></i></button>
-                </div>
+                <button id="searchBtn" title="Search (Ctrl+K)"><i class="fas fa-search"></i></button>
                 <button id="themeToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
-                <a href="/rasu/bookmarks.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;">
-                    <button title="Bookmarks" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px; border-radius: var(--radius-md);">
-                        <i class="fas fa-bookmark"></i>
-                    </button>
-                </a>
-                <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;">
-                    <button title="Profile" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px; border-radius: var(--radius-md);">
-                        <i class="fas fa-user-circle"></i>
-                    </button>
-                </a>
+                <a href="/rasu/bookmarks.html" class="icon-link" title="Bookmarks"><i class="fas fa-bookmark"></i></a>
+                <a href="/rasu/profile.html" class="icon-link" title="Profile"><i class="fas fa-user-circle"></i></a>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Sidebar -->
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay">
+    <div class="search-modal">
+        <input type="text" id="searchInput" placeholder="🔍 Search THE MOON..." onkeyup="handleSearch()" autofocus>
+        <div class="search-results" id="searchResults"></div>
+        <button class="btn" style="margin-top:1rem;background:var(--brand-red);color:white;padding:0.5rem 1.5rem;border:none;border-radius:var(--radius-md);cursor:pointer;font-weight:600;" onclick="closeSearch()">✕ Close</button>
+    </div>
+</div>
+
+<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <span class="logo">🌙 THE MOON</span>
-        <button id="closeSidebar" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-primary);padding:0.5rem;">✕</button>
+        <button id="closeSidebar" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-primary);">✕</button>
     </div>
     <div class="sidebar-nav">
         <a href="#" data-category="all" class="active"><i class="fas fa-home"></i> All News</a>
@@ -674,155 +483,151 @@
         <a href="#" data-category="sports"><i class="fas fa-futbol"></i> Sports</a>
         <a href="#" data-category="business"><i class="fas fa-chart-line"></i> Business</a>
         <a href="#" data-category="politics"><i class="fas fa-landmark"></i> Politics</a>
-        <a href="#" data-category="study"><i class="fas fa-graduation-cap"></i> Study</a>
-        <hr style="border-color:var(--border);margin:0.5rem 0;">
+        <a href="#" data-category="science"><i class="fas fa-flask"></i> Science</a>
+        <a href="#" data-category="world"><i class="fas fa-globe"></i> World</a>
+        <hr>
         <a href="/rasu/bookmarks.html"><i class="fas fa-bookmark"></i> Bookmarks</a>
         <a href="/rasu/profile.html"><i class="fas fa-user"></i> Profile</a>
+        <a href="/rasu/admin/quantum-command.html"><i class="fas fa-cog"></i> Admin Panel</a>
         <a href="/rasu/contact.html"><i class="fas fa-envelope"></i> Contact</a>
-        <a href="/rasu/about.html"><i class="fas fa-info-circle"></i> About</a>
     </div>
 </div>
-
-<!-- Overlay -->
 <div class="overlay" id="overlay"></div>
 
-<!-- Main Content -->
+<!-- MAIN CONTENT -->
 <div class="container">
     <div class="layout-main">
-        <!-- LEFT COLUMN -->
         <div>
-            <!-- Hero -->
+            <!-- HERO -->
             <div class="hero">
                 <h1>🌙 Welcome to THE MOON</h1>
                 <p>World's Most Advanced AI-Powered News Platform | Real-Time Updates | Curated Global Coverage</p>
+                <div class="hero-stats">
+                    <div class="hero-stat"><div class="number" id="heroTotalArticles">0</div><div class="label">Stories Today</div></div>
+                    <div class="hero-stat"><div class="number">195+</div><div class="label">Countries</div></div>
+                    <div class="hero-stat"><div class="number">24/7</div><div class="label">Live Updates</div></div>
+                </div>
             </div>
 
-            <!-- Breaking News Ticker -->
-            <div class="ticker" style="margin-bottom: 1rem;">
-                <div class="ticker-content" id="tickerContent">⚡ Loading breaking news...</div>
-            </div>
+            <!-- TICKER -->
+            <div class="ticker"><div class="ticker-content" id="tickerContent">⚡ Loading breaking news...</div></div>
 
-            <!-- Category Grid -->
+            <!-- CATEGORIES -->
             <div class="category-grid" id="categoryGrid"></div>
 
-            <!-- News Section -->
-            <h2 style="margin: 1.5rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                📰 <span id="sectionTitle">Latest News</span>
-            </h2>
+            <!-- NEWS SECTION -->
+            <h2 style="margin:1.5rem 0 1rem;display:flex;align-items:center;gap:0.5rem;">📰 <span id="sectionTitle">Latest News</span></h2>
             <div class="news-grid" id="newsGrid"></div>
-
-            <!-- Load More -->
-            <div style="text-align: center; margin: 2rem 0;">
-                <button onclick="loadMore()" style="background: var(--brand-red); color: white; border: none; padding: 0.75rem 2rem; border-radius: var(--radius-lg); cursor: pointer; font-weight: 600; font-size: 0.9rem;">Load More News ↓</button>
+            <div style="text-align:center;margin:2rem 0;">
+                <button onclick="loadMore()" style="background:var(--brand-red);color:white;border:none;padding:0.75rem 2rem;border-radius:var(--radius-lg);cursor:pointer;font-weight:600;">Load More ↓</button>
             </div>
         </div>
 
         <!-- RIGHT SIDEBAR -->
-        <div class="sidebar-right">
-            <!-- Trending -->
+        <aside class="sidebar-right">
             <div class="widget">
                 <h3>🔥 Trending Now</h3>
                 <div id="trendingList">Loading...</div>
             </div>
-
-            <!-- Weather -->
             <div class="widget">
                 <h3>🌤️ Weather</h3>
                 <div class="weather-info">
                     <div class="weather-icon-display">⛅</div>
                     <div class="weather-temp">28°C</div>
                     <div class="weather-location">New Delhi, India</div>
-                    <div class="weather-desc">Partly Cloudy • Humidity: 65%</div>
                 </div>
             </div>
-
-            <!-- Newsletter -->
-            <div class="widget" style="background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark)); color: white; border: none;">
-                <h3 style="border-bottom-color: rgba(255,255,255,0.3); color: white;">📧 Stay Updated</h3>
-                <p style="font-size: 0.85rem; margin-bottom: 1rem;">Get breaking news delivered to your inbox.</p>
-                <div class="newsletter-input">
-                    <input type="email" id="newsletterEmail" placeholder="Enter your email" style="border: none;">
-                    <button onclick="subscribeNewsletter()" style="background: white; color: var(--brand-red);">Subscribe Free →</button>
-                </div>
+            <div class="newsletter-box">
+                <h3>📧 Stay Updated</h3>
+                <p style="font-size:0.85rem;">Get breaking news delivered to your inbox.</p>
+                <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+                    <input type="email" placeholder="Your email" required>
+                    <button type="submit">Subscribe Free →</button>
+                </form>
             </div>
-
-            <!-- Quick Links -->
             <div class="widget">
                 <h3>⚡ Quick Links</h3>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <a href="/rasu/about.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">→ About THE MOON</a>
-                    <a href="/rasu/contact.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">→ Contact Us</a>
-                    <a href="/rasu/privacy.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">→ Privacy Policy</a>
-                    <a href="/rasu/terms.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">→ Terms of Service</a>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                    <a href="/rasu/about.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">→ About THE MOON</a>
+                    <a href="/rasu/contact.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">→ Contact Us</a>
+                    <a href="/rasu/privacy.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">→ Privacy Policy</a>
                 </div>
             </div>
-        </div>
+        </aside>
     </div>
 </div>
 
-<!-- Mobile Bottom Navigation -->
+<!-- ARTICLE MODAL -->
+<div class="article-modal" id="articleModal">
+    <div class="article-modal-content" id="articleModalContent"></div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
 <nav class="bottom-nav">
     <a href="/rasu/" class="bottom-nav-item active"><i class="fas fa-home"></i>Home</a>
-    <a href="#" class="bottom-nav-item" onclick="document.getElementById('searchInput').classList.toggle('active'); document.getElementById('searchInput').focus();"><i class="fas fa-search"></i>Search</a>
-    <a href="/rasu/bookmarks.html" class="bottom-nav-item"><i class="fas fa-bookmark"></i>Bookmarks</a>
+    <a href="#" class="bottom-nav-item" onclick="openSearch()"><i class="fas fa-search"></i>Search</a>
+    <a href="/rasu/admin/quantum-command.html" class="bottom-nav-item"><i class="fas fa-cog"></i>Admin</a>
     <a href="/rasu/profile.html" class="bottom-nav-item"><i class="fas fa-user"></i>Profile</a>
 </nav>
 
-<!-- Toast Container -->
+<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Footer -->
+<!-- GOOGLE TRANSLATE -->
+<div id="google_translate_element"></div>
+
+<!-- FOOTER -->
 <footer class="footer">
     <div class="footer-links">
         <a href="/rasu/about.html">About</a>
         <a href="/rasu/contact.html">Contact</a>
         <a href="/rasu/privacy.html">Privacy</a>
         <a href="/rasu/terms.html">Terms</a>
-        <a href="/rasu/careers.html">Careers</a>
-        <a href="/rasu/sitemap.xml">Sitemap</a>
+        <a href="/rasu/admin/quantum-command.html">Admin</a>
     </div>
     <div class="footer-social">
         <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
         <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
         <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
         <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
     </div>
     <p class="copyright">© 2025 THE MOON News Network. All Rights Reserved. | World's Most Advanced News Platform</p>
 </footer>
 
 <script>
-// ============ COMPLETE NEWS DATABASE ============
-const newsDatabase = [
-    { id: 1, title: "BREAKING: Major 7.8 Magnitude Earthquake Hits Pacific Region — Tsunami Warning Issued", category: "politics", summary: "A powerful earthquake struck the Pacific Ring of Fire, triggering widespread tsunami warnings for 12 countries. Emergency services mobilized.", time: "2 minutes ago", image: "🌊", trending: true, views: "125.4K", fullContent: "A massive 7.8 magnitude earthquake struck the Pacific Ring of Fire at 14:23 UTC today, approximately 150km off the coast. The Pacific Tsunami Warning Center has issued urgent warnings for coastal regions across 12 countries. Emergency services are mobilizing as aftershocks continue. 'This is a developing situation of extreme concern,' said Dr. Maria Santos, chief seismologist. 'Coastal residents must move to higher ground immediately.' The earthquake was felt as far as 500km from the epicenter. Several airports have been temporarily closed and naval vessels are being deployed for potential rescue operations." },
-    { id: 2, title: "AI Breakthrough: New Model Achieves Human-Level Scientific Reasoning", category: "tech", summary: "Revolutionary AI system demonstrates ability to formulate and test scientific hypotheses independently, discovering 3 new drug candidates.", time: "15 minutes ago", image: "🧠", trending: true, views: "98.2K", fullContent: "In a landmark achievement for artificial intelligence, researchers at the Global AI Institute have unveiled a model capable of independent scientific reasoning. The system, named 'Newton-AI', successfully identified three novel drug candidates for previously untreatable diseases in just 48 hours — work that would typically take human researchers years. 'This is not just automation; this is genuine scientific creativity,' proclaimed Dr. James Chen, lead researcher. The breakthrough has massive implications for drug discovery, climate modeling, and materials science." },
-    { id: 3, title: "Global Markets Hit Record Highs as Historic Trade Deal Finalized", category: "business", summary: "World stock markets surge following comprehensive trade agreement eliminating 90% tariffs between major economies.", time: "30 minutes ago", image: "📈", trending: true, views: "87.1K", fullContent: "Stock markets worldwide have reached unprecedented levels following the announcement of a comprehensive trade agreement that eliminates tariffs on over 90% of goods between participating nations. The Dow Jones, FTSE, Nikkei, and Shanghai Composite all posted gains exceeding 3% in a single session. Economists are calling it 'the most significant trade liberalization in modern history.' The agreement covers 45 countries and is expected to boost global GDP by an estimated $2.8 trillion annually." },
-    { id: 4, title: "India Wins T20 World Cup in Dramatic Last-Ball Finish Against Australia", category: "sports", summary: "Team India clinches victory in a nail-biting final that went down to the last delivery. Hardik Pandya hits winning six.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K", fullContent: "In one of the greatest cricket matches ever played, India defeated Australia by 3 wickets off the final ball to win the T20 World Cup. Needing 6 runs off the last delivery, all-rounder Hardik Pandya launched a massive six over long-on, sending the packed 130,000-seat stadium into delirium. 'This is for the billion-plus fans back home,' said captain Rohit Sharma, tears in his eyes. Celebrations erupted across India with millions taking to the streets." },
-    { id: 5, title: "NASA Confirms Signs of Ancient Microbial Life on Mars", category: "study", summary: "Perseverance rover finds definitive chemical evidence of past biological activity in Martian rock samples dating back 3.5 billion years.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K", fullContent: "NASA has officially confirmed that the Perseverance rover has discovered chemical signatures consistent with ancient microbial life on Mars. The findings, published in the journal Science, show complex organic molecules and mineral formations that 'can only be explained by biological processes,' according to the research team. The rock samples date back approximately 3.5 billion years, when Mars had liquid water on its surface. 'We are not alone in the universe — and the proof is right next door,' said NASA Administrator." },
-    { id: 6, title: "Revolutionary Cancer Treatment Shows 90% Success Rate in Global Trials", category: "study", summary: "Personalized mRNA cancer vaccine demonstrates unprecedented effectiveness in Phase III clinical trials across 12 cancer types.", time: "3 hours ago", image: "💊", trending: true, views: "167.5K", fullContent: "A personalized mRNA cancer vaccine has shown a 90% success rate in Phase III clinical trials across 12 different cancer types including lung, breast, and pancreatic cancers. Developed using technology similar to COVID-19 vaccines, the treatment trains the immune system to recognize and destroy cancer cells specific to each patient's tumor profile. 'We are witnessing the beginning of the end for cancer as we know it,' said oncologist Dr. Sarah Mitchell. The treatment is expected to receive emergency FDA approval within weeks." },
-    { id: 7, title: "Elon Musk Announces Neuralink Successfully Restores Vision in Blind Patient", category: "tech", summary: "Brain-computer interface achieves medical breakthrough, giving functional sight to a person blind from birth.", time: "4 hours ago", image: "👁️", trending: true, views: "234.6K", fullContent: "Neuralink has achieved what was once thought impossible: restoring functional vision to a person who has been blind since birth. The 28-year-old patient can now recognize faces, read large text, and navigate rooms independently after receiving the visual cortex implant. 'This is the most profound moment of my career,' Elon Musk stated. 'We are not just treating blindness — we are curing it.' The technology bypasses damaged eyes and optic nerves, sending visual information directly to the brain's visual processing center." },
-    { id: 8, title: "World Leaders Sign Historic Climate Pact: Net Zero by 2040", category: "politics", summary: "195 nations agree to legally binding emissions targets, pledging $2 trillion annual climate fund for developing nations.", time: "5 hours ago", image: "🌍", trending: false, views: "92.1K", fullContent: "In a historic moment for climate action, all 195 UN member states signed a legally binding treaty committing to net-zero carbon emissions by 2040. The agreement includes a $2 trillion annual climate fund for developing nations, with contributions based on historical emissions. 'Future generations will look back at this day as the turning point,' said UN Secretary-General. The treaty includes mandatory 5-year review cycles and financial penalties for non-compliance." },
-    { id: 9, title: "Apple Unveils Foldable iPhone with Holographic 3D Display", category: "tech", summary: "Tech giant's latest device features groundbreaking glasses-free holographic display and week-long battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K", fullContent: "Apple has stunned the tech world with the iPhone Fold, featuring a revolutionary holographic display that projects 3D images without glasses. CEO Tim Cook demonstrated life-size holographic video calls. Combined with new solid-state battery technology providing 7-day battery life, analysts predict this will be the best-selling iPhone in history. Pre-orders open next month starting at $1,499." },
-    { id: 10, title: "SpaceX Starship Successfully Lands Humans on Moon After 53 Years", category: "study", summary: "Private mission achieves historic lunar landing carrying 4 astronauts, marking humanity's return to the Moon since 1972.", time: "7 hours ago", image: "🚀", trending: true, views: "312.4K", fullContent: "SpaceX's Starship has successfully landed four astronauts on the lunar surface, marking humanity's return to the Moon after more than half a century. The crew, consisting of two NASA astronauts and two private citizens, planted the first commercial flag on the lunar surface near the Shackleton Crater. 'This is not just America's achievement — this is humanity's achievement,' said mission commander Sarah Johnson from the lunar surface. The mission paves the way for permanent lunar bases." },
-    { id: 11, title: "FIFA Announces 2030 World Cup Will Span Three Continents", category: "sports", summary: "Historic centenary tournament to be hosted across South America, Europe, and Africa for the first time ever.", time: "8 hours ago", image: "⚽", trending: false, views: "76.3K", fullContent: "FIFA has confirmed that the 2030 World Cup will be the first to span three continents, with matches in Argentina, Uruguay, Spain, Portugal, and Morocco. The unprecedented format commemorates the tournament's centenary, with the opening match at Montevideo's Estadio Centenario, site of the first World Cup in 1930. The final will be held at the Santiago Bernabéu in Madrid." },
-    { id: 12, title: "Gold Prices Plummet as New Seawater Extraction Tech Doubles Supply", category: "business", summary: "Revolutionary mining technology extracts gold from seawater at commercial scale, causing 40% price crash.", time: "9 hours ago", image: "💎", trending: false, views: "54.2K", fullContent: "Gold prices have fallen 40% in a single day after a mining company unveiled technology capable of extracting gold from seawater at commercially viable costs. The breakthrough could fundamentally alter global currency reserves and make gold accessible for industrial applications previously deemed too expensive. Central banks worldwide are convening emergency meetings to assess implications for gold reserves." },
-    { id: 13, title: "Oscars 2024: Non-English Films Dominate With Historic Wins", category: "politics", summary: "International cinema sweeps major Academy Award categories, marking watershed moment for global film industry.", time: "10 hours ago", image: "🎬", trending: false, views: "45.8K", fullContent: "The 96th Academy Awards made history as non-English language films swept major categories, including Best Picture, Best Director, and Best Actor. Japanese film 'Eternal Waves' won four awards, while Indian epic 'The Last Empire' took three. 'The era of Hollywood dominance is over. We are entering the golden age of global storytelling,' declared winning director Akira Tanaka." },
-    { id: 14, title: "New Study Reveals: 15 Minutes of Daily Walking Adds 5 Years to Lifespan", category: "study", summary: "Landmark 20-year study of 500,000 participants confirms minimal daily exercise dramatically extends life expectancy.", time: "11 hours ago", image: "🚶", trending: false, views: "38.1K", fullContent: "A groundbreaking 20-year longitudinal study published in The Lancet has revealed that just 15 minutes of brisk walking daily can add up to 5 years to life expectancy. The study tracked 500,000 participants across 30 countries. 'The findings are remarkable — you don't need marathon training. A short daily walk is one of the most powerful health interventions available,' said lead researcher Dr. Elena Rodriguez." },
-    { id: 15, title: "India Successfully Tests Hypersonic Cruise Missile, Joins Elite Club", category: "tech", summary: "DRDO achieves Mach 7 speed in successful test, making India the 4th nation with hypersonic cruise missile technology.", time: "12 hours ago", image: "🚀", trending: false, views: "89.4K", fullContent: "India's Defence Research and Development Organisation (DRDO) has successfully tested a hypersonic cruise missile achieving speeds of Mach 7 (8,575 km/h). India becomes only the fourth nation after the US, Russia, and China to possess this technology. The missile can strike targets over 1,500 km away in under 12 minutes, making it virtually impossible to intercept with current defense systems." }
-];
+// ============ SUPABASE CONFIG ============
+const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ============ STATE ============
+let allNews = [];
 let currentFilter = 'all';
 let displayedCount = 6;
 let bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
 
+// ============ STATIC FALLBACK ============
+const staticNews = [
+    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7. India becomes only the fourth nation after US, Russia, and China to possess this technology." },
+    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed 100,000 for the first time in Indian financial history, fueled by robust GDP growth and record foreign investments." },
+    { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets in a nail-biting final.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "Needing 6 runs off the last delivery, Hardik Pandya launched a massive 102-meter six over deep mid-wicket, sending the packed MCG into delirium." },
+    { id: 's4', title: "NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago", category: "science", summary: "Perseverance rover finds definitive chemical evidence of past biological activity.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K views", fullContent: "NASA has confirmed that the Perseverance rover discovered chemical signatures consistent with ancient microbial life on Mars." },
+    { id: 's5', title: "AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours", category: "tech", summary: "Revolutionary AI demonstrates human-level scientific reasoning, compressing decades of research into 2 days.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K views", fullContent: "The system named Newton-AI successfully identified three novel drug candidates for previously untreatable pancreatic cancer." },
+    { id: 's6', title: "World Leaders Sign Historic Climate Pact: Net Zero by 2040", category: "politics", summary: "195 nations agree to legally binding emissions targets with $2 trillion annual climate fund.", time: "4 hours ago", image: "🌍", trending: false, views: "76.5K views", fullContent: "All 195 UN member states signed a legally binding treaty committing to net-zero carbon emissions by 2040." },
+    { id: 's7', title: "Elon Musk: Neuralink Restores Vision in Blind Patient", category: "science", summary: "Brain-computer interface gives functional sight to 28-year-old blind since birth.", time: "5 hours ago", image: "👁️", trending: true, views: "234.6K views", fullContent: "Neuralink has successfully restored functional vision to a person blind since birth using a visual cortex implant." },
+    { id: 's8', title: "Apple Unveils Foldable iPhone with Glasses-Free Holographic Display", category: "tech", summary: "Revolutionary device features 3D holographic projection and 7-day battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K views", fullContent: "CEO Tim Cook demonstrated life-size holographic FaceTime calls without any glasses or headsets." }
+];
+
 // ============ INIT ============
-function init() {
+async function init() {
     loadTheme();
+    await loadNewsFromSupabase();
     displayTicker();
     displayCategories();
     displayNews();
     displayTrending();
+    subscribeToRealtime();
+    updateHeroStats();
 }
 
 // ============ THEME ============
@@ -831,98 +636,96 @@ function loadTheme() {
     if (saved === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
         document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-        document.documentElement.removeAttribute('data-theme');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
     }
 }
-
 document.getElementById('themeToggle').addEventListener('click', () => {
-    if (document.documentElement.hasAttribute('data-theme')) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'dark');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-    } else {
+    const isDark = !document.documentElement.hasAttribute('data-theme');
+    if (isDark) {
         document.documentElement.setAttribute('data-theme', 'light');
         localStorage.setItem('theme', 'light');
         document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
     }
     showToast('Theme updated! 🎨');
 });
 
-// ============ SIDEBAR TOGGLE ============
-document.getElementById('menuToggle').addEventListener('click', () => {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').classList.add('active');
-});
-
-document.getElementById('closeSidebar').addEventListener('click', closeSidebar);
-document.getElementById('overlay').addEventListener('click', closeSidebar);
-
-function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
+// ============ SUPABASE LOAD ============
+async function loadNewsFromSupabase() {
+    try {
+        const { data, error } = await supabase.from('news_articles').select('*').order('published_at', { ascending: false }).limit(50);
+        if (error) throw error;
+        if (data && data.length > 0) {
+            allNews = data.map(item => ({
+                id: item.id, title: item.title, category: item.category,
+                summary: item.summary || '', time: timeAgo(new Date(item.published_at)),
+                image: item.image_emoji || '📰', trending: item.trending || false,
+                views: (item.views || 0).toLocaleString() + ' views',
+                fullContent: item.full_content || item.summary || ''
+            }));
+            console.log('✅ ' + allNews.length + ' articles from Supabase');
+            return;
+        }
+    } catch(e) { console.log('Supabase:', e.message); }
+    allNews = staticNews;
 }
 
-// ============ SEARCH TOGGLE ============
-document.getElementById('searchBtn').addEventListener('click', () => {
-    const input = document.getElementById('searchInput');
-    input.classList.toggle('active');
-    if (input.classList.contains('active')) {
-        input.focus();
-    } else {
-        input.value = '';
-        handleSearch();
-    }
-});
+function timeAgo(date) {
+    const s = Math.floor((new Date() - date) / 1000);
+    if (s < 60) return 'Just now';
+    if (s < 3600) return Math.floor(s/60) + ' min ago';
+    if (s < 86400) return Math.floor(s/3600) + ' hours ago';
+    return Math.floor(s/86400) + ' days ago';
+}
+
+function subscribeToRealtime() {
+    supabase.channel('news_feed').on('postgres_changes', { event: '*', schema: 'public', table: 'news_articles' }, () => {
+        console.log('🔄 Real-time update!');
+        loadNewsFromSupabase().then(() => { displayTicker(); displayCategories(); displayNews(); displayTrending(); updateHeroStats(); });
+    }).subscribe();
+}
 
 // ============ TICKER ============
 function displayTicker() {
-    const breaking = newsDatabase.filter(n => n.trending);
-    document.getElementById('tickerContent').innerHTML = breaking.map(n => 
-        `<span style="margin-right: 3rem; cursor: pointer;" onclick="openArticle(${n.id})">⚡ ${n.title}</span>`
+    const breaking = allNews.filter(n => n.trending);
+    document.getElementById('tickerContent').innerHTML = (breaking.length > 0 ? breaking : allNews.slice(0, 3)).map(n =>
+        `<span onclick="openArticle(${n.id})">⚡ ${n.title}</span>`
     ).join('');
 }
 
 // ============ CATEGORIES ============
 function displayCategories() {
-    const categories = [
-        { id: 'tech', name: 'Tech', icon: 'fa-microchip', color: '#3b82f6', count: newsDatabase.filter(n => n.category === 'tech').length },
-        { id: 'sports', name: 'Sports', icon: 'fa-futbol', color: '#10b981', count: newsDatabase.filter(n => n.category === 'sports').length },
-        { id: 'business', name: 'Business', icon: 'fa-chart-line', color: '#f59e0b', count: newsDatabase.filter(n => n.category === 'business').length },
-        { id: 'politics', name: 'Politics', icon: 'fa-landmark', color: '#8b5cf6', count: newsDatabase.filter(n => n.category === 'politics').length },
-        { id: 'study', name: 'Study', icon: 'fa-graduation-cap', color: '#06b6d4', count: newsDatabase.filter(n => n.category === 'study').length },
-        { id: 'all', name: 'All', icon: 'fa-globe', color: '#dc2626', count: newsDatabase.length }
+    const cats = [
+        { id: 'all', name: 'All', icon: 'fa-globe', color: '#dc2626' },
+        { id: 'tech', name: 'Tech', icon: 'fa-microchip', color: '#3b82f6' },
+        { id: 'sports', name: 'Sports', icon: 'fa-futbol', color: '#10b981' },
+        { id: 'business', name: 'Business', icon: 'fa-chart-line', color: '#f59e0b' },
+        { id: 'politics', name: 'Politics', icon: 'fa-landmark', color: '#8b5cf6' },
+        { id: 'science', name: 'Science', icon: 'fa-flask', color: '#06b6d4' }
     ];
-    
-    document.getElementById('categoryGrid').innerHTML = categories.map(c => `
-        <div class="category-card" onclick="filterByCategory('${c.id}')" style="border-color: ${c.id === currentFilter ? c.color : 'transparent'};">
-            <i class="fas ${c.icon}" style="color: ${c.color}; font-size: 1.5rem; margin-bottom: 0.25rem; display: block;"></i>
+    document.getElementById('categoryGrid').innerHTML = cats.map(c => `
+        <div class="category-card" onclick="filterByCategory('${c.id}')">
+            <i class="fas ${c.icon}" style="color:${c.color};"></i>
             <span>${c.name}</span>
-            <small>${c.count} articles</small>
+            <small>${c.id === 'all' ? allNews.length : allNews.filter(n => n.category === c.id).length} articles</small>
         </div>
     `).join('');
 }
 
 // ============ NEWS DISPLAY ============
-function displayNews(filter = 'all', search = '') {
-    let filtered = newsDatabase;
-    if (filter !== 'all') filtered = filtered.filter(n => n.category === filter);
-    if (search) filtered = filtered.filter(n => 
-        n.title.toLowerCase().includes(search.toLowerCase()) || 
-        n.summary.toLowerCase().includes(search.toLowerCase()) ||
-        n.category.includes(search.toLowerCase())
-    );
+function displayNews(filter = 'all') {
+    let filtered = filter === 'all' ? allNews : allNews.filter(n => n.category === filter);
+    currentFilter = filter;
+    const newsGrid = document.getElementById('newsGrid');
     
-    const displayed = filtered.slice(0, displayedCount);
-    const grid = document.getElementById('newsGrid');
-    
-    if (displayed.length === 0) {
-        grid.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><h3>No stories found</h3><p>Try a different search or category filter.</p></div>';
+    if (filtered.length === 0) {
+        newsGrid.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><h3>No stories found</h3></div>';
         return;
     }
     
-    grid.innerHTML = displayed.map(n => `
+    newsGrid.innerHTML = filtered.slice(0, displayedCount).map(n => `
         <article class="news-card" onclick="openArticle(${n.id})">
             <div class="news-image">${n.image}</div>
             <div class="news-content">
@@ -932,191 +735,141 @@ function displayNews(filter = 'all', search = '') {
                 <div class="news-meta">
                     <span>🕒 ${n.time} • 👁️ ${n.views}</span>
                     <div class="news-actions">
-                        <button class="${isBookmarked(n.id) ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleBookmark(${n.id})" title="Bookmark">
-                            <i class="fas fa-bookmark"></i>
-                        </button>
-                        <button onclick="event.stopPropagation(); shareArticle(${n.id})" title="Share">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
+                        <button class="${isBookmarked(n.id) ? 'bookmarked' : ''}" onclick="event.stopPropagation();toggleBookmark(${n.id})"><i class="fas fa-bookmark"></i></button>
+                        <button onclick="event.stopPropagation();shareArticle(${n.id})"><i class="fas fa-share-alt"></i></button>
                     </div>
                 </div>
             </div>
         </article>
     `).join('');
     
-    document.getElementById('sectionTitle').textContent = 
-        filter === 'all' ? 'Latest News' : `${filter.charAt(0).toUpperCase() + filter.slice(1)} News`;
+    document.getElementById('sectionTitle').textContent = filter === 'all' ? 'Latest News' : filter.charAt(0).toUpperCase() + filter.slice(1) + ' News';
 }
 
-function loadMore() {
-    displayedCount += 6;
-    displayNews(currentFilter, document.getElementById('searchInput').value);
-    showToast('Loading more stories... 📰');
-    window.scrollTo({ top: document.body.scrollHeight - 1000, behavior: 'smooth' });
-}
-
-function filterByCategory(category) {
-    currentFilter = category;
-    displayedCount = 6;
-    document.getElementById('searchInput').value = '';
-    document.getElementById('searchInput').classList.remove('active');
-    
-    // Update active states
-    document.querySelectorAll('.nav-desktop a').forEach(a => a.classList.remove('active'));
-    document.querySelectorAll('.sidebar-nav a[data-category]').forEach(a => a.classList.remove('active'));
-    
-    const desktopLink = document.querySelector(`.nav-desktop a[data-category="${category}"]`);
-    const sidebarLink = document.querySelector(`.sidebar-nav a[data-category="${category}"]`);
-    if (desktopLink) desktopLink.classList.add('active');
-    if (sidebarLink) sidebarLink.classList.add('active');
-    
-    displayNews(category);
-    displayCategories();
-    closeSidebar();
-}
-
-function handleSearch() {
-    const search = document.getElementById('searchInput').value;
-    displayedCount = 6;
-    displayNews(currentFilter, search);
+function loadMore() { displayedCount += 6; displayNews(currentFilter); showToast('Loading more... 📰'); }
+function filterByCategory(cat) {
+    currentFilter = cat; displayedCount = 6;
+    document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(a => a.classList.remove('active'));
+    document.querySelector(`.nav-desktop a[data-category="${cat}"]`)?.classList.add('active');
+    document.querySelector(`.sidebar-nav a[data-category="${cat}"]`)?.classList.add('active');
+    displayNews(cat); displayCategories();
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
 }
 
 // ============ TRENDING ============
 function displayTrending() {
-    const trending = newsDatabase.filter(n => n.trending).slice(0, 5);
+    const trending = allNews.filter(n => n.trending).slice(0, 5);
     document.getElementById('trendingList').innerHTML = trending.map((n, i) => `
         <div class="trending-item" onclick="openArticle(${n.id})">
-            <div class="trending-rank">${String(i+1).padStart(2, '0')}</div>
-            <div>
-                <div class="trending-title">${n.title}</div>
-                <div class="trending-views">👁️ ${n.views} • 🕒 ${n.time}</div>
-            </div>
+            <div class="trending-rank">${String(i+1).padStart(2,'0')}</div>
+            <div><div class="trending-title">${n.title.substring(0,55)}...</div><div class="trending-views">👁️ ${n.views}</div></div>
         </div>
     `).join('');
 }
 
-// ============ ARTICLE VIEWER ============
+// ============ ARTICLE MODAL ============
 function openArticle(id) {
-    const article = newsDatabase.find(n => n.id === id);
+    const article = allNews.find(n => n.id == id);
     if (!article) return;
     
-    // Mark as read in localStorage for reading history
+    // Track reading history
     let history = JSON.parse(localStorage.getItem('readingHistory')) || [];
     history.unshift({ id: article.id, title: article.title, timestamp: new Date().toISOString() });
-    history = history.slice(0, 50); // Keep last 50
-    localStorage.setItem('readingHistory', JSON.stringify(history));
+    localStorage.setItem('readingHistory', JSON.stringify(history.slice(0, 50)));
     
-    document.getElementById('newsGrid').innerHTML = `
-        <div style="grid-column: 1 / -1; background: var(--bg-secondary); border-radius: var(--radius-xl); padding: 2rem; border: 1px solid var(--border);">
-            <button onclick="displayNews('${currentFilter}'); displayCategories();" style="background: var(--brand-red); color: white; border: none; padding: 0.5rem 1rem; border-radius: var(--radius-md); cursor: pointer; margin-bottom: 1.5rem; font-weight: 600;">← Back to News</button>
-            <div style="text-align: center; font-size: 5rem; padding: 2rem; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: var(--radius-lg); margin-bottom: 1.5rem;">${article.image}</div>
-            <span class="news-category ${article.category}" style="margin-bottom: 1rem; display: inline-block;">${article.category}</span>
-            <h1 style="font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 900; margin-bottom: 1rem; line-height: 1.2;">${article.title}</h1>
-            <div style="color: var(--text-tertiary); margin-bottom: 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.85rem;">
-                <span>🕒 ${article.time}</span>
-                <span>👁️ ${article.views} views</span>
-                <span>💬 2.3K comments</span>
-                <span>⏱️ 8 min read</span>
-            </div>
-            <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.5rem;">${article.summary}</p>
-            <p style="font-size: 1.05rem; line-height: 1.9; color: var(--text-secondary);">${article.fullContent}</p>
-            <p style="font-size: 1.05rem; line-height: 1.9; color: var(--text-secondary); margin-top: 1rem;">This developing story continues to evolve. THE MOON is committed to bringing you the latest updates as they happen. Our global team of journalists is working to provide verified information, expert analysis, and on-ground reports.</p>
-            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 1rem; flex-wrap: wrap;">
-                <button onclick="toggleBookmark(${article.id}); showToast(isBookmarked(${article.id}) ? 'Bookmarked! 🔖' : 'Bookmark removed');" style="background: var(--brand-red); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); cursor: pointer; font-weight: 600;">${isBookmarked(article.id) ? '🔖 Bookmarked' : '🔖 Bookmark Story'}</button>
-                <button onclick="shareArticle(${article.id})" style="background: var(--bg-primary); color: var(--text-primary); border: 2px solid var(--border); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); cursor: pointer; font-weight: 600;">📤 Share Story</button>
-            </div>
+    document.getElementById('articleModalContent').innerHTML = `
+        <button class="modal-close" onclick="closeArticle()">✕</button>
+        <div class="article-full-image">${article.image}</div>
+        <span class="news-category ${article.category}" style="margin-bottom:1rem;">${article.category}</span>
+        <h1 class="article-full-title">${article.title}</h1>
+        <div class="article-full-meta">
+            <span>🕒 ${article.time}</span><span>👁️ ${article.views}</span><span>💬 2.3K comments</span><span>⏱️ 8 min read</span>
+        </div>
+        <div class="article-full-body">
+            <p style="font-size:1.2rem;font-weight:600;color:var(--text-primary);margin-bottom:1rem;">${article.summary}</p>
+            <p>${article.fullContent}</p>
+            <p style="margin-top:1rem;">This story is developing. THE MOON is committed to bringing you verified updates as they happen.</p>
+        </div>
+        <div class="article-actions-bar">
+            <button onclick="toggleBookmark(${article.id});showToast(isBookmarked(${article.id})?'Bookmarked! 🔖':'Bookmark removed');" style="background:var(--brand-red);color:white;border:none;padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">${isBookmarked(article.id) ? '🔖 Bookmarked' : '🔖 Bookmark'}</button>
+            <button onclick="shareArticle(${article.id})" style="background:transparent;border:2px solid var(--border);color:var(--text-primary);padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">📤 Share</button>
         </div>
     `;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('articleModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeArticle() {
+    document.getElementById('articleModal').classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 // ============ BOOKMARKS ============
 function toggleBookmark(id) {
     const idx = bookmarks.indexOf(id);
-    if (idx > -1) {
-        bookmarks.splice(idx, 1);
-    } else {
-        bookmarks.push(id);
-    }
+    if (idx > -1) bookmarks.splice(idx, 1);
+    else bookmarks.push(id);
     localStorage.setItem('moonBookmarks', JSON.stringify(bookmarks));
 }
-
-function isBookmarked(id) {
-    return bookmarks.includes(id);
-}
+function isBookmarked(id) { return bookmarks.includes(id); }
 
 // ============ SHARE ============
 function shareArticle(id) {
-    const article = newsDatabase.find(n => n.id === id);
-    if (navigator.share) {
-        navigator.share({
-            title: article.title,
-            text: article.summary,
-            url: window.location.href
-        }).catch(() => {});
-    } else {
-        navigator.clipboard.writeText(`${article.title} - ${window.location.href}`);
-        showToast('📋 Link copied to clipboard!');
-    }
+    const a = allNews.find(n => n.id == id);
+    if (navigator.share) navigator.share({ title: a.title, text: a.summary, url: window.location.href }).catch(()=>{});
+    else { navigator.clipboard.writeText(a.title + ' - ' + window.location.href); showToast('📋 Link copied!'); }
 }
 
-// ============ NEWSLETTER ============
-function subscribeNewsletter() {
-    const email = document.getElementById('newsletterEmail').value;
-    if (!email) {
-        showToast('⚠️ Please enter your email first!');
-        return;
-    }
-    showToast(`✅ Welcome aboard! ${email} is now subscribed.`);
-    document.getElementById('newsletterEmail').value = '';
+// ============ SEARCH ============
+function openSearch() { document.getElementById('searchOverlay').classList.add('active'); document.getElementById('searchInput').focus(); }
+function closeSearch() { document.getElementById('searchOverlay').classList.remove('active'); document.getElementById('searchInput').value = ''; document.getElementById('searchResults').innerHTML = ''; }
+function handleSearch() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    if (q.length < 2) { document.getElementById('searchResults').innerHTML = ''; return; }
+    const results = allNews.filter(n => n.title.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q) || n.category.includes(q));
+    document.getElementById('searchResults').innerHTML = results.slice(0, 8).map(n => `
+        <div class="search-result-item" onclick="closeSearch();openArticle(${n.id})">
+            <strong>${n.image} ${n.title}</strong><br>
+            <small>${n.category} • ${n.time}</small>
+        </div>
+    `).join('') || '<div style="padding:20px;text-align:center;">No results found</div>';
 }
+
+// ============ SIDEBAR ============
+document.getElementById('menuToggle').addEventListener('click', () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('active'); });
+document.getElementById('closeSidebar').addEventListener('click', closeSidebar);
+document.getElementById('overlay').addEventListener('click', closeSidebar);
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); }
+
+// ============ NEWSLETTER ============
+function handleNewsletter(e) { e.preventDefault(); showToast('✅ Subscribed! Welcome to THE MOON!'); e.target.reset(); }
+
+// ============ HERO STATS ============
+function updateHeroStats() { document.getElementById('heroTotalArticles').textContent = allNews.length; }
 
 // ============ TOAST ============
 function showToast(msg) {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = msg;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+    c.appendChild(t); setTimeout(() => t.remove(), 3000);
 }
 
-// ============ NAVIGATION CLICK HANDLERS ============
-document.querySelectorAll('.nav-desktop a[data-category]').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        filterByCategory(link.dataset.category);
-    });
+// ============ NAV CLICKS ============
+document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(link => {
+    link.addEventListener('click', (e) => { e.preventDefault(); filterByCategory(link.dataset.category); });
 });
 
-document.querySelectorAll('.sidebar-nav a[data-category]').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        filterByCategory(link.dataset.category);
-    });
-});
-
-// ============ KEYBOARD SHORTCUTS ============
+// ============ KEYBOARD ============
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeSidebar();
-        document.getElementById('searchInput').classList.remove('active');
-        document.getElementById('searchInput').value = '';
-        displayNews(currentFilter);
-    }
-    if (e.ctrlKey && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('searchInput').classList.add('active');
-        document.getElementById('searchInput').focus();
-    }
+    if (e.key === 'Escape') { closeArticle(); closeSearch(); closeSidebar(); }
+    if (e.ctrlKey && e.key === 'k') { e.preventDefault(); openSearch(); }
 });
 
 // ============ START ============
 init();
-console.log('🌙 THE MOON - World\'s Most Advanced News Platform');
-console.log('✅ All systems operational');
-console.log('📰 ' + newsDatabase.length + ' articles loaded');
-console.log('🔖 ' + bookmarks.length + ' bookmarks saved');
+console.log('🌙 THE MOON - Complete Platform Ready');
+console.log('✅ Supabase Connected | Search | Bookmarks | Trending | Categories | Dark Mode | Translate');
 </script>
 </body>
 </html>
