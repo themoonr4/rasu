@@ -102,7 +102,7 @@
         @media (min-width: 768px) { .container { padding: 0 1.5rem; } }
         @media (min-width: 1024px) { .container { padding: 0 2rem; } }
 
-        /* ============ HEADER ============ */
+        /* HEADER */
         .header {
             position: sticky; top: 0; z-index: 100;
             background: var(--bg-primary); border-bottom: 2px solid var(--brand-red);
@@ -121,7 +121,14 @@
             color: transparent; text-decoration: none; white-space: nowrap;
         }
 
-        /* Desktop Navigation */
+        .hamburger {
+            display: flex; align-items: center; justify-content: center;
+            background: none; border: none; font-size: 1.3rem; cursor: pointer;
+            color: var(--text-primary); min-width: 44px; min-height: 44px;
+            border-radius: var(--radius-md);
+        }
+        @media (min-width: 768px) { .hamburger { display: none; } }
+
         .nav-desktop { display: none; flex: 1; justify-content: center; gap: 0.25rem; flex-wrap: wrap; }
         @media (min-width: 768px) { .nav-desktop { display: flex; } }
         .nav-desktop a {
@@ -131,7 +138,6 @@
         }
         .nav-desktop a:hover, .nav-desktop a.active { color: white; background: var(--brand-red); }
 
-        /* Header Actions */
         .header-actions { display: flex; align-items: center; gap: 0.25rem; }
         .header-actions button, .header-actions .icon-link {
             background: none; border: none; font-size: 1.1rem; cursor: pointer;
@@ -143,7 +149,7 @@
             background: var(--bg-secondary); color: var(--brand-red);
         }
 
-        /* Search Overlay */
+        /* SEARCH OVERLAY */
         .search-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.9); z-index: 10000;
@@ -166,14 +172,12 @@
             cursor: pointer; transition: background 0.15s;
         }
         .search-result-item:hover { background: #f5f5f5; }
-        .search-result-item strong { font-size: 0.95rem; }
-        .search-result-item small { color: #6c757d; font-size: 0.75rem; }
 
-        /* ============ SIDEBAR (Mobile) ============ */
+        /* SIDEBAR (Mobile) */
         .sidebar {
             position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: var(--bg-primary); z-index: 200; transition: left var(--transition-normal);
-            box-shadow: var(--shadow-xl); overflow-y: auto;
+            background: var(--bg-primary); z-index: 200;
+            transition: left 0.3s ease; box-shadow: var(--shadow-xl); overflow-y: auto;
         }
         .sidebar.open { left: 0; }
         .sidebar-header {
@@ -189,14 +193,14 @@
         .sidebar-nav a:hover, .sidebar-nav a.active { background: var(--brand-red); color: white; }
         .sidebar-nav hr { border-color: var(--border); margin: 0.5rem 0; }
 
-        /* Overlay */
+        /* OVERLAY */
         .overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5); z-index: 199; display: none;
         }
         .overlay.active { display: block; }
 
-        /* ============ MOBILE BOTTOM NAV ============ */
+        /* BOTTOM NAV */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: var(--bg-primary); border-top: 2px solid var(--border);
@@ -212,20 +216,11 @@
         .bottom-nav-item.active { color: var(--brand-red); }
         .bottom-nav-item i { font-size: 1.1rem; }
 
-        /* ============ MAIN LAYOUT ============ */
-        .layout-main {
-            display: flex; flex-direction: column; gap: 1.5rem;
-            padding: 1rem 0;
-        }
-        @media (min-width: 1024px) {
-            .layout-main { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
-        }
-
-        /* ============ HERO ============ */
+        /* HERO */
         .hero {
             background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
             border-radius: var(--radius-xl); padding: 1.5rem; color: white;
-            text-align: center; grid-column: 1 / -1;
+            text-align: center; grid-column: 1 / -1; margin-bottom: 1rem;
         }
         @media (min-width: 768px) { .hero { padding: 2.5rem; text-align: left; } }
         .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 0.5rem; }
@@ -236,11 +231,11 @@
         .hero-stat .number { font-size: 2rem; font-weight: 900; }
         .hero-stat .label { font-size: 0.75rem; opacity: 0.8; }
 
-        /* ============ TICKER ============ */
+        /* TICKER */
         .ticker {
             background: var(--bg-secondary); border-radius: var(--radius-lg);
             padding: 0.6rem 1rem; overflow: hidden; white-space: nowrap;
-            border: 1px solid var(--border); margin-bottom: 0.5rem;
+            border: 1px solid var(--border); margin-bottom: 1rem;
         }
         .ticker-content {
             display: inline-block; animation: ticker 30s linear infinite;
@@ -250,10 +245,17 @@
         .ticker-content span { margin-right: 3rem; cursor: pointer; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* ============ CATEGORY GRID ============ */
-        .category-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem;
+        /* MAIN LAYOUT */
+        .layout-main {
+            display: flex; flex-direction: column; gap: 1.5rem;
+            padding: 1rem 0;
         }
+        @media (min-width: 1024px) {
+            .layout-main { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
+        }
+
+        /* CATEGORY GRID */
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
         @media (min-width: 640px) { .category-grid { grid-template-columns: repeat(6, 1fr); } }
         .category-card {
             background: var(--bg-secondary); border-radius: var(--radius-lg);
@@ -265,7 +267,7 @@
         .category-card span { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; display: block; }
         .category-card small { font-size: 0.65rem; color: var(--text-tertiary); }
 
-        /* ============ NEWS GRID ============ */
+        /* NEWS GRID */
         .news-grid { display: grid; gap: 1rem; }
         @media (min-width: 640px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
         .news-card {
@@ -310,7 +312,7 @@
         .news-actions button:hover { color: var(--brand-red); }
         .news-actions button.bookmarked { color: var(--brand-red); }
 
-        /* ============ ARTICLE MODAL ============ */
+        /* ARTICLE MODAL */
         .article-modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.85); z-index: 10001;
@@ -345,11 +347,10 @@
             border-top: 1px solid var(--border); flex-wrap: wrap;
         }
 
-        /* ============ SIDEBAR WIDGETS ============ */
-        .sidebar-right { display: flex; flex-direction: column; gap: 1rem; }
+        /* WIDGETS */
         .widget {
             background: var(--bg-secondary); border-radius: var(--radius-lg);
-            padding: 1.25rem; border: 1px solid var(--border);
+            padding: 1.25rem; border: 1px solid var(--border); margin-bottom: 1rem;
         }
         .widget h3 {
             font-size: 1rem; margin-bottom: 1rem; padding-bottom: 0.75rem;
@@ -364,17 +365,14 @@
         .trending-rank { font-size: 1.2rem; color: var(--brand-red); font-weight: 900; min-width: 25px; }
         .trending-title { font-size: 0.85rem; font-weight: 500; line-height: 1.3; }
         .trending-views { font-size: 0.65rem; color: var(--text-tertiary); margin-top: 0.25rem; }
-
-        /* Weather */
         .weather-info { text-align: center; }
         .weather-icon-display { font-size: 3rem; margin-bottom: 0.5rem; }
         .weather-temp { font-size: 2.5rem; font-weight: 900; }
         .weather-location { font-size: 0.85rem; color: var(--text-secondary); }
 
-        /* Newsletter */
         .newsletter-box {
             background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
-            color: white; border-radius: var(--radius-lg); padding: 1.5rem; text-align: center;
+            color: white; border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; margin-bottom: 1rem;
         }
         .newsletter-box h3 { color: white; border-bottom-color: rgba(255,255,255,0.3); }
         .newsletter-form { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
@@ -387,22 +385,21 @@
             padding: 0.75rem; border: none; border-radius: var(--radius-md);
             cursor: pointer; font-size: 0.9rem; transition: var(--transition-fast);
         }
-        .newsletter-form button:hover { transform: scale(1.02); }
 
-        /* ============ TOAST ============ */
+        /* TOAST */
         .toast-container {
             position: fixed; bottom: 80px; right: 20px; z-index: 9999;
             display: flex; flex-direction: column; gap: 0.5rem;
         }
         @media (min-width: 768px) { .toast-container { bottom: 20px; } }
         .toast {
-            background: var(--success); color: white; padding: 0.75rem 1.25rem;
+            background: #10b981; color: white; padding: 0.75rem 1.25rem;
             border-radius: var(--radius-md); font-weight: 500; font-size: 0.9rem;
             box-shadow: var(--shadow-lg); animation: slideIn 0.3s ease;
         }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        /* ============ FOOTER ============ */
+        /* FOOTER */
         .footer {
             background: var(--bg-secondary); border-top: 2px solid var(--border);
             padding: 2rem 1rem; text-align: center; margin-top: 2rem;
@@ -415,19 +412,14 @@
         .footer-social a:hover { color: var(--brand-red); transform: translateY(-2px); }
         .copyright { font-size: 0.75rem; color: var(--text-tertiary); }
 
-        /* Translate Widget */
+        /* TRANSLATE */
         #google_translate_element { position: fixed; bottom: 70px; right: 10px; z-index: 9998; }
         @media (min-width: 768px) { #google_translate_element { bottom: 10px; } }
         .goog-te-banner-frame { display: none !important; }
         body { top: 0 !important; }
 
-        /* No Results */
         .no-results { text-align: center; padding: 3rem; color: var(--text-tertiary); }
         .no-results i { font-size: 3rem; display: block; margin-bottom: 1rem; }
-
-        /* Hamburger */
-        .hamburger { display: flex; }
-        @media (min-width: 768px) { .hamburger { display: none; } }
     </style>
 </head>
 <body>
@@ -436,7 +428,7 @@
 <header class="header">
     <div class="container">
         <div class="header-content">
-            <button class="hamburger" id="menuToggle" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-primary);min-width:44px;min-height:44px;">
+            <button class="hamburger" id="menuToggle" aria-label="Open menu">
                 <i class="fas fa-bars"></i>
             </button>
             
@@ -453,8 +445,8 @@
             </div>
             
             <div class="header-actions">
-                <button id="searchBtn" title="Search (Ctrl+K)"><i class="fas fa-search"></i></button>
-                <button id="themeToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <button id="searchBtn" title="Search (Ctrl+K)" aria-label="Search"><i class="fas fa-search"></i></button>
+                <button id="themeToggle" title="Toggle Theme" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
                 <a href="/rasu/bookmarks.html" class="icon-link" title="Bookmarks"><i class="fas fa-bookmark"></i></a>
                 <a href="/rasu/profile.html" class="icon-link" title="Profile"><i class="fas fa-user-circle"></i></a>
             </div>
@@ -467,7 +459,7 @@
     <div class="search-modal">
         <input type="text" id="searchInput" placeholder="🔍 Search THE MOON..." onkeyup="handleSearch()" autofocus>
         <div class="search-results" id="searchResults"></div>
-        <button class="btn" style="margin-top:1rem;background:var(--brand-red);color:white;padding:0.5rem 1.5rem;border:none;border-radius:var(--radius-md);cursor:pointer;font-weight:600;" onclick="closeSearch()">✕ Close</button>
+        <button style="margin-top:1rem;background:var(--brand-red);color:white;padding:0.5rem 1.5rem;border:none;border-radius:var(--radius-md);cursor:pointer;font-weight:600;" onclick="closeSearch()">✕ Close</button>
     </div>
 </div>
 
@@ -475,7 +467,7 @@
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <span class="logo">🌙 THE MOON</span>
-        <button id="closeSidebar" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-primary);">✕</button>
+        <button id="closeSidebar" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-primary);" aria-label="Close menu">✕</button>
     </div>
     <div class="sidebar-nav">
         <a href="#" data-category="all" class="active"><i class="fas fa-home"></i> All News</a>
@@ -515,7 +507,7 @@
             <!-- CATEGORIES -->
             <div class="category-grid" id="categoryGrid"></div>
 
-            <!-- NEWS SECTION -->
+            <!-- NEWS -->
             <h2 style="margin:1.5rem 0 1rem;display:flex;align-items:center;gap:0.5rem;">📰 <span id="sectionTitle">Latest News</span></h2>
             <div class="news-grid" id="newsGrid"></div>
             <div style="text-align:center;margin:2rem 0;">
@@ -524,7 +516,7 @@
         </div>
 
         <!-- RIGHT SIDEBAR -->
-        <aside class="sidebar-right">
+        <aside style="display:flex;flex-direction:column;gap:1rem;">
             <div class="widget">
                 <h3>🔥 Trending Now</h3>
                 <div id="trendingList">Loading...</div>
@@ -562,7 +554,7 @@
     <div class="article-modal-content" id="articleModalContent"></div>
 </div>
 
-<!-- MOBILE BOTTOM NAV -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
     <a href="/rasu/" class="bottom-nav-item active"><i class="fas fa-home"></i>Home</a>
     <a href="#" class="bottom-nav-item" onclick="openSearch()"><i class="fas fa-search"></i>Search</a>
@@ -598,7 +590,13 @@
 // ============ SUPABASE CONFIG ============
 const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabase;
+try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log('✅ Supabase connected');
+} catch(e) {
+    console.log('Supabase init note:', e.message);
+}
 
 // ============ STATE ============
 let allNews = [];
@@ -608,19 +606,47 @@ let bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
 
 // ============ STATIC FALLBACK ============
 const staticNews = [
-    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7. India becomes only the fourth nation after US, Russia, and China to possess this technology." },
-    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed 100,000 for the first time in Indian financial history, fueled by robust GDP growth and record foreign investments." },
-    { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets in a nail-biting final.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "Needing 6 runs off the last delivery, Hardik Pandya launched a massive 102-meter six over deep mid-wicket, sending the packed MCG into delirium." },
-    { id: 's4', title: "NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago", category: "science", summary: "Perseverance rover finds definitive chemical evidence of past biological activity.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K views", fullContent: "NASA has confirmed that the Perseverance rover discovered chemical signatures consistent with ancient microbial life on Mars." },
-    { id: 's5', title: "AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours", category: "tech", summary: "Revolutionary AI demonstrates human-level scientific reasoning, compressing decades of research into 2 days.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K views", fullContent: "The system named Newton-AI successfully identified three novel drug candidates for previously untreatable pancreatic cancer." },
-    { id: 's6', title: "World Leaders Sign Historic Climate Pact: Net Zero by 2040", category: "politics", summary: "195 nations agree to legally binding emissions targets with $2 trillion annual climate fund.", time: "4 hours ago", image: "🌍", trending: false, views: "76.5K views", fullContent: "All 195 UN member states signed a legally binding treaty committing to net-zero carbon emissions by 2040." },
-    { id: 's7', title: "Elon Musk: Neuralink Restores Vision in Blind Patient", category: "science", summary: "Brain-computer interface gives functional sight to 28-year-old blind since birth.", time: "5 hours ago", image: "👁️", trending: true, views: "234.6K views", fullContent: "Neuralink has successfully restored functional vision to a person blind since birth using a visual cortex implant." },
-    { id: 's8', title: "Apple Unveils Foldable iPhone with Glasses-Free Holographic Display", category: "tech", summary: "Revolutionary device features 3D holographic projection and 7-day battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K views", fullContent: "CEO Tim Cook demonstrated life-size holographic FaceTime calls without any glasses or headsets." }
+    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7 (8,575 km/h). India becomes only the fourth nation after US, Russia, and China to possess this technology. The missile can strike targets over 1,500 km away in under 12 minutes." },
+    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth and record foreign investments.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed 100,000 for the first time in Indian financial history. The bull run has been fueled by robust GDP growth of 8.5% and record FII inflows of over $45 billion this year." },
+    { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets at packed MCG.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "Needing 6 runs off the last delivery, Hardik Pandya launched a massive 102-meter six over deep mid-wicket, sending the packed MCG into delirium. India lifts their third T20 World Cup title." },
+    { id: 's4', title: "NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago", category: "science", summary: "Perseverance rover finds definitive chemical evidence of past biological activity in rock samples.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K views", fullContent: "NASA has confirmed that the Perseverance rover discovered chemical signatures and fossilized structures consistent with ancient microbial life on Mars. The findings date back 3.5 billion years." },
+    { id: 's5', title: "AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours", category: "tech", summary: "Revolutionary AI demonstrates human-level scientific reasoning, compressing decades of research.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K views", fullContent: "The system named Newton-AI successfully identified three novel drug candidates for previously untreatable pancreatic cancer in just 48 hours." },
+    { id: 's6', title: "World Leaders Sign Historic Climate Pact: Net Zero by 2040", category: "politics", summary: "195 nations agree to legally binding emissions targets with $2 trillion annual climate fund.", time: "4 hours ago", image: "🌍", trending: false, views: "76.5K views", fullContent: "All 195 UN member states signed a legally binding treaty committing to net-zero carbon emissions by 2040 with mandatory 5-year review cycles." },
+    { id: 's7', title: "Elon Musk: Neuralink Restores Vision in Blind Patient", category: "science", summary: "Brain-computer interface gives functional sight to 28-year-old blind since birth.", time: "5 hours ago", image: "👁️", trending: true, views: "234.6K views", fullContent: "Neuralink has successfully restored functional vision to a person blind since birth using a visual cortex implant that bypasses damaged optic nerves." },
+    { id: 's8', title: "Apple Unveils Foldable iPhone with Glasses-Free Holographic Display", category: "tech", summary: "Revolutionary device features 3D holographic projection and 7-day battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K views", fullContent: "Tim Cook demonstrated life-size holographic FaceTime calls without any glasses. The iPhone Fold features solid-state battery providing 7-day battery life." }
 ];
+
+// ============ SIDEBAR (FIXED) ============
+(function() {
+    const menuToggle = document.getElementById('menuToggle');
+    const closeSidebarBtn = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+    }
+
+    if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+    if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    
+    // Close sidebar when a nav link is clicked
+    document.querySelectorAll('.sidebar-nav a[data-category]').forEach(link => {
+        link.addEventListener('click', closeSidebar);
+    });
+})();
 
 // ============ INIT ============
 async function init() {
     loadTheme();
+    setupNavListeners();
     await loadNewsFromSupabase();
     displayTicker();
     displayCategories();
@@ -652,8 +678,9 @@ document.getElementById('themeToggle').addEventListener('click', () => {
     showToast('Theme updated! 🎨');
 });
 
-// ============ SUPABASE LOAD ============
+// ============ SUPABASE ============
 async function loadNewsFromSupabase() {
+    if (!supabase) { allNews = staticNews; return; }
     try {
         const { data, error } = await supabase.from('news_articles').select('*').order('published_at', { ascending: false }).limit(50);
         if (error) throw error;
@@ -681,9 +708,11 @@ function timeAgo(date) {
 }
 
 function subscribeToRealtime() {
+    if (!supabase) return;
     supabase.channel('news_feed').on('postgres_changes', { event: '*', schema: 'public', table: 'news_articles' }, () => {
-        console.log('🔄 Real-time update!');
-        loadNewsFromSupabase().then(() => { displayTicker(); displayCategories(); displayNews(); displayTrending(); updateHeroStats(); });
+        loadNewsFromSupabase().then(() => {
+            displayTicker(); displayCategories(); displayNews(); displayTrending(); updateHeroStats();
+        });
     }).subscribe();
 }
 
@@ -714,18 +743,18 @@ function displayCategories() {
     `).join('');
 }
 
-// ============ NEWS DISPLAY ============
+// ============ NEWS ============
 function displayNews(filter = 'all') {
     let filtered = filter === 'all' ? allNews : allNews.filter(n => n.category === filter);
     currentFilter = filter;
-    const newsGrid = document.getElementById('newsGrid');
+    const grid = document.getElementById('newsGrid');
     
     if (filtered.length === 0) {
-        newsGrid.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><h3>No stories found</h3></div>';
+        grid.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><h3>No stories found</h3></div>';
         return;
     }
     
-    newsGrid.innerHTML = filtered.slice(0, displayedCount).map(n => `
+    grid.innerHTML = filtered.slice(0, displayedCount).map(n => `
         <article class="news-card" onclick="openArticle(${n.id})">
             <div class="news-image">${n.image}</div>
             <div class="news-content">
@@ -746,15 +775,14 @@ function displayNews(filter = 'all') {
     document.getElementById('sectionTitle').textContent = filter === 'all' ? 'Latest News' : filter.charAt(0).toUpperCase() + filter.slice(1) + ' News';
 }
 
-function loadMore() { displayedCount += 6; displayNews(currentFilter); showToast('Loading more... 📰'); }
+function loadMore() { displayedCount += 6; displayNews(currentFilter); showToast('Loading more stories... 📰'); }
+
 function filterByCategory(cat) {
     currentFilter = cat; displayedCount = 6;
     document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(a => a.classList.remove('active'));
     document.querySelector(`.nav-desktop a[data-category="${cat}"]`)?.classList.add('active');
     document.querySelector(`.sidebar-nav a[data-category="${cat}"]`)?.classList.add('active');
     displayNews(cat); displayCategories();
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
 }
 
 // ============ TRENDING ============
@@ -773,7 +801,6 @@ function openArticle(id) {
     const article = allNews.find(n => n.id == id);
     if (!article) return;
     
-    // Track reading history
     let history = JSON.parse(localStorage.getItem('readingHistory')) || [];
     history.unshift({ id: article.id, title: article.title, timestamp: new Date().toISOString() });
     localStorage.setItem('readingHistory', JSON.stringify(history.slice(0, 50)));
@@ -789,7 +816,6 @@ function openArticle(id) {
         <div class="article-full-body">
             <p style="font-size:1.2rem;font-weight:600;color:var(--text-primary);margin-bottom:1rem;">${article.summary}</p>
             <p>${article.fullContent}</p>
-            <p style="margin-top:1rem;">This story is developing. THE MOON is committed to bringing you verified updates as they happen.</p>
         </div>
         <div class="article-actions-bar">
             <button onclick="toggleBookmark(${article.id});showToast(isBookmarked(${article.id})?'Bookmarked! 🔖':'Bookmark removed');" style="background:var(--brand-red);color:white;border:none;padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">${isBookmarked(article.id) ? '🔖 Bookmarked' : '🔖 Bookmark'}</button>
@@ -818,10 +844,11 @@ function isBookmarked(id) { return bookmarks.includes(id); }
 function shareArticle(id) {
     const a = allNews.find(n => n.id == id);
     if (navigator.share) navigator.share({ title: a.title, text: a.summary, url: window.location.href }).catch(()=>{});
-    else { navigator.clipboard.writeText(a.title + ' - ' + window.location.href); showToast('📋 Link copied!'); }
+    else { navigator.clipboard.writeText(a.title); showToast('📋 Link copied!'); }
 }
 
 // ============ SEARCH ============
+document.getElementById('searchBtn').addEventListener('click', openSearch);
 function openSearch() { document.getElementById('searchOverlay').classList.add('active'); document.getElementById('searchInput').focus(); }
 function closeSearch() { document.getElementById('searchOverlay').classList.remove('active'); document.getElementById('searchInput').value = ''; document.getElementById('searchResults').innerHTML = ''; }
 function handleSearch() {
@@ -830,23 +857,23 @@ function handleSearch() {
     const results = allNews.filter(n => n.title.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q) || n.category.includes(q));
     document.getElementById('searchResults').innerHTML = results.slice(0, 8).map(n => `
         <div class="search-result-item" onclick="closeSearch();openArticle(${n.id})">
-            <strong>${n.image} ${n.title}</strong><br>
-            <small>${n.category} • ${n.time}</small>
+            <strong>${n.image} ${n.title}</strong><br><small>${n.category} • ${n.time}</small>
         </div>
     `).join('') || '<div style="padding:20px;text-align:center;">No results found</div>';
 }
 
-// ============ SIDEBAR ============
-document.getElementById('menuToggle').addEventListener('click', () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('active'); });
-document.getElementById('closeSidebar').addEventListener('click', closeSidebar);
-document.getElementById('overlay').addEventListener('click', closeSidebar);
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); }
+// ============ NAV LISTENERS ============
+function setupNavListeners() {
+    document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(link => {
+        link.addEventListener('click', (e) => { e.preventDefault(); filterByCategory(link.dataset.category); });
+    });
+}
+
+// ============ HERO ============
+function updateHeroStats() { document.getElementById('heroTotalArticles').textContent = allNews.length; }
 
 // ============ NEWSLETTER ============
-function handleNewsletter(e) { e.preventDefault(); showToast('✅ Subscribed! Welcome to THE MOON!'); e.target.reset(); }
-
-// ============ HERO STATS ============
-function updateHeroStats() { document.getElementById('heroTotalArticles').textContent = allNews.length; }
+function handleNewsletter(e) { e.preventDefault(); showToast('✅ Subscribed! Welcome aboard!'); e.target.reset(); }
 
 // ============ TOAST ============
 function showToast(msg) {
@@ -855,21 +882,21 @@ function showToast(msg) {
     c.appendChild(t); setTimeout(() => t.remove(), 3000);
 }
 
-// ============ NAV CLICKS ============
-document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(link => {
-    link.addEventListener('click', (e) => { e.preventDefault(); filterByCategory(link.dataset.category); });
-});
-
 // ============ KEYBOARD ============
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeArticle(); closeSearch(); closeSidebar(); }
+    if (e.key === 'Escape') { closeArticle(); closeSearch(); }
     if (e.ctrlKey && e.key === 'k') { e.preventDefault(); openSearch(); }
+});
+
+// Close modal on overlay click
+document.getElementById('articleModal').addEventListener('click', function(e) {
+    if (e.target === this) closeArticle();
 });
 
 // ============ START ============
 init();
-console.log('🌙 THE MOON - Complete Platform Ready');
-console.log('✅ Supabase Connected | Search | Bookmarks | Trending | Categories | Dark Mode | Translate');
+console.log('🌙 THE MOON v5.0 - Complete Platform');
+console.log('✅ Sidebar | Search | Bookmarks | Trending | Categories | Dark Mode | Supabase | Translate');
 </script>
 </body>
 </html>
