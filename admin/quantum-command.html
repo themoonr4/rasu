@@ -3,67 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌙 QUANTUM COMMAND | THE MOON</title>
+    <title>🌙 QUANTUM COMMAND | THE MOON Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* SAME COMPLETE CSS AS BEFORE - COPY FROM PREVIOUS quantum-command.html */
-        /* I'm keeping it brief here for message length. Use the FULL CSS from the earlier Quantum Command code. */
-        :root{--quantum-bg:#000510;--quantum-card:#0a0f1e;--quantum-border:#1a2040;--quantum-accent:#00d4ff;--quantum-glow:#00ff88;--quantum-red:#ff3366;--text-primary:#e8e8f0;--text-secondary:#8899bb;--success:#00ff88;--warning:#ffaa00;--danger:#ff3366}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Segoe UI',sans-serif;background:var(--quantum-bg);color:var(--text-primary);min-height:100vh}
-        .command-bar{position:sticky;top:0;z-index:1000;background:rgba(10,15,30,0.95);border-bottom:1px solid var(--quantum-border);display:flex;align-items:center;justify-content:space-between;padding:0.5rem 1.5rem;height:56px}
-        .quantum-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 56px)}
-        .quantum-sidebar{background:rgba(10,15,30,0.8);border-right:1px solid var(--quantum-border);padding:1rem 0;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
-        .sidebar-section{padding:0.75rem 1rem;font-size:0.6rem;letter-spacing:2px;color:var(--text-secondary);text-transform:uppercase}
-        .sidebar-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 1rem;margin:0.15rem 0.5rem;border-radius:8px;cursor:pointer;font-size:0.82rem;color:var(--text-secondary);border:1px solid transparent}
-        .sidebar-item:hover,.sidebar-item.active{background:rgba(0,212,255,0.1);border-color:var(--quantum-accent);color:var(--quantum-accent)}
-        .quantum-main{padding:1.5rem;overflow-y:auto;max-height:calc(100vh - 56px)}
-        .panel{display:none}.panel.active{display:block}
-        .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
-        .stat-card{background:var(--quantum-card);border:1px solid var(--quantum-border);border-radius:12px;padding:1.25rem}
-        .stat-value{font-size:1.8rem;font-weight:900;color:var(--quantum-accent)}
-        .stat-label{font-size:0.7rem;color:var(--text-secondary);text-transform:uppercase}
-        .quantum-card{background:var(--quantum-card);border:1px solid var(--quantum-border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
-        input,textarea,select{width:100%;padding:0.7rem 1rem;background:rgba(0,0,0,0.3);border:1px solid var(--quantum-border);border-radius:8px;color:var(--text-primary);font-family:inherit;margin-bottom:0.75rem}
-        .btn{padding:0.7rem 1.5rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;margin-right:0.5rem}
-        .btn-primary{background:var(--quantum-accent);color:#000}
-        .btn-success{background:var(--success);color:#000}
-        .btn-danger{background:var(--danger);color:#fff}
-        .btn-outline{background:transparent;border:1px solid var(--quantum-border);color:var(--text-primary)}
-        .toast-feed{position:fixed;top:70px;right:20px;z-index:10000}
-        .toast{padding:1rem 1.5rem;border-radius:8px;margin-bottom:0.5rem;animation:slideIn 0.3s ease}
-        .toast-success{background:rgba(0,255,136,0.2);border:1px solid var(--success);color:var(--success)}
-        .toast-error{background:rgba(255,51,102,0.2);border:1px solid var(--danger);color:var(--danger)}
-        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-        @media(max-width:768px){.quantum-layout{grid-template-columns:1fr}.quantum-sidebar{display:none}}
+        :root {
+            --bg: #000510; --card: #0a0f1e; --border: #1a2040;
+            --accent: #00d4ff; --glow: #00ff88; --red: #ff3366;
+            --text: #e8e8f0; --text2: #8899bb; --success: #00ff88; --warning: #ffaa00;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .cmd-bar { position: sticky; top: 0; z-index: 100; background: rgba(10,15,30,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1.5rem; height: 56px; }
+        .layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 56px); }
+        .sidebar { background: rgba(10,15,30,0.8); border-right: 1px solid var(--border); padding: 1rem 0; }
+        .sidebar-section { padding: 0.75rem 1rem; font-size: 0.6rem; letter-spacing: 2px; color: var(--text2); text-transform: uppercase; }
+        .sidebar-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1rem; margin: 0.15rem 0.5rem; border-radius: 8px; cursor: pointer; font-size: 0.82rem; color: var(--text2); border: 1px solid transparent; transition: all 0.2s; }
+        .sidebar-item:hover, .sidebar-item.active { background: rgba(0,212,255,0.1); border-color: var(--accent); color: var(--accent); }
+        .main { padding: 1.5rem; overflow-y: auto; max-height: calc(100vh - 56px); }
+        .panel { display: none; } .panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+        .stat-value { font-size: 1.8rem; font-weight: 900; color: var(--accent); }
+        .stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; }
+        .qcard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+        input, textarea, select { width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; margin-bottom: 0.75rem; font-size: 0.85rem; }
+        textarea { min-height: 100px; resize: vertical; }
+        .btn { padding: 0.7rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(0,212,255,0.4); }
+        .btn-success { background: var(--success); color: #000; }
+        .btn-danger { background: var(--red); color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.75rem; }
+        .toast-feed { position: fixed; top: 70px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toast { padding: 1rem 1.5rem; border-radius: 8px; font-size: 0.85rem; animation: slideIn 0.3s ease; }
+        .toast-success { background: rgba(0,255,136,0.2); border: 1px solid var(--success); color: var(--success); }
+        .toast-error { background: rgba(255,51,102,0.2); border: 1px solid var(--red); color: var(--red); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .article-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; }
+        .article-row:hover { border-color: var(--accent); }
+        @media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
     </style>
 </head>
 <body>
 
-<div class="command-bar">
+<div class="cmd-bar">
     <div style="display:flex;align-items:center;gap:0.5rem;">
         <span style="font-size:1.5rem;">🌙</span>
-        <span style="font-weight:900;letter-spacing:2px;color:var(--quantum-accent);">QUANTUM COMMAND</span>
+        <span style="font-weight:900;letter-spacing:2px;color:var(--accent);">QUANTUM COMMAND</span>
     </div>
     <div style="display:flex;gap:1rem;align-items:center;">
-        <span style="font-size:0.7rem;color:var(--success);">🟢 CONNECTED TO SUPABASE</span>
-        <button class="btn btn-outline" onclick="window.open('/rasu/')">🌍 VIEW SITE</button>
+        <span style="font-size:0.7rem;color:var(--success);">🟢 SUPABASE CONNECTED</span>
+        <button class="btn btn-outline btn-sm" onclick="window.open('/rasu/')">🌍 VIEW SITE</button>
     </div>
 </div>
 
-<div class="quantum-layout">
-    <aside class="quantum-sidebar">
+<div class="layout">
+    <aside class="sidebar">
         <div class="sidebar-section">📡 MAIN</div>
         <div class="sidebar-item active" onclick="switchPanel('dashboard',this)">📊 Dashboard</div>
         <div class="sidebar-item" onclick="switchPanel('compose',this)">✍️ Compose</div>
-        <div class="sidebar-item" onclick="switchPanel('articles',this)">📰 Articles</div>
-        <div class="sidebar-section">🔧 TOOLS</div>
-        <div class="sidebar-item" onclick="switchPanel('sync',this)">🔄 Sync Supabase</div>
+        <div class="sidebar-item" onclick="switchPanel('articles',this)">📰 All Articles</div>
+        <div class="sidebar-section">⚙️ SYSTEM</div>
+        <div class="sidebar-item" onclick="switchPanel('sync',this)">🔄 Sync Now</div>
     </aside>
 
-    <main class="quantum-main">
+    <main class="main">
         <!-- DASHBOARD -->
         <div class="panel active" id="panel-dashboard">
             <h2 style="margin-bottom:1.5rem;">📊 DASHBOARD</h2>
@@ -78,46 +87,43 @@
         <!-- COMPOSE -->
         <div class="panel" id="panel-compose">
             <h2 style="margin-bottom:1rem;">✍️ COMPOSE ARTICLE</h2>
-            <div class="quantum-card">
+            <div class="qcard">
                 <input type="text" id="cmpTitle" placeholder="Headline *">
                 <select id="cmpCategory">
                     <option value="">Category *</option>
-                    <option value="tech">Technology</option>
-                    <option value="sports">Sports</option>
-                    <option value="business">Business</option>
-                    <option value="politics">Politics</option>
-                    <option value="science">Science</option>
-                    <option value="world">World</option>
+                    <option value="tech">Technology</option><option value="sports">Sports</option>
+                    <option value="business">Business</option><option value="politics">Politics</option>
+                    <option value="science">Science</option><option value="world">World</option>
                 </select>
-                <input type="text" id="cmpEmoji" placeholder="Emoji (📰)" value="📰" style="width:100px;">
+                <input type="text" id="cmpEmoji" placeholder="Emoji" value="📰" style="width:80px;">
                 <textarea id="cmpSummary" placeholder="Summary *" rows="2"></textarea>
                 <textarea id="cmpContent" placeholder="Full Content" rows="5"></textarea>
-                <label style="display:inline-flex;align-items:center;gap:0.5rem;margin-right:1rem;cursor:pointer;">
+                <label style="display:inline-flex;align-items:center;gap:0.5rem;margin-right:1rem;cursor:pointer;color:var(--text);">
                     <input type="checkbox" id="cmpTrending"> 🔥 Trending
                 </label>
-                <label style="display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                <label style="display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;color:var(--text);">
                     <input type="checkbox" id="cmpBreaking"> ⚡ Breaking
                 </label>
                 <div style="margin-top:1rem;">
                     <button class="btn btn-primary" onclick="publishArticle()">🚀 PUBLISH TO SUPABASE</button>
-                    <button class="btn btn-outline" onclick="clearForm()">🗑️ Clear</button>
+                    <button class="btn btn-outline btn-sm" onclick="clearForm()">🗑️ Clear</button>
                 </div>
             </div>
         </div>
 
-        <!-- ARTICLES LIST -->
+        <!-- ARTICLES -->
         <div class="panel" id="panel-articles">
             <h2 style="margin-bottom:1rem;">📰 ALL ARTICLES</h2>
-            <div id="articlesList">Loading from Supabase...</div>
+            <div id="articlesList">Loading...</div>
         </div>
 
-        <!-- SYNC PANEL -->
+        <!-- SYNC -->
         <div class="panel" id="panel-sync">
             <h2 style="margin-bottom:1rem;">🔄 SYNC WITH SUPABASE</h2>
-            <div class="quantum-card">
+            <div class="qcard">
                 <p style="margin-bottom:1rem;">✅ Connected to: <strong>crmbbmwekdlfjgekjnll.supabase.co</strong></p>
-                <button class="btn btn-primary" onclick="syncAllFromSupabase()">📥 Pull All from Supabase</button>
-                <button class="btn btn-success" onclick="pushLocalToSupabase()">📤 Push Local to Supabase</button>
+                <button class="btn btn-primary" onclick="syncFromSupabase()">📥 Pull All Articles</button>
+                <button class="btn btn-success" onclick="pushToSupabase()" style="margin-left:0.5rem;">📤 Push Local to Supabase</button>
                 <div id="syncStatus" style="margin-top:1rem;"></div>
             </div>
         </div>
@@ -127,101 +133,99 @@
 <div class="toast-feed" id="toastFeed"></div>
 
 <script>
-// ============ SUPABASE ============
 const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let articles = [];
 
-// ============ INIT ============
 async function init() {
-    await syncAllFromSupabase();
+    await syncFromSupabase();
     updateDashboard();
 }
 
-async function syncAllFromSupabase() {
+async function syncFromSupabase() {
+    document.getElementById('syncStatus').innerHTML = '<p style="color:var(--accent);">Syncing...</p>';
     try {
         const { data, error } = await supabase.from('news_articles').select('*').order('published_at', { ascending: false });
         if (error) throw error;
         if (data) {
             articles = data;
             localStorage.setItem('quantumArticles', JSON.stringify(data));
-            document.getElementById('syncStatus').innerHTML = '<p style="color:var(--success);">✅ Synced ' + data.length + ' articles from Supabase!</p>';
+            document.getElementById('syncStatus').innerHTML = '<p style="color:var(--success);">✅ Synced ' + data.length + ' articles!</p>';
         }
     } catch(e) {
-        document.getElementById('syncStatus').innerHTML = '<p style="color:var(--danger);">❌ ' + e.message + '</p>';
+        document.getElementById('syncStatus').innerHTML = '<p style="color:var(--red);">❌ ' + e.message + '</p>';
     }
     updateDashboard();
     loadArticlesList();
 }
 
-async function pushLocalToSupabase() {
-    const local = JSON.parse(localStorage.getItem('quantumArticles')) || [];
-    let count = 0;
-    for (const a of local) {
-        const { error } = await supabase.from('news_articles').insert({
-            title: a.title, category: a.category, summary: a.summary, full_content: a.content || a.summary,
-            image_emoji: a.emoji || '📰', trending: a.trending || false, breaking: a.breaking || false
-        });
-        if (!error) count++;
-    }
-    document.getElementById('syncStatus').innerHTML = '<p style="color:var(--success);">✅ Pushed ' + count + ' articles to Supabase!</p>';
-}
-
 async function publishArticle() {
-    const article = {
-        title: document.getElementById('cmpTitle').value,
-        category: document.getElementById('cmpCategory').value,
-        summary: document.getElementById('cmpSummary').value,
-        content: document.getElementById('cmpContent').value,
-        emoji: document.getElementById('cmpEmoji').value || '📰',
-        trending: document.getElementById('cmpTrending').checked,
-        breaking: document.getElementById('cmpBreaking').checked
-    };
-    
-    if (!article.title || !article.category || !article.summary) {
+    const title = document.getElementById('cmpTitle').value.trim();
+    const category = document.getElementById('cmpCategory').value;
+    const summary = document.getElementById('cmpSummary').value.trim();
+    const content = document.getElementById('cmpContent').value.trim();
+    const emoji = document.getElementById('cmpEmoji').value || '📰';
+    const trending = document.getElementById('cmpTrending').checked;
+    const breaking = document.getElementById('cmpBreaking').checked;
+
+    if (!title || !category || !summary) {
         showToast('⚠️ Title, Category, and Summary required!', 'error');
         return;
     }
 
     const { error } = await supabase.from('news_articles').insert({
-        title: article.title, category: article.category, summary: article.summary,
-        full_content: article.content || article.summary, image_emoji: article.emoji,
-        trending: article.trending, breaking: article.breaking, views: 0
+        title, category, summary, full_content: content || summary,
+        image_emoji: emoji, trending, breaking, views: 0
     });
 
     if (error) {
         showToast('❌ ' + error.message, 'error');
     } else {
-        showToast('🚀 Published to Supabase! LIVE on homepage!', 'success');
+        showToast('🚀 Published! LIVE on homepage!', 'success');
         clearForm();
-        syncAllFromSupabase();
+        syncFromSupabase();
     }
 }
 
 function loadArticlesList() {
     const list = document.getElementById('articlesList');
-    if (articles.length === 0) {
-        list.innerHTML = '<p>No articles. Publish your first one!</p>';
-        return;
-    }
+    if (!articles.length) { list.innerHTML = '<p>No articles yet. Publish your first one!</p>'; return; }
     list.innerHTML = articles.slice(0, 20).map(a => `
-        <div style="background:var(--quantum-card);padding:1rem;margin-bottom:0.5rem;border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
-            <div>
-                <strong>${a.image_emoji||'📰'} ${a.title}</strong>
-                <div style="font-size:0.7rem;color:var(--text-secondary);">${a.category} • ${new Date(a.published_at).toLocaleString()} ${a.trending?'•🔥':''}</div>
+        <div class="article-row">
+            <div style="font-size:1.5rem;">${a.image_emoji||'📰'}</div>
+            <div style="flex:1;">
+                <strong>${a.title}</strong>
+                <div style="font-size:0.7rem;color:var(--text2);">${a.category} • ${new Date(a.published_at).toLocaleString()} ${a.trending?'•🔥':''} ${a.breaking?'•⚡':''}</div>
             </div>
-            <button class="btn btn-danger" onclick="deleteArticle(${a.id})">🗑️</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteArticle(${a.id})">🗑️</button>
         </div>
     `).join('');
 }
 
 async function deleteArticle(id) {
-    if (!confirm('Delete?')) return;
+    if (!confirm('Delete this article?')) return;
     await supabase.from('news_articles').delete().eq('id', id);
     showToast('🗑️ Deleted!', 'error');
-    syncAllFromSupabase();
+    syncFromSupabase();
+}
+
+async function pushToSupabase() {
+    const local = JSON.parse(localStorage.getItem('quantumArticles')) || [];
+    let count = 0;
+    for (const a of local) {
+        if (a.id < 1000000) {
+            const { error } = await supabase.from('news_articles').insert({
+                title: a.title, category: a.category, summary: a.summary,
+                full_content: a.content || a.summary, image_emoji: a.emoji || '📰',
+                trending: a.trending, breaking: a.breaking
+            });
+            if (!error) count++;
+        }
+    }
+    showToast('📤 Pushed ' + count + ' articles to Supabase!', 'success');
+    syncFromSupabase();
 }
 
 function updateDashboard() {
@@ -250,7 +254,7 @@ function clearForm() {
 function showToast(msg, type) {
     const feed = document.getElementById('toastFeed');
     const t = document.createElement('div');
-    t.className = 'toast toast-' + type;
+    t.className = 'toast toast-' + (type === 'error' ? 'error' : 'success');
     t.textContent = msg;
     feed.appendChild(t);
     setTimeout(() => t.remove(), 4000);
