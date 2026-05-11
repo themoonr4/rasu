@@ -3,129 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌙 QUANTUM COMMAND | THE MOON Admin</title>
+    <title>🌙 QUANTUM COMMAND | Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --bg: #000510; --card: #0a0f1e; --border: #1a2040;
-            --accent: #00d4ff; --glow: #00ff88; --red: #ff3366;
-            --text: #e8e8f0; --text2: #8899bb; --success: #00ff88; --warning: #ffaa00;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-        .cmd-bar { position: sticky; top: 0; z-index: 100; background: rgba(10,15,30,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1.5rem; height: 56px; }
-        .layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 56px); }
-        .sidebar { background: rgba(10,15,30,0.8); border-right: 1px solid var(--border); padding: 1rem 0; }
-        .sidebar-section { padding: 0.75rem 1rem; font-size: 0.6rem; letter-spacing: 2px; color: var(--text2); text-transform: uppercase; }
-        .sidebar-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1rem; margin: 0.15rem 0.5rem; border-radius: 8px; cursor: pointer; font-size: 0.82rem; color: var(--text2); border: 1px solid transparent; transition: all 0.2s; }
-        .sidebar-item:hover, .sidebar-item.active { background: rgba(0,212,255,0.1); border-color: var(--accent); color: var(--accent); }
-        .main { padding: 1.5rem; overflow-y: auto; max-height: calc(100vh - 56px); }
-        .panel { display: none; } .panel.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-        .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
-        .stat-value { font-size: 1.8rem; font-weight: 900; color: var(--accent); }
-        .stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; }
-        .qcard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-        input, textarea, select { width: 100%; padding: 0.7rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; margin-bottom: 0.75rem; font-size: 0.85rem; }
-        textarea { min-height: 100px; resize: vertical; }
-        .btn { padding: 0.7rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.85rem; transition: all 0.2s; }
-        .btn-primary { background: var(--accent); color: #000; }
-        .btn-primary:hover { box-shadow: 0 0 20px rgba(0,212,255,0.4); }
-        .btn-success { background: var(--success); color: #000; }
-        .btn-danger { background: var(--red); color: #fff; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.75rem; }
-        .toast-feed { position: fixed; top: 70px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 0.5rem; }
-        .toast { padding: 1rem 1.5rem; border-radius: 8px; font-size: 0.85rem; animation: slideIn 0.3s ease; }
-        .toast-success { background: rgba(0,255,136,0.2); border: 1px solid var(--success); color: var(--success); }
-        .toast-error { background: rgba(255,51,102,0.2); border: 1px solid var(--red); color: var(--red); }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .article-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; }
-        .article-row:hover { border-color: var(--accent); }
-        @media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
+        :root{--bg:#000510;--card:#0a0f1e;--border:#1a2040;--accent:#00d4ff;--text:#e8e8f0;--text2:#8899bb;--success:#00ff88;--red:#ff3366}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .bar{position:sticky;top:0;z-index:100;background:rgba(10,15,30,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0.5rem 1.5rem;height:56px}
+        .layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 56px)}
+        .sidebar{background:rgba(10,15,30,0.8);border-right:1px solid var(--border);padding:1rem 0}
+        .side-sec{padding:0.75rem 1rem;font-size:0.6rem;letter-spacing:2px;color:var(--text2);text-transform:uppercase}
+        .side-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 1rem;margin:0.15rem 0.5rem;border-radius:8px;cursor:pointer;font-size:0.82rem;color:var(--text2);border:1px solid transparent}
+        .side-item:hover,.side-item.active{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent)}
+        .main{padding:1.5rem;overflow-y:auto;max-height:calc(100vh - 56px)}
+        .panel{display:none}.panel.active{display:block}
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+        .stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+        .stat-val{font-size:1.8rem;font-weight:900;color:var(--accent)}.stat-lbl{font-size:0.7rem;color:var(--text2)}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+        input,textarea,select{width:100%;padding:0.7rem;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;color:var(--text);margin-bottom:0.75rem;font-family:inherit}
+        textarea{min-height:100px;resize:vertical}
+        .btn{padding:0.7rem 1.5rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:inherit}
+        .btn-p{background:var(--accent);color:#000}.btn-s{background:var(--success);color:#000}.btn-d{background:var(--red);color:#fff}.btn-o{background:transparent;border:1px solid var(--border);color:var(--text)}
+        .row{display:flex;align-items:center;gap:1rem;padding:0.75rem;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:8px;margin-bottom:0.5rem}
+        .toast-feed{position:fixed;top:70px;right:20px;z-index:10000}
+        .toast{padding:1rem 1.5rem;border-radius:8px;margin-bottom:0.5rem}
+        .toast-s{background:rgba(0,255,136,0.2);border:1px solid var(--success);color:var(--success)}
+        .toast-e{background:rgba(255,51,102,0.2);border:1px solid var(--red);color:var(--red)}
+        @media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
     </style>
 </head>
 <body>
 
-<div class="cmd-bar">
-    <div style="display:flex;align-items:center;gap:0.5rem;">
-        <span style="font-size:1.5rem;">🌙</span>
-        <span style="font-weight:900;letter-spacing:2px;color:var(--accent);">QUANTUM COMMAND</span>
-    </div>
-    <div style="display:flex;gap:1rem;align-items:center;">
-        <span id="connStatus" style="font-size:0.7rem;color:var(--success);">🟢 CONNECTED</span>
-        <button class="btn btn-outline btn-sm" onclick="window.open('/rasu/')">🌍 VIEW SITE</button>
-    </div>
+<div class="bar">
+    <div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-size:1.5rem;">🌙</span><span style="font-weight:900;color:var(--accent);">QUANTUM COMMAND</span></div>
+    <div style="display:flex;gap:1rem;align-items:center;"><span style="font-size:0.7rem;color:var(--success);">🟢 SUPABASE</span><button class="btn btn-o" onclick="window.open('/rasu/')">🌍 VIEW SITE</button></div>
 </div>
 
 <div class="layout">
     <aside class="sidebar">
-        <div class="sidebar-section">📡 MAIN</div>
-        <div class="sidebar-item active" onclick="switchPanel('dashboard',this)">📊 Dashboard</div>
-        <div class="sidebar-item" onclick="switchPanel('compose',this)">✍️ Compose</div>
-        <div class="sidebar-item" onclick="switchPanel('articles',this)">📰 All Articles</div>
-        <div class="sidebar-section">⚙️ SYSTEM</div>
-        <div class="sidebar-item" onclick="switchPanel('sync',this)">🔄 Sync Now</div>
+        <div class="side-sec">📡 MAIN</div>
+        <div class="side-item active" onclick="switchPanel('dash',this)">📊 Dashboard</div>
+        <div class="side-item" onclick="switchPanel('compose',this)">✍️ Compose</div>
+        <div class="side-item" onclick="switchPanel('list',this)">📰 Articles</div>
+        <div class="side-sec">⚙️ SYSTEM</div>
+        <div class="side-item" onclick="syncAll()">🔄 Sync Now</div>
     </aside>
-
+    
     <main class="main">
-        <!-- DASHBOARD -->
-        <div class="panel active" id="panel-dashboard">
+        <div class="panel active" id="panel-dash">
             <h2 style="margin-bottom:1.5rem;">📊 DASHBOARD</h2>
-            <div class="stats-row">
-                <div class="stat-card"><div class="stat-value" id="dashTotal">0</div><div class="stat-label">Total Articles</div></div>
-                <div class="stat-card"><div class="stat-value" id="dashTrending">0</div><div class="stat-label">Trending</div></div>
-                <div class="stat-card"><div class="stat-value" id="dashBreaking">0</div><div class="stat-label">Breaking</div></div>
-                <div class="stat-card"><div class="stat-value" id="dashViews">0</div><div class="stat-label">Total Views</div></div>
+            <div class="stats">
+                <div class="stat-card"><div class="stat-val" id="dashTotal">0</div><div class="stat-lbl">Total Articles</div></div>
+                <div class="stat-card"><div class="stat-val" id="dashTrend">0</div><div class="stat-lbl">Trending</div></div>
+                <div class="stat-card"><div class="stat-val" id="dashBreak">0</div><div class="stat-lbl">Breaking</div></div>
+                <div class="stat-card"><div class="stat-val" id="dashViews">0</div><div class="stat-lbl">Total Views</div></div>
             </div>
         </div>
-
-        <!-- COMPOSE -->
+        
         <div class="panel" id="panel-compose">
-            <h2 style="margin-bottom:1rem;">✍️ COMPOSE ARTICLE</h2>
-            <div class="qcard">
-                <input type="text" id="cmpTitle" placeholder="Headline *">
-                <select id="cmpCategory">
-                    <option value="">Category *</option>
-                    <option value="tech">Technology</option><option value="sports">Sports</option>
-                    <option value="business">Business</option><option value="politics">Politics</option>
-                    <option value="science">Science</option><option value="world">World</option>
-                </select>
-                <input type="text" id="cmpEmoji" placeholder="Emoji" value="📰" style="width:80px;">
-                <textarea id="cmpSummary" placeholder="Summary *" rows="2"></textarea>
-                <textarea id="cmpContent" placeholder="Full Content" rows="5"></textarea>
-                <label style="display:inline-flex;align-items:center;gap:0.5rem;margin-right:1rem;cursor:pointer;color:var(--text);">
-                    <input type="checkbox" id="cmpTrending"> 🔥 Trending
-                </label>
-                <label style="display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;color:var(--text);">
-                    <input type="checkbox" id="cmpBreaking"> ⚡ Breaking
-                </label>
-                <div style="margin-top:1rem;">
-                    <button class="btn btn-primary" onclick="publishArticle()">🚀 PUBLISH TO SUPABASE</button>
-                    <button class="btn btn-outline btn-sm" onclick="clearForm()">🗑️ Clear</button>
-                </div>
+            <h2 style="margin-bottom:1rem;">✍️ COMPOSE</h2>
+            <div class="card">
+                <input type="text" id="t" placeholder="Headline *">
+                <select id="c"><option value="">Category *</option><option value="tech">Tech</option><option value="sports">Sports</option><option value="business">Business</option><option value="politics">Politics</option><option value="science">Science</option><option value="world">World</option></select>
+                <input type="text" id="e" placeholder="Emoji" value="📰" style="width:80px;">
+                <textarea id="s" placeholder="Summary *" rows="2"></textarea>
+                <textarea id="fc" placeholder="Full Content" rows="4"></textarea>
+                <label style="display:inline-flex;align-items:center;gap:0.5rem;margin-right:1rem;cursor:pointer;"><input type="checkbox" id="tr"> 🔥 Trending</label>
+                <label style="display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;"><input type="checkbox" id="br"> ⚡ Breaking</label>
+                <div style="margin-top:1rem;"><button class="btn btn-p" onclick="publish()">🚀 PUBLISH</button><button class="btn btn-o" onclick="clearF()" style="margin-left:0.5rem;">🗑️ Clear</button></div>
             </div>
         </div>
-
-        <!-- ARTICLES -->
-        <div class="panel" id="panel-articles">
+        
+        <div class="panel" id="panel-list">
             <h2 style="margin-bottom:1rem;">📰 ALL ARTICLES</h2>
-            <div id="articlesList">Loading...</div>
-        </div>
-
-        <!-- SYNC -->
-        <div class="panel" id="panel-sync">
-            <h2 style="margin-bottom:1rem;">🔄 SYNC WITH SUPABASE</h2>
-            <div class="qcard">
-                <p style="margin-bottom:1rem;">Connected to: <strong>crmbbmwekdlfjgekjnll.supabase.co</strong></p>
-                <button class="btn btn-primary" onclick="syncFromSupabase()">📥 Pull All Articles</button>
-                <button class="btn btn-success" onclick="pushToSupabase()" style="margin-left:0.5rem;">📤 Push Local</button>
-                <div id="syncStatus" style="margin-top:1rem;"></div>
-            </div>
+            <div id="list">Loading...</div>
         </div>
     </main>
 </div>
@@ -133,172 +86,65 @@
 <div class="toast-feed" id="toastFeed"></div>
 
 <script>
-const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+var SUPABASE_URL='https://crmbbmwekdlfjgekjnll.supabase.co';
+var SUPABASE_KEY='sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+var sb=null;
+try{if(window.supabase&&typeof window.supabase.createClient==='function'){sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);console.log('✅ Supabase connected');}}catch(e){console.warn(e);}
+var articles=[];
 
-let supabaseAdmin = null;
-try {
-    if (window.supabase && typeof window.supabase.createClient === 'function') {
-        supabaseAdmin = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Supabase Admin connected!');
-    }
-} catch(e) {
-    console.error('Supabase Admin init error:', e.message);
-    document.getElementById('connStatus').innerHTML = '🔴 OFFLINE';
+async function init(){if(sb){await syncAll();}else{loadLocal();}updateDash();}
+
+async function syncAll(){
+    if(!sb){loadLocal();return;}
+    try{var r=await sb.from('news_articles').select('*').order('published_at',{ascending:false});if(r.data){articles=r.data;localStorage.setItem('qa',JSON.stringify(r.data));console.log('✅ Synced '+articles.length);}}catch(e){console.warn(e);loadLocal();}
+    updateDash();loadList();
 }
 
-let articles = [];
+function loadLocal(){articles=JSON.parse(localStorage.getItem('qa'))||[];updateDash();loadList();}
 
-async function init() {
-    if (supabaseAdmin) {
-        await syncFromSupabase();
-    } else {
-        loadLocalArticles();
-    }
-    updateDashboard();
+async function publish(){
+    if(!sb){toast('❌ Supabase not connected!','e');return;}
+    var title=document.getElementById('t').value.trim();
+    var cat=document.getElementById('c').value;
+    var summary=document.getElementById('s').value.trim();
+    var content=document.getElementById('fc').value.trim();
+    var emoji=document.getElementById('e').value||'📰';
+    var trending=document.getElementById('tr').checked;
+    var breaking=document.getElementById('br').checked;
+    if(!title||!cat||!summary){toast('⚠️ Title, Category, Summary required!','e');return;}
+    var r=await sb.from('news_articles').insert({title:title,category:cat,summary:summary,full_content:content||summary,image_emoji:emoji,trending:trending,breaking:breaking,views:0});
+    if(r.error){toast('❌ '+r.error.message,'e');}else{toast('🚀 Published! LIVE!','s');clearF();syncAll();}
 }
 
-async function syncFromSupabase() {
-    if (!supabaseAdmin) {
-        document.getElementById('syncStatus').innerHTML = '<p style="color:var(--red);">❌ Supabase not connected</p>';
-        loadLocalArticles();
-        return;
-    }
-    
-    document.getElementById('syncStatus').innerHTML = '<p style="color:var(--accent);">⏳ Syncing...</p>';
-    try {
-        const { data, error } = await supabaseAdmin
-            .from('news_articles')
-            .select('*')
-            .order('published_at', { ascending: false });
-        
-        if (error) throw error;
-        
-        if (data) {
-            articles = data;
-            localStorage.setItem('quantumArticles', JSON.stringify(data));
-            document.getElementById('syncStatus').innerHTML = '<p style="color:var(--success);">✅ Synced ' + data.length + ' articles!</p>';
-        }
-    } catch(e) {
-        document.getElementById('syncStatus').innerHTML = '<p style="color:var(--red);">❌ ' + e.message + '</p>';
-        loadLocalArticles();
-    }
-    updateDashboard();
-    loadArticlesList();
+function loadList(){
+    var el=document.getElementById('list');
+    if(!articles.length){el.innerHTML='<p style="text-align:center;padding:2rem;">No articles yet.</p>';return;}
+    el.innerHTML=articles.slice(0,20).map(function(a){return '<div class="row"><div style="font-size:1.5rem;">'+(a.image_emoji||'📰')+'</div><div style="flex:1;"><strong>'+a.title+'</strong><div style="font-size:0.7rem;color:var(--text2);">'+a.category+' • '+new Date(a.published_at).toLocaleString()+' '+(a.trending?'🔥':'')+'</div></div><button class="btn btn-d" onclick="del('+a.id+')">🗑️</button></div>';}).join('');
 }
 
-function loadLocalArticles() {
-    articles = JSON.parse(localStorage.getItem('quantumArticles')) || [];
-    console.log('📦 Loaded ' + articles.length + ' local articles');
-    updateDashboard();
-    loadArticlesList();
+async function del(id){if(!sb||!confirm('Delete?'))return;await sb.from('news_articles').delete().eq('id',id);toast('🗑️ Deleted!','e');syncAll();}
+
+function updateDash(){
+    document.getElementById('dashTotal').textContent=articles.length;
+    document.getElementById('dashTrend').textContent=articles.filter(function(a){return a.trending;}).length;
+    document.getElementById('dashBreak').textContent=articles.filter(function(a){return a.breaking;}).length;
+    document.getElementById('dashViews').textContent=articles.reduce(function(s,a){return s+(a.views||0);},0).toLocaleString();
 }
 
-async function publishArticle() {
-    if (!supabaseAdmin) {
-        showToast('❌ Supabase not connected!', 'error');
-        return;
-    }
-    
-    const title = document.getElementById('cmpTitle').value.trim();
-    const category = document.getElementById('cmpCategory').value;
-    const summary = document.getElementById('cmpSummary').value.trim();
-    const content = document.getElementById('cmpContent').value.trim();
-    const emoji = document.getElementById('cmpEmoji').value || '📰';
-    const trending = document.getElementById('cmpTrending').checked;
-    const breaking = document.getElementById('cmpBreaking').checked;
-
-    if (!title || !category || !summary) {
-        showToast('⚠️ Title, Category, and Summary required!', 'error');
-        return;
-    }
-
-    const { error } = await supabaseAdmin.from('news_articles').insert({
-        title, category, summary, full_content: content || summary,
-        image_emoji: emoji, trending, breaking, views: 0
-    });
-
-    if (error) {
-        showToast('❌ ' + error.message, 'error');
-    } else {
-        showToast('🚀 Published! LIVE on homepage!', 'success');
-        clearForm();
-        syncFromSupabase();
-    }
+function switchPanel(p,el){
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+    document.getElementById('panel-'+p).classList.add('active');
+    document.querySelectorAll('.side-item').forEach(function(x){x.classList.remove('active');});
+    if(el)el.classList.add('active');
+    if(p==='list')loadList();if(p==='dash')updateDash();
 }
 
-function loadArticlesList() {
-    const list = document.getElementById('articlesList');
-    if (!articles.length) { list.innerHTML = '<p style="text-align:center;padding:2rem;">No articles yet. Publish your first one!</p>'; return; }
-    list.innerHTML = articles.slice(0, 20).map(a => `
-        <div class="article-row">
-            <div style="font-size:1.5rem;">${a.image_emoji||'📰'}</div>
-            <div style="flex:1;">
-                <strong>${a.title}</strong>
-                <div style="font-size:0.7rem;color:var(--text2);">${a.category} • ${new Date(a.published_at).toLocaleString()} ${a.trending?'•🔥':''} ${a.breaking?'•⚡':''}</div>
-            </div>
-            <button class="btn btn-danger btn-sm" onclick="deleteArticle(${a.id})">🗑️</button>
-        </div>
-    `).join('');
-}
+function clearF(){['t','c','s','fc'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('e').value='📰';document.getElementById('tr').checked=false;document.getElementById('br').checked=false;}
 
-async function deleteArticle(id) {
-    if (!supabaseAdmin) return;
-    if (!confirm('Delete this article?')) return;
-    await supabaseAdmin.from('news_articles').delete().eq('id', id);
-    showToast('🗑️ Deleted!', 'error');
-    syncFromSupabase();
-}
-
-async function pushToSupabase() {
-    if (!supabaseAdmin) {
-        showToast('❌ Supabase not connected!', 'error');
-        return;
-    }
-    const local = JSON.parse(localStorage.getItem('quantumArticles')) || [];
-    let count = 0;
-    for (const a of local) {
-        const { error } = await supabaseAdmin.from('news_articles').insert({
-            title: a.title, category: a.category, summary: a.summary,
-            full_content: a.content || a.summary, image_emoji: a.emoji || '📰',
-            trending: a.trending, breaking: a.breaking
-        });
-        if (!error) count++;
-    }
-    showToast('📤 Pushed ' + count + ' articles!', 'success');
-    syncFromSupabase();
-}
-
-function updateDashboard() {
-    document.getElementById('dashTotal').textContent = articles.length;
-    document.getElementById('dashTrending').textContent = articles.filter(a => a.trending).length;
-    document.getElementById('dashBreaking').textContent = articles.filter(a => a.breaking).length;
-    document.getElementById('dashViews').textContent = articles.reduce((s, a) => s + (a.views || 0), 0).toLocaleString();
-}
-
-function switchPanel(panel, el) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('panel-' + panel).classList.add('active');
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-    if (el) el.classList.add('active');
-    if (panel === 'articles') loadArticlesList();
-    if (panel === 'dashboard') updateDashboard();
-}
-
-function clearForm() {
-    ['cmpTitle','cmpCategory','cmpSummary','cmpContent'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('cmpEmoji').value = '📰';
-    document.getElementById('cmpTrending').checked = false;
-    document.getElementById('cmpBreaking').checked = false;
-}
-
-function showToast(msg, type) {
-    const feed = document.getElementById('toastFeed');
-    const t = document.createElement('div');
-    t.className = 'toast toast-' + (type === 'error' ? 'error' : 'success');
-    t.textContent = msg;
-    feed.appendChild(t);
-    setTimeout(() => t.remove(), 4000);
+function toast(m,t){
+    var f=document.getElementById('toastFeed');var d=document.createElement('div');
+    d.className='toast toast-'+(t==='e'?'e':'s');d.textContent=m;f.appendChild(d);
+    setTimeout(function(){d.remove();},4000);
 }
 
 init();
