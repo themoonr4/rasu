@@ -7,23 +7,11 @@
     <meta name="theme-color" content="#dc2626">
     <meta property="og:title" content="THE MOON - World's Best News Platform">
     <meta property="og:description" content="World's Most Advanced News Platform | AI-Powered | Real-Time">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://themoonr4.github.io/rasu/assets/og-image.jpg">
-    <meta name="twitter:card" content="summary_large_image">
     <title>THE MOON 🌙 | World's Most Advanced News Platform | Breaking News & Live Updates</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
     <link rel="manifest" href="/rasu/manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- OneSignal Push Notifications -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({ appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c" });
-      });
-    </script>
     
     <!-- Google Translate -->
     <script type="text/javascript">
@@ -49,26 +37,20 @@
             --border: #e2e8f0;
             --brand-red: #dc2626;
             --brand-red-dark: #b91c1c;
-            --brand-red-light: #ef4444;
             --tech: #3b82f6;
             --sports: #10b981;
             --business: #f59e0b;
             --politics: #8b5cf6;
-            --study: #06b6d4;
-            --science: #8b5cf6;
+            --science: #06b6d4;
             --world: #ef4444;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --radius-sm: 0.375rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
-            --radius-2xl: 1.5rem;
             --transition-fast: 150ms ease;
-            --transition-normal: 250ms ease;
-            --transition-slow: 350ms ease;
         }
 
         [data-theme="dark"] {
@@ -82,7 +64,6 @@
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -93,7 +74,6 @@
             color: var(--text-primary);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             padding-bottom: 70px;
         }
         @media (min-width: 768px) { body { padding-bottom: 0; } }
@@ -220,7 +200,7 @@
         .hero {
             background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
             border-radius: var(--radius-xl); padding: 1.5rem; color: white;
-            text-align: center; grid-column: 1 / -1; margin-bottom: 1rem;
+            text-align: center; margin-bottom: 1rem;
         }
         @media (min-width: 768px) { .hero { padding: 2.5rem; text-align: left; } }
         .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 0.5rem; }
@@ -238,7 +218,7 @@
             border: 1px solid var(--border); margin-bottom: 1rem;
         }
         .ticker-content {
-            display: inline-block; animation: ticker 30s linear infinite;
+            display: inline-block; animation: ticker 20s linear infinite;
             font-size: 0.85rem; color: var(--brand-red); font-weight: 500;
         }
         .ticker-content:hover { animation-play-state: paused; }
@@ -291,7 +271,7 @@
         .news-category.sports { background: var(--sports); }
         .news-category.business { background: var(--business); }
         .news-category.politics { background: var(--politics); }
-        .news-category.study, .news-category.science { background: var(--study); }
+        .news-category.science { background: var(--science); }
         .news-category.world { background: var(--world); }
         .news-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4; flex: 1; }
         .news-excerpt {
@@ -587,15 +567,21 @@
 </footer>
 
 <script>
-// ============ SUPABASE CONFIG ============
+// ============ SUPABASE FIXED CONNECTION ============
 const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
-let supabase;
+
+// Initialize Supabase client PROPERLY
+let supabase = null;
 try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('✅ Supabase connected');
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase connected successfully!');
+    } else {
+        console.warn('⚠️ Supabase library not loaded. Using static fallback data.');
+    }
 } catch(e) {
-    console.log('Supabase init note:', e.message);
+    console.error('Supabase init error:', e.message);
 }
 
 // ============ STATE ============
@@ -606,14 +592,14 @@ let bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
 
 // ============ STATIC FALLBACK ============
 const staticNews = [
-    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7 (8,575 km/h). India becomes only the fourth nation after US, Russia, and China to possess this technology. The missile can strike targets over 1,500 km away in under 12 minutes." },
-    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth and record foreign investments.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed 100,000 for the first time in Indian financial history. The bull run has been fueled by robust GDP growth of 8.5% and record FII inflows of over $45 billion this year." },
-    { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets at packed MCG.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "Needing 6 runs off the last delivery, Hardik Pandya launched a massive 102-meter six over deep mid-wicket, sending the packed MCG into delirium. India lifts their third T20 World Cup title." },
-    { id: 's4', title: "NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago", category: "science", summary: "Perseverance rover finds definitive chemical evidence of past biological activity in rock samples.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K views", fullContent: "NASA has confirmed that the Perseverance rover discovered chemical signatures and fossilized structures consistent with ancient microbial life on Mars. The findings date back 3.5 billion years." },
-    { id: 's5', title: "AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours", category: "tech", summary: "Revolutionary AI demonstrates human-level scientific reasoning, compressing decades of research.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K views", fullContent: "The system named Newton-AI successfully identified three novel drug candidates for previously untreatable pancreatic cancer in just 48 hours." },
-    { id: 's6', title: "World Leaders Sign Historic Climate Pact: Net Zero by 2040", category: "politics", summary: "195 nations agree to legally binding emissions targets with $2 trillion annual climate fund.", time: "4 hours ago", image: "🌍", trending: false, views: "76.5K views", fullContent: "All 195 UN member states signed a legally binding treaty committing to net-zero carbon emissions by 2040 with mandatory 5-year review cycles." },
-    { id: 's7', title: "Elon Musk: Neuralink Restores Vision in Blind Patient", category: "science", summary: "Brain-computer interface gives functional sight to 28-year-old blind since birth.", time: "5 hours ago", image: "👁️", trending: true, views: "234.6K views", fullContent: "Neuralink has successfully restored functional vision to a person blind since birth using a visual cortex implant that bypasses damaged optic nerves." },
-    { id: 's8', title: "Apple Unveils Foldable iPhone with Glasses-Free Holographic Display", category: "tech", summary: "Revolutionary device features 3D holographic projection and 7-day battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K views", fullContent: "Tim Cook demonstrated life-size holographic FaceTime calls without any glasses. The iPhone Fold features solid-state battery providing 7-day battery life." }
+    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7. India becomes only the fourth nation after US, Russia, and China to possess this technology." },
+    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed 100,000 for the first time in Indian financial history." },
+    { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets at packed MCG.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "Needing 6 runs off the last delivery, Hardik Pandya launched a massive six over deep mid-wicket." },
+    { id: 's4', title: "NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago", category: "science", summary: "Perseverance rover finds definitive chemical evidence of past biological activity.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K views", fullContent: "NASA has confirmed that the Perseverance rover discovered chemical signatures consistent with ancient microbial life on Mars." },
+    { id: 's5', title: "AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours", category: "tech", summary: "Revolutionary AI demonstrates human-level scientific reasoning.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K views", fullContent: "The system named Newton-AI identified three novel drug candidates in just 48 hours." },
+    { id: 's6', title: "World Leaders Sign Historic Climate Pact: Net Zero by 2040", category: "politics", summary: "195 nations agree to legally binding emissions targets with $2 trillion annual climate fund.", time: "4 hours ago", image: "🌍", trending: false, views: "76.5K views", fullContent: "All 195 UN member states signed a legally binding treaty committing to net-zero carbon emissions by 2040." },
+    { id: 's7', title: "Elon Musk: Neuralink Restores Vision in Blind Patient", category: "science", summary: "Brain-computer interface gives functional sight to 28-year-old blind since birth.", time: "5 hours ago", image: "👁️", trending: true, views: "234.6K views", fullContent: "Neuralink has successfully restored functional vision to a person blind since birth." },
+    { id: 's8', title: "Apple Unveils Foldable iPhone with Glasses-Free Holographic Display", category: "tech", summary: "Revolutionary device features 3D holographic projection and 7-day battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K views", fullContent: "Tim Cook demonstrated life-size holographic FaceTime calls without any glasses." }
 ];
 
 // ============ SIDEBAR (FIXED) ============
@@ -623,37 +609,38 @@ const staticNews = [
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
 
-    function openSidebar() {
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
+    if (menuToggle && sidebar && overlay) {
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
     }
-
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
+    if (closeSidebarBtn && sidebar && overlay) {
+        closeSidebarBtn.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
     }
-
-    if (menuToggle) menuToggle.addEventListener('click', openSidebar);
-    if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
-    if (overlay) overlay.addEventListener('click', closeSidebar);
-    
-    // Close sidebar when a nav link is clicked
-    document.querySelectorAll('.sidebar-nav a[data-category]').forEach(link => {
-        link.addEventListener('click', closeSidebar);
-    });
+    if (overlay && sidebar) {
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+    }
 })();
 
 // ============ INIT ============
 async function init() {
+    console.log('🌙 THE MOON initializing...');
     loadTheme();
     setupNavListeners();
-    await loadNewsFromSupabase();
+    await loadNews();
     displayTicker();
     displayCategories();
     displayNews();
     displayTrending();
-    subscribeToRealtime();
     updateHeroStats();
+    console.log('✅ THE MOON ready! ' + allNews.length + ' articles loaded.');
 }
 
 // ============ THEME ============
@@ -678,25 +665,43 @@ document.getElementById('themeToggle').addEventListener('click', () => {
     showToast('Theme updated! 🎨');
 });
 
-// ============ SUPABASE ============
-async function loadNewsFromSupabase() {
-    if (!supabase) { allNews = staticNews; return; }
-    try {
-        const { data, error } = await supabase.from('news_articles').select('*').order('published_at', { ascending: false }).limit(50);
-        if (error) throw error;
-        if (data && data.length > 0) {
-            allNews = data.map(item => ({
-                id: item.id, title: item.title, category: item.category,
-                summary: item.summary || '', time: timeAgo(new Date(item.published_at)),
-                image: item.image_emoji || '📰', trending: item.trending || false,
-                views: (item.views || 0).toLocaleString() + ' views',
-                fullContent: item.full_content || item.summary || ''
-            }));
-            console.log('✅ ' + allNews.length + ' articles from Supabase');
-            return;
+// ============ LOAD NEWS ============
+async function loadNews() {
+    // Try Supabase first
+    if (supabase) {
+        try {
+            console.log('📡 Fetching from Supabase...');
+            const { data, error } = await supabase
+                .from('news_articles')
+                .select('*')
+                .order('published_at', { ascending: false })
+                .limit(50);
+            
+            if (error) {
+                console.warn('Supabase query error:', error.message);
+            } else if (data && data.length > 0) {
+                allNews = data.map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    category: item.category,
+                    summary: item.summary || '',
+                    time: timeAgo(new Date(item.published_at)),
+                    image: item.image_emoji || '📰',
+                    trending: item.trending || false,
+                    views: (item.views || 0).toLocaleString() + ' views',
+                    fullContent: item.full_content || item.summary || ''
+                }));
+                console.log('✅ Loaded ' + allNews.length + ' articles from Supabase');
+                return;
+            }
+        } catch(e) {
+            console.warn('Supabase fetch failed:', e.message);
         }
-    } catch(e) { console.log('Supabase:', e.message); }
-    allNews = staticNews;
+    }
+    
+    // Fallback to static
+    console.log('📦 Using static fallback data');
+    allNews = [...staticNews];
 }
 
 function timeAgo(date) {
@@ -707,20 +712,12 @@ function timeAgo(date) {
     return Math.floor(s/86400) + ' days ago';
 }
 
-function subscribeToRealtime() {
-    if (!supabase) return;
-    supabase.channel('news_feed').on('postgres_changes', { event: '*', schema: 'public', table: 'news_articles' }, () => {
-        loadNewsFromSupabase().then(() => {
-            displayTicker(); displayCategories(); displayNews(); displayTrending(); updateHeroStats();
-        });
-    }).subscribe();
-}
-
 // ============ TICKER ============
 function displayTicker() {
     const breaking = allNews.filter(n => n.trending);
-    document.getElementById('tickerContent').innerHTML = (breaking.length > 0 ? breaking : allNews.slice(0, 3)).map(n =>
-        `<span onclick="openArticle(${n.id})">⚡ ${n.title}</span>`
+    const items = breaking.length > 0 ? breaking : allNews.slice(0, 3);
+    document.getElementById('tickerContent').innerHTML = items.map(n =>
+        `<span onclick="openArticle(${n.id})" style="cursor:pointer;">⚡ ${n.title}</span>`
     ).join('');
 }
 
@@ -743,7 +740,7 @@ function displayCategories() {
     `).join('');
 }
 
-// ============ NEWS ============
+// ============ NEWS DISPLAY ============
 function displayNews(filter = 'all') {
     let filtered = filter === 'all' ? allNews : allNews.filter(n => n.category === filter);
     currentFilter = filter;
@@ -894,9 +891,8 @@ document.getElementById('articleModal').addEventListener('click', function(e) {
 });
 
 // ============ START ============
-init();
-console.log('🌙 THE MOON v5.0 - Complete Platform');
-console.log('✅ Sidebar | Search | Bookmarks | Trending | Categories | Dark Mode | Supabase | Translate');
+document.addEventListener('DOMContentLoaded', init);
+console.log('🌙 THE MOON v7.0 FINAL - All Systems Ready');
 </script>
 </body>
 </html>
