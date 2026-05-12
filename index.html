@@ -3,403 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="THE MOON - World's Most Advanced AI-Powered News Platform. Real-time breaking news, curated content, and comprehensive global coverage.">
+    <meta name="description" content="THE MOON - World's Most Advanced AI-Powered News Platform">
     <meta name="theme-color" content="#dc2626">
-    <meta property="og:title" content="THE MOON - World's Best News Platform">
-    <meta property="og:description" content="World's Most Advanced News Platform | AI-Powered | Real-Time">
-    <title>THE MOON 🌙 | World's Most Advanced News Platform | Breaking News & Live Updates</title>
+    <title>THE MOON 🌙 | World's Best News Platform</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
-    <link rel="manifest" href="/rasu/manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Google Translate -->
-    <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'hi,en,es,fr,de,zh-CN,ar,ja,ko,pt,ru,bn,ta,te,mr,gu,pa,ur',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
-    </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    
     <style>
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-tertiary: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-tertiary: #94a3b8;
-            --border: #e2e8f0;
-            --brand-red: #dc2626;
-            --brand-red-dark: #b91c1c;
-            --tech: #3b82f6;
-            --sports: #10b981;
-            --business: #f59e0b;
-            --politics: #8b5cf6;
-            --science: #06b6d4;
-            --world: #ef4444;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --transition-fast: 150ms ease;
+            --bg: #0f0f0f; --bg2: #1a1a1a; --bg3: #222;
+            --text: #f8fafc; --text2: #cbd5e1; --text3: #64748b;
+            --border: #2a2a2a; --red: #dc2626; --red-dark: #b91c1c;
+            --tech: #3b82f6; --sports: #10b981; --business: #f59e0b;
+            --politics: #8b5cf6; --science: #06b6d4; --world: #ef4444;
+            --shadow: 0 4px 6px rgba(0,0,0,0.4);
+            --radius: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem;
         }
-
-        [data-theme="dark"] {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --bg-tertiary: #222222;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-tertiary: #64748b;
-            --border: #2a2a2a;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+        [data-theme="light"] {
+            --bg: #f8fafc; --bg2: #fff; --bg3: #f1f5f9;
+            --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+            --border: #e2e8f0; --shadow: 0 4px 6px rgba(0,0,0,0.07);
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            padding-bottom: 70px;
-        }
-        @media (min-width: 768px) { body { padding-bottom: 0; } }
-
-        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
-        @media (min-width: 768px) { .container { padding: 0 1.5rem; } }
-        @media (min-width: 1024px) { .container { padding: 0 2rem; } }
-
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:70px}
+        @media(min-width:768px){body{padding-bottom:0}}
+        .container{max-width:1400px;margin:0 auto;padding:0 1rem}
+        
         /* HEADER */
-        .header {
-            position: sticky; top: 0; z-index: 100;
-            background: var(--bg-primary); border-bottom: 2px solid var(--brand-red);
-            backdrop-filter: blur(10px);
-        }
-        .header-content {
-            display: flex; align-items: center; justify-content: space-between;
-            height: 60px; gap: 1rem;
-        }
-        @media (min-width: 768px) { .header-content { height: 70px; gap: 2rem; } }
+        .header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:2px solid var(--red)}
+        .header-content{display:flex;align-items:center;justify-content:space-between;height:60px;gap:1rem}
+        .logo{font-size:1.3rem;font-weight:800;color:var(--red);text-decoration:none;white-space:nowrap}
+        .hamburger{display:flex;align-items:center;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text);min-width:44px;min-height:44px;justify-content:center}
+        @media(min-width:768px){.hamburger{display:none}}
+        .nav-desktop{display:none;gap:0.25rem}
+        @media(min-width:768px){.nav-desktop{display:flex;flex:1;justify-content:center;flex-wrap:wrap}}
+        .nav-desktop a{text-decoration:none;color:var(--text2);font-weight:500;padding:0.5rem 0.75rem;border-radius:var(--radius);font-size:0.85rem}
+        .nav-desktop a:hover,.nav-desktop a.active{background:var(--red);color:#fff}
+        .header-actions{display:flex;gap:0.25rem}
+        .header-actions button,.header-actions a{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text);padding:0.5rem;min-width:40px;min-height:40px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;text-decoration:none}
+        .header-actions button:hover{background:var(--bg2);color:var(--red)}
 
-        .logo {
-            font-size: 1.4rem; font-weight: 800;
-            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
-            -webkit-background-clip: text; background-clip: text;
-            color: transparent; text-decoration: none; white-space: nowrap;
-        }
-
-        .hamburger {
-            display: flex; align-items: center; justify-content: center;
-            background: none; border: none; font-size: 1.3rem; cursor: pointer;
-            color: var(--text-primary); min-width: 44px; min-height: 44px;
-            border-radius: var(--radius-md);
-        }
-        @media (min-width: 768px) { .hamburger { display: none; } }
-
-        .nav-desktop { display: none; flex: 1; justify-content: center; gap: 0.25rem; flex-wrap: wrap; }
-        @media (min-width: 768px) { .nav-desktop { display: flex; } }
-        .nav-desktop a {
-            text-decoration: none; color: var(--text-secondary); font-weight: 500;
-            padding: 0.5rem 0.75rem; border-radius: var(--radius-md); font-size: 0.85rem;
-            transition: var(--transition-fast);
-        }
-        .nav-desktop a:hover, .nav-desktop a.active { color: white; background: var(--brand-red); }
-
-        .header-actions { display: flex; align-items: center; gap: 0.25rem; }
-        .header-actions button, .header-actions .icon-link {
-            background: none; border: none; font-size: 1.1rem; cursor: pointer;
-            color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px;
-            border-radius: var(--radius-md); transition: var(--transition-fast);
-            display: flex; align-items: center; justify-content: center; text-decoration: none;
-        }
-        .header-actions button:hover, .header-actions .icon-link:hover {
-            background: var(--bg-secondary); color: var(--brand-red);
-        }
-
-        /* SEARCH OVERLAY */
-        .search-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9); z-index: 10000;
-            display: none; align-items: flex-start; justify-content: center;
-            padding-top: 80px;
-        }
-        .search-overlay.active { display: flex; }
-        .search-modal { width: 90%; max-width: 650px; }
-        .search-modal input {
-            width: 100%; padding: 1rem 1.5rem; font-size: 1.2rem;
-            border: none; border-radius: var(--radius-lg); background: white;
-            color: #0f172a; font-family: inherit;
-        }
-        .search-results {
-            background: white; border-radius: var(--radius-lg); margin-top: 0.5rem;
-            max-height: 400px; overflow-y: auto; color: #0f172a;
-        }
-        .search-result-item {
-            padding: 1rem 1.5rem; border-bottom: 1px solid #e0e0e0;
-            cursor: pointer; transition: background 0.15s;
-        }
-        .search-result-item:hover { background: #f5f5f5; }
-
-        /* SIDEBAR (Mobile) */
-        .sidebar {
-            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: var(--bg-primary); z-index: 200;
-            transition: left 0.3s ease; box-shadow: var(--shadow-xl); overflow-y: auto;
-        }
-        .sidebar.open { left: 0; }
-        .sidebar-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
-        }
-        .sidebar-nav { padding: 0.5rem; }
-        .sidebar-nav a {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.75rem 1rem; text-decoration: none; color: var(--text-secondary);
-            border-radius: var(--radius-md); font-weight: 500; transition: var(--transition-fast);
-        }
-        .sidebar-nav a:hover, .sidebar-nav a.active { background: var(--brand-red); color: white; }
-        .sidebar-nav hr { border-color: var(--border); margin: 0.5rem 0; }
-
-        /* OVERLAY */
-        .overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5); z-index: 199; display: none;
-        }
-        .overlay.active { display: block; }
+        /* SIDEBAR */
+        .sidebar{position:fixed;top:0;left:-300px;width:280px;height:100%;background:var(--bg);z-index:200;transition:left 0.3s;box-shadow:0 20px 25px rgba(0,0,0,0.5);overflow-y:auto}
+        .sidebar.open{left:0}
+        .sidebar-header{display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid var(--border)}
+        .sidebar-nav{padding:0.5rem}
+        .sidebar-nav a{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;text-decoration:none;color:var(--text2);border-radius:var(--radius);font-weight:500}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:var(--red);color:#fff}
+        .sidebar-nav hr{border-color:var(--border);margin:0.5rem 0}
+        .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:199;display:none}
+        .overlay.active{display:block}
 
         /* BOTTOM NAV */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--bg-primary); border-top: 2px solid var(--border);
-            display: flex; justify-content: space-around; padding: 0.4rem 0.5rem; z-index: 99;
-        }
-        @media (min-width: 768px) { .bottom-nav { display: none; } }
-        .bottom-nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-            text-decoration: none; color: var(--text-secondary); font-size: 0.65rem;
-            padding: 0.25rem; border-radius: var(--radius-md); min-width: 50px;
-            transition: var(--transition-fast);
-        }
-        .bottom-nav-item.active { color: var(--brand-red); }
-        .bottom-nav-item i { font-size: 1.1rem; }
+        .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:2px solid var(--border);display:flex;justify-content:space-around;padding:0.4rem;z-index:99}
+        @media(min-width:768px){.bottom-nav{display:none}}
+        .bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:var(--text2);font-size:0.65rem;padding:0.25rem}
+        .bottom-nav-item.active,.bottom-nav-item:hover{color:var(--red)}
+        .bottom-nav-item i{font-size:1.1rem}
 
         /* HERO */
-        .hero {
-            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
-            border-radius: var(--radius-xl); padding: 1.5rem; color: white;
-            text-align: center; margin-bottom: 1rem;
-        }
-        @media (min-width: 768px) { .hero { padding: 2.5rem; text-align: left; } }
-        .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 0.5rem; }
-        .hero p { font-size: 0.95rem; opacity: 0.9; }
-        .hero-stats { display: flex; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
-        @media (min-width: 768px) { .hero-stats { justify-content: flex-start; } }
-        .hero-stat { text-align: center; }
-        .hero-stat .number { font-size: 2rem; font-weight: 900; }
-        .hero-stat .label { font-size: 0.75rem; opacity: 0.8; }
+        .hero{background:linear-gradient(135deg,var(--red),var(--red-dark));border-radius:var(--radius-xl);padding:1.5rem;color:#fff;text-align:center;margin-bottom:1rem}
+        @media(min-width:768px){.hero{padding:2.5rem;text-align:left}}
+        .hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;margin-bottom:0.5rem}
+        .hero p{opacity:0.9}
 
         /* TICKER */
-        .ticker {
-            background: var(--bg-secondary); border-radius: var(--radius-lg);
-            padding: 0.6rem 1rem; overflow: hidden; white-space: nowrap;
-            border: 1px solid var(--border); margin-bottom: 1rem;
-        }
-        .ticker-content {
-            display: inline-block; animation: ticker 20s linear infinite;
-            font-size: 0.85rem; color: var(--brand-red); font-weight: 500;
-        }
-        .ticker-content:hover { animation-play-state: paused; }
-        .ticker-content span { margin-right: 3rem; cursor: pointer; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .ticker{background:var(--bg2);border-radius:var(--radius-lg);padding:0.6rem 1rem;overflow:hidden;white-space:nowrap;border:1px solid var(--border);margin-bottom:1rem}
+        .ticker-content{display:inline-block;animation:ticker 20s linear infinite;font-size:0.85rem;color:var(--red);font-weight:500}
+        .ticker-content:hover{animation-play-state:paused}
+        .ticker-content span{margin-right:3rem;cursor:pointer}
+        @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
-        /* MAIN LAYOUT */
-        .layout-main {
-            display: flex; flex-direction: column; gap: 1.5rem;
-            padding: 1rem 0;
-        }
-        @media (min-width: 1024px) {
-            .layout-main { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
-        }
+        /* LAYOUT */
+        .layout{display:flex;flex-direction:column;gap:1.5rem;padding:1rem 0}
+        @media(min-width:1024px){.layout{display:grid;grid-template-columns:1fr 320px;gap:2rem}}
 
-        /* CATEGORY GRID */
-        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
-        @media (min-width: 640px) { .category-grid { grid-template-columns: repeat(6, 1fr); } }
-        .category-card {
-            background: var(--bg-secondary); border-radius: var(--radius-lg);
-            padding: 0.75rem; text-align: center; cursor: pointer;
-            border: 2px solid transparent; transition: var(--transition-fast); text-decoration: none;
-        }
-        .category-card:hover { border-color: var(--brand-red); transform: translateY(-3px); box-shadow: var(--shadow-md); }
-        .category-card i { font-size: 1.5rem; margin-bottom: 0.25rem; display: block; }
-        .category-card span { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; display: block; }
-        .category-card small { font-size: 0.65rem; color: var(--text-tertiary); }
+        /* CATEGORIES */
+        .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem}
+        @media(min-width:640px){.cat-grid{grid-template-columns:repeat(6,1fr)}}
+        .cat-card{background:var(--bg2);border-radius:var(--radius-lg);padding:0.75rem;text-align:center;cursor:pointer;border:2px solid transparent}
+        .cat-card:hover{border-color:var(--red);transform:translateY(-3px)}
+        .cat-card i{font-size:1.5rem;display:block;margin-bottom:0.25rem}
+        .cat-card span{font-size:0.8rem;font-weight:500;display:block}
+        .cat-card small{font-size:0.65rem;color:var(--text3)}
 
         /* NEWS GRID */
-        .news-grid { display: grid; gap: 1rem; }
-        @media (min-width: 640px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
-        .news-card {
-            background: var(--bg-secondary); border-radius: var(--radius-lg);
-            overflow: hidden; cursor: pointer; transition: var(--transition-fast);
-            border: 1px solid var(--border); display: flex; flex-direction: column;
-        }
-        .news-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--brand-red); }
-        .news-image {
-            height: 160px; display: flex; align-items: center; justify-content: center;
-            font-size: 4rem; background: linear-gradient(135deg, #1a1a2e, #16213e);
-        }
-        [data-theme="light"] .news-image { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
-        .news-content { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
-        .news-category {
-            display: inline-block; background: var(--brand-red); color: white;
-            font-size: 0.65rem; padding: 3px 10px; border-radius: 20px; margin-bottom: 0.5rem;
-            font-weight: 600; text-transform: uppercase; align-self: flex-start;
-        }
-        .news-category.tech { background: var(--tech); }
-        .news-category.sports { background: var(--sports); }
-        .news-category.business { background: var(--business); }
-        .news-category.politics { background: var(--politics); }
-        .news-category.science { background: var(--science); }
-        .news-category.world { background: var(--world); }
-        .news-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4; flex: 1; }
-        .news-excerpt {
-            color: var(--text-secondary); font-size: 0.85rem;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-            margin-bottom: 0.75rem;
-        }
-        .news-meta {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.7rem; color: var(--text-tertiary);
-            border-top: 1px solid var(--border); padding-top: 0.5rem; margin-top: auto;
-        }
-        .news-actions { display: flex; gap: 0.5rem; }
-        .news-actions button {
-            background: none; border: none; cursor: pointer; color: var(--text-tertiary);
-            font-size: 1rem; padding: 0.25rem; transition: var(--transition-fast);
-        }
-        .news-actions button:hover { color: var(--brand-red); }
-        .news-actions button.bookmarked { color: var(--brand-red); }
-
-        /* ARTICLE MODAL */
-        .article-modal {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 10001;
-            display: none; align-items: center; justify-content: center; padding: 20px;
-        }
-        .article-modal.active { display: flex; }
-        .article-modal-content {
-            background: var(--bg-secondary); border-radius: var(--radius-xl);
-            max-width: 850px; width: 100%; max-height: 90vh; overflow-y: auto;
-            padding: 2.5rem; position: relative; border: 1px solid var(--border);
-        }
-        .modal-close {
-            position: sticky; top: 10px; float: right;
-            background: var(--bg-tertiary); border: none; font-size: 1.5rem;
-            cursor: pointer; width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 1; color: var(--text-primary);
-        }
-        .article-full-image {
-            font-size: 6rem; text-align: center; padding: 2rem;
-            background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: var(--radius-lg);
-            margin-bottom: 1.5rem;
-        }
-        .article-full-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 900; margin-bottom: 1rem; line-height: 1.2; }
-        .article-full-meta {
-            display: flex; gap: 1.5rem; color: var(--text-tertiary);
-            margin-bottom: 1.5rem; flex-wrap: wrap; font-size: 0.85rem;
-        }
-        .article-full-body { font-size: 1.05rem; line-height: 1.9; color: var(--text-secondary); }
-        .article-actions-bar {
-            display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem;
-            border-top: 1px solid var(--border); flex-wrap: wrap;
-        }
+        .news-grid{display:grid;gap:1rem}
+        @media(min-width:640px){.news-grid{grid-template-columns:repeat(2,1fr)}}
+        .news-card{background:var(--bg2);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;border:1px solid var(--border);display:flex;flex-direction:column}
+        .news-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--red)}
+        .news-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#1a1a2e,#16213e)}
+        .news-body{padding:1rem;flex:1;display:flex;flex-direction:column}
+        .news-cat{display:inline-block;background:var(--red);color:#fff;font-size:0.65rem;padding:3px 10px;border-radius:20px;margin-bottom:0.5rem;font-weight:600;text-transform:uppercase;align-self:flex-start}
+        .news-cat.tech{background:var(--tech)}.news-cat.sports{background:var(--sports)}
+        .news-cat.business{background:var(--business)}.news-cat.politics{background:var(--politics)}
+        .news-cat.science{background:var(--science)}.news-cat.world{background:var(--world)}
+        .news-title{font-size:1rem;font-weight:700;margin-bottom:0.5rem;line-height:1.4;flex:1}
+        .news-excerpt{color:var(--text2);font-size:0.85rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;margin-bottom:0.75rem}
+        .news-meta{display:flex;justify-content:space-between;align-items:center;font-size:0.7rem;color:var(--text3);border-top:1px solid var(--border);padding-top:0.5rem;margin-top:auto}
 
         /* WIDGETS */
-        .widget {
-            background: var(--bg-secondary); border-radius: var(--radius-lg);
-            padding: 1.25rem; border: 1px solid var(--border); margin-bottom: 1rem;
-        }
-        .widget h3 {
-            font-size: 1rem; margin-bottom: 1rem; padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 0.5rem;
-        }
-        .trending-item {
-            padding: 0.75rem 0; border-bottom: 1px solid var(--border);
-            cursor: pointer; display: flex; gap: 0.75rem; align-items: flex-start;
-            transition: var(--transition-fast);
-        }
-        .trending-item:hover { padding-left: 0.5rem; }
-        .trending-rank { font-size: 1.2rem; color: var(--brand-red); font-weight: 900; min-width: 25px; }
-        .trending-title { font-size: 0.85rem; font-weight: 500; line-height: 1.3; }
-        .trending-views { font-size: 0.65rem; color: var(--text-tertiary); margin-top: 0.25rem; }
-        .weather-info { text-align: center; }
-        .weather-icon-display { font-size: 3rem; margin-bottom: 0.5rem; }
-        .weather-temp { font-size: 2.5rem; font-weight: 900; }
-        .weather-location { font-size: 0.85rem; color: var(--text-secondary); }
+        .widget{background:var(--bg2);border-radius:var(--radius-lg);padding:1.25rem;border:1px solid var(--border);margin-bottom:1rem}
+        .widget h3{font-size:1rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--border)}
+        .trend-item{padding:0.75rem 0;border-bottom:1px solid var(--border);cursor:pointer;display:flex;gap:0.75rem;align-items:flex-start}
+        .trend-item:hover{padding-left:0.5rem}
+        .trend-rank{font-size:1.2rem;color:var(--red);font-weight:900;min-width:25px}
+        .trend-title{font-size:0.85rem;font-weight:500}
+        .trend-views{font-size:0.65rem;color:var(--text3);margin-top:0.25rem}
 
-        .newsletter-box {
-            background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
-            color: white; border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; margin-bottom: 1rem;
-        }
-        .newsletter-box h3 { color: white; border-bottom-color: rgba(255,255,255,0.3); }
-        .newsletter-form { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
-        .newsletter-form input {
-            padding: 0.75rem; border: none; border-radius: var(--radius-md);
-            font-size: 0.9rem; font-family: inherit;
-        }
-        .newsletter-form button {
-            background: white; color: var(--brand-red); font-weight: 700;
-            padding: 0.75rem; border: none; border-radius: var(--radius-md);
-            cursor: pointer; font-size: 0.9rem; transition: var(--transition-fast);
-        }
+        /* NEWSLETTER */
+        .nl-box{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border-radius:var(--radius-lg);padding:1.5rem;text-align:center;margin-bottom:1rem}
+        .nl-box input{padding:0.75rem;border:none;border-radius:var(--radius);width:100%;margin-bottom:0.5rem;font-family:inherit}
+        .nl-box button{background:#fff;color:var(--red);font-weight:700;padding:0.75rem;border:none;border-radius:var(--radius);cursor:pointer;width:100%;font-family:inherit}
 
         /* TOAST */
-        .toast-container {
-            position: fixed; bottom: 80px; right: 20px; z-index: 9999;
-            display: flex; flex-direction: column; gap: 0.5rem;
-        }
-        @media (min-width: 768px) { .toast-container { bottom: 20px; } }
-        .toast {
-            background: #10b981; color: white; padding: 0.75rem 1.25rem;
-            border-radius: var(--radius-md); font-weight: 500; font-size: 0.9rem;
-            box-shadow: var(--shadow-lg); animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-container{position:fixed;bottom:80px;right:20px;z-index:9999}
+        .toast{background:#10b981;color:#fff;padding:0.75rem 1.25rem;border-radius:var(--radius);margin-bottom:0.5rem;animation:slideIn 0.3s}
+        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
         /* FOOTER */
-        .footer {
-            background: var(--bg-secondary); border-top: 2px solid var(--border);
-            padding: 2rem 1rem; text-align: center; margin-top: 2rem;
-        }
-        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
-        .footer-links a { text-decoration: none; color: var(--text-secondary); font-size: 0.85rem; transition: var(--transition-fast); }
-        .footer-links a:hover { color: var(--brand-red); }
-        .footer-social { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
-        .footer-social a { color: var(--text-secondary); font-size: 1.3rem; transition: var(--transition-fast); }
-        .footer-social a:hover { color: var(--brand-red); transform: translateY(-2px); }
-        .copyright { font-size: 0.75rem; color: var(--text-tertiary); }
-
-        /* TRANSLATE */
-        #google_translate_element { position: fixed; bottom: 70px; right: 10px; z-index: 9998; }
-        @media (min-width: 768px) { #google_translate_element { bottom: 10px; } }
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0 !important; }
-
-        .no-results { text-align: center; padding: 3rem; color: var(--text-tertiary); }
-        .no-results i { font-size: 3rem; display: block; margin-bottom: 1rem; }
+        .footer{background:var(--bg2);border-top:2px solid var(--border);padding:2rem;text-align:center;margin-top:2rem;color:var(--text3);font-size:0.8rem}
+        .footer a{color:var(--text2);text-decoration:none;margin:0 0.75rem}
+        .footer a:hover{color:var(--red)}
     </style>
 </head>
 <body>
@@ -408,12 +133,8 @@
 <header class="header">
     <div class="container">
         <div class="header-content">
-            <button class="hamburger" id="menuToggle" aria-label="Open menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            
+            <button class="hamburger" id="menuToggle"><i class="fas fa-bars"></i></button>
             <a href="/rasu/" class="logo">🌙 THE MOON</a>
-            
             <div class="nav-desktop">
                 <a href="#" data-category="all" class="active">All</a>
                 <a href="#" data-category="tech">Tech</a>
@@ -423,31 +144,20 @@
                 <a href="#" data-category="science">Science</a>
                 <a href="#" data-category="world">World</a>
             </div>
-            
             <div class="header-actions">
-                <button id="searchBtn" title="Search (Ctrl+K)" aria-label="Search"><i class="fas fa-search"></i></button>
-                <button id="themeToggle" title="Toggle Theme" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
-                <a href="/rasu/bookmarks.html" class="icon-link" title="Bookmarks"><i class="fas fa-bookmark"></i></a>
-                <a href="/rasu/profile.html" class="icon-link" title="Profile"><i class="fas fa-user-circle"></i></a>
+                <button id="themeToggle"><i class="fas fa-moon"></i></button>
+                <a href="/rasu/bookmarks.html"><i class="fas fa-bookmark"></i></a>
+                <a href="/rasu/profile.html"><i class="fas fa-user-circle"></i></a>
             </div>
         </div>
     </div>
 </header>
 
-<!-- SEARCH OVERLAY -->
-<div class="search-overlay" id="searchOverlay">
-    <div class="search-modal">
-        <input type="text" id="searchInput" placeholder="🔍 Search THE MOON..." onkeyup="handleSearch()" autofocus>
-        <div class="search-results" id="searchResults"></div>
-        <button style="margin-top:1rem;background:var(--brand-red);color:white;padding:0.5rem 1.5rem;border:none;border-radius:var(--radius-md);cursor:pointer;font-weight:600;" onclick="closeSearch()">✕ Close</button>
-    </div>
-</div>
-
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <span class="logo">🌙 THE MOON</span>
-        <button id="closeSidebar" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-primary);" aria-label="Close menu">✕</button>
+        <button id="closeSidebar" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text);">✕</button>
     </div>
     <div class="sidebar-nav">
         <a href="#" data-category="all" class="active"><i class="fas fa-home"></i> All News</a>
@@ -460,284 +170,182 @@
         <hr>
         <a href="/rasu/bookmarks.html"><i class="fas fa-bookmark"></i> Bookmarks</a>
         <a href="/rasu/profile.html"><i class="fas fa-user"></i> Profile</a>
-        <a href="/rasu/admin/quantum-command.html"><i class="fas fa-cog"></i> Admin Panel</a>
+        <a href="/rasu/admin/quantum-command.html"><i class="fas fa-cog"></i> Admin</a>
         <a href="/rasu/contact.html"><i class="fas fa-envelope"></i> Contact</a>
     </div>
 </div>
 <div class="overlay" id="overlay"></div>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <div class="container">
-    <div class="layout-main">
+    <div class="hero">
+        <h1>🌙 Welcome to THE MOON</h1>
+        <p>World's Most Advanced AI-Powered News Platform | Real-Time Updates</p>
+        <div style="display:flex;gap:2rem;margin-top:1rem;flex-wrap:wrap;">
+            <div><span style="font-size:2rem;font-weight:900;" id="heroCount">0</span><br><span style="font-size:0.75rem;opacity:0.8;">Stories Today</span></div>
+            <div><span style="font-size:2rem;font-weight:900;">195+</span><br><span style="font-size:0.75rem;opacity:0.8;">Countries</span></div>
+            <div><span style="font-size:2rem;font-weight:900;">24/7</span><br><span style="font-size:0.75rem;opacity:0.8;">Live Updates</span></div>
+        </div>
+    </div>
+
+    <div class="ticker"><div class="ticker-content" id="tickerContent">⚡ Loading...</div></div>
+    <div class="cat-grid" id="categoryGrid"></div>
+
+    <div class="layout">
         <div>
-            <!-- HERO -->
-            <div class="hero">
-                <h1>🌙 Welcome to THE MOON</h1>
-                <p>World's Most Advanced AI-Powered News Platform | Real-Time Updates | Curated Global Coverage</p>
-                <div class="hero-stats">
-                    <div class="hero-stat"><div class="number" id="heroTotalArticles">0</div><div class="label">Stories Today</div></div>
-                    <div class="hero-stat"><div class="number">195+</div><div class="label">Countries</div></div>
-                    <div class="hero-stat"><div class="number">24/7</div><div class="label">Live Updates</div></div>
-                </div>
-            </div>
-
-            <!-- TICKER -->
-            <div class="ticker"><div class="ticker-content" id="tickerContent">⚡ Loading breaking news...</div></div>
-
-            <!-- CATEGORIES -->
-            <div class="category-grid" id="categoryGrid"></div>
-
-            <!-- NEWS -->
-            <h2 style="margin:1.5rem 0 1rem;display:flex;align-items:center;gap:0.5rem;">📰 <span id="sectionTitle">Latest News</span></h2>
+            <h2 style="margin-bottom:1rem;">📰 Latest News</h2>
             <div class="news-grid" id="newsGrid"></div>
             <div style="text-align:center;margin:2rem 0;">
-                <button onclick="loadMore()" style="background:var(--brand-red);color:white;border:none;padding:0.75rem 2rem;border-radius:var(--radius-lg);cursor:pointer;font-weight:600;">Load More ↓</button>
+                <button onclick="loadMore()" style="background:var(--red);color:#fff;border:none;padding:0.75rem 2rem;border-radius:var(--radius-lg);cursor:pointer;font-weight:600;">Load More ↓</button>
             </div>
         </div>
-
-        <!-- RIGHT SIDEBAR -->
-        <aside style="display:flex;flex-direction:column;gap:1rem;">
-            <div class="widget">
-                <h3>🔥 Trending Now</h3>
-                <div id="trendingList">Loading...</div>
-            </div>
-            <div class="widget">
-                <h3>🌤️ Weather</h3>
-                <div class="weather-info">
-                    <div class="weather-icon-display">⛅</div>
-                    <div class="weather-temp">28°C</div>
-                    <div class="weather-location">New Delhi, India</div>
-                </div>
-            </div>
-            <div class="newsletter-box">
-                <h3>📧 Stay Updated</h3>
-                <p style="font-size:0.85rem;">Get breaking news delivered to your inbox.</p>
-                <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-                    <input type="email" placeholder="Your email" required>
-                    <button type="submit">Subscribe Free →</button>
-                </form>
-            </div>
-            <div class="widget">
-                <h3>⚡ Quick Links</h3>
-                <div style="display:flex;flex-direction:column;gap:0.5rem;">
-                    <a href="/rasu/about.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">→ About THE MOON</a>
-                    <a href="/rasu/contact.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">→ Contact Us</a>
-                    <a href="/rasu/privacy.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">→ Privacy Policy</a>
-                </div>
-            </div>
+        <aside>
+            <div class="widget"><h3>🔥 Trending</h3><div id="trendingList">Loading...</div></div>
+            <div class="widget" style="text-align:center;"><div style="font-size:3rem;">⛅</div><div style="font-size:2rem;font-weight:900;">28°C</div><div style="color:var(--text2);">New Delhi, India</div></div>
+            <div class="nl-box"><h3>📧 Stay Updated</h3><form onsubmit="handleNl(event)"><input type="email" placeholder="Your email" required><button type="submit">Subscribe Free →</button></form></div>
         </aside>
     </div>
-</div>
-
-<!-- ARTICLE MODAL -->
-<div class="article-modal" id="articleModal">
-    <div class="article-modal-content" id="articleModalContent"></div>
 </div>
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
     <a href="/rasu/" class="bottom-nav-item active"><i class="fas fa-home"></i>Home</a>
-    <a href="#" class="bottom-nav-item" onclick="openSearch()"><i class="fas fa-search"></i>Search</a>
+    <a href="/rasu/bookmarks.html" class="bottom-nav-item"><i class="fas fa-bookmark"></i>Bookmarks</a>
     <a href="/rasu/admin/quantum-command.html" class="bottom-nav-item"><i class="fas fa-cog"></i>Admin</a>
     <a href="/rasu/profile.html" class="bottom-nav-item"><i class="fas fa-user"></i>Profile</a>
 </nav>
 
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- GOOGLE TRANSLATE -->
-<div id="google_translate_element"></div>
-
-<!-- FOOTER -->
 <footer class="footer">
-    <div class="footer-links">
-        <a href="/rasu/about.html">About</a>
-        <a href="/rasu/contact.html">Contact</a>
-        <a href="/rasu/privacy.html">Privacy</a>
-        <a href="/rasu/terms.html">Terms</a>
-        <a href="/rasu/admin/quantum-command.html">Admin</a>
-    </div>
-    <div class="footer-social">
-        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
-        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
-    </div>
-    <p class="copyright">© 2025 THE MOON News Network. All Rights Reserved. | World's Most Advanced News Platform</p>
+    <div><a href="/rasu/about.html">About</a><a href="/rasu/contact.html">Contact</a><a href="/rasu/privacy.html">Privacy</a></div>
+    <p style="margin-top:0.5rem;">© 2025 THE MOON News Network</p>
 </footer>
 
 <script>
 // ============ SUPABASE SAFE INIT ============
 var SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
-
-// Initialize Supabase safely
 var supabase = null;
-try {
-    if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Supabase connected');
-    } else {
-        console.warn('⚠️ Supabase library not loaded yet, will retry');
-    }
-} catch(e) {
-    console.warn('Supabase init delayed:', e.message);
-}
-
-// ============ STATE ============
 var allNews = [];
 var currentFilter = 'all';
 var displayedCount = 6;
 var bookmarks = JSON.parse(localStorage.getItem('moonBookmarks')) || [];
 
-// ============ STATIC FALLBACK ============
 var staticNews = [
-    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7. India becomes only the fourth nation after US, Russia, and China to possess this technology." },
-    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed 100,000 for the first time in Indian financial history." },
-    { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets at packed MCG.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "Needing 6 runs off the last delivery, Hardik Pandya launched a massive six over deep mid-wicket." },
-    { id: 's4', title: "NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago", category: "science", summary: "Perseverance rover finds definitive chemical evidence of past biological activity.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K views", fullContent: "NASA has confirmed that the Perseverance rover discovered chemical signatures consistent with ancient microbial life on Mars." },
-    { id: 's5', title: "AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours", category: "tech", summary: "Revolutionary AI demonstrates human-level scientific reasoning.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K views", fullContent: "The system named Newton-AI identified three novel drug candidates in just 48 hours." },
-    { id: 's6', title: "World Leaders Sign Historic Climate Pact: Net Zero by 2040", category: "politics", summary: "195 nations agree to legally binding emissions targets with $2 trillion annual climate fund.", time: "4 hours ago", image: "🌍", trending: false, views: "76.5K views", fullContent: "All 195 UN member states signed a legally binding treaty committing to net-zero carbon emissions by 2040." },
-    { id: 's7', title: "Elon Musk: Neuralink Restores Vision in Blind Patient", category: "science", summary: "Brain-computer interface gives functional sight to 28-year-old blind since birth.", time: "5 hours ago", image: "👁️", trending: true, views: "234.6K views", fullContent: "Neuralink has successfully restored functional vision to a person blind since birth." },
-    { id: 's8', title: "Apple Unveils Foldable iPhone with Glasses-Free Holographic Display", category: "tech", summary: "Revolutionary device features 3D holographic projection and 7-day battery life.", time: "6 hours ago", image: "📱", trending: false, views: "178.2K views", fullContent: "Tim Cook demonstrated life-size holographic FaceTime calls without any glasses." }
+    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7", category: "tech", summary: "DRDO achieves breakthrough. India becomes 4th nation with this technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K", fullContent: "DRDO successfully tested a hypersonic cruise missile achieving Mach 7." },
+    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark", category: "business", summary: "Indian stock market creates history with record bull run.", time: "15 min ago", image: "📈", trending: true, views: "67.2K", fullContent: "BSE Sensex crossed 100,000 for the first time." },
+    { id: 's3', title: "India Wins T20 World Cup in Last-Ball Thriller", category: "sports", summary: "Hardik Pandya hits winning six at packed MCG.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K", fullContent: "India defeated Australia by 3 wickets off the final ball." },
+    { id: 's4', title: "NASA Confirms Ancient Life on Mars", category: "science", summary: "Perseverance rover finds evidence 3.5 billion years old.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K", fullContent: "NASA confirmed chemical signatures of ancient microbial life." },
+    { id: 's5', title: "AI Discovers Cancer Drugs in 48 Hours", category: "tech", summary: "Newton-AI compresses decades of research into 2 days.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K", fullContent: "Revolutionary AI identified 3 novel drug candidates." }
 ];
 
-// ============ SIDEBAR TOGGLE (FIXED) ============
+// ============ DOM READY - ALL EVENT LISTENERS HERE ============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🌙 DOM loaded - initializing sidebar...');
+    console.log('🌙 THE MOON initializing...');
     
+    // Sidebar toggle
     var menuToggle = document.getElementById('menuToggle');
     var closeSidebarBtn = document.getElementById('closeSidebar');
     var sidebar = document.getElementById('sidebar');
     var overlay = document.getElementById('overlay');
     
-    if (menuToggle && sidebar && overlay) {
-        menuToggle.addEventListener('click', function() {
-            console.log('☰ Menu clicked');
-            sidebar.classList.add('open');
-            overlay.classList.add('active');
-        });
-    }
+    if (menuToggle) menuToggle.addEventListener('click', function() { sidebar.classList.add('open'); overlay.classList.add('active'); });
+    if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', function() { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
+    if (overlay) overlay.addEventListener('click', function() { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
     
-    if (closeSidebarBtn && sidebar && overlay) {
-        closeSidebarBtn.addEventListener('click', function() {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        });
-    }
-    
-    if (overlay && sidebar) {
-        overlay.addEventListener('click', function() {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        });
-    }
-    
-    console.log('✅ Sidebar initialized');
-    
-    // Initialize the rest
+    // Theme
     loadTheme();
-    setupNavListeners();
+    
+    // Init Supabase
+    initSupabase();
+    
+    // Load news
     loadNews();
+    
+    // Nav listeners
+    document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(function(link) {
+        link.addEventListener('click', function(e) { e.preventDefault(); filterByCategory(this.dataset.category); });
+    });
+    
+    console.log('✅ All listeners initialized');
 });
 
-// ============ THEME ============
-function loadTheme() {
-    var saved = localStorage.getItem('theme') || 'dark';
-    var themeToggle = document.getElementById('themeToggle');
-    if (saved === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    }
-    if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-            var isDark = !document.documentElement.hasAttribute('data-theme');
-            if (isDark) {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-            showToast('Theme updated! 🎨');
-        });
+// ============ SUPABASE INIT ============
+function initSupabase() {
+    if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') {
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('✅ Supabase connected!');
+        } catch(e) {
+            console.warn('Supabase init error:', e.message);
+        }
+    } else {
+        console.warn('⚠️ Supabase library not loaded');
     }
 }
 
 // ============ LOAD NEWS ============
 function loadNews() {
-    console.log('📡 Loading news...');
+    console.log('📡 Loading news... supabase=' + (supabase ? 'YES' : 'NO'));
     
-    // Try Supabase if available
     if (supabase) {
         supabase.from('news_articles').select('*').order('published_at', { ascending: false }).limit(50)
-            .then(function(result) {
-                if (result.data && result.data.length > 0) {
-                    allNews = result.data.map(function(item) {
+            .then(function(r) {
+                console.log('Response:', r.data ? r.data.length + ' rows' : 'empty');
+                if (r.data && r.data.length > 0) {
+                    allNews = r.data.map(function(item) {
                         return {
-                            id: item.id,
-                            title: item.title,
-                            category: item.category,
-                            summary: item.summary || '',
-                            time: timeAgo(new Date(item.published_at)),
-                            image: item.image_emoji || '📰',
-                            trending: item.trending || false,
-                            views: (item.views || 0).toLocaleString() + ' views',
+                            id: item.id, title: item.title, category: item.category,
+                            summary: item.summary || '', time: timeAgo(new Date(item.published_at)),
+                            image: item.image_emoji || '📰', trending: item.trending || false,
+                            views: (item.views||0).toLocaleString()+' views',
                             fullContent: item.full_content || item.summary || ''
                         };
                     });
                     console.log('✅ Supabase: ' + allNews.length + ' articles');
-                    renderAll();
                 } else {
-                    console.log('📦 Supabase empty, using static');
+                    console.log('📦 No Supabase data, using static');
                     allNews = staticNews.slice();
-                    renderAll();
                 }
+                renderAll();
             })
             .catch(function(e) {
-                console.warn('Supabase error:', e.message);
+                console.error('❌ Fetch error:', e.message);
                 allNews = staticNews.slice();
                 renderAll();
             });
     } else {
-        console.log('📦 No Supabase, using static');
+        console.log('📦 No connection, static only');
         allNews = staticNews.slice();
         renderAll();
     }
 }
 
 function renderAll() {
-    displayTicker();
-    displayCategories();
-    displayNews();
-    displayTrending();
-    updateHeroStats();
+    displayTicker(); displayCategories(); displayNews(); displayTrending(); updateHero();
 }
 
-function timeAgo(date) {
-    var s = Math.floor((new Date() - date) / 1000);
+function timeAgo(d) {
+    var s = Math.floor((new Date() - d) / 1000);
     if (s < 60) return 'Just now';
     if (s < 3600) return Math.floor(s/60) + ' min ago';
-    if (s < 86400) return Math.floor(s/3600) + ' hours ago';
+    if (s < 86400) return Math.floor(s/3600) + ' hrs ago';
     return Math.floor(s/86400) + ' days ago';
 }
 
-// ============ TICKER ============
+// ============ DISPLAY FUNCTIONS ============
 function displayTicker() {
-    var breaking = allNews.filter(function(n) { return n.trending; });
-    var items = breaking.length > 0 ? breaking : allNews.slice(0, 3);
-    var tickerEl = document.getElementById('tickerContent');
-    if (tickerEl) {
-        tickerEl.innerHTML = items.map(function(n) {
-            return '<span onclick="openArticle(\'' + n.id + '\')" style="cursor:pointer;">⚡ ' + n.title + '</span>';
-        }).join('');
-    }
+    var el = document.getElementById('tickerContent');
+    if (!el) return;
+    var items = allNews.filter(function(n) { return n.trending; }).slice(0, 5);
+    if (!items.length) items = allNews.slice(0, 3);
+    el.innerHTML = items.map(function(n) { return '<span onclick="openArticle(\''+n.id+'\')">⚡ '+n.title+'</span>'; }).join('');
 }
 
-// ============ CATEGORIES ============
 function displayCategories() {
+    var el = document.getElementById('categoryGrid');
+    if (!el) return;
     var cats = [
         { id: 'all', name: 'All', icon: 'fa-globe', color: '#dc2626' },
         { id: 'tech', name: 'Tech', icon: 'fa-microchip', color: '#3b82f6' },
@@ -746,195 +354,78 @@ function displayCategories() {
         { id: 'politics', name: 'Politics', icon: 'fa-landmark', color: '#8b5cf6' },
         { id: 'science', name: 'Science', icon: 'fa-flask', color: '#06b6d4' }
     ];
-    var grid = document.getElementById('categoryGrid');
-    if (grid) {
-        grid.innerHTML = cats.map(function(c) {
-            return '<div class="category-card" onclick="filterByCategory(\'' + c.id + '\')">' +
-                '<i class="fas ' + c.icon + '" style="color:' + c.color + ';"></i>' +
-                '<span>' + c.name + '</span>' +
-                '<small>' + (c.id === 'all' ? allNews.length : allNews.filter(function(n) { return n.category === c.id; }).length) + ' articles</small>' +
-                '</div>';
-        }).join('');
-    }
+    el.innerHTML = cats.map(function(c) {
+        return '<div class="cat-card" onclick="filterByCategory(\''+c.id+'\')"><i class="fas '+c.icon+'" style="color:'+c.color+';"></i><span>'+c.name+'</span><small>'+(c.id==='all'?allNews.length:allNews.filter(function(n){return n.category===c.id;}).length)+' articles</small></div>';
+    }).join('');
 }
 
-// ============ NEWS DISPLAY ============
 function displayNews(filter) {
     filter = filter || 'all';
     var filtered = filter === 'all' ? allNews : allNews.filter(function(n) { return n.category === filter; });
     currentFilter = filter;
     var grid = document.getElementById('newsGrid');
-    
     if (!grid) return;
-    
-    if (filtered.length === 0) {
-        grid.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><h3>No stories found</h3></div>';
-        return;
-    }
-    
     grid.innerHTML = filtered.slice(0, displayedCount).map(function(n) {
-        return '<article class="news-card" onclick="openArticle(\'' + n.id + '\')">' +
-            '<div class="news-image">' + n.image + '</div>' +
-            '<div class="news-content">' +
-            '<span class="news-category ' + n.category + '">' + n.category + '</span>' +
-            '<h3 class="news-title">' + n.title + '</h3>' +
-            '<p class="news-excerpt">' + n.summary + '</p>' +
-            '<div class="news-meta">' +
-            '<span>🕒 ' + n.time + ' • 👁️ ' + n.views + '</span>' +
-            '<div class="news-actions">' +
-            '<button class="' + (isBookmarked(n.id) ? 'bookmarked' : '') + '" onclick="event.stopPropagation();toggleBookmark(\'' + n.id + '\')"><i class="fas fa-bookmark"></i></button>' +
-            '<button onclick="event.stopPropagation();shareArticle(\'' + n.id + '\')"><i class="fas fa-share-alt"></i></button>' +
-            '</div></div></div></article>';
+        return '<article class="news-card" onclick="openArticle(\''+n.id+'\')"><div class="news-img">'+n.image+'</div><div class="news-body"><span class="news-cat '+n.category+'">'+n.category+'</span><h3 class="news-title">'+n.title+'</h3><p class="news-excerpt">'+n.summary+'</p><div class="news-meta"><span>🕒 '+n.time+' • 👁 '+n.views+'</span></div></div></article>';
     }).join('');
-    
-    var sectionTitle = document.getElementById('sectionTitle');
-    if (sectionTitle) {
-        sectionTitle.textContent = filter === 'all' ? 'Latest News' : filter.charAt(0).toUpperCase() + filter.slice(1) + ' News';
-    }
 }
-
-function loadMore() { displayedCount += 6; displayNews(currentFilter); showToast('Loading more stories... 📰'); }
 
 function filterByCategory(cat) {
     currentFilter = cat; displayedCount = 6;
     document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(function(a) { a.classList.remove('active'); });
-    var desktopLink = document.querySelector('.nav-desktop a[data-category="' + cat + '"]');
-    var sidebarLink = document.querySelector('.sidebar-nav a[data-category="' + cat + '"]');
-    if (desktopLink) desktopLink.classList.add('active');
-    if (sidebarLink) sidebarLink.classList.add('active');
+    document.querySelector('.nav-desktop a[data-category="'+cat+'"]')?.classList.add('active');
+    document.querySelector('.sidebar-nav a[data-category="'+cat+'"]')?.classList.add('active');
     displayNews(cat); displayCategories();
 }
 
-// ============ TRENDING ============
+function loadMore() { displayedCount += 6; displayNews(currentFilter); toast('Loading more... 📰'); }
+
 function displayTrending() {
+    var el = document.getElementById('trendingList');
+    if (!el) return;
     var trending = allNews.filter(function(n) { return n.trending; }).slice(0, 5);
-    var list = document.getElementById('trendingList');
-    if (list) {
-        list.innerHTML = trending.map(function(n, i) {
-            return '<div class="trending-item" onclick="openArticle(\'' + n.id + '\')">' +
-                '<div class="trending-rank">' + String(i+1).padStart(2,'0') + '</div>' +
-                '<div><div class="trending-title">' + n.title.substring(0,55) + '...</div>' +
-                '<div class="trending-views">👁️ ' + n.views + '</div></div></div>';
-        }).join('');
-    }
+    el.innerHTML = trending.map(function(n, i) {
+        return '<div class="trend-item" onclick="openArticle(\''+n.id+'\')"><div class="trend-rank">'+String(i+1).padStart(2,'0')+'</div><div><div class="trend-title">'+n.title.substring(0,55)+'...</div><div class="trend-views">👁 '+n.views+'</div></div></div>';
+    }).join('');
 }
 
-// ============ ARTICLE MODAL ============
 function openArticle(id) {
-    var article = allNews.find(function(n) { return n.id == id; });
-    if (!article) return;
+    var a = allNews.find(function(n) { return n.id == id; });
+    if (!a) return;
+    // Save to history
+    var h = JSON.parse(localStorage.getItem('readingHistory')) || [];
+    h.unshift({ id: a.id, title: a.title, timestamp: new Date().toISOString() });
+    localStorage.setItem('readingHistory', JSON.stringify(h.slice(0, 50)));
     
-    var history = JSON.parse(localStorage.getItem('readingHistory')) || [];
-    history.unshift({ id: article.id, title: article.title, timestamp: new Date().toISOString() });
-    localStorage.setItem('readingHistory', JSON.stringify(history.slice(0, 50)));
-    
-    var modalContent = document.getElementById('articleModalContent');
-    var modal = document.getElementById('articleModal');
-    
-    if (modalContent && modal) {
-        modalContent.innerHTML = 
-            '<button class="modal-close" onclick="closeArticle()">✕</button>' +
-            '<div class="article-full-image">' + article.image + '</div>' +
-            '<span class="news-category ' + article.category + '" style="margin-bottom:1rem;">' + article.category + '</span>' +
-            '<h1 class="article-full-title">' + article.title + '</h1>' +
-            '<div class="article-full-meta"><span>🕒 ' + article.time + '</span><span>👁️ ' + article.views + '</span></div>' +
-            '<div class="article-full-body"><p style="font-size:1.2rem;font-weight:600;margin-bottom:1rem;">' + article.summary + '</p><p>' + article.fullContent + '</p></div>' +
-            '<div class="article-actions-bar">' +
-            '<button onclick="toggleBookmark(\'' + article.id + '\');showToast(isBookmarked(\'' + article.id + '\')?\'Bookmarked! 🔖\':\'Bookmark removed\');" style="background:var(--brand-red);color:white;border:none;padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">' + (isBookmarked(article.id) ? '🔖 Bookmarked' : '🔖 Bookmark') + '</button>' +
-            '<button onclick="shareArticle(\'' + article.id + '\')" style="background:transparent;border:2px solid var(--border);color:var(--text-primary);padding:0.7rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:600;">📤 Share</button>' +
-            '</div>';
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    document.getElementById('newsGrid').innerHTML = '<div style="background:var(--bg2);border-radius:var(--radius-xl);padding:2rem;border:1px solid var(--border);"><button onclick="displayNews(\''+currentFilter+'\')" style="background:var(--red);color:#fff;border:none;padding:0.5rem 1rem;border-radius:var(--radius);cursor:pointer;margin-bottom:1rem;">← Back</button><div style="text-align:center;font-size:5rem;padding:2rem;">'+a.image+'</div><span class="news-cat '+a.category+'">'+a.category+'</span><h1 style="font-size:1.8rem;margin:1rem 0;">'+a.title+'</h1><p style="color:var(--text3);margin-bottom:1rem;">🕒 '+a.time+' • 👁 '+a.views+'</p><p style="font-size:1.1rem;line-height:1.8;">'+a.fullContent+'</p></div>';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ UTILS ============
+function loadTheme() {
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
     }
 }
-
-function closeArticle() {
-    var modal = document.getElementById('articleModal');
-    if (modal) { modal.classList.remove('active'); }
-    document.body.style.overflow = '';
-}
-
-// ============ BOOKMARKS ============
-function toggleBookmark(id) {
-    var idx = bookmarks.indexOf(id);
-    if (idx > -1) bookmarks.splice(idx, 1);
-    else bookmarks.push(id);
-    localStorage.setItem('moonBookmarks', JSON.stringify(bookmarks));
-}
-function isBookmarked(id) { return bookmarks.indexOf(id) > -1; }
-
-// ============ SHARE ============
-function shareArticle(id) {
-    var a = allNews.find(function(n) { return n.id == id; });
-    if (navigator.share) navigator.share({ title: a.title, text: a.summary }).catch(function(){});
-    else { showToast('📋 Link copied!'); }
-}
-
-// ============ SEARCH ============
-var searchBtn = document.getElementById('searchBtn');
-if (searchBtn) { searchBtn.addEventListener('click', openSearch); }
-function openSearch() { 
-    var overlay = document.getElementById('searchOverlay');
-    if (overlay) { overlay.classList.add('active'); }
-    var input = document.getElementById('searchInput');
-    if (input) { input.focus(); }
-}
-function closeSearch() { 
-    var overlay = document.getElementById('searchOverlay');
-    if (overlay) { overlay.classList.remove('active'); }
-    var input = document.getElementById('searchInput');
-    if (input) { input.value = ''; }
-    var results = document.getElementById('searchResults');
-    if (results) { results.innerHTML = ''; }
-}
-function handleSearch() {
-    var q = document.getElementById('searchInput').value.toLowerCase();
-    var results = document.getElementById('searchResults');
-    if (!results) return;
-    if (q.length < 2) { results.innerHTML = ''; return; }
-    var found = allNews.filter(function(n) { return n.title.toLowerCase().indexOf(q) > -1 || n.summary.toLowerCase().indexOf(q) > -1 || n.category.indexOf(q) > -1; });
-    results.innerHTML = found.slice(0, 8).map(function(n) {
-        return '<div class="search-result-item" onclick="closeSearch();openArticle(\'' + n.id + '\')"><strong>' + n.image + ' ' + n.title + '</strong><br><small>' + n.category + ' • ' + n.time + '</small></div>';
-    }).join('') || '<div style="padding:20px;text-align:center;">No results found</div>';
-}
-
-// ============ NAV LISTENERS ============
-function setupNavListeners() {
-    document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(function(link) {
-        link.addEventListener('click', function(e) { e.preventDefault(); filterByCategory(link.dataset.category); });
-    });
-}
-
-// ============ HERO ============
-function updateHeroStats() { 
-    var el = document.getElementById('heroTotalArticles');
-    if (el) el.textContent = allNews.length; 
-}
-
-// ============ NEWSLETTER ============
-function handleNewsletter(e) { e.preventDefault(); showToast('✅ Subscribed! Welcome aboard!'); e.target.reset(); }
-
-// ============ TOAST ============
-function showToast(msg) {
-    var c = document.getElementById('toastContainer');
-    if (!c) return;
-    var t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
-    c.appendChild(t); setTimeout(function() { t.remove(); }, 3000);
-}
-
-// ============ KEYBOARD ============
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closeArticle(); closeSearch(); }
-    if (e.ctrlKey && e.key === 'k') { e.preventDefault(); openSearch(); }
+document.getElementById('themeToggle').addEventListener('click', function() {
+    var isDark = !document.documentElement.hasAttribute('data-theme');
+    if (isDark) { document.documentElement.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); this.innerHTML = '<i class="fas fa-sun"></i>'; }
+    else { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('theme', 'dark'); this.innerHTML = '<i class="fas fa-moon"></i>'; }
+    toast('Theme updated! 🎨');
 });
 
-// Close modal on overlay click
-var articleModal = document.getElementById('articleModal');
-if (articleModal) {
-    articleModal.addEventListener('click', function(e) { if (e.target === this) closeArticle(); });
-}
+function updateHero() { var el = document.getElementById('heroCount'); if (el) el.textContent = allNews.length; }
+function handleNl(e) { e.preventDefault(); toast('✅ Subscribed!'); e.target.reset(); }
+function toast(m) { var c = document.getElementById('toastContainer'); if (!c) return; var t = document.createElement('div'); t.className = 'toast'; t.textContent = m; c.appendChild(t); setTimeout(function() { t.remove(); }, 3000); }
 
-console.log('🌙 THE MOON v8.0 - All scripts loaded successfully');
+function isBookmarked(id) { return bookmarks.indexOf(id) > -1; }
+function toggleBookmark(id) { var i = bookmarks.indexOf(id); if (i > -1) bookmarks.splice(i, 1); else bookmarks.push(id); localStorage.setItem('moonBookmarks', JSON.stringify(bookmarks)); }
+
+// Keyboard
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { displayNews(currentFilter); } });
+
+console.log('🌙 THE MOON v9.0 FINAL - All Systems Ready');
 </script>
 </body>
 </html>
