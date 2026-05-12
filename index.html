@@ -10,8 +10,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#222;--text:#f8fafc;--text2:#cbd5e1;--text3:#64748b;--border:#2a2a2a;--red:#dc2626;--red-dark:#b91c1c;--tech:#3b82f6;--sports:#10b981;--business:#f59e0b;--politics:#8b5cf6;--science:#06b6d4;--world:#ef4444;--shadow:0 4px 6px rgba(0,0,0,0.4);--radius:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem}
-        [data-theme="light"]{--bg:#f8fafc;--bg2:#fff;--bg3:#f1f5f9;--text:#0f172a;--text2:#475569;--text3:#94a3b8;--border:#e2e8f0;--shadow:0 4px 6px rgba(0,0,0,0.07)}
+        :root {
+            --bg: #0f0f0f; --bg2: #1a1a1a; --bg3: #222;
+            --text: #f8fafc; --text2: #cbd5e1; --text3: #64748b;
+            --border: #2a2a2a; --red: #dc2626; --red-dark: #b91c1c;
+            --tech: #3b82f6; --sports: #10b981; --business: #f59e0b;
+            --politics: #8b5cf6; --science: #06b6d4; --world: #ef4444;
+            --shadow: 0 4px 6px rgba(0,0,0,0.4);
+            --radius: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem;
+        }
+        [data-theme="light"] {
+            --bg: #f8fafc; --bg2: #fff; --bg3: #f1f5f9;
+            --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+            --border: #e2e8f0; --shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:70px}
         @media(min-width:768px){body{padding-bottom:0}}
@@ -168,49 +180,166 @@
     <p style="margin-top:0.5rem;">© 2025 THE MOON News Network. All Rights Reserved. | World's Most Advanced News Platform</p>
 </footer>
 <script>
-var SUPABASE_URL='https://crmbbmwekdlfjgekjnll.supabase.co';
-var SUPABASE_KEY='sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
-var supabase=null;
-var allNews=[];
-var currentFilter='all';
-var displayedCount=6;
-var bookmarks=JSON.parse(localStorage.getItem('moonBookmarks')||'[]');
-var staticNews=[{id:'s1',title:"India Tests Hypersonic Missile at Mach 7, Joins Elite Club",category:"tech",summary:"DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.",time:"Just now",image:"🚀",trending:true,views:"89.4K views",fullContent:"In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7 (8,575 km/h). India becomes only the fourth nation after the US, Russia, and China to possess this technology. The missile can strike targets over 1,500 km away in under 12 minutes, making it virtually impossible to intercept with current defense systems."},{id:'s2',title:"Sensex Crosses Historic 100,000 Mark for First Time Ever",category:"business",summary:"Indian stock market creates history as bull run continues amid 8.5% GDP growth and record foreign investments.",time:"15 min ago",image:"📈",trending:true,views:"67.2K views",fullContent:"The BSE Sensex crossed the historic 100,000 mark for the first time in Indian financial history. The bull run has been fueled by robust GDP growth of 8.5%, record foreign institutional investment inflows of over $45 billion this year, and exceptional corporate earnings across sectors."},{id:'s3',title:"T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia",category:"sports",summary:"Hardik Pandya hits winning six as India defeats Australia by 3 wickets at packed Melbourne Cricket Ground.",time:"1 hour ago",image:"🏆",trending:true,views:"256.8K views",fullContent:"In one of the greatest cricket matches ever played, India defeated Australia by 3 wickets off the final ball to win the T20 World Cup. Needing 6 runs off the last delivery, all-rounder Hardik Pandya launched a massive 102-meter six over deep mid-wicket, sending the packed 130,000-seat stadium into delirium."},{id:'s4',title:"NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago",category:"science",summary:"Perseverance rover finds definitive chemical evidence of past biological activity in Martian rock samples.",time:"2 hours ago",image:"🔴",trending:true,views:"189.3K views",fullContent:"NASA has officially confirmed that the Perseverance rover has discovered chemical signatures and fossilized structures consistent with ancient microbial life on Mars. The findings show complex organic molecules, stromatolite-like formations, and isotopic ratios that can only be explained by biological processes."},{id:'s5',title:"AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours",category:"tech",summary:"Revolutionary AI system demonstrates human-level scientific reasoning, compressing decades of research into 2 days.",time:"3 hours ago",image:"🧠",trending:true,views:"98.2K views",fullContent:"In a landmark achievement for artificial intelligence, researchers at the Global AI Institute have unveiled Newton-AI, a model capable of independent scientific reasoning. The system successfully identified three novel drug candidates for previously untreatable forms of pancreatic cancer in just 48 hours."}];
+var SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+var supabase = null;
+var allNews = [];
+var currentFilter = 'all';
+var displayedCount = 6;
+var bookmarks = JSON.parse(localStorage.getItem('moonBookmarks') || '[]');
 
-document.addEventListener('DOMContentLoaded',function(){
-    var menuToggle=document.getElementById('menuToggle');
-    var closeSidebarBtn=document.getElementById('closeSidebar');
-    var sidebar=document.getElementById('sidebar');
-    var overlay=document.getElementById('overlay');
-    if(menuToggle)menuToggle.addEventListener('click',function(){sidebar.classList.add('open');overlay.classList.add('active');});
-    if(closeSidebarBtn)closeSidebarBtn.addEventListener('click',function(){sidebar.classList.remove('open');overlay.classList.remove('active');});
-    if(overlay)overlay.addEventListener('click',function(){sidebar.classList.remove('open');overlay.classList.remove('active');});
+var staticNews = [
+    { id: 's1', title: "India Tests Hypersonic Missile at Mach 7, Joins Elite Club", category: "tech", summary: "DRDO achieves breakthrough making India the 4th nation globally with hypersonic cruise missile technology.", time: "Just now", image: "🚀", trending: true, views: "89.4K views", fullContent: "In a landmark achievement, DRDO successfully tested a hypersonic cruise missile achieving speeds of Mach 7 (8,575 km/h). India becomes only the fourth nation after the US, Russia, and China to possess this technology. The missile can strike targets over 1,500 km away in under 12 minutes, making it virtually impossible to intercept with current defense systems." },
+    { id: 's2', title: "Sensex Crosses Historic 100,000 Mark for First Time Ever", category: "business", summary: "Indian stock market creates history as bull run continues amid 8.5% GDP growth and record foreign investments.", time: "15 min ago", image: "📈", trending: true, views: "67.2K views", fullContent: "The BSE Sensex crossed the historic 100,000 mark for the first time in Indian financial history. The bull run has been fueled by robust GDP growth of 8.5%, record foreign institutional investment inflows of over $45 billion this year, and exceptional corporate earnings across sectors." },
+    { id: 's3', title: "T20 World Cup Final: India Wins in Last-Ball Thriller vs Australia", category: "sports", summary: "Hardik Pandya hits winning six as India defeats Australia by 3 wickets at packed Melbourne Cricket Ground.", time: "1 hour ago", image: "🏆", trending: true, views: "256.8K views", fullContent: "In one of the greatest cricket matches ever played, India defeated Australia by 3 wickets off the final ball to win the T20 World Cup. Needing 6 runs off the last delivery, all-rounder Hardik Pandya launched a massive 102-meter six over deep mid-wicket, sending the packed 130,000-seat stadium into delirium." },
+    { id: 's4', title: "NASA Confirms Ancient Microbial Life Existed on Mars 3.5 Billion Years Ago", category: "science", summary: "Perseverance rover finds definitive chemical evidence of past biological activity in Martian rock samples.", time: "2 hours ago", image: "🔴", trending: true, views: "189.3K views", fullContent: "NASA has officially confirmed that the Perseverance rover has discovered chemical signatures and fossilized structures consistent with ancient microbial life on Mars. The findings show complex organic molecules, stromatolite-like formations, and isotopic ratios that can only be explained by biological processes." },
+    { id: 's5', title: "AI Breakthrough: New Model Discovers 3 Cancer Drug Candidates in 48 Hours", category: "tech", summary: "Revolutionary AI system demonstrates human-level scientific reasoning, compressing decades of research into 2 days.", time: "3 hours ago", image: "🧠", trending: true, views: "98.2K views", fullContent: "In a landmark achievement for artificial intelligence, researchers at the Global AI Institute have unveiled Newton-AI, a model capable of independent scientific reasoning. The system successfully identified three novel drug candidates for previously untreatable forms of pancreatic cancer in just 48 hours." }
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+    var menuToggle = document.getElementById('menuToggle');
+    var closeSidebarBtn = document.getElementById('closeSidebar');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('overlay');
+    
+    if (menuToggle) menuToggle.addEventListener('click', function() { sidebar.classList.add('open'); overlay.classList.add('active'); });
+    if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', function() { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
+    if (overlay) overlay.addEventListener('click', function() { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
+    
     loadTheme();
     initSupabase();
     loadNews();
-    document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(function(link){link.addEventListener('click',function(e){e.preventDefault();filterByCategory(this.dataset.category);});});
+    
+    document.querySelectorAll('.nav-desktop a[data-category], .sidebar-nav a[data-category]').forEach(function(link) {
+        link.addEventListener('click', function(e) { e.preventDefault(); filterByCategory(this.dataset.category); });
+    });
 });
 
-function initSupabase(){if(typeof window.supabase!=='undefined'&&typeof window.supabase.createClient==='function'){try{supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}catch(e){}}}
-function loadNews(){if(!supabase)initSupabase();if(supabase){supabase.from('news_articles').select('*').order('published_at',{ascending:false}).limit(50).then(function(r){if(r.data&&r.data.length>0){allNews=r.data.map(function(item){return{id:item.id,title:item.title,category:item.category,summary:item.summary||'',time:timeAgo(new Date(item.published_at)),image:item.image_emoji||'📰',trending:item.trending||false,views:(item.views||0).toLocaleString()+' views',fullContent:item.full_content||item.summary||''};});}else{allNews=staticNews.slice();}renderAll();}).catch(function(e){allNews=staticNews.slice();renderAll();});}else{allNews=staticNews.slice();renderAll();}}
-function renderAll(){displayTicker();displayCategories();displayNews();displayTrending();updateHero();}
-function timeAgo(d){var s=Math.floor((new Date()-d)/1000);if(s<60)return'Just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' hours ago';return Math.floor(s/86400)+' days ago';}
-function displayTicker(){var el=document.getElementById('tickerContent');if(!el)return;var items=allNews.filter(function(n){return n.trending;}).slice(0,5);if(!items.length)items=allNews.slice(0,3);el.innerHTML=items.map(function(n){return'<span onclick="openArticle(\''+n.id+'\')" style="cursor:pointer;">⚡ '+n.title+'</span>';}).join('');}
-function displayCategories(){var el=document.getElementById('categoryGrid');if(!el)return;var cats=[{id:'all',name:'All',icon:'fa-globe',color:'#dc2626'},{id:'tech',name:'Tech',icon:'fa-microchip',color:'#3b82f6'},{id:'sports',name:'Sports',icon:'fa-futbol',color:'#10b981'},{id:'business',name:'Business',icon:'fa-chart-line',color:'#f59e0b'},{id:'politics',name:'Politics',icon:'fa-landmark',color:'#8b5cf6'},{id:'science',name:'Science',icon:'fa-flask',color:'#06b6d4'}];el.innerHTML=cats.map(function(c){return'<div class="cat-card" onclick="filterByCategory(\''+c.id+'\')"><i class="fas '+c.icon+'" style="color:'+c.color+';"></i><span>'+c.name+'</span><small>'+(c.id==='all'?allNews.length:allNews.filter(function(n){return n.category===c.id;}).length)+' articles</small></div>';}).join('');}
-function displayNews(filter){filter=filter||'all';var filtered=filter==='all'?allNews:allNews.filter(function(n){return n.category===filter;});currentFilter=filter;var grid=document.getElementById('newsGrid');if(!grid)return;if(filtered.length===0){grid.innerHTML='<div style="text-align:center;padding:3rem;color:var(--text3);"><i class="fas fa-search" style="font-size:3rem;display:block;margin-bottom:1rem;"></i><h3>No stories found</h3></div>';return;}grid.innerHTML=filtered.slice(0,displayedCount).map(function(n){return'<article class="news-card" onclick="openArticle(\''+n.id+'\')"><div class="news-img">'+n.image+'</div><div class="news-body"><span class="news-cat '+n.category+'">'+n.category+'</span><h3 class="news-title">'+n.title+'</h3><p class="news-excerpt">'+n.summary+'</p><div class="news-meta"><span>🕒 '+n.time+' • 👁 '+n.views+'</span><div><button class="'+(isBookmarked(n.id)?'bookmarked':'')+'" onclick="event.stopPropagation();toggleBookmark(\''+n.id+'\')" style="background:none;border:none;cursor:pointer;color:'+(isBookmarked(n.id)?'var(--red)':'var(--text3)')+';font-size:1rem;">🔖</button></div></div></div></article>';}).join('');}
-function filterByCategory(cat){currentFilter=cat;displayedCount=6;document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(function(a){a.classList.remove('active');});var dl=document.querySelector('.nav-desktop a[data-category="'+cat+'"]');var sl=document.querySelector('.sidebar-nav a[data-category="'+cat+'"]');if(dl)dl.classList.add('active');if(sl)sl.classList.add('active');displayNews(cat);displayCategories();}
-function loadMore(){displayedCount+=6;displayNews(currentFilter);toast('Loading more stories... 📰');}
-function displayTrending(){var el=document.getElementById('trendingList');if(!el)return;var trending=allNews.filter(function(n){return n.trending;}).slice(0,5);el.innerHTML=trending.map(function(n,i){return'<div class="trend-item" onclick="openArticle(\''+n.id+'\')"><div class="trend-rank">'+String(i+1).padStart(2,'0')+'</div><div><div class="trend-title">'+n.title.substring(0,55)+'...</div><div class="trend-views">👁 '+n.views+'</div></div></div>';}).join('');}
-function openArticle(id){var a=allNews.find(function(n){return n.id==id;});if(!a)return;var h=JSON.parse(localStorage.getItem('readingHistory')||'[]');h.unshift({id:a.id,title:a.title,timestamp:new Date().toISOString()});localStorage.setItem('readingHistory',JSON.stringify(h.slice(0,50)));document.getElementById('newsGrid').innerHTML='<div style="grid-column:1/-1;background:var(--bg2);border-radius:var(--radius-xl);padding:2rem;border:1px solid var(--border);"><button onclick="displayNews(\''+currentFilter+'\')" style="background:var(--red);color:#fff;border:none;padding:0.5rem 1rem;border-radius:var(--radius);cursor:pointer;margin-bottom:1.5rem;font-weight:600;">← Back to News</button><div style="text-align:center;font-size:6rem;padding:2rem;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:var(--radius-lg);margin-bottom:1.5rem;">'+a.image+'</div><span class="news-cat '+a.category+'" style="margin-bottom:1rem;">'+a.category+'</span><h1 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:900;margin:1rem 0;line-height:1.2;">'+a.title+'</h1><div style="display:flex;gap:1.5rem;color:var(--text3);margin-bottom:1.5rem;flex-wrap:wrap;font-size:0.85rem;"><span>🕒 '+a.time+'</span><span>👁 '+a.views+'</span><span>💬 2.3K comments</span><span>⏱️ 8 min read</span></div><p style="font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:1rem;">'+a.summary+'</p><p style="font-size:1.05rem;line-height:1.9;color:var(--text2);">'+a.fullContent+'</p><p style="font-size:1.05rem;line-height:1.9;color:var(--text2);margin-top:1rem;">This developing story continues to evolve. THE MOON is committed to bringing you the latest updates as they happen.</p><div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:1rem;flex-wrap:wrap;"><button onclick="toggleBookmark(\''+a.id+'\');toast(isBookmarked(\''+a.id+'\')?\'Bookmarked! 🔖\':\'Bookmark removed\');" style="background:var(--red);color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:var(--radius);cursor:pointer;font-weight:600;">'+(isBookmarked(a.id)?'🔖 Bookmarked':'🔖 Bookmark Story')+'</button><button onclick="shareArticle(\''+a.id+'\')" style="background:transparent;border:2px solid var(--border);color:var(--text);padding:0.75rem 1.5rem;border-radius:var(--radius);cursor:pointer;font-weight:600;">📤 Share Story</button></div></div>';window.scrollTo({top:0,behavior:'smooth'});}
-function isBookmarked(id){return bookmarks.indexOf(id)>-1;}
-function toggleBookmark(id){var i=bookmarks.indexOf(id);if(i>-1)bookmarks.splice(i,1);else bookmarks.push(id);localStorage.setItem('moonBookmarks',JSON.stringify(bookmarks));}
-function shareArticle(id){var a=allNews.find(function(n){return n.id==id;});if(navigator.share){navigator.share({title:a.title,text:a.summary}).catch(function(){});}else{toast('📋 Link copied to clipboard!');}}
-function loadTheme(){if(localStorage.getItem('theme')==='light'){document.documentElement.setAttribute('data-theme','light');document.getElementById('themeToggle').innerHTML='<i class="fas fa-sun"></i>';}}
-document.getElementById('themeToggle').addEventListener('click',function(){var isDark=!document.documentElement.hasAttribute('data-theme');if(isDark){document.documentElement.setAttribute('data-theme','light');localStorage.setItem('theme','light');this.innerHTML='<i class="fas fa-sun"></i>';}else{document.documentElement.removeAttribute('data-theme');localStorage.setItem('theme','dark');this.innerHTML='<i class="fas fa-moon"></i>';}toast('Theme updated! 🎨');});
-function updateHero(){var el=document.getElementById('heroCount');if(el)el.textContent=allNews.length;}
-function handleNl(e){e.preventDefault();toast('✅ Subscribed! Welcome aboard!');e.target.reset();}
-function toast(m){var c=document.getElementById('toastContainer');if(!c)return;var t=document.createElement('div');t.className='toast';t.textContent=m;c.appendChild(t);setTimeout(function(){t.remove();},3000);}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){displayNews(currentFilter);}});
+function initSupabase() {
+    if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') {
+        try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) {}
+    }
+}
+
+function loadNews() {
+    initSupabase();
+    if (supabase) {
+        supabase.from('news_articles').select('*').order('published_at', { ascending: false }).limit(50)
+            .then(function(r) {
+                if (r.data && r.data.length > 0) {
+                    allNews = r.data.map(function(item) {
+                        return {
+                            id: item.id, title: item.title, category: item.category,
+                            summary: item.summary || '', time: timeAgo(new Date(item.published_at)),
+                            image: item.image_emoji || '📰', trending: item.trending || false,
+                            views: (item.views||0).toLocaleString()+' views',
+                            fullContent: item.full_content || item.summary || ''
+                        };
+                    });
+                } else { allNews = staticNews.slice(); }
+                renderAll();
+            })
+            .catch(function(e) { allNews = staticNews.slice(); renderAll(); });
+    } else { allNews = staticNews.slice(); renderAll(); }
+}
+
+function renderAll() { displayTicker(); displayCategories(); displayNews(); displayTrending(); updateHero(); }
+
+function timeAgo(d) {
+    var s = Math.floor((new Date() - d) / 1000);
+    if (s < 60) return 'Just now';
+    if (s < 3600) return Math.floor(s/60) + ' min ago';
+    if (s < 86400) return Math.floor(s/3600) + ' hours ago';
+    return Math.floor(s/86400) + ' days ago';
+}
+
+function displayTicker() {
+    var el = document.getElementById('tickerContent');
+    if (!el) return;
+    var items = allNews.filter(function(n) { return n.trending; }).slice(0, 5);
+    if (!items.length) items = allNews.slice(0, 3);
+    el.innerHTML = items.map(function(n) { return '<span onclick="openArticle(\''+n.id+'\')" style="cursor:pointer;">⚡ '+n.title+'</span>'; }).join('');
+}
+
+function displayCategories() {
+    var el = document.getElementById('categoryGrid');
+    if (!el) return;
+    var cats = [
+        { id: 'all', name: 'All', icon: 'fa-globe', color: '#dc2626' },
+        { id: 'tech', name: 'Tech', icon: 'fa-microchip', color: '#3b82f6' },
+        { id: 'sports', name: 'Sports', icon: 'fa-futbol', color: '#10b981' },
+        { id: 'business', name: 'Business', icon: 'fa-chart-line', color: '#f59e0b' },
+        { id: 'politics', name: 'Politics', icon: 'fa-landmark', color: '#8b5cf6' },
+        { id: 'science', name: 'Science', icon: 'fa-flask', color: '#06b6d4' }
+    ];
+    el.innerHTML = cats.map(function(c) {
+        return '<div class="cat-card" onclick="filterByCategory(\''+c.id+'\')"><i class="fas '+c.icon+'" style="color:'+c.color+';"></i><span>'+c.name+'</span><small>'+(c.id==='all'?allNews.length:allNews.filter(function(n){return n.category===c.id;}).length)+' articles</small></div>';
+    }).join('');
+}
+
+function displayNews(filter) {
+    filter = filter || 'all';
+    var filtered = filter === 'all' ? allNews : allNews.filter(function(n) { return n.category === filter; });
+    currentFilter = filter;
+    var grid = document.getElementById('newsGrid');
+    if (!grid) return;
+    if (filtered.length === 0) { grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text3);"><i class="fas fa-search" style="font-size:3rem;display:block;margin-bottom:1rem;"></i><h3>No stories found</h3></div>'; return; }
+    grid.innerHTML = filtered.slice(0, displayedCount).map(function(n) {
+        return '<article class="news-card" onclick="openArticle(\''+n.id+'\')"><div class="news-img">'+n.image+'</div><div class="news-body"><span class="news-cat '+n.category+'">'+n.category+'</span><h3 class="news-title">'+n.title+'</h3><p class="news-excerpt">'+n.summary+'</p><div class="news-meta"><span>🕒 '+n.time+' • 👁 '+n.views+'</span><div><button class="'+(isBookmarked(n.id)?'bookmarked':'')+'" onclick="event.stopPropagation();toggleBookmark(\''+n.id+'\')" style="background:none;border:none;cursor:pointer;color:'+(isBookmarked(n.id)?'var(--red)':'var(--text3)')+';font-size:1rem;">🔖</button></div></div></div></article>';
+    }).join('');
+}
+
+function filterByCategory(cat) {
+    currentFilter = cat; displayedCount = 6;
+    document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(function(a) { a.classList.remove('active'); });
+    var dl = document.querySelector('.nav-desktop a[data-category="'+cat+'"]');
+    var sl = document.querySelector('.sidebar-nav a[data-category="'+cat+'"]');
+    if (dl) dl.classList.add('active'); if (sl) sl.classList.add('active');
+    displayNews(cat); displayCategories();
+}
+
+function loadMore() { displayedCount += 6; displayNews(currentFilter); toast('Loading more stories... 📰'); }
+
+function displayTrending() {
+    var el = document.getElementById('trendingList');
+    if (!el) return;
+    var trending = allNews.filter(function(n) { return n.trending; }).slice(0, 5);
+    el.innerHTML = trending.map(function(n, i) { return '<div class="trend-item" onclick="openArticle(\''+n.id+'\')"><div class="trend-rank">'+String(i+1).padStart(2,'0')+'</div><div><div class="trend-title">'+n.title.substring(0,55)+'...</div><div class="trend-views">👁 '+n.views+'</div></div></div>'; }).join('');
+}
+
+function openArticle(id) {
+    var a = allNews.find(function(n) { return n.id == id; });
+    if (!a) return;
+    var h = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+    h.unshift({ id: a.id, title: a.title, timestamp: new Date().toISOString() });
+    localStorage.setItem('readingHistory', JSON.stringify(h.slice(0, 50)));
+    document.getElementById('newsGrid').innerHTML = '<div style="grid-column:1/-1;background:var(--bg2);border-radius:var(--radius-xl);padding:2rem;border:1px solid var(--border);"><button onclick="displayNews(\''+currentFilter+'\')" style="background:var(--red);color:#fff;border:none;padding:0.5rem 1rem;border-radius:var(--radius);cursor:pointer;margin-bottom:1.5rem;font-weight:600;">← Back to News</button><div style="text-align:center;font-size:6rem;padding:2rem;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:var(--radius-lg);margin-bottom:1.5rem;">'+a.image+'</div><span class="news-cat '+a.category+'" style="margin-bottom:1rem;">'+a.category+'</span><h1 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:900;margin:1rem 0;line-height:1.2;">'+a.title+'</h1><div style="display:flex;gap:1.5rem;color:var(--text3);margin-bottom:1.5rem;flex-wrap:wrap;font-size:0.85rem;"><span>🕒 '+a.time+'</span><span>👁 '+a.views+'</span><span>💬 2.3K comments</span><span>⏱️ 8 min read</span></div><p style="font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:1rem;">'+a.summary+'</p><p style="font-size:1.05rem;line-height:1.9;color:var(--text2);">'+a.fullContent+'</p><p style="font-size:1.05rem;line-height:1.9;color:var(--text2);margin-top:1rem;">This developing story continues to evolve. THE MOON is committed to bringing you the latest updates as they happen.</p><div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:1rem;flex-wrap:wrap;"><button onclick="toggleBookmark(\''+a.id+'\');toast(isBookmarked(\''+a.id+'\')?\'Bookmarked! 🔖\':\'Bookmark removed\');" style="background:var(--red);color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:var(--radius);cursor:pointer;font-weight:600;">'+(isBookmarked(a.id)?'🔖 Bookmarked':'🔖 Bookmark Story')+'</button><button onclick="shareArticle(\''+a.id+'\')" style="background:transparent;border:2px solid var(--border);color:var(--text);padding:0.75rem 1.5rem;border-radius:var(--radius);cursor:pointer;font-weight:600;">📤 Share Story</button></div></div>';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function isBookmarked(id) { return bookmarks.indexOf(id) > -1; }
+function toggleBookmark(id) { var i = bookmarks.indexOf(id); if (i > -1) bookmarks.splice(i, 1); else bookmarks.push(id); localStorage.setItem('moonBookmarks', JSON.stringify(bookmarks)); }
+
+function shareArticle(id) {
+    var a = allNews.find(function(n) { return n.id == id; });
+    if (navigator.share) { navigator.share({ title: a.title, text: a.summary }).catch(function(){}); }
+    else { toast('📋 Link copied to clipboard!'); }
+}
+
+function loadTheme() {
+    if (localStorage.getItem('theme') === 'light') { document.documentElement.setAttribute('data-theme', 'light'); document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>'; }
+}
+document.getElementById('themeToggle').addEventListener('click', function() {
+    var isDark = !document.documentElement.hasAttribute('data-theme');
+    if (isDark) { document.documentElement.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); this.innerHTML = '<i class="fas fa-sun"></i>'; }
+    else { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('theme', 'dark'); this.innerHTML = '<i class="fas fa-moon"></i>'; }
+    toast('Theme updated! 🎨');
+});
+
+function updateHero() { var el = document.getElementById('heroCount'); if (el) el.textContent = allNews.length; }
+function handleNl(e) { e.preventDefault(); toast('✅ Subscribed! Welcome aboard!'); e.target.reset(); }
+function toast(m) { var c = document.getElementById('toastContainer'); if (!c) return; var t = document.createElement('div'); t.className = 'toast'; t.textContent = m; c.appendChild(t); setTimeout(function() { t.remove(); }, 3000); }
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { displayNews(currentFilter); } });
 </script>
 </body>
 </html>
