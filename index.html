@@ -8,41 +8,48 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',Arial,sans-serif;}
+        :root{--bg:#0a0a0a;--card:#111;--text:#fff;--text-sec:#aaa;--border:#222;--red:#dc2626;}
+        [data-theme="light"]{--bg:#f5f5f5;--card:#fff;--text:#1a1a1a;--text-sec:#666;--border:#ddd;}
+        body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);transition:0.3s;}
         .container{max-width:1200px;margin:0 auto;padding:20px;}
-        .header{background:#111;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
-        .logo{font-size:24px;font-weight:bold;color:#dc2626;text-decoration:none;}
-        .nav a{color:#fff;text-decoration:none;margin:0 15px;cursor:pointer;}
-        .nav a.active{color:#dc2626;}
-        .hero{background:linear-gradient(135deg,#dc2626,#991b1b);padding:40px;border-radius:16px;text-align:center;margin-bottom:30px;}
-        .ticker{background:#111;padding:12px;border-radius:8px;margin-bottom:20px;overflow:hidden;white-space:nowrap;}
+        .header{background:var(--card);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);}
+        .logo{font-size:24px;font-weight:bold;color:var(--red);text-decoration:none;}
+        .nav a{color:var(--text);text-decoration:none;margin:0 15px;cursor:pointer;}
+        .nav a.active{color:var(--red);}
+        .hero{background:linear-gradient(135deg,var(--red),#991b1b);padding:40px;border-radius:16px;text-align:center;margin-bottom:30px;color:#fff;}
+        .ticker{background:var(--card);padding:12px;border-radius:8px;margin-bottom:20px;overflow:hidden;white-space:nowrap;border:1px solid var(--border);}
         .ticker-content{display:inline-block;animation:ticker 20s linear infinite;}
         @keyframes ticker{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
         .category-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;margin-bottom:30px;}
-        .category-card{background:#111;padding:15px;border-radius:12px;text-align:center;cursor:pointer;transition:0.2s;}
-        .category-card:hover{background:#dc2626;}
+        .category-card{background:var(--card);padding:15px;border-radius:12px;text-align:center;cursor:pointer;transition:0.2s;border:1px solid var(--border);}
+        .category-card:hover{background:var(--red);color:#fff;}
         .category-card i{font-size:28px;display:block;margin-bottom:8px;}
         .news-grid{display:grid;gap:20px;margin-bottom:30px;}
         @media(min-width:768px){.news-grid{grid-template-columns:repeat(2,1fr);}}
-        .news-card{background:#111;padding:20px;border-radius:12px;cursor:pointer;transition:0.2s;}
-        .news-card:hover{background:#1a1a1a;}
-        .news-cat{background:#dc2626;display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:10px;}
+        .news-card{background:var(--card);padding:20px;border-radius:12px;cursor:pointer;transition:0.2s;border:1px solid var(--border);}
+        .news-card:hover{transform:translateY(-3px);}
+        .news-cat{background:var(--red);display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:10px;color:#fff;}
         .news-title{font-size:18px;margin-bottom:8px;}
-        .news-excerpt{color:#aaa;font-size:14px;margin-bottom:10px;}
-        .news-meta{display:flex;gap:15px;font-size:12px;color:#666;}
+        .news-excerpt{color:var(--text-sec);font-size:14px;margin-bottom:10px;}
+        .news-meta{display:flex;gap:15px;font-size:12px;color:var(--text-sec);}
         .loader{text-align:center;padding:50px;}
-        .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
+        .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
         @keyframes spin{to{transform:rotate(360deg);}}
-        .footer{background:#111;padding:30px;text-align:center;margin-top:40px;}
-        .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;display:flex;justify-content:space-around;padding:12px;z-index:99;display:none;}
+        .footer{background:var(--card);padding:30px;text-align:center;margin-top:40px;border-top:1px solid var(--border);}
+        .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;justify-content:space-around;padding:12px;z-index:99;border-top:1px solid var(--border);display:none;}
         @media(max-width:768px){.bottom-nav{display:flex;}}
-        .sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:#111;z-index:1000;transition:left 0.3s;padding:20px;}
+        .bottom-nav a{color:var(--text);text-decoration:none;font-size:20px;}
+        .bottom-nav a.active{color:var(--red);}
+        .sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:var(--card);z-index:1000;transition:left 0.3s;padding:20px;border-right:1px solid var(--border);}
         .sidebar.open{left:0;}
+        .sidebar a{display:block;padding:12px 0;color:var(--text);text-decoration:none;border-bottom:1px solid var(--border);}
+        .sidebar a:hover{color:var(--red);}
         .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;display:none;}
         .overlay.active{display:block;}
-        .menu-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;}
-        .widget{background:#111;padding:20px;border-radius:12px;margin-bottom:20px;}
-        .trending-item{padding:10px 0;border-bottom:1px solid #222;cursor:pointer;}
+        .menu-btn{background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;}
+        .widget{background:var(--card);padding:20px;border-radius:12px;margin-bottom:20px;border:1px solid var(--border);}
+        .trending-item{padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+        .theme-toggle{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
     </style>
 </head>
 <body>
@@ -58,30 +65,33 @@
         <a data-cat="politics">Politics</a>
         <a data-cat="study">Study</a>
     </div>
-    <a href="/rasu/profile.html">👤</a>
+    <div>
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <a href="/rasu/profile.html" style="color:var(--text);margin-left:15px;"><i class="fas fa-user-circle fa-xl"></i></a>
+    </div>
 </div>
 
 <div class="sidebar" id="sidebar">
     <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
         <span class="logo">🌙 THE MOON</span>
-        <button id="closeSidebar" style="background:none;border:none;color:#fff;font-size:20px;">✕</button>
+        <button id="closeSidebar" style="background:none;border:none;color:var(--text);font-size:24px;">✕</button>
     </div>
-    <a data-cat="all" style="display:block;padding:10px 0;">🏠 Home</a>
-    <a data-cat="tech" style="display:block;padding:10px 0;">💻 Technology</a>
-    <a data-cat="sports" style="display:block;padding:10px 0;">🏏 Sports</a>
-    <a data-cat="business" style="display:block;padding:10px 0;">📊 Business</a>
-    <a data-cat="politics" style="display:block;padding:10px 0;">🏛️ Politics</a>
-    <a data-cat="study" style="display:block;padding:10px 0;">📚 Study</a>
-    <a href="/rasu/profile.html" style="display:block;padding:10px 0;">👤 Profile</a>
+    <a data-cat="all">🏠 Home</a>
+    <a data-cat="tech">💻 Technology</a>
+    <a data-cat="sports">🏏 Sports</a>
+    <a data-cat="business">📊 Business</a>
+    <a data-cat="politics">🏛️ Politics</a>
+    <a data-cat="study">📚 Study</a>
+    <a href="/rasu/profile.html">👤 Profile</a>
 </div>
 <div class="overlay" id="overlay"></div>
 
 <div class="bottom-nav">
-    <a data-cat="all">🏠</a>
-    <a data-cat="tech">💻</a>
-    <a data-cat="sports">🏏</a>
-    <a data-cat="business">📊</a>
-    <a href="/rasu/profile.html">👤</a>
+    <a data-cat="all"><i class="fas fa-home"></i></a>
+    <a data-cat="tech"><i class="fas fa-microchip"></i></a>
+    <a data-cat="sports"><i class="fas fa-futbol"></i></a>
+    <a data-cat="business"><i class="fas fa-chart-line"></i></a>
+    <a href="/rasu/profile.html"><i class="fas fa-user"></i></a>
 </div>
 
 <div class="container">
@@ -98,7 +108,7 @@
 
     <div class="widget"><h3>🔥 Trending Now</h3><div id="trendingList">Loading...</div></div>
     <div class="widget"><h3>🤖 AI Curated</h3><div id="aiPicks">Loading...</div></div>
-    <div class="widget"><h3>☁️ Weather</h3><div id="weather" style="text-align:center;"><span style="font-size:32px;">28°C</span><br>📍 New Delhi, IN</div></div>
+    <div class="widget"><h3>☁️ Weather</h3><div style="text-align:center;"><span style="font-size:32px;">28°C</span><br>📍 New Delhi, IN</div></div>
 </div>
 
 <footer class="footer"><p>© 2026 THE MOON. All rights reserved.</p></footer>
@@ -114,6 +124,40 @@ const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY, {
 let currentCat = 'all';
 let allNews = [];
 let categories = [];
+
+// Theme
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if(saved === 'light') document.body.setAttribute('data-theme', 'light');
+    else document.body.removeAttribute('data-theme');
+}
+function toggleTheme() {
+    if(document.body.hasAttribute('data-theme')) {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+    } else {
+        document.body.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+    }
+}
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+initTheme();
+
+// Sidebar
+document.getElementById('menuBtn').onclick = () => {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('overlay').classList.add('active');
+};
+document.getElementById('closeSidebar').onclick = () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+};
+document.getElementById('overlay').onclick = () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+};
 
 async function loadData() {
     document.getElementById('categoryGrid').innerHTML = '<div class="loader"><div class="spinner"></div></div>';
@@ -135,7 +179,7 @@ async function loadData() {
                 el.onclick = () => {
                     currentCat = el.getAttribute('data-cat');
                     loadNews();
-                    document.querySelectorAll('.nav a, .bottom-nav a, .sidebar a').forEach(n => n.classList.remove('active'));
+                    updateActiveNav();
                 };
             });
         }
@@ -143,6 +187,13 @@ async function loadData() {
         await loadNews();
         
     } catch(e) { console.error(e); }
+}
+
+function updateActiveNav() {
+    document.querySelectorAll('.nav a, .bottom-nav a, .sidebar a').forEach(n => {
+        if(n.getAttribute('data-cat') === currentCat) n.classList.add('active');
+        else n.classList.remove('active');
+    });
 }
 
 async function loadNews() {
@@ -195,6 +246,8 @@ async function loadNews() {
         const tickerNews = publishedNews.slice(0,5);
         document.getElementById('tickerContent').innerHTML = '🔴 LIVE | ' + tickerNews.map(n => n.title).join(' | ') + ' | ';
         
+        updateActiveNav();
+        
     } catch(e) { console.error(e); }
 }
 
@@ -203,27 +256,13 @@ function escapeHtml(text) {
     return text.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
 }
 
-document.getElementById('menuBtn').onclick = () => {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').classList.add('active');
-};
-document.getElementById('closeSidebar').onclick = () => {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
-};
-document.getElementById('overlay').onclick = () => {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
-};
-
 document.querySelectorAll('.nav a, .bottom-nav a, .sidebar a').forEach(el => {
     if(el.getAttribute('data-cat')) {
         el.onclick = (e) => {
             e.preventDefault();
             currentCat = el.getAttribute('data-cat');
             loadNews();
-            document.querySelectorAll('.nav a, .bottom-nav a, .sidebar a').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
+            updateActiveNav();
         };
     }
 });
