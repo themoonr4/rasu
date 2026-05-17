@@ -8,41 +8,49 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',Arial,sans-serif;padding:20px;}
+        :root{--bg:#0a0a0a;--card:#111;--text:#fff;--text-sec:#aaa;--border:#222;--red:#dc2626;}
+        [data-theme="light"]{--bg:#f5f5f5;--card:#fff;--text:#1a1a1a;--text-sec:#666;--border:#ddd;}
+        body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);transition:0.3s;padding:20px;}
         .container{max-width:600px;margin:0 auto;}
-        .header{background:#111;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-radius:12px;}
-        .logo{font-size:24px;font-weight:bold;color:#dc2626;text-decoration:none;}
-        .card{background:#111;border-radius:16px;padding:25px;margin-bottom:20px;}
-        .card h2{color:#dc2626;margin-bottom:15px;}
-        input,select{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
-        button{background:#dc2626;color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold;}
+        .header{background:var(--card);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-radius:12px;border:1px solid var(--border);}
+        .logo{font-size:24px;font-weight:bold;color:var(--red);text-decoration:none;}
+        .theme-toggle{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+        .card{background:var(--card);border-radius:16px;padding:25px;margin-bottom:20px;border:1px solid var(--border);}
+        .card h2{color:var(--red);margin-bottom:15px;}
+        .card h3{color:var(--red);margin-bottom:15px;}
+        input,select{width:100%;padding:12px;margin-bottom:15px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);}
+        button{background:var(--red);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold;}
         button:hover{background:#b91c1c;}
         .success{background:#28a745;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
         .error{background:#dc3545;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
         .info{background:#17a2b8;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
         .nav-links{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap;}
-        .nav-btn{background:#1a1a1a;padding:10px 20px;border-radius:8px;cursor:pointer;}
-        .nav-btn.active{background:#dc2626;}
+        .nav-btn{background:var(--bg);padding:10px 20px;border-radius:8px;cursor:pointer;border:1px solid var(--border);color:var(--text);}
+        .nav-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
         .hide{display:none;}
-        .back-btn{display:inline-block;background:#dc2626;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;margin-bottom:20px;}
-        .bookmark-item,.history-item{background:#1a1a1a;padding:12px;margin-bottom:10px;border-radius:8px;cursor:pointer;}
-        .avatar{width:80px;height:80px;background:#dc2626;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;font-size:2.5rem;}
+        .back-btn{display:inline-block;background:var(--red);color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;margin-bottom:20px;}
+        .bookmark-item,.history-item{background:var(--bg);padding:12px;margin-bottom:10px;border-radius:8px;cursor:pointer;border:1px solid var(--border);}
+        .bookmark-item:hover,.history-item:hover{background:var(--card);}
+        .avatar{width:80px;height:80px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;font-size:2.5rem;}
         .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:20px 0;}
         .stat{text-align:center;}
-        .stat-number{font-size:1.5rem;font-weight:bold;color:#dc2626;}
-        .stat-label{font-size:0.7rem;color:#aaa;}
-        .setting-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222;}
+        .stat-number{font-size:1.5rem;font-weight:bold;color:var(--red);}
+        .stat-label{font-size:0.7rem;color:var(--text-sec);}
+        .setting-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
         .logout-btn{background:#6c757d;margin-top:10px;}
+        .achievement-card{background:var(--bg);padding:12px;border-radius:12px;text-align:center;min-width:100px;display:inline-block;margin:5px;border:1px solid var(--border);}
+        .achievement-card.earned{background:var(--red);border-color:var(--red);}
+        .stats-summary{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;}
+        .stat-summary-card{background:var(--bg);padding:10px;border-radius:8px;text-align:center;flex:1;border:1px solid var(--border);}
     </style>
 </head>
 <body>
-<div class="header">
-    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
-        <a href="/rasu/" class="logo">🌙 THE MOON</a>
-        <button id="themeToggle" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;">🌙</button>
-    </div>
-</div>
 <div class="container">
+    <div class="header">
+        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+    
     <a href="/rasu/" class="back-btn">← Back to Home</a>
     
     <div id="loginSection" class="card">
@@ -57,13 +65,20 @@
         <div class="card">
             <div class="avatar"><i class="fas fa-user-circle"></i></div>
             <h3 id="userName"></h3>
-            <p style="color:#aaa;" id="userEmail"></p>
+            <p style="color:var(--text-sec);" id="userEmail"></p>
             <div class="stats-grid">
                 <div class="stat"><div class="stat-number" id="bookmarkCount">0</div><div class="stat-label">Bookmarks</div></div>
                 <div class="stat"><div class="stat-number" id="historyCount">0</div><div class="stat-label">Articles Read</div></div>
                 <div class="stat"><div class="stat-number" id="readingTime">0</div><div class="stat-label">Minutes Read</div></div>
             </div>
             <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+        </div>
+        
+        <div class="card">
+            <h2>🏆 Achievements</h2>
+            <div id="achievementsStats" class="stats-summary"></div>
+            <div id="achievementsList" class="achievements-grid" style="display:flex;flex-wrap:wrap;"></div>
+            <div id="nextAchievementProgress"></div>
         </div>
         
         <div class="nav-links">
@@ -93,6 +108,90 @@ const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY, {
 });
 
 let currentUser = null;
+
+// Achievements Data
+const achievements = [
+    { id: 1, name: 'First Article', icon: '📖', desc: 'Read your first article', condition: (s) => s.articlesRead >= 1, points: 10 },
+    { id: 2, name: 'Bookmarker', icon: '🔖', desc: 'Save 5 articles', condition: (s) => s.bookmarks >= 5, points: 20 },
+    { id: 3, name: 'News Junkie', icon: '📰', desc: 'Read 25 articles', condition: (s) => s.articlesRead >= 25, points: 50 },
+    { id: 4, name: 'Super Reader', icon: '⭐', desc: 'Read 100 articles', condition: (s) => s.articlesRead >= 100, points: 100 },
+    { id: 5, name: 'Weekly Warrior', icon: '⚡', desc: '7 day streak', condition: (s) => s.streak >= 7, points: 40 },
+    { id: 6, name: 'News Master', icon: '👑', desc: 'Read 250 articles', condition: (s) => s.articlesRead >= 250, points: 200 },
+    { id: 7, name: 'Legend', icon: '🏆', desc: 'Read 500 articles', condition: (s) => s.articlesRead >= 500, points: 500 }
+];
+
+// Theme
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if(saved === 'light') document.body.setAttribute('data-theme', 'light');
+    else document.body.removeAttribute('data-theme');
+}
+function toggleTheme() {
+    if(document.body.hasAttribute('data-theme')) {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.body.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+    document.getElementById('themeToggle').innerHTML = document.body.hasAttribute('data-theme') ? '🌙' : '☀️';
+}
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+initTheme();
+
+async function loadAchievements() {
+    const { data: bookmarks } = await supabase.from('user_bookmarks').select('*').eq('user_id', currentUser.id);
+    const { data: history } = await supabase.from('reading_history').select('*').eq('user_id', currentUser.id);
+    const stats = {
+        articlesRead: history?.length || 0,
+        bookmarks: bookmarks?.length || 0,
+        streak: parseInt(localStorage.getItem('readingStreak') || 0)
+    };
+    
+    let totalPoints = 0, earnedCount = 0;
+    const achievementsHtml = achievements.map(ach => {
+        const earned = ach.condition(stats);
+        if(earned) { earnedCount++; totalPoints += ach.points; }
+        return `
+            <div class="achievement-card ${earned ? 'earned' : ''}" style="opacity:${earned ? '1' : '0.5'};">
+                <div style="font-size:28px;">${ach.icon}</div>
+                <div style="font-size:13px;">${ach.name}</div>
+                ${earned ? `<div style="font-size:11px;color:#ffc107;">+${ach.points} pts</div>` : '<div style="font-size:10px;">🔒 Locked</div>'}
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('achievementsStats').innerHTML = `
+        <div class="stat-summary-card"><div style="font-size:20px;color:var(--red);">${earnedCount}</div><div>🏆</div></div>
+        <div class="stat-summary-card"><div style="font-size:20px;color:#ffc107;">${totalPoints}</div><div>⭐ Points</div></div>
+        <div class="stat-summary-card"><div style="font-size:20px;color:#28a745;">${stats.articlesRead}</div><div>📰 Read</div></div>
+        <div class="stat-summary-card"><div style="font-size:20px;color:#17a2b8;">${stats.streak}</div><div>⚡ Streak</div></div>
+    `;
+    document.getElementById('achievementsList').innerHTML = achievementsHtml;
+    
+    // Next achievement progress
+    const nextAch = achievements.find(a => !a.condition(stats));
+    if(nextAch) {
+        let current = 0, required = 0;
+        if(nextAch.id === 2) { current = stats.bookmarks; required = 5; }
+        else if(nextAch.id === 3) { current = stats.articlesRead; required = 25; }
+        else if(nextAch.id === 4) { current = stats.articlesRead; required = 100; }
+        else if(nextAch.id === 5) { current = stats.streak; required = 7; }
+        else if(nextAch.id === 6) { current = stats.articlesRead; required = 250; }
+        else if(nextAch.id === 7) { current = stats.articlesRead; required = 500; }
+        const percent = Math.min(100, (current / required) * 100);
+        document.getElementById('nextAchievementProgress').innerHTML = `
+            <div style="margin-top:15px;">
+                <div style="font-size:12px;">Next: ${nextAch.name} (${current}/${required})</div>
+                <div style="background:var(--border);height:6px;border-radius:3px;margin-top:5px;overflow:hidden;">
+                    <div style="background:var(--red);width:${percent}%;height:6px;border-radius:3px;"></div>
+                </div>
+            </div>
+        `;
+    } else {
+        document.getElementById('nextAchievementProgress').innerHTML = '<div class="info">🏆 You unlocked all achievements!</div>';
+    }
+}
 
 async function login() {
     const email = document.getElementById('loginEmail').value;
@@ -124,6 +223,7 @@ async function login() {
         document.getElementById('loginSection').classList.add('hide');
         document.getElementById('profileSection').classList.remove('hide');
         loadUserData();
+        loadAchievements();
     }
 }
 
@@ -140,9 +240,19 @@ async function loadUserData() {
     document.getElementById('historyCount').innerText = history?.length || 0;
     document.getElementById('readingTime').innerText = (history?.length || 0) * 3;
     
-    document.getElementById('bookmarksList').innerHTML = (!bookmarks || bookmarks.length === 0) ? '<div class="info">No bookmarks yet</div>' : bookmarks.map(b => `<div class="bookmark-item" onclick="location.href='/rasu/article.html?id=${b.news.id}'">📰 ${b.news.title}<div style="font-size:12px;color:#aaa;">${new Date(b.created_at).toLocaleDateString()}</div></div>`).join('');
+    document.getElementById('bookmarksList').innerHTML = (!bookmarks || bookmarks.length === 0) ? '<div class="info">No bookmarks yet</div>' : bookmarks.map(b => `
+        <div class="bookmark-item" onclick="location.href='/rasu/article.html?id=${b.news.id}'">
+            📰 ${b.news.title}
+            <div style="font-size:12px;color:var(--text-sec);">${new Date(b.created_at).toLocaleDateString()}</div>
+        </div>
+    `).join('');
     
-    document.getElementById('historyList').innerHTML = (!history || history.length === 0) ? '<div class="info">No reading history yet</div>' : history.map(h => `<div class="history-item" onclick="location.href='/rasu/article.html?id=${h.news.id}'">📖 ${h.news.title}<div style="font-size:12px;color:#aaa;">${new Date(h.read_at).toLocaleDateString()}</div></div>`).join('');
+    document.getElementById('historyList').innerHTML = (!history || history.length === 0) ? '<div class="info">No reading history yet</div>' : history.map(h => `
+        <div class="history-item" onclick="location.href='/rasu/article.html?id=${h.news.id}'">
+            📖 ${h.news.title}
+            <div style="font-size:12px;color:var(--text-sec);">${new Date(h.read_at).toLocaleDateString()}</div>
+        </div>
+    `).join('');
     
     document.getElementById('displayName').value = localStorage.getItem('displayName') || '';
     document.getElementById('themeSelect').value = localStorage.getItem('theme') || 'dark';
@@ -165,8 +275,8 @@ function updateProfile() {
     localStorage.setItem('displayName', name);
     localStorage.setItem('theme', theme);
     document.getElementById('userName').innerText = name || currentUser.email.split('@')[0];
-    if(theme === 'light') document.body.style.background = '#f5f5f5';
-    else document.body.style.background = '#0a0a0a';
+    if(theme === 'light') document.body.setAttribute('data-theme', 'light');
+    else document.body.removeAttribute('data-theme');
     document.getElementById('settingsMsg').innerHTML = '<div class="success">Settings saved!</div>';
     setTimeout(() => document.getElementById('settingsMsg').innerHTML = '', 2000);
 }
@@ -180,25 +290,13 @@ async function logout() {
     document.getElementById('loginPassword').value = '';
 }
 
-function toggleTheme() {
-    if(document.body.style.background === 'rgb(245, 245, 245)') {
-        document.body.style.background = '#0a0a0a';
-        localStorage.setItem('theme', 'dark');
-    } else {
-        document.body.style.background = '#f5f5f5';
-        localStorage.setItem('theme', 'light');
-    }
-}
-
-document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-if(localStorage.getItem('theme') === 'light') document.body.style.background = '#f5f5f5';
-
 supabase.auth.getSession().then(({ data }) => {
     if(data.session) {
         currentUser = data.session.user;
         document.getElementById('loginSection').classList.add('hide');
         document.getElementById('profileSection').classList.remove('hide');
         loadUserData();
+        loadAchievements();
     }
 });
 </script>
