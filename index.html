@@ -3,46 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - World Class News</title>
+    <title>THE MOON - News</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        :root{--bg:#0a0a0a;--card:#111;--text:#fff;--text-sec:#aaa;--border:#222;--red:#dc2626;}
-        body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);}
+        body{background:#0a0a0a;color:#fff;font-family:Arial,sans-serif;}
         .container{max-width:1200px;margin:0 auto;padding:20px;}
-        .header{background:var(--card);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
-        .logo{font-size:24px;font-weight:bold;color:var(--red);text-decoration:none;}
-        .nav a{color:var(--text);text-decoration:none;margin:0 15px;cursor:pointer;}
-        .hero{background:linear-gradient(135deg,var(--red),#991b1b);padding:50px;border-radius:20px;text-align:center;margin-bottom:30px;}
-        .hero h1{font-size:36px;margin-bottom:10px;}
+        .header{background:#111;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+        .logo{font-size:24px;font-weight:bold;color:#dc2626;text-decoration:none;}
+        .nav a{color:#fff;text-decoration:none;margin:0 15px;cursor:pointer;}
+        .hero{background:linear-gradient(135deg,#dc2626,#991b1b);padding:40px;border-radius:16px;text-align:center;margin-bottom:30px;}
         .category-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;margin-bottom:30px;}
-        .category-card{background:var(--card);padding:15px;border-radius:12px;text-align:center;cursor:pointer;transition:0.2s;}
-        .category-card:hover{background:var(--red);}
-        .news-grid{display:grid;gap:20px;margin-bottom:30px;}
+        .category-card{background:#1a1a1a;padding:15px;border-radius:12px;text-align:center;cursor:pointer;}
+        .category-card:hover{background:#dc2626;}
+        .news-grid{display:grid;gap:20px;margin-bottom:80px;}
         @media(min-width:768px){.news-grid{grid-template-columns:repeat(2,1fr);}}
-        .news-card{background:var(--card);padding:20px;border-radius:12px;cursor:pointer;transition:0.2s;}
-        .news-card:hover{transform:translateY(-3px);background:#1a1a1a;}
-        .news-cat{background:var(--red);display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:10px;}
+        .news-card{background:#1a1a1a;padding:20px;border-radius:12px;cursor:pointer;transition:0.2s;}
+        .news-card:hover{background:#222;}
+        .news-category{background:#dc2626;display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:10px;}
         .news-title{font-size:18px;margin-bottom:8px;}
-        .news-excerpt{color:var(--text-sec);font-size:14px;margin-bottom:10px;}
-        .news-meta{display:flex;gap:15px;font-size:12px;color:#666;}
-        .loader{text-align:center;padding:50px;}
-        .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:var(--red);border-radius:50%;animation:spin 1s infinite;margin:0 auto;}
+        .news-excerpt{color:#aaa;font-size:14px;}
+        .news-meta{display:flex;gap:15px;font-size:12px;color:#666;margin-top:10px;}
+        .loader{text-align:center;padding:40px;}
+        .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
         @keyframes spin{to{transform:rotate(360deg);}}
-        .footer{background:var(--card);padding:30px;text-align:center;margin-top:30px;}
-        .ticker{background:var(--card);padding:12px;border-radius:8px;margin-bottom:20px;overflow:hidden;white-space:nowrap;}
-        .ticker-content{display:inline-block;animation:ticker 20s linear infinite;}
-        @keyframes ticker{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
-        .sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:var(--card);z-index:200;transition:0.3s;padding:20px;}
-        .sidebar.open{left:0;}
-        .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:199;display:none;}
-        .overlay.active{display:block;}
-        .menu-btn{background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;}
-        .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;justify-content:space-around;padding:12px;z-index:99;display:none;}
+        .footer{background:#111;padding:30px;text-align:center;margin-top:40px;}
+        .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;display:flex;justify-content:space-around;padding:10px;z-index:99;display:none;}
         @media(max-width:768px){.bottom-nav{display:flex;}}
-        .widget{background:var(--card);padding:20px;border-radius:12px;margin-bottom:20px;}
-        .trending-item{padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+        .sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:#111;z-index:1000;transition:left 0.3s;padding:20px;}
+        .sidebar.open{left:0;}
+        .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;display:none;}
+        .overlay.active{display:block;}
+        .menu-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;}
+        .widget{background:#1a1a1a;padding:20px;border-radius:12px;margin-bottom:20px;}
+        .trending-item{padding:8px 0;border-bottom:1px solid #333;cursor:pointer;}
     </style>
 </head>
 <body>
@@ -85,12 +80,8 @@
         <p>World's Most Advanced News Platform | AI-Powered | Real-Time</p>
     </div>
 
-    <div class="ticker"><div class="ticker-content" id="tickerContent">🔴 LIVE | Loading news...</div></div>
-
     <div class="category-grid" id="categoryGrid"><div class="loader"><div class="spinner"></div></div></div>
-
     <div class="news-grid" id="newsGrid"><div class="loader"><div class="spinner"></div></div></div>
-
     <div class="widget"><h3>🔥 Trending Now</h3><div id="trendingList">Loading...</div></div>
     <div class="widget"><h3>☁️ Weather</h3><div style="text-align:center"><span style="font-size:32px;">28°C</span><br>📍 New Delhi, IN</div></div>
 </div>
@@ -114,6 +105,7 @@ async function loadData() {
     document.getElementById('newsGrid').innerHTML = '<div class="loader"><div class="spinner"></div></div>';
     
     try {
+        // Load categories
         const { data: cats } = await supabase.from('categories').select('*');
         categories = cats || [];
         
@@ -129,7 +121,6 @@ async function loadData() {
                 el.onclick = () => {
                     currentCat = el.getAttribute('data-cat');
                     loadNews();
-                    document.querySelectorAll('.nav a, .bottom-nav a, .sidebar a').forEach(n => n.classList.remove('active'));
                 };
             });
         }
@@ -160,9 +151,9 @@ async function loadNews() {
             const cat = categories.find(c => c.id == article.category_id);
             return `
                 <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-                    <span class="news-cat">${cat?.name || 'News'}</span>
+                    <span class="news-category">${cat?.name || 'News'}</span>
                     <h3 class="news-title">${escapeHtml(article.title)}</h3>
-                    <p class="news-excerpt">${escapeHtml((article.excerpt || article.content || '').substring(0, 120))}...</p>
+                    <p class="news-excerpt">${escapeHtml((article.excerpt || article.content || '').substring(0,120))}...</p>
                     <div class="news-meta">
                         <span>📅 ${new Date(article.published_at || article.created_at).toLocaleDateString()}</span>
                         <span>👁️ ${article.views || 0} views</span>
@@ -171,6 +162,7 @@ async function loadNews() {
             `;
         }).join('');
         
+        // Trending
         const trending = [...publishedNews].sort((a,b) => (b.views||0) - (a.views||0)).slice(0,5);
         document.getElementById('trendingList').innerHTML = trending.map((item,i) => `
             <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
@@ -179,9 +171,6 @@ async function loadNews() {
                 <div style="font-size:11px;">👁️ ${item.views || 0} views</div>
             </div>
         `).join('');
-        
-        const tickerNews = publishedNews.slice(0,5);
-        document.getElementById('tickerContent').innerHTML = '🔴 LIVE | ' + tickerNews.map(n => n.title).join(' | ') + ' | ';
         
     } catch(e) { console.error(e); }
 }
