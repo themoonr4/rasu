@@ -8,37 +8,45 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',Arial,sans-serif;padding:20px;}
+        :root{--bg:#0a0a0a;--card:#111;--text:#fff;--text-sec:#aaa;--border:#222;--red:#dc2626;}
+        [data-theme="light"]{--bg:#f5f5f5;--card:#fff;--text:#1a1a1a;--text-sec:#666;--border:#ddd;}
+        body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);transition:0.3s;padding:20px;}
         .container{max-width:800px;margin:0 auto;}
-        .back-btn{background:#dc2626;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block;margin-bottom:20px;}
-        .article-card{background:#111;padding:30px;border-radius:16px;}
-        .cat{background:#dc2626;display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:15px;}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+        .logo{font-size:24px;font-weight:bold;color:var(--red);text-decoration:none;}
+        .theme-toggle{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+        .back-btn{background:var(--red);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block;margin-bottom:20px;}
+        .article-card{background:var(--card);padding:30px;border-radius:16px;border:1px solid var(--border);}
+        .cat{background:var(--red);display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:15px;color:#fff;}
         h1{font-size:28px;margin-bottom:15px;}
-        .meta{color:#aaa;font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #222;}
+        .meta{color:var(--text-sec);font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid var(--border);}
         .content{line-height:1.7;margin-top:20px;}
         .content p{margin-bottom:15px;}
-        .loader{text-align:center;padding:50px;}
-        .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
-        @keyframes spin{to{transform:rotate(360deg);}}
-        .error{text-align:center;padding:50px;color:#dc3545;}
         .action-buttons{display:flex;gap:15px;margin:20px 0;flex-wrap:wrap;}
-        .btn{background:#1a1a1a;border:none;color:#fff;padding:10px 20px;border-radius:30px;cursor:pointer;font-size:14px;}
-        .btn.bookmarked{background:#dc2626;}
+        .btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:30px;cursor:pointer;font-size:14px;}
+        .btn.bookmarked{background:var(--red);color:#fff;border-color:var(--red);}
         .share-dropdown{position:relative;display:inline-block;}
-        .share-content{display:none;position:absolute;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:10px;min-width:180px;z-index:10;}
-        .share-content a{display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:#fff;border-radius:8px;}
-        .share-content a:hover{background:#333;}
-        .comments-section{margin-top:30px;border-top:1px solid #222;padding-top:20px;}
-        .comment-item{background:#1a1a1a;padding:15px;margin-bottom:15px;border-radius:8px;}
-        .comment-name{font-weight:bold;color:#dc2626;margin-bottom:5px;}
+        .share-content{display:none;position:absolute;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;min-width:180px;z-index:10;}
+        .share-content a{display:flex;align-items:center;gap:10px;padding:8px 12px;text-decoration:none;color:var(--text);border-radius:8px;}
+        .share-content a:hover{background:var(--bg);}
+        .comments-section{margin-top:30px;border-top:1px solid var(--border);padding-top:20px;}
+        .comment-item{background:var(--card);padding:15px;margin-bottom:15px;border-radius:8px;border:1px solid var(--border);}
+        .comment-name{font-weight:bold;color:var(--red);margin-bottom:5px;}
         .comment-text{margin:10px 0;line-height:1.5;}
-        .comment-date{font-size:11px;color:#666;}
-        .add-comment textarea{width:100%;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:10px;resize:vertical;}
-        .add-comment button{background:#dc2626;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;}
+        .comment-date{font-size:11px;color:var(--text-sec);}
+        .add-comment textarea{width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);margin-bottom:10px;resize:vertical;}
+        .add-comment button{background:var(--red);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;}
+        .loader{text-align:center;padding:50px;}
+        .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
+        @keyframes spin{to{transform:rotate(360deg);}}
     </style>
 </head>
 <body>
 <div class="container">
+    <div class="header">
+        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
     <a href="/rasu/" class="back-btn">← Back to Home</a>
     <div id="articleCard"><div class="loader"><div class="spinner"></div></div></div>
 </div>
@@ -55,18 +63,42 @@ const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get('id');
 let currentUser = null;
 let isBookmarked = false;
+let currentArticle = null;
 
+// Theme
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if(saved === 'light') document.body.setAttribute('data-theme', 'light');
+    else document.body.removeAttribute('data-theme');
+}
+function toggleTheme() {
+    if(document.body.hasAttribute('data-theme')) {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+    } else {
+        document.body.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+    }
+}
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+initTheme();
+
+// Check login
 async function checkLogin() {
     const { data } = await supabase.auth.getSession();
     if(data.session) currentUser = data.session.user;
 }
 
+// Check bookmark
 async function checkBookmark() {
     if(!currentUser || !articleId) return false;
     const { data } = await supabase.from('user_bookmarks').select('id').eq('user_id', currentUser.id).eq('news_id', articleId).single();
     return !!data;
 }
 
+// Toggle bookmark
 async function toggleBookmark() {
     if(!currentUser) {
         alert('Please login to bookmark');
@@ -106,9 +138,10 @@ function showToast(msg) {
     setTimeout(() => toast.remove(), 3000);
 }
 
+// Share
 function shareArticle(platform) {
     const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(document.querySelector('h1')?.innerText || 'THE MOON News');
+    const title = encodeURIComponent(currentArticle?.title || 'THE MOON News');
     let shareUrl = '';
     if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${title}%20${url}`;
     else if(platform === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${title}`;
@@ -122,12 +155,13 @@ function toggleShareDropdown() {
     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 }
 
+// Comments
 async function loadComments() {
     const { data } = await supabase.from('comments').select('*').eq('news_id', articleId).order('created_at', { ascending: false });
     const commentList = document.getElementById('commentList');
     if(!commentList) return;
     if(!data || data.length === 0) {
-        commentList.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;">No comments yet. Be the first to comment!</div>';
+        commentList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-sec);">No comments yet. Be the first to comment!</div>';
         return;
     }
     commentList.innerHTML = data.map(c => `
@@ -160,9 +194,39 @@ function escapeHtml(text) {
     return text.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
 }
 
+// Update reading streak and history
+async function updateReadingStreak() {
+    const today = new Date().toDateString();
+    const lastRead = localStorage.getItem('lastReadDate');
+    let streak = parseInt(localStorage.getItem('readingStreak') || 0);
+    if(lastRead !== today) {
+        const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+        streak = lastRead === yesterday.toDateString() ? streak + 1 : 1;
+        localStorage.setItem('readingStreak', streak);
+        localStorage.setItem('lastReadDate', today);
+        if(currentUser) {
+            await supabase.from('profiles').upsert({ id: currentUser.id, reading_streak: streak });
+        }
+    }
+}
+
+async function saveReadingHistory() {
+    if(!currentUser || !articleId) return;
+    const { data: existing } = await supabase.from('reading_history').select('id').eq('user_id', currentUser.id).eq('news_id', articleId).single();
+    if(!existing) {
+        await supabase.from('reading_history').insert({ user_id: currentUser.id, news_id: articleId, read_at: new Date() });
+    }
+}
+
+async function updateViewCount() {
+    if(!currentArticle) return;
+    await supabase.from('news').update({ views: (currentArticle.views || 0) + 1 }).eq('id', articleId);
+}
+
+// Load article
 async function loadArticle() {
     if(!articleId) {
-        document.getElementById('articleCard').innerHTML = '<div class="error">❌ No article ID found</div>';
+        document.getElementById('articleCard').innerHTML = '<div class="loader">❌ No article ID found</div>';
         return;
     }
     
@@ -175,30 +239,16 @@ async function loadArticle() {
         .single();
     
     if(error || !article) {
-        document.getElementById('articleCard').innerHTML = '<div class="error">❌ Article not found</div>';
+        document.getElementById('articleCard').innerHTML = '<div class="loader">❌ Article not found</div>';
         return;
     }
     
-    // Update view count
-    await supabase.from('news').update({ views: (article.views || 0) + 1 }).eq('id', articleId);
+    currentArticle = article;
     
-    // Save reading history
-    if(currentUser) {
-        await supabase.from('reading_history').upsert({ user_id: currentUser.id, news_id: articleId, read_at: new Date() });
-        
-        // Reading streak
-        const today = new Date().toDateString();
-        const lastRead = localStorage.getItem('lastReadDate');
-        let streak = parseInt(localStorage.getItem('readingStreak') || 0);
-        if(lastRead !== today) {
-            const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-            streak = lastRead === yesterday.toDateString() ? streak + 1 : 1;
-            localStorage.setItem('readingStreak', streak);
-            localStorage.setItem('lastReadDate', today);
-            await supabase.from('profiles').upsert({ id: currentUser.id, reading_streak: streak });
-        }
-    }
-    
+    // Update view count, history, streak
+    await updateViewCount();
+    await saveReadingHistory();
+    await updateReadingStreak();
     isBookmarked = await checkBookmark();
     
     document.getElementById('articleCard').innerHTML = `
