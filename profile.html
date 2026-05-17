@@ -20,7 +20,7 @@
         .success{background:#28a745;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
         .error{background:#dc3545;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
         .info{background:#17a2b8;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
-        .nav-links{display:flex;gap:15px;margin-bottom:20px;}
+        .nav-links{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap;}
         .nav-btn{background:#1a1a1a;padding:10px 20px;border-radius:8px;cursor:pointer;}
         .nav-btn.active{background:#dc2626;}
         .hide{display:none;}
@@ -30,12 +30,9 @@
         .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:20px 0;}
         .stat{text-align:center;}
         .stat-number{font-size:1.5rem;font-weight:bold;color:#dc2626;}
+        .stat-label{font-size:0.7rem;color:#aaa;}
         .setting-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222;}
         .logout-btn{background:#6c757d;margin-top:10px;}
-        .achievement-card{background:#1a1a1a;padding:12px;border-radius:12px;text-align:center;min-width:100px;display:inline-block;margin:5px;}
-        .achievement-card.earned{background:#dc2626;}
-        .stats-summary{display:flex;gap:10px;margin-bottom:15px;}
-        .stat-summary-card{background:#1a1a1a;padding:10px;border-radius:8px;text-align:center;flex:1;}
     </style>
 </head>
 <body>
@@ -143,11 +140,12 @@ async function loadUserData() {
     document.getElementById('historyCount').innerText = history?.length || 0;
     document.getElementById('readingTime').innerText = (history?.length || 0) * 3;
     
-    document.getElementById('bookmarksList').innerHTML = (!bookmarks || bookmarks.length === 0) ? '<div class="info">No bookmarks yet</div>' : bookmarks.map(b => `<div class="bookmark-item" onclick="location.href='/rasu/article.html?id=${b.news.id}'">📰 ${b.news.title}<div style="font-size:12px;">${new Date(b.created_at).toLocaleDateString()}</div></div>`).join('');
+    document.getElementById('bookmarksList').innerHTML = (!bookmarks || bookmarks.length === 0) ? '<div class="info">No bookmarks yet</div>' : bookmarks.map(b => `<div class="bookmark-item" onclick="location.href='/rasu/article.html?id=${b.news.id}'">📰 ${b.news.title}<div style="font-size:12px;color:#aaa;">${new Date(b.created_at).toLocaleDateString()}</div></div>`).join('');
     
-    document.getElementById('historyList').innerHTML = (!history || history.length === 0) ? '<div class="info">No history yet</div>' : history.map(h => `<div class="history-item" onclick="location.href='/rasu/article.html?id=${h.news.id}'">📖 ${h.news.title}<div style="font-size:12px;">${new Date(h.read_at).toLocaleDateString()}</div></div>`).join('');
+    document.getElementById('historyList').innerHTML = (!history || history.length === 0) ? '<div class="info">No reading history yet</div>' : history.map(h => `<div class="history-item" onclick="location.href='/rasu/article.html?id=${h.news.id}'">📖 ${h.news.title}<div style="font-size:12px;color:#aaa;">${new Date(h.read_at).toLocaleDateString()}</div></div>`).join('');
     
     document.getElementById('displayName').value = localStorage.getItem('displayName') || '';
+    document.getElementById('themeSelect').value = localStorage.getItem('theme') || 'dark';
 }
 
 function showTab(tab) {
@@ -178,6 +176,8 @@ async function logout() {
     currentUser = null;
     document.getElementById('loginSection').classList.remove('hide');
     document.getElementById('profileSection').classList.add('hide');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
 }
 
 function toggleTheme() {
