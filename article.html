@@ -8,18 +8,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:Arial,sans-serif;background:#0a0a0a;color:#fff;padding:20px;}
+        body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',Arial,sans-serif;padding:20px;}
         .container{max-width:800px;margin:0 auto;}
-        .back-btn{display:inline-block;background:#dc2626;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;margin-bottom:20px;}
-        .article-card{background:#1a1a1a;padding:30px;border-radius:16px;}
-        .category{display:inline-block;background:#dc2626;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:15px;}
+        .back-btn{background:#dc2626;padding:10px 20px;border-radius:8px;text-decoration:none;color:#fff;display:inline-block;margin-bottom:20px;}
+        .article-card{background:#111;padding:30px;border-radius:16px;}
+        .cat{background:#dc2626;display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:15px;}
         h1{font-size:28px;margin-bottom:15px;}
-        .meta{color:#aaa;font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #333;}
-        .content{line-height:1.6;color:#ddd;}
+        .meta{color:#aaa;font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #222;}
+        .content{line-height:1.7;margin-top:20px;}
+        .content p{margin-bottom:15px;}
         .loader{text-align:center;padding:50px;}
-        .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
+        .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#dc2626;border-radius:50%;animation:spin 1s infinite;margin:0 auto;}
         @keyframes spin{to{transform:rotate(360deg);}}
         .error{text-align:center;padding:50px;color:#dc3545;}
+        .action-buttons{display:flex;gap:15px;margin:20px 0;}
+        .bookmark-btn{background:#1a1a1a;border:none;color:#fff;padding:10px 20px;border-radius:30px;cursor:pointer;}
+        .bookmark-btn.bookmarked{background:#dc2626;}
     </style>
 </head>
 <body>
@@ -27,8 +31,8 @@
     <a href="/rasu/" class="back-btn">← Back to Home</a>
     <div id="articleCard"><div class="loader"><div class="spinner"></div></div></div>
 </div>
+
 <script>
-// 🔥 NAYA SUPABASE URL AUR KEY (TUNE DIYA)
 const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
 
@@ -38,22 +42,102 @@ const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get('id');
+let currentUser = null;
+let isBookmarked = false;
+
+async function checkLogin() {
+    const { data } = await supabase.auth.getSession();
+    if(data.session) currentUser = data.session.user;
+}
+
+async function checkBookmark() {
+    if(!currentUser || !articleId) return false;
+    const { data } = await supabase.from('user_bookmarks').select('id').eq('user_id', currentUser.id).eq('news_id', articleId).single();
+    return !!data;
+}
+
+async function toggleBookmark() {
+    if(!currentUser) {
+        alert('Please login to bookmark');
+        window.location.href = '/rasu/profile.html';
+        return;
+    }
+    if(isBookmarked) {
+        await supabase.from('user_bookmarks').delete().eq('user_id', currentUser.id).eq('news_id', articleId);
+        isBookmarked = false;
+    } else {
+        await supabase.from('user_bookmarks').insert({ user_id: currentUser.id, news_id: articleId, created_at: new Date() });
+        isBookmarked = true;
+    }
+    updateBookmarkBtn();
+}
+
+function updateBookmarkBtn() {
+    const btn = document.getElementById('bookmarkBtn');
+    if(btn) {
+        if(isBookmarked) {
+            btn.innerHTML = '✅ Bookmarked';
+            btn.classList.add('bookmarked');
+        } else {
+            btn.innerHTML = '🔖 Bookmark';
+            btn.classList.remove('bookmarked');
+        }
+    }
+}
 
 async function loadArticle() {
-    if(!articleId){ document.getElementById('articleCard').innerHTML='<div class="error">No article ID</div>'; return; }
+    if(!articleId) {
+        document.getElementById('articleCard').innerHTML = '<div class="error">❌ No article ID found</div>';
+        return;
+    }
     
-    const {data:article, error} = await supabase.from('news').select('*, categories(*)').eq('id',articleId).single();
+    await checkLogin();
     
-    if(error || !article){ document.getElementById('articleCard').innerHTML='<div class="error">Article not found</div>'; return; }
+    const { data: article, error } = await supabase
+        .from('news')
+        .select('*, categories(*)')
+        .eq('id', articleId)
+        .single();
+    
+    if(error || !article) {
+        document.getElementById('articleCard').innerHTML = '<div class="error">❌ Article not found</div>';
+        return;
+    }
+    
+    // Update view count
+    await supabase.from('news').update({ views: (article.views || 0) + 1 }).eq('id', articleId);
+    
+    // Save to reading history
+    if(currentUser) {
+        await supabase.from('reading_history').upsert({ user_id: currentUser.id, news_id: articleId, read_at: new Date() });
+        
+        // Update reading streak
+        const today = new Date().toDateString();
+        const lastRead = localStorage.getItem('lastReadDate');
+        let streak = parseInt(localStorage.getItem('readingStreak') || 0);
+        if(lastRead !== today) {
+            const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+            streak = lastRead === yesterday.toDateString() ? streak + 1 : 1;
+            localStorage.setItem('readingStreak', streak);
+            localStorage.setItem('lastReadDate', today);
+            await supabase.from('profiles').upsert({ id: currentUser.id, reading_streak: streak });
+        }
+    }
+    
+    isBookmarked = await checkBookmark();
     
     document.getElementById('articleCard').innerHTML = `
         <div class="article-card">
-            <span class="category">${article.categories?.name || 'News'}</span>
+            <span class="cat">${article.categories?.name || 'News'}</span>
             <h1>${escapeHtml(article.title)}</h1>
-            <div class="meta">📅 ${new Date(article.published_at || article.created_at).toLocaleDateString()} | 👁️ ${article.views || 0} views</div>
+            <div class="meta">📅 ${new Date(article.published_at || article.created_at).toLocaleDateString()} | 👁️ ${(article.views || 0) + 1} views</div>
             <div class="content">${(article.content || article.excerpt || '').split('\n').map(p => `<p>${escapeHtml(p)}</p>`).join('')}</div>
+            <div class="action-buttons">
+                <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark()">${isBookmarked ? '✅ Bookmarked' : '🔖 Bookmark'}</button>
+            </div>
         </div>
     `;
+    updateBookmarkBtn();
 }
 
 function escapeHtml(text) {
