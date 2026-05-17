@@ -208,7 +208,7 @@ async function loadNews() {
         const publishedNews = (news || []).filter(n => n.status === 'published');
         
         if(publishedNews.length === 0) {
-            document.getElementById('newsGrid').innerHTML = '<div class="loader">📭 No news yet</div>';
+            document.getElementById('newsGrid').innerHTML = '<div class="loader">📭 No news yet. Please add news in Supabase.</div>';
             return;
         }
         
