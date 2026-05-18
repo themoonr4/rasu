@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>GNews Proxy</title></head>
+<body>
+<script>
+const API_KEY = 'ab48ed766b05b0ab07a4c81f81817cef';
+const url = `https://gnews.io/api/v4/top-headlines?country=in&apikey=${API_KEY}`;
+
+fetch(url)
+  .then(r => r.json())
+  .then(data => {
+    document.body.innerHTML = `<pre>${JSON.stringify(data)}</pre>`;
+  })
+  .catch(e => {
+    document.body.innerHTML = `<pre>Error: ${e.message}</pre>`;
+  });
+</script>
+</body>
+</html>
