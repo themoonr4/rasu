@@ -1,11 +1,16 @@
-const CACHE_NAME = 'the-moon-v2';
+const CACHE_NAME = 'the-moon-v3';
 const urlsToCache = [
   '/rasu/',
   '/rasu/index.html',
+  '/rasu/style.css',
+  '/rasu/script.js',
   '/rasu/article.html',
+  '/rasu/article.js',
   '/rasu/profile.html',
-  '/rasu/admin.html',
-  '/rasu/assets/logo.svg'
+  '/rasu/profile.js',
+  '/rasu/manifest.json',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
 ];
 
 self.addEventListener('install', event => {
