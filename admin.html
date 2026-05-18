@@ -8,19 +8,11 @@
         .container{max-width:600px;margin:0 auto;}
         .card{background:#111;border:1px solid #222;border-radius:16px;padding:25px;margin-bottom:20px;}
         h2{color:#dc2626;text-align:center;margin-bottom:20px;}
-        h3{color:#dc2626;margin-bottom:15px;font-size:18px;}
         input,textarea,select{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px;}
         button{background:#dc2626;color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold;}
-        button:hover{background:#b91c1c;}
         .success{background:#28a745;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
         .error{background:#dc3545;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
-        .info{background:#17a2b8;padding:10px;border-radius:8px;margin-bottom:15px;text-align:center;}
         .hide{display:none;}
-        .btn-secondary{background:#6c757d;margin-top:10px;}
-        .subscriber-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #222;}
-        .subscriber-email{font-weight:bold;}
-        .subscriber-date{font-size:11px;color:#aaa;}
-        .delete-sub-btn{background:#dc3545;padding:4px 8px;width:auto;font-size:12px;}
     </style>
 </head>
 <body>
@@ -35,41 +27,29 @@
         <div id="adminPanel" class="hide">
             <div class="card">
                 <h2>🌙 Post News</h2>
-                <div class="info">✅ Authorized Admin | Supabase Connected</div>
+                <div class="success">✅ Authorized Admin | Categories Ready</div>
                 
                 <input type="text" id="title" placeholder="Title">
-                <select id="category">
+                <select id="categoryId">
                     <option value="1">💻 Technology</option>
                     <option value="2">🏏 Sports</option>
                     <option value="3">📊 Business</option>
                     <option value="4">🏛️ Politics</option>
                     <option value="5">📚 Study</option>
+                    <option value="6">📺 Entertainment</option>
                 </select>
                 <input type="text" id="image" placeholder="Image URL">
                 <textarea id="content" rows="8" placeholder="Content..."></textarea>
                 <button onclick="postNews()">📰 PUBLISH</button>
                 <div id="result"></div>
             </div>
-
-            <div class="card">
-                <h3>📧 Newsletter Subscribers</h3>
-                <div id="subscriberList">
-                    <div class="info">Loading subscribers...</div>
-                </div>
-                <button onclick="exportSubscribers()" style="margin-top:10px; background:#28a745;">
-                    📥 Export Subscribers (CSV)
-                </button>
-            </div>
-
-            <button onclick="logout()" class="btn-secondary">🚪 Logout</button>
+            <button onclick="logout()" style="background:#6c757d;">🚪 Logout</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         const SECRET_PASSWORD = 'TheMoon2024';
-        
-        // 🔑 UPDATED SUPABASE KEYS
         const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
         const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -79,7 +59,6 @@
             if (pass === SECRET_PASSWORD) {
                 document.getElementById('passwordScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                loadSubscribers();
             } else {
                 document.getElementById('passMsg').innerHTML = '<div class="error">❌ Wrong Password!</div>';
             }
@@ -91,49 +70,10 @@
             document.getElementById('adminPass').value = '';
         }
 
-        async function loadSubscribers() {
-            const { data, error } = await supabase.from('newsletter').select('*').order('subscribed_at', { ascending: false });
-            const listDiv = document.getElementById('subscriberList');
-            if (error || !data || data.length === 0) {
-                listDiv.innerHTML = '<div class="info">No subscribers yet</div>';
-                return;
-            }
-            listDiv.innerHTML = data.map(sub => `
-                <div class="subscriber-item">
-                    <div>
-                        <div class="subscriber-email">${sub.email}</div>
-                        <div class="subscriber-date">📅 ${new Date(sub.subscribed_at).toLocaleDateString()}</div>
-                    </div>
-                    <button class="delete-sub-btn" onclick="deleteSubscriber('${sub.id}')">Delete</button>
-                </div>
-            `).join('');
-        }
-
-        async function deleteSubscriber(id) {
-            if (confirm('Remove this subscriber?')) {
-                await supabase.from('newsletter').delete().eq('id', id);
-                loadSubscribers();
-            }
-        }
-
-        async function exportSubscribers() {
-            const { data } = await supabase.from('newsletter').select('*');
-            if (!data || data.length === 0) { alert('No subscribers'); return; }
-            let csv = 'Email,Subscribed Date\n';
-            data.forEach(sub => csv += `"${sub.email}","${new Date(sub.subscribed_at).toLocaleString()}"\n`);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `subscribers_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
         async function postNews() {
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
-            const categoryId = parseInt(document.getElementById('category').value);
+            const categoryId = parseInt(document.getElementById('categoryId').value);
             const image = document.getElementById('image').value;
             const resultDiv = document.getElementById('result');
 
@@ -146,33 +86,29 @@
 
             const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-            try {
-                const { data, error } = await supabase
-                    .from('news')
-                    .insert({
-                        title: title,
-                        slug: slug,
-                        content: content,
-                        category_id: categoryId,
-                        featured_image: image || null,
-                        excerpt: content.substring(0, 150),
-                        status: 'published',
-                        published_at: new Date().toISOString(),
-                        created_at: new Date().toISOString(),
-                        source: 'Admin'
-                    });
+            const { data, error } = await supabase
+                .from('news')
+                .insert({
+                    title: title,
+                    slug: slug,
+                    content: content,
+                    category_id: categoryId,
+                    featured_image: image || null,
+                    excerpt: content.substring(0, 150),
+                    status: 'published',
+                    published_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    source: 'Admin'
+                });
 
-                if (error) {
-                    resultDiv.innerHTML = `<div class="error">❌ ${error.message}</div>`;
-                } else {
-                    resultDiv.innerHTML = '<div class="success">✅ NEWS PUBLISHED! 🎉</div>';
-                    document.getElementById('title').value = '';
-                    document.getElementById('content').value = '';
-                    document.getElementById('image').value = '';
-                    setTimeout(() => resultDiv.innerHTML = '', 3000);
-                }
-            } catch (err) {
-                resultDiv.innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
+            if (error) {
+                resultDiv.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+            } else {
+                resultDiv.innerHTML = '<div class="success">✅ NEWS PUBLISHED! 🎉</div>';
+                document.getElementById('title').value = '';
+                document.getElementById('content').value = '';
+                document.getElementById('image').value = '';
+                setTimeout(() => resultDiv.innerHTML = '', 3000);
             }
         }
     </script>
