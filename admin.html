@@ -188,12 +188,17 @@
         async function postNews() {
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
-            const categoryId = document.getElementById('category').value;
+            const categoryId = parseInt(document.getElementById('category').value, 10);
             const image = document.getElementById('image').value;
             const resultDiv = document.getElementById('result');
 
             if (!title || !content) {
                 resultDiv.innerHTML = '<div class="error">❌ Title and Content required</div>';
+                return;
+            }
+
+            if (Number.isNaN(categoryId)) {
+                resultDiv.innerHTML = '<div class="error">❌ Valid category required</div>';
                 return;
             }
 
@@ -213,7 +218,7 @@
                         title: title,
                         slug: slug,
                         content: content,
-                        category_id: parseInt(categoryId),
+                        category_id: categoryId,
                         featured_image: image || null,
                         excerpt: content.substring(0, 150),
                         status: 'published',
@@ -237,8 +242,11 @@
                     
                     setTimeout(() => resultDiv.innerHTML = '', 3000);
                 } else {
-                    const error = await response.json();
-                    resultDiv.innerHTML = `<div class="error">❌ ${error.message || 'Unknown error'}</div>`;
+                    const errorText = await response.text();
+                    let parsedError = null;
+                    try { parsedError = JSON.parse(errorText); } catch (_) {}
+                    const errorMsg = parsedError?.message || parsedError?.hint || errorText || 'Unknown error';
+                    resultDiv.innerHTML = `<div class="error">❌ ${errorMsg}</div>`;
                 }
             } catch (err) {
                 resultDiv.innerHTML = `<div class="error">❌ Connection error: ${err.message}</div>`;
