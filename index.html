@@ -957,11 +957,11 @@
     <script>
 async function loadNews() {
     try {
-        const response = await fetch('https://api.freeapi.app/api/v1/public/news?page=1&limit=20');
+        const response = await fetch('https://gnews.io/api/v4/top-headlines?country=in&category=general&apikey=87fa66ffb328fc16aa35724f2cf0c739');
         const result = await response.json();
         
-        if(result.success && result.data.data) {
-            const news = result.data.data;
+        if(result.articles && result.articles.length > 0) {
+            const news = result.articles;
             
             let breakingHTML = '<div style="background:#dc2626; color:white; padding:15px; border-radius:10px; margin:10px;">';
             breakingHTML += '<h2>🔴 BREAKING NEWS</h2>';
@@ -1032,6 +1032,6 @@ async function loadNews() {
 }
 
 loadNews();
-            </script>
+    </script>
 </body>
 </html>
