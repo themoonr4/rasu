@@ -954,58 +954,80 @@
     initSidebar();
     initNewsletter();
 </script>
-    <script>
-async function loadNews() {
-    const API_KEY = 'ab48ed766b05b0ab07a4c81f81817cef';
-    const url = `https://api.allorigins.win/raw?url=https://gnews.io/api/v4/top-headlines?country=in&apikey=${API_KEY}`;
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function loadNewsFromSupabase() {
+    const { data: news, error } = await supabase
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
     
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
+    if(error) {
+        console.log('Supabase error:', error);
+        showEmergencyNews();
+        return;
+    }
+    
+    if(news && news.length > 0) {
+        let breakingHtml = '<div style="background:#dc2626; color:white; padding:15px; border-radius:12px; margin:10px;"><h2>🔴 BREAKING NEWS</h2>';
+        let trendingHtml = '<ul style="list-style:none; padding:10px;">';
         
-        console.log("Data received:", data);
-        
-        if(data.articles && data.articles.length > 0) {
-            const articles = data.articles;
-            let breaking = '<div style="background:#dc2626;color:white;padding:15px;border-radius:10px;margin:10px;"><h2>🔴 BREAKING NEWS</h2>';
-            for(let i=0; i<3; i++) breaking += `<p>🔥 ${articles[i].title}</p>`;
-            breaking += '</div>';
-            
-            let trending = '<ul style="list-style:none;padding:10px;">';
-            for(let i=0; i<5; i++) trending += `<li style="padding:8px 0;border-bottom:1px solid #eee;">📰 ${articles[i].title}</li>`;
-            trending += '</ul>';
-            
-            document.querySelectorAll('div').forEach(div => {
-                if(div.innerText.includes('Breaking news') || div.innerText.includes('LIVE')) {
-                    div.innerHTML = breaking;
-                }
-            });
-            
-            document.body.getElementsByTagName('*').forEach(el => {
-                if(el.innerText === 'Trending Now' && el.nextElementSibling) {
-                    el.nextElementSibling.innerHTML = trending;
-                }
-            });
-        } else {
-            showBackup();
+        for(let i = 0; i < news.length && i < 5; i++) {
+            if(i < 3) breakingHtml += `<p>🔥 ${news[i].title}</p>`;
+            trendingHtml += `<li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                📰 ${news[i].title}
+                ${news[i].image_url ? `<br><img src="${news[i].image_url}" width="100%" style="border-radius:8px; margin-top:8px;">` : ''}
+                <div style="font-size:12px; color:#666;">Source: ${news[i].source} | 👁️ ${news[i].views || 0} views</div>
+            </li>`;
         }
-    } catch(e) {
-        console.log("Error:", e);
-        showBackup();
+        
+        breakingHtml += '</div>';
+        trendingHtml += '</ul>';
+        
+        document.querySelectorAll('div').forEach(div => {
+            if(div.innerText.includes('Breaking news') || div.innerText.includes('LIVE')) {
+                div.innerHTML = breakingHtml;
+            }
+        });
+        
+        const allEls = document.body.getElementsByTagName('*');
+        for(let el of allEls) {
+            if(el.innerText === 'Trending Now' && el.nextElementSibling) {
+                el.nextElementSibling.innerHTML = trendingHtml;
+                break;
+            }
+        }
+        
+        console.log(`✅ ${news.length} news loaded from Supabase!`);
+    } else {
+        showEmergencyNews();
     }
 }
 
-function showBackup() {
-    const headlines = ["🔴 ISRO moon mission successful", "📊 Sensex at record high 85000", "🏏 IPL playoffs today"];
-    let html = '<div style="background:#dc2626;color:white;padding:15px;border-radius:10px;margin:10px;"><h2>🔴 BREAKING NEWS</h2>';
-    for(let h of headlines) html += `<p>🔥 ${h}</p>`;
+function showEmergencyNews() {
+    const emergency = [
+        "🔴 Welcome to THE MOON - Add your first news from Admin Panel",
+        "📊 Go to admin.html to publish news",
+        "🏏 Your Supabase is connected successfully"
+    ];
+    
+    let html = '<div style="background:#dc2626;color:white;padding:15px;border-radius:12px;margin:10px;"><h2>🔴 BREAKING NEWS</h2>';
+    for(let h of emergency) html += `<p>🔥 ${h}</p>`;
     html += '</div>';
+    
     document.querySelectorAll('div').forEach(div => {
-        if(div.innerText.includes('Breaking news')) div.innerHTML = html;
+        if(div.innerText.includes('Breaking news') || div.innerText.includes('LIVE')) {
+            div.innerHTML = html;
+        }
     });
 }
 
-loadNews();
-                </script>
+loadNewsFromSupabase();
+</script>
 </body>
 </html>
