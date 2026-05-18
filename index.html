@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="THE MOON - World's Most Advanced News Platform">
+    <meta name="theme-color" content="#dc2626">
+    <title>THE MOON - World Class News</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="header">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <a href="/rasu/" class="logo">🌙 THE MOON</a>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search news...">
+        <button id="searchBtn"><i class="fas fa-search"></i></button>
+        <div id="searchResults" class="search-results"></div>
+    </div>
+    <div class="nav">
+        <a data-cat="all" class="active">All</a>
+        <a data-cat="tech">Tech</a>
+        <a data-cat="sports">Sports</a>
+        <a data-cat="business">Business</a>
+        <a data-cat="politics">Politics</a>
+        <a data-cat="study">Study</a>
+        <a data-cat="entertainment">Entertainment</a>
+    </div>
+    <div class="header-actions">
+        <button id="themeToggle"><i class="fas fa-moon"></i></button>
+        <button id="notifyBtn"><i class="fas fa-bell"></i></button>
+        <a href="/rasu/profile.html" id="profileLink">👤</a>
+    </div>
+</div>
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <span class="logo">🌙 THE MOON</span>
+        <button id="closeSidebar">✕</button>
+    </div>
+    <a data-cat="all">🏠 Home</a>
+    <a data-cat="tech">💻 Technology</a>
+    <a data-cat="sports">🏏 Sports</a>
+    <a data-cat="business">📊 Business</a>
+    <a data-cat="politics">🏛️ Politics</a>
+    <a data-cat="study">📚 Study</a>
+    <a data-cat="entertainment">🎬 Entertainment</a>
+    <a href="/rasu/profile.html">👤 Profile</a>
+    <a id="installApp" style="display:none;">📱 Install App</a>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="bottom-nav">
+    <a data-cat="all">🏠</a>
+    <a data-cat="tech">💻</a>
+    <a data-cat="sports">🏏</a>
+    <a data-cat="business">📊</a>
+    <a href="/rasu/profile.html">👤</a>
+</div>
+
+<div class="container">
+    <div class="hero">
+        <h1>Welcome to THE MOON</h1>
+        <p>World's Most Advanced News Platform | AI-Powered | Real-Time</p>
+    </div>
+
+    <div class="ticker">
+        <div class="ticker-content" id="tickerContent">🔴 LIVE | Loading breaking news...</div>
+    </div>
+
+    <div class="category-grid" id="categoryGrid">
+        <div class="loader"><div class="spinner"></div></div>
+    </div>
+
+    <div class="layout-main">
+        <div class="news-grid" id="newsGrid">
+            <div class="loader"><div class="spinner"></div></div>
+        </div>
+
+        <div class="sidebar-right">
+            <div class="widget">
+                <h3><i class="fas fa-fire"></i> Trending Now</h3>
+                <div id="trendingList">Loading...</div>
+            </div>
+            <div class="widget">
+                <h3><i class="fas fa-robot"></i> AI Curated</h3>
+                <div id="aiPicks">Loading...</div>
+            </div>
+            <div class="widget">
+                <h3><i class="fas fa-envelope"></i> Newsletter</h3>
+                <input type="email" id="newsletterEmail" placeholder="Your email">
+                <button id="newsletterBtn">Subscribe</button>
+                <div id="newsletterMsg"></div>
+            </div>
+            <div class="widget">
+                <h3><i class="fas fa-cloud-sun"></i> Weather</h3>
+                <div class="weather-temp">28°C</div>
+                <div class="weather-location">📍 New Delhi, IN</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+        <a href="#">Advertise</a>
+    </div>
+    <div class="footer-social">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div class="copyright">
+        <p>© 2026 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
+    </div>
+</footer>
+
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({ appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c" });
+    });
+</script>
+</body>
+</html>
