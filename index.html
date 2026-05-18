@@ -955,26 +955,8 @@
     initNewsletter();
 </script>
     <script>
-function getApiKey() {
-    const keys = JSON.parse(localStorage.getItem('apiKeys') || '[]');
-    return keys.length > 0 ? keys[0].key : null;
-}
-
-function saveApiKey(key) {
-    const keys = JSON.parse(localStorage.getItem('apiKeys') || '[]');
-    if(keys.length === 0) {
-        keys.push({ name: 'Website Key', key: key, permissions: 'read', date: new Date().toLocaleString() });
-        localStorage.setItem('apiKeys', JSON.stringify(keys));
-    }
-}
-
 async function loadNews() {
-    let savedKey = getApiKey();
-    
-    if(!savedKey) {
-        savedKey = 'ab48ed766b05b0ab07a4c81f81817cef';
-        saveApiKey(savedKey);
-    }
+    const savedKey = 'ab48ed766b05b0ab07a4c81f81817cef';
     
     try {
         const response = await fetch(`https://gnews.io/api/v4/top-headlines?country=in&apikey=${savedKey}`);
@@ -982,10 +964,8 @@ async function loadNews() {
         
         if(result.articles && result.articles.length > 0) {
             displayNews(result.articles);
-        } else if(result.errors) {
-            console.log('API key invalid, using backup');
-            showBackupNews();
         } else {
+            console.log('No articles, using backup');
             showBackupNews();
         }
     } catch(error) {
