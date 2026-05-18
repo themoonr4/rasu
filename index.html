@@ -956,20 +956,21 @@
 </script>
     <script>
 async function loadNews() {
-    const savedKey = 'ab48ed766b05b0ab07a4c81f81817cef';
+    const API_KEY = 'ab48ed766b05b0ab07a4c81f81817cef';
+    const PROXY = 'https://cors-anywhere.herokuapp.com/';
+    const url = `${PROXY}https://gnews.io/api/v4/top-headlines?country=in&apikey=${API_KEY}`;
     
     try {
-        const response = await fetch(`https://gnews.io/api/v4/top-headlines?country=in&apikey=${savedKey}`);
+        const response = await fetch(url);
         const result = await response.json();
         
         if(result.articles && result.articles.length > 0) {
             displayNews(result.articles);
         } else {
-            console.log('No articles, using backup');
             showBackupNews();
         }
     } catch(error) {
-        console.log('Network error, using backup');
+        console.log('Proxy error, using backup');
         showBackupNews();
     }
 }
@@ -977,13 +978,13 @@ async function loadNews() {
 function displayNews(articles) {
     let breakingHTML = '<div style="background:#dc2626; color:white; padding:15px; border-radius:10px; margin:10px;">';
     breakingHTML += '<h2>🔴 BREAKING NEWS</h2>';
-    for(let i = 0; i < 3 && i < articles.length; i++) {
+    for(let i = 0; i < 3; i++) {
         breakingHTML += `<p>🔥 ${articles[i].title}</p>`;
     }
     breakingHTML += '</div>';
     
     let trendingHTML = '<ul style="list-style:none; padding:10px;">';
-    for(let i = 0; i < 5 && i < articles.length; i++) {
+    for(let i = 0; i < 5; i++) {
         trendingHTML += `<li style="padding:8px 0; border-bottom:1px solid #eee;">📰 ${articles[i].title}</li>`;
     }
     trendingHTML += '</ul>';
@@ -1006,25 +1007,20 @@ function displayNews(articles) {
 }
 
 function showBackupNews() {
-    const backupNews = [
+    const backup = [
         "India launches new space mission to Moon",
-        "Supreme Court delivers landmark judgment today",
         "Sensex hits record high at 85000 points",
-        "Team India wins thrilling match by 5 wickets",
-        "New AI policy announced by government"
+        "Team India wins thrilling match",
+        "New AI policy announced",
+        "Supreme Court landmark judgment"
     ];
     
-    let breakingHTML = '<div style="background:#dc2626; color:white; padding:15px; border-radius:10px; margin:10px;">';
-    breakingHTML += '<h2>🔴 BREAKING NEWS</h2>';
-    for(let i = 0; i < 3; i++) {
-        breakingHTML += `<p>🔥 ${backupNews[i]}</p>`;
-    }
+    let breakingHTML = '<div style="background:#dc2626; color:white; padding:15px; border-radius:10px; margin:10px;"><h2>🔴 BREAKING NEWS</h2>';
+    for(let i = 0; i < 3; i++) breakingHTML += `<p>🔥 ${backup[i]}</p>`;
     breakingHTML += '</div>';
     
     let trendingHTML = '<ul style="list-style:none; padding:10px;">';
-    for(let i = 0; i < 5; i++) {
-        trendingHTML += `<li style="padding:8px 0; border-bottom:1px solid #eee;">📰 ${backupNews[i % backupNews.length]}</li>`;
-    }
+    for(let i = 0; i < 5; i++) trendingHTML += `<li style="padding:8px 0; border-bottom:1px solid #eee;">📰 ${backup[i % backup.length]}</li>`;
     trendingHTML += '</ul>';
     
     const allDivs = document.querySelectorAll('div');
