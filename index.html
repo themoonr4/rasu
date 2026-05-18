@@ -955,69 +955,95 @@
     initNewsletter();
 </script>
     <script>
-async function loadNews() {
-    try {
-        const response = await fetch('https://gnews.io/api/v4/top-headlines?country=in&category=general&apikey=7b8f9c2d3e4a5b6c7d8e9f0a1b2c3d4e');
-        const result = await response.json();
-        
-        if(result.articles && result.articles.length > 0) {
-            const news = result.articles;
-            
-            let breakingHTML = '<div style="background:#dc2626; color:white; padding:15px; border-radius:10px; margin:10px;">';
-            breakingHTML += '<h2>🔴 BREAKING NEWS</h2>';
-            for(let i = 0; i < 3; i++) {
-                breakingHTML += `<p>🔥 ${news[i]?.title}</p>`;
-            }
-            breakingHTML += '</div>';
-            
-            let trendingHTML = '<ul style="list-style:none; padding:10px;">';
-            for(let i = 0; i < 5; i++) {
-                trendingHTML += `<li style="padding:8px 0; border-bottom:1px solid #eee;">📰 ${news[i]?.title}</li>`;
-            }
-            trendingHTML += '</ul>';
-            
-            const allDivs = document.querySelectorAll('div');
-            for(let div of allDivs) {
-                if(div.innerText.includes('Breaking news') || div.innerText.includes('LIVE')) {
-                    div.innerHTML = breakingHTML;
-                    break;
-                }
-            }
-            
-            const allElements = document.body.getElementsByTagName('*');
-            for(let el of allElements) {
-                if(el.innerText === 'Trending Now' && el.nextElementSibling) {
-                    el.nextElementSibling.innerHTML = trendingHTML;
-                    break;
-                }
-            }
-        } else {
-            loadBackupNews();
-        }
-    } catch(error) {
-        loadBackupNews();
+function getApiKey() {
+    const keys = JSON.parse(localStorage.getItem('apiKeys') || '[]');
+    return keys.length > 0 ? keys[0].key : null;
+}
+
+function saveApiKey(key) {
+    const keys = JSON.parse(localStorage.getItem('apiKeys') || '[]');
+    if(keys.length === 0) {
+        keys.push({ name: 'Website Key', key: key, permissions: 'read', date: new Date().toLocaleString() });
+        localStorage.setItem('apiKeys', JSON.stringify(keys));
     }
 }
 
-function loadBackupNews() {
+async function loadNews() {
+    let savedKey = getApiKey();
+    
+    if(!savedKey) {
+        savedKey = '87fa66ffb328fc16aa35724f2cf0c739';
+        saveApiKey(savedKey);
+    }
+    
+    try {
+        const response = await fetch(`https://gnews.io/api/v4/top-headlines?country=in&category=general&apikey=${savedKey}`);
+        const result = await response.json();
+        
+        if(result.articles && result.articles.length > 0) {
+            displayNews(result.articles);
+        } else if(result.errors) {
+            console.log('API key invalid, using backup');
+            showBackupNews();
+        } else {
+            showBackupNews();
+        }
+    } catch(error) {
+        console.log('Network error, using backup');
+        showBackupNews();
+    }
+}
+
+function displayNews(articles) {
+    let breakingHTML = '<div style="background:#dc2626; color:white; padding:15px; border-radius:10px; margin:10px;">';
+    breakingHTML += '<h2>🔴 BREAKING NEWS</h2>';
+    for(let i = 0; i < 3 && i < articles.length; i++) {
+        breakingHTML += `<p>🔥 ${articles[i].title}</p>`;
+    }
+    breakingHTML += '</div>';
+    
+    let trendingHTML = '<ul style="list-style:none; padding:10px;">';
+    for(let i = 0; i < 5 && i < articles.length; i++) {
+        trendingHTML += `<li style="padding:8px 0; border-bottom:1px solid #eee;">📰 ${articles[i].title}</li>`;
+    }
+    trendingHTML += '</ul>';
+    
+    const allDivs = document.querySelectorAll('div');
+    for(let div of allDivs) {
+        if(div.innerText.includes('Breaking news') || div.innerText.includes('LIVE')) {
+            div.innerHTML = breakingHTML;
+            break;
+        }
+    }
+    
+    const allElements = document.body.getElementsByTagName('*');
+    for(let el of allElements) {
+        if(el.innerText === 'Trending Now' && el.nextElementSibling) {
+            el.nextElementSibling.innerHTML = trendingHTML;
+            break;
+        }
+    }
+}
+
+function showBackupNews() {
     const backupNews = [
-        {title: "India launches new space mission to Moon"},
-        {title: "Supreme Court delivers landmark judgment today"},
-        {title: "Sensex hits record high at 85000 points"},
-        {title: "Team India wins thrilling match by 5 wickets"},
-        {title: "New AI policy announced by government"}
+        "India launches new space mission to Moon",
+        "Supreme Court delivers landmark judgment today",
+        "Sensex hits record high at 85000 points",
+        "Team India wins thrilling match by 5 wickets",
+        "New AI policy announced by government"
     ];
     
     let breakingHTML = '<div style="background:#dc2626; color:white; padding:15px; border-radius:10px; margin:10px;">';
     breakingHTML += '<h2>🔴 BREAKING NEWS</h2>';
     for(let i = 0; i < 3; i++) {
-        breakingHTML += `<p>🔥 ${backupNews[i].title}</p>`;
+        breakingHTML += `<p>🔥 ${backupNews[i]}</p>`;
     }
     breakingHTML += '</div>';
     
     let trendingHTML = '<ul style="list-style:none; padding:10px;">';
     for(let i = 0; i < 5; i++) {
-        trendingHTML += `<li style="padding:8px 0; border-bottom:1px solid #eee;">📰 ${backupNews[i % backupNews.length].title}</li>`;
+        trendingHTML += `<li style="padding:8px 0; border-bottom:1px solid #eee;">📰 ${backupNews[i % backupNews.length]}</li>`;
     }
     trendingHTML += '</ul>';
     
