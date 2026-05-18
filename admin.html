@@ -2,298 +2,311 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - Admin Panel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>THE MOON - Admin</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',Arial,sans-serif;padding:20px;}
-        .container{max-width:1200px;margin:0 auto;}
-        .header{background:#111;padding:15px 20px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-        .logo{font-size:24px;font-weight:bold;color:#dc2626;text-decoration:none;}
-        .card{background:#111;border-radius:16px;padding:25px;margin-bottom:20px;}
-        .card h2{color:#dc2626;margin-bottom:20px;}
-        input,textarea,select{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;}
-        button{background:#dc2626;color:#fff;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:bold;}
+        body{background:#0a0a0a;font-family:Arial;color:#fff;padding:20px;}
+        .container{max-width:600px;margin:0 auto;}
+        .card{background:#111;border:1px solid #222;border-radius:16px;padding:25px;margin-bottom:20px;}
+        h2{color:#dc2626;text-align:center;margin-bottom:20px;}
+        h3{color:#dc2626;margin-bottom:15px;font-size:18px;}
+        input,textarea,select{width:100%;padding:12px;margin-bottom:15px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px;}
+        button{background:#dc2626;color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;width:100%;font-weight:bold;}
         button:hover{background:#b91c1c;}
-        .news-item{background:#1a1a1a;padding:15px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;}
-        .news-title{flex:1;font-weight:bold;}
-        .news-actions button{margin-left:10px;padding:8px 15px;}
-        .btn-danger{background:#dc3545;}
-        .btn-danger:hover{background:#c82333;}
-        .btn-edit{background:#ffc107;color:#000;}
-        .btn-edit:hover{background:#e0a800;}
+        .success{background:#28a745;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
+        .error{background:#dc3545;padding:10px;border-radius:8px;margin-top:15px;text-align:center;}
+        .info{background:#17a2b8;padding:10px;border-radius:8px;margin-bottom:15px;text-align:center;}
         .hide{display:none;}
-        .success{background:#28a745;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
-        .error{background:#dc3545;padding:10px;border-radius:8px;margin-top:10px;text-align:center;}
-        .loader{text-align:center;padding:40px;}
-        .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
-        @keyframes spin{to{transform:rotate(360deg);}}
-        table{width:100%;border-collapse:collapse;}
-        th,td{padding:12px;text-align:left;border-bottom:1px solid #333;}
-        th{color:#dc2626;}
+        .form-group{margin-bottom:15px;}
+        label{display:block;margin-bottom:5px;color:#aaa;font-size:13px;}
+        .btn-secondary{background:#6c757d;margin-top:10px;}
+        .btn-secondary:hover{background:#5a6268;}
+        .subscriber-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #222;}
+        .subscriber-email{font-weight:bold;}
+        .subscriber-date{font-size:11px;color:#aaa;}
+        .delete-sub-btn{background:#dc3545;padding:4px 8px;width:auto;font-size:12px;}
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <a href="/rasu/" class="logo">🌙 THE MOON Admin</a>
-        <a href="/rasu/" style="color:#fff;text-decoration:none;">← Back to Site</a>
-    </div>
-
-    <div id="loginSection" class="card">
-        <h2>🔐 Admin Login</h2>
-        <input type="email" id="loginEmail" placeholder="Email">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button onclick="adminLogin()">Login</button>
-        <div id="loginMsg"></div>
-    </div>
-
-    <div id="adminPanel" class="hide">
-        <div class="card">
-            <h2>➕ Add New Article</h2>
-            <input type="text" id="newsTitle" placeholder="Title">
-            <input type="text" id="newsSlug" placeholder="Slug (e.g., india-wins-world-cup)">
-            <input type="text" id="newsExcerpt" placeholder="Short excerpt">
-            <textarea id="newsContent" rows="5" placeholder="Full article content..."></textarea>
-            <select id="newsCategory">
-                <option value="">Select Category</option>
-                <option value="Technology">Technology</option>
-                <option value="Sports">Sports</option>
-                <option value="Business">Business</option>
-                <option value="Politics">Politics</option>
-                <option value="Study">Study</option>
-                <option value="Entertainment">Entertainment</option>
-            </select>
-            <input type="text" id="newsImage" placeholder="Featured image URL (optional)">
-            <button onclick="addNews()">➕ Publish Article</button>
-            <div id="addMsg"></div>
+    <div class="container">
+        <!-- Password Screen -->
+        <div id="passwordScreen" class="card">
+            <h2>🔐 Admin Access</h2>
+            <input type="password" id="adminPass" placeholder="Enter Admin Password">
+            <button onclick="checkPassword()">Enter</button>
+            <div id="passMsg"></div>
         </div>
 
-        <div class="card">
-            <h2>📰 All Articles</h2>
-            <div id="newsList"><div class="loader"><div class="spinner"></div></div></div>
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="hide">
+            <!-- Post News Section -->
+            <div class="card">
+                <h2>🌙 Post News</h2>
+                <div class="info">✅ Authorized Admin</div>
+                
+                <input type="text" id="title" placeholder="Title">
+                <select id="category">
+                    <option value="1">💻 Technology</option>
+                    <option value="2">🏏 Sports</option>
+                    <option value="3">📊 Business</option>
+                    <option value="4">🏛️ Politics</option>
+                    <option value="5">📚 Study</option>
+                </select>
+                <input type="text" id="image" placeholder="Image URL">
+                <textarea id="content" rows="8" placeholder="Content..."></textarea>
+                <button onclick="postNews()">📰 PUBLISH</button>
+                <div id="result"></div>
+            </div>
+
+            <!-- Push Notification Section -->
+            <div class="card">
+                <h3><i class="fas fa-bell"></i> 🔔 Send Push Notification</h3>
+                <div class="form-group">
+                    <label>Notification Title</label>
+                    <input type="text" id="notifyTitle" placeholder="e.g., Breaking News">
+                </div>
+                <div class="form-group">
+                    <label>Notification Message</label>
+                    <textarea id="notifyMessage" rows="3" placeholder="e.g., Click to read the full story..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Click URL (optional)</label>
+                    <input type="text" id="notifyUrl" placeholder="/rasu/">
+                </div>
+                <button id="sendNotifyBtn" onclick="sendNotificationFromAdmin()">📤 Send Notification</button>
+                <div id="notifyResult"></div>
+            </div>
+
+            <!-- Subscriber List Section -->
+            <div class="card">
+                <h3><i class="fas fa-users"></i> 📧 Newsletter Subscribers</h3>
+                <div id="subscriberList" style="max-height: 300px; overflow-y: auto;">
+                    <div class="info">Loading subscribers...</div>
+                </div>
+                <button onclick="exportSubscribers()" style="margin-top: 10px; background: #28a745;">
+                    📥 Export Subscribers (CSV)
+                </button>
+            </div>
+
+            <!-- Logout Button -->
+            <button onclick="logout()" class="btn-secondary">🚪 Logout</button>
         </div>
     </div>
-</div>
 
-<script>
-const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // 🔐 Password
+        const SECRET_PASSWORD = 'TheMoon2024';
 
-const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY, {
-    global: { headers: { 'apikey': SUPABASE_KEY } }
-});
+        // 🔑 Supabase (YOUR credentials)
+        const SUPABASE_URL = 'https://qrtiapjrslubbbuucpen.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Um_UlotzRIAPivm1GErr-A_S_-gJyz9';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser = null;
-let isAdmin = false;
+        // 🔔 OneSignal Configuration
+        const ONESIGNAL_APP_ID = '60154f61-182d-45c0-99f1-fef13b3f9d1c';
+        const ONESIGNAL_REST_API_KEY = 'YOUR_REST_API_KEY_HERE';  // 🔑 OneSignal Dashboard se copy karo
 
-async function adminLogin() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const msgDiv = document.getElementById('loginMsg');
-    
-    if(!email || !password) {
-        msgDiv.innerHTML = '<div class="error">Enter email and password</div>';
-        return;
-    }
-    
-    msgDiv.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
-    
-    let { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    
-    if(error && error.message.includes('Invalid login credentials')) {
-        await supabase.auth.signUp({ email, password });
-        const { data: retryData } = await supabase.auth.signInWithPassword({ email, password });
-        data = retryData;
-    } else if(error) {
-        msgDiv.innerHTML = `<div class="error">${error.message}</div>`;
-        return;
-    }
-    
-    if(data?.user) {
-        currentUser = data.user;
-        
-        // Check if admin (you can manually add yourself as admin)
-        const { data: adminCheck } = await supabase
-            .from('admin_users')
-            .select('*')
-            .eq('id', currentUser.id)
-            .single();
-        
-        if(adminCheck || email === 'admin@themoon.com') {
-            isAdmin = true;
-            msgDiv.innerHTML = '<div class="success">✅ Admin login successful!</div>';
-            document.getElementById('loginSection').classList.add('hide');
-            document.getElementById('adminPanel').classList.remove('hide');
-            loadAllNews();
-        } else {
-            msgDiv.innerHTML = '<div class="error">❌ You are not an admin. Contact site owner.</div>';
+        // Check Password
+        function checkPassword() {
+            const pass = document.getElementById('adminPass').value;
+            const msgDiv = document.getElementById('passMsg');
+            
+            if (pass === SECRET_PASSWORD) {
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                msgDiv.innerHTML = '';
+                loadSubscribers();
+            } else {
+                msgDiv.innerHTML = '<div class="error">❌ Wrong Password!</div>';
+            }
         }
-    }
-}
 
-async function loadAllNews() {
-    const { data, error } = await supabase
-        .from('news')
-        .select('*')
-        .order('published_at', { ascending: false });
-    
-    const newsList = document.getElementById('newsList');
-    if(error || !data || data.length === 0) {
-        newsList.innerHTML = '<div class="loader">No articles found</div>';
-        return;
-    }
-    
-    newsList.innerHTML = `
-        <table>
-            <thead>
-                <tr><th>ID</th><th>Title</th><th>Category</th><th>Date</th><th>Views</th><th>Actions</th></tr>
-            </thead>
-            <tbody>
-                ${data.map(article => `
-                    <tr>
-                        <td>${article.id}</td>
-                        <td>${escapeHtml(article.title)}</td>
-                        <td>${article.category || article.category_id}</td>
-                        <td>${new Date(article.published_at).toLocaleDateString()}</td>
-                        <td>${article.views || 0}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editNews(${article.id})">Edit</button>
-                            <button class="btn-danger" onclick="deleteNews(${article.id})">Delete</button>
-                        </td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
-}
-
-async function addNews() {
-    const title = document.getElementById('newsTitle').value;
-    const slug = document.getElementById('newsSlug').value;
-    const excerpt = document.getElementById('newsExcerpt').value;
-    const content = document.getElementById('newsContent').value;
-    const category = document.getElementById('newsCategory').value;
-    const image = document.getElementById('newsImage').value;
-    const msgDiv = document.getElementById('addMsg');
-    
-    if(!title || !content || !category) {
-        msgDiv.innerHTML = '<div class="error">Please fill title, content and category</div>';
-        return;
-    }
-    
-    msgDiv.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
-    
-    const { error } = await supabase.from('news').insert({
-        title: title,
-        slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        excerpt: excerpt || title.substring(0, 120),
-        content: content,
-        category: category,
-        category_id: await getCategoryId(category),
-        featured_image: image,
-        status: 'published',
-        published_at: new Date(),
-        views: 0
-    });
-    
-    if(error) {
-        msgDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
-    } else {
-        msgDiv.innerHTML = '<div class="success">✅ Article published successfully!</div>';
-        document.getElementById('newsTitle').value = '';
-        document.getElementById('newsSlug').value = '';
-        document.getElementById('newsExcerpt').value = '';
-        document.getElementById('newsContent').value = '';
-        document.getElementById('newsImage').value = '';
-        loadAllNews();
-    }
-    setTimeout(() => msgDiv.innerHTML = '', 3000);
-}
-
-async function getCategoryId(categoryName) {
-    const { data } = await supabase.from('categories').select('id').eq('name', categoryName).single();
-    return data?.id || 1;
-}
-
-async function editNews(id) {
-    const { data } = await supabase.from('news').select('*').eq('id', id).single();
-    if(data) {
-        document.getElementById('newsTitle').value = data.title;
-        document.getElementById('newsSlug').value = data.slug;
-        document.getElementById('newsExcerpt').value = data.excerpt || '';
-        document.getElementById('newsContent').value = data.content;
-        document.getElementById('newsCategory').value = data.category || '';
-        document.getElementById('newsImage').value = data.featured_image || '';
-        
-        // Scroll to form
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Change button to update
-        const addBtn = document.querySelector('#adminPanel .card:first-child button');
-        addBtn.innerHTML = '✏️ Update Article';
-        addBtn.setAttribute('onclick', `updateNews(${id})`);
-    }
-}
-
-async function updateNews(id) {
-    const title = document.getElementById('newsTitle').value;
-    const slug = document.getElementById('newsSlug').value;
-    const excerpt = document.getElementById('newsExcerpt').value;
-    const content = document.getElementById('newsContent').value;
-    const category = document.getElementById('newsCategory').value;
-    const image = document.getElementById('newsImage').value;
-    const msgDiv = document.getElementById('addMsg');
-    
-    const { error } = await supabase
-        .from('news')
-        .update({
-            title: title,
-            slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-            excerpt: excerpt || title.substring(0, 120),
-            content: content,
-            category: category,
-            featured_image: image,
-            updated_at: new Date()
-        })
-        .eq('id', id);
-    
-    if(error) {
-        msgDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
-    } else {
-        msgDiv.innerHTML = '<div class="success">✅ Article updated successfully!</div>';
-        // Reset form
-        document.getElementById('newsTitle').value = '';
-        document.getElementById('newsSlug').value = '';
-        document.getElementById('newsExcerpt').value = '';
-        document.getElementById('newsContent').value = '';
-        document.getElementById('newsImage').value = '';
-        const addBtn = document.querySelector('#adminPanel .card:first-child button');
-        addBtn.innerHTML = '➕ Publish Article';
-        addBtn.setAttribute('onclick', 'addNews()');
-        loadAllNews();
-    }
-    setTimeout(() => msgDiv.innerHTML = '', 3000);
-}
-
-async function deleteNews(id) {
-    if(confirm('Are you sure you want to delete this article?')) {
-        const { error } = await supabase.from('news').delete().eq('id', id);
-        if(error) {
-            alert('Error deleting: ' + error.message);
-        } else {
-            loadAllNews();
+        // Logout
+        function logout() {
+            document.getElementById('passwordScreen').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPass').value = '';
         }
-    }
-}
 
-function escapeHtml(text) {
-    if(!text) return '';
-    return text.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-}
-</script>
+        // Load Subscribers
+        async function loadSubscribers() {
+            const { data, error } = await supabase
+                .from('newsletter')
+                .select('*')
+                .order('subscribed_at', { ascending: false });
+            
+            const listDiv = document.getElementById('subscriberList');
+            
+            if (error || !data || data.length === 0) {
+                listDiv.innerHTML = '<div class="info">No subscribers yet</div>';
+                return;
+            }
+            
+            listDiv.innerHTML = data.map(sub => `
+                <div class="subscriber-item">
+                    <div>
+                        <div class="subscriber-email">${sub.email}</div>
+                        <div class="subscriber-date">📅 ${new Date(sub.subscribed_at).toLocaleDateString()}</div>
+                    </div>
+                    <button class="delete-sub-btn" onclick="deleteSubscriber('${sub.id}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Delete Subscriber
+        async function deleteSubscriber(id) {
+            if (confirm('Remove this subscriber?')) {
+                await supabase.from('newsletter').delete().eq('id', id);
+                loadSubscribers();
+            }
+        }
+
+        // Export Subscribers to CSV
+        async function exportSubscribers() {
+            const { data } = await supabase.from('newsletter').select('*').order('subscribed_at', { ascending: false });
+            
+            if (!data || data.length === 0) {
+                alert('No subscribers to export');
+                return;
+            }
+            
+            let csv = 'Email,Subscribed Date\n';
+            data.forEach(sub => {
+                csv += `"${sub.email}","${new Date(sub.subscribed_at).toLocaleString()}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `subscribers_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Post News to Supabase
+        async function postNews() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const categoryId = document.getElementById('category').value;
+            const image = document.getElementById('image').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!title || !content) {
+                resultDiv.innerHTML = '<div class="error">❌ Title and Content required</div>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<div class="success">⏳ Publishing...</div>';
+
+            const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        slug: slug,
+                        content: content,
+                        category_id: parseInt(categoryId),
+                        featured_image: image || null,
+                        excerpt: content.substring(0, 150),
+                        status: 'published',
+                        published_at: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok) {
+                    resultDiv.innerHTML = '<div class="success">✅ NEWS PUBLISHED! 🎉</div>';
+                    document.getElementById('title').value = '';
+                    document.getElementById('content').value = '';
+                    document.getElementById('image').value = '';
+                    
+                    // Auto send notification after publishing news
+                    const notifyTitle = document.getElementById('notifyTitle').value || title;
+                    const notifyMessage = document.getElementById('notifyMessage').value || content.substring(0, 100);
+                    const notifyUrl = document.getElementById('notifyUrl').value || `/rasu/`;
+                    
+                    await sendPushNotification(notifyTitle, notifyMessage, notifyUrl);
+                    loadSubscribers();
+                    
+                    setTimeout(() => resultDiv.innerHTML = '', 3000);
+                } else {
+                    const error = await response.json();
+                    resultDiv.innerHTML = `<div class="error">❌ ${error.message || 'Unknown error'}</div>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="error">❌ Connection error: ${err.message}</div>`;
+            }
+        }
+
+        // Send Push Notification via OneSignal REST API
+        async function sendPushNotification(title, message, url) {
+            if (!ONESIGNAL_REST_API_KEY || ONESIGNAL_REST_API_KEY === 'YOUR_REST_API_KEY_HERE') {
+                console.log('REST API key not configured');
+                return false;
+            }
+            
+            try {
+                const response = await fetch('https://onesignal.com/api/v1/notifications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Basic ${ONESIGNAL_REST_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        app_id: ONESIGNAL_APP_ID,
+                        headings: { en: title },
+                        contents: { en: message },
+                        url: url,
+                        included_segments: ['Subscribed Users']
+                    })
+                });
+                
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Notification error:', error);
+                return { error: error.message };
+            }
+        }
+
+        // Send notification from admin panel button
+        async function sendNotificationFromAdmin() {
+            const title = document.getElementById('notifyTitle').value;
+            const message = document.getElementById('notifyMessage').value;
+            const url = document.getElementById('notifyUrl').value || '/rasu/';
+            const resultDiv = document.getElementById('notifyResult');
+            
+            if (!title || !message) {
+                resultDiv.innerHTML = '<div class="error">❌ Please enter both title and message</div>';
+                setTimeout(() => resultDiv.innerHTML = '', 3000);
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="success">⏳ Sending notification...</div>';
+            
+            const response = await sendPushNotification(title, message, url);
+            
+            if (response.errors) {
+                resultDiv.innerHTML = `<div class="error">❌ Failed: ${response.errors}</div>`;
+            } else if (response.id) {
+                resultDiv.innerHTML = `<div class="success">✅ Notification sent successfully! (ID: ${response.id})</div>`;
+                document.getElementById('notifyTitle').value = '';
+                document.getElementById('notifyMessage').value = '';
+            } else {
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${JSON.stringify(response)}</div>`;
+            }
+            
+            setTimeout(() => {
+                if (resultDiv.innerHTML) resultDiv.innerHTML = '';
+            }, 4000);
+        }
+    </script>
 </body>
 </html>
