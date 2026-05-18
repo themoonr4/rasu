@@ -18,6 +18,7 @@
         .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
         input{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
         select{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
+        .success-badge{background:#10b981;color:white;padding:2px 8px;border-radius:12px;font-size:12px;margin-left:10px;}
     </style>
 </head>
 <body>
@@ -38,7 +39,7 @@
         </div>
         
         <div class="card">
-            <h3>Active API Keys</h3>
+            <h3>Active API Keys <span id="activeKeyStatus"></span></h3>
             <div id="keyList"></div>
         </div>
     </div>
@@ -54,6 +55,14 @@
                     <div><button onclick="revokeKey(${i})">Revoke</button></div>
                 </div>
             `).join('');
+            
+            const activeKey = localStorage.getItem('newsApiKey');
+            const statusSpan = document.getElementById('activeKeyStatus');
+            if(activeKey) {
+                statusSpan.innerHTML = `<span class="success-badge"><i class="fas fa-check"></i> Active for News</span>`;
+            } else {
+                statusSpan.innerHTML = `<span style="color:#dc2626;font-size:12px;"> No active news key</span>`;
+            }
         }
         
         function generateKey() {
@@ -63,8 +72,11 @@
             const key = 'tm_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 8);
             apiKeys.push({ name, key, permissions, date: new Date().toLocaleString() });
             localStorage.setItem('apiKeys', JSON.stringify(apiKeys));
+            
+            localStorage.setItem('newsApiKey', key);
+            
             const newKeyDiv = document.getElementById('newKey');
-            newKeyDiv.innerHTML = `<div style="background:#1a1a1a;padding:1rem;border-radius:8px;"><strong>Your new API key:</strong><br><code style="background:#000;padding:0.5rem;display:block;margin-top:0.5rem;">${key}</code><br><small>Copy this key now. You won't see it again!</small></div>`;
+            newKeyDiv.innerHTML = `<div style="background:#10b981;padding:1rem;border-radius:8px;"><strong><i class="fas fa-check-circle"></i> Your new API key:</strong><br><code style="background:#000;padding:0.5rem;display:block;margin-top:0.5rem;">${key}</code><br><small>Copy this key now. You won't see it again!</small><br><small>✅ This key is now ACTIVE for news fetching</small></div>`;
             newKeyDiv.style.display = 'block';
             document.getElementById('keyName').value = '';
             loadKeys();
@@ -73,8 +85,14 @@
         
         function revokeKey(index) {
             if(confirm('Revoke this API key?')) {
+                const revokedKey = apiKeys[index].key;
                 apiKeys.splice(index, 1);
                 localStorage.setItem('apiKeys', JSON.stringify(apiKeys));
+                
+                if(localStorage.getItem('newsApiKey') === revokedKey) {
+                    localStorage.removeItem('newsApiKey');
+                }
+                
                 loadKeys();
             }
         }
