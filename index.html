@@ -959,7 +959,7 @@
 // 🔑 const hata diya
 SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
 SUPABASE_ANON_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
-const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function loadNewsFromSupabase() {
     const { data: news, error } = await supabase
