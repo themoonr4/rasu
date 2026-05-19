@@ -954,14 +954,15 @@
     initSidebar();
     initNewsletter();
 </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// 🔑 const hata diya
-SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
-SUPABASE_ANON_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
-supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+    <script>
+// Existing supabase variable use kar rahe hain (dobara declare nahi kar rahe)
 async function loadNewsFromSupabase() {
+    if (typeof supabase === 'undefined') {
+        console.log('Supabase not initialized yet');
+        showEmergencyNews();
+        return;
+    }
+    
     const { data: news, error } = await supabase
         .from('news')
         .select('*')
@@ -982,8 +983,8 @@ async function loadNewsFromSupabase() {
             if(i < 3) breakingHtml += `<p>🔥 ${news[i].title}</p>`;
             trendingHtml += `<li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
                 📰 ${news[i].title}
-                ${news[i].image_url ? `<br><img src="${news[i].image_url}" width="100%" style="border-radius:8px; margin-top:8px;">` : ''}
-                <div style="font-size:12px; color:#666;">Source: ${news[i].source} | 👁️ ${news[i].views || 0} views</div>
+                ${news[i].featured_image ? `<br><img src="${news[i].featured_image}" width="100%" style="border-radius:8px; margin-top:8px;">` : ''}
+                <div style="font-size:12px; color:#666;">Source: ${news[i].source || 'Admin'} | 👁️ ${news[i].views || 0} views</div>
             </li>`;
         }
         
@@ -1012,9 +1013,9 @@ async function loadNewsFromSupabase() {
 
 function showEmergencyNews() {
     const emergency = [
-        "🔴 Welcome to THE MOON - Add your first news from Admin Panel",
-        "📊 Go to admin.html to publish news",
-        "🏏 Your Supabase is connected successfully"
+        "🔴 No news yet! Go to Admin Panel",
+        "📊 Publish your first news at admin.html",
+        "🏏 Admin password: TheMoon2024"
     ];
     
     let html = '<div style="background:#dc2626;color:white;padding:15px;border-radius:12px;margin:10px;"><h2>🔴 BREAKING NEWS</h2>';
@@ -1028,7 +1029,12 @@ function showEmergencyNews() {
     });
 }
 
-loadNewsFromSupabase();
-</script>
+// Wait for supabase to be ready
+if (typeof supabase !== 'undefined') {
+    loadNewsFromSupabase();
+} else {
+    setTimeout(loadNewsFromSupabase, 1000);
+}
+    </script>
 </body>
 </html>
