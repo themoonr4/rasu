@@ -954,15 +954,14 @@
     initSidebar();
     initNewsletter();
 </script>
-    <script>
-// Existing supabase variable use kar rahe hain (dobara declare nahi kar rahe)
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Supabase Initialize
+const SUPABASE_URL = 'https://crmbbmwekdlfjgekjnll.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_kiBIIC7EYdIOuMUe4ss1Eg_DWDuK2kG';
+const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 async function loadNewsFromSupabase() {
-    if (typeof supabase === 'undefined') {
-        console.log('Supabase not initialized yet');
-        showEmergencyNews();
-        return;
-    }
-    
     const { data: news, error } = await supabase
         .from('news')
         .select('*')
@@ -1029,12 +1028,7 @@ function showEmergencyNews() {
     });
 }
 
-// Wait for supabase to be ready
-if (typeof supabase !== 'undefined') {
-    loadNewsFromSupabase();
-} else {
-    setTimeout(loadNewsFromSupabase, 1000);
-}
-    </script>
+loadNewsFromSupabase();
+            </script>
 </body>
 </html>
