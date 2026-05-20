@@ -689,22 +689,19 @@
         <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
     <div class="copyright">
-        <p>© 2026 THE MOON. All rights reserved. | Made with THE MOON for world-class journalism</p>
+        <p>© 2026 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
     </div>
 </footer>
 
 <script>
     // ============================================
-    // THE MOON - Main JavaScript
-    // All Devices Supported
+    // THE MOON - Final Working JavaScript
     // ============================================
     
-    const SUPABASE_URL = 'https://bmhvpdkcjrxcuzlrfxhn.supabase.co';
+    const SUPABASE_URL = 'https://dkcjrxczulrfxhn.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_sHFJHyY5gKoulhhdwWpJfg_w1eUiaf1';
     
     let currentCategory = 'all';
-    let currentPage = 1;
-    let isLoading = false;
     let allNews = [];
     
     // Theme
@@ -728,38 +725,39 @@
         }
     }
     
-    // Fetch News
+    // Fetch News - Final Working Version
     async function fetchNews() {
         const grid = document.getElementById('newsGrid');
+        if (!grid) return;
         grid.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
         
         try {
-            let url = `${SUPABASE_URL}/rest/v1/news?select=*,categories(*)&status=eq.published&order=published_at.desc&limit=20`;
-            if (currentCategory !== 'all') {
-                url = `${SUPABASE_URL}/rest/v1/news?select=*,categories(*)&categories.slug=eq.${currentCategory}&status=eq.published&order=published_at.desc&limit=20`;
-            }
-            
+            const url = `${SUPABASE_URL}/rest/v1/news?select=*&status=eq.published&order=published_at.desc&limit=20`;
             const response = await fetch(url, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
             });
             
-            if (!response.ok) throw new Error('Failed to fetch');
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
             
             const news = await response.json();
             allNews = news;
             
             if (news.length === 0) {
-                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Check back soon!</div>';
+                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Go to Admin Panel to publish!</div>';
                 return;
             }
             
             grid.innerHTML = news.map(article => `
                 <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-                    ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
                     <div class="news-content">
-                        <span class="news-category">${article.categories?.name || 'News'}</span>
-                        <h3 class="news-title">${article.title}</h3>
-                        <p class="news-excerpt">${article.excerpt || article.content?.substring(0, 100)}...</p>
+                        <span class="news-category">News</span>
+                        <h3 class="news-title">${escapeHtml(article.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(article.excerpt || (article.content ? article.content.substring(0, 100) : ''))}...</p>
                         <div class="news-meta">
                             <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
                             <span>👁️ ${article.views || 0}</span>
@@ -768,26 +766,46 @@
                 </div>
             `).join('');
         } catch (error) {
+            console.error('Fetch error:', error);
             grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
         }
+    }
+    
+    // Helper function to prevent XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
     }
     
     // Trending
     async function loadTrending() {
         const trendingDiv = document.getElementById('trendingList');
+        if (!trendingDiv) return;
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title,views&status=eq.published&order=views.desc&limit=5`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=id,title,views&status=eq.published&order=views.desc&limit=5`, {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
             });
             const news = await response.json();
             
-            trendingDiv.innerHTML = news.map((item, index) => `
-                <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                    <div class="trending-rank">#${index + 1}</div>
-                    <div class="trending-title">${item.title}</div>
-                    <div class="trending-views">👁️ ${item.views || 0} views</div>
-                </div>
-            `).join('');
+            if (news && news.length > 0) {
+                trendingDiv.innerHTML = news.map((item, index) => `
+                    <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                        <div class="trending-rank">#${index + 1}</div>
+                        <div class="trending-title">${escapeHtml(item.title)}</div>
+                        <div class="trending-views">👁️ ${item.views || 0} views</div>
+                    </div>
+                `).join('');
+            } else {
+                trendingDiv.innerHTML = '<p>No trending news yet</p>';
+            }
         } catch (e) {
             trendingDiv.innerHTML = '<p>Loading...</p>';
         }
@@ -797,31 +815,34 @@
     async function loadCategories() {
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
             });
             const categories = await response.json();
             
             const categoryGrid = document.getElementById('categoryGrid');
-            categoryGrid.innerHTML = categories.map(cat => `
-                <a href="#" class="category-card" data-category="${cat.slug}">
-                    <i>${cat.icon || '📰'}</i>
-                    <span>${cat.name}</span>
-                    <small>news</small>
-                </a>
-            `).join('');
-            
-            document.querySelectorAll('.category-card, .nav-desktop a, .sidebar-nav a, .bottom-nav-item').forEach(el => {
-                if (el.getAttribute('data-category')) {
+            if (categoryGrid && categories.length > 0) {
+                categoryGrid.innerHTML = categories.map(cat => `
+                    <a href="#" class="category-card" data-category="${cat.slug}">
+                        <i>${cat.icon || '📰'}</i>
+                        <span>${cat.name}</span>
+                        <small>news</small>
+                    </a>
+                `).join('');
+                
+                document.querySelectorAll('.category-card').forEach(el => {
                     el.addEventListener('click', (e) => {
                         e.preventDefault();
                         currentCategory = el.getAttribute('data-category');
                         fetchNews();
-                        document.querySelectorAll('.nav-desktop a, .bottom-nav-item').forEach(nav => nav.classList.remove('active'));
-                        el.classList.add('active');
                     });
-                }
-            });
-        } catch (e) {}
+                });
+            }
+        } catch (e) {
+            console.log('Categories error:', e);
+        }
     }
     
     // Weather
@@ -836,11 +857,14 @@
     async function loadTicker() {
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title&status=eq.published&order=published_at.desc&limit=5`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
             });
             const news = await response.json();
             const tickerContent = document.getElementById('tickerContent');
-            if (tickerContent) {
+            if (tickerContent && news.length > 0) {
                 tickerContent.innerHTML = '🔴 LIVE | ' + news.map(n => n.title).join(' | ') + ' | ';
             }
         } catch (e) {}
@@ -849,16 +873,24 @@
     // AI Picks
     async function loadAIPicks() {
         const aiDiv = document.getElementById('aiPicks');
+        if (!aiDiv) return;
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title&status=eq.published&order=views.desc&limit=3`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
             });
             const news = await response.json();
-            aiDiv.innerHTML = news.map(item => `
-                <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;">
-                    <div class="trending-title">🤖 ${item.title}</div>
-                </div>
-            `).join('');
+            if (news.length > 0) {
+                aiDiv.innerHTML = news.map(item => `
+                    <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.5rem 0;">
+                        <div class="trending-title">🤖 ${escapeHtml(item.title)}</div>
+                    </div>
+                `).join('');
+            } else {
+                aiDiv.innerHTML = '<p>AI picks loading...</p>';
+            }
         } catch (e) {
             aiDiv.innerHTML = '<p>AI picks loading...</p>';
         }
@@ -868,38 +900,41 @@
     function initSearch() {
         const searchBtn = document.getElementById('searchBtn');
         const searchInput = document.getElementById('searchInput');
-        searchBtn.addEventListener('click', () => {
-            searchInput.classList.toggle('active');
-            if (searchInput.classList.contains('active')) {
-                searchInput.focus();
-            }
-        });
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => {
+                searchInput.classList.toggle('active');
+                if (searchInput.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+        }
         
-        searchInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') {
-                const term = searchInput.value.toLowerCase();
-                const filtered = allNews.filter(n => n.title.toLowerCase().includes(term) || (n.content && n.content.toLowerCase().includes(term)));
-                const grid = document.getElementById('newsGrid');
-                if (filtered.length === 0) {
-                    grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results found</div>';
-                } else {
-                    grid.innerHTML = filtered.map(article => `
-                        <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-                            ${article.featured_image ? `<img class="news-image" src="${article.featured_image}" alt="${article.title}">` : '<div style="height:150px;background:linear-gradient(135deg,var(--brand-red),var(--brand-red-dark));display:flex;align-items:center;justify-content:center;font-size:2rem;">🌙</div>'}
-                            <div class="news-content">
-                                <span class="news-category">${article.categories?.name || 'News'}</span>
-                                <h3 class="news-title">${article.title}</h3>
-                                <p class="news-excerpt">${article.excerpt || article.content?.substring(0, 100)}...</p>
-                                <div class="news-meta">
-                                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
-                                    <span>👁️ ${article.views || 0}</span>
+        if (searchInput) {
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    const term = searchInput.value.toLowerCase();
+                    const filtered = allNews.filter(n => n.title.toLowerCase().includes(term) || (n.content && n.content.toLowerCase().includes(term)));
+                    const grid = document.getElementById('newsGrid');
+                    if (filtered.length === 0) {
+                        grid.innerHTML = '<div class="text-center" style="padding:2rem;">No results found</div>';
+                    } else {
+                        grid.innerHTML = filtered.map(article => `
+                            <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                                <div class="news-content">
+                                    <span class="news-category">News</span>
+                                    <h3 class="news-title">${escapeHtml(article.title)}</h3>
+                                    <p class="news-excerpt">${escapeHtml(article.excerpt || (article.content ? article.content.substring(0, 100) : ''))}...</p>
+                                    <div class="news-meta">
+                                        <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                                        <span>👁️ ${article.views || 0}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `).join('');
+                        `).join('');
+                    }
                 }
-            }
-        });
+            });
+        }
     }
     
     // Sidebar
@@ -909,40 +944,50 @@
         const overlay = document.getElementById('overlay');
         const sidebar = document.getElementById('sidebar');
         
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('open');
-            overlay.classList.add('active');
-        });
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                if (sidebar) sidebar.classList.add('open');
+                if (overlay) overlay.classList.add('active');
+            });
+        }
         
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        });
+        if (closeSidebar) {
+            closeSidebar.addEventListener('click', () => {
+                if (sidebar) sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+            });
+        }
         
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        });
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                if (sidebar) sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+            });
+        }
     }
     
     // Newsletter
     function initNewsletter() {
         const subscribeBtn = document.getElementById('subscribeBtn');
-        subscribeBtn.addEventListener('click', () => {
-            const email = document.getElementById('newsletterEmail').value;
-            if (email) {
-                alert(`Subscribed with ${email}!`);
-                document.getElementById('newsletterEmail').value = '';
-            } else {
-                alert('Please enter email');
-            }
-        });
+        if (subscribeBtn) {
+            subscribeBtn.addEventListener('click', () => {
+                const email = document.getElementById('newsletterEmail')?.value;
+                if (email) {
+                    alert(`Subscribed with ${email}!`);
+                    const input = document.getElementById('newsletterEmail');
+                    if (input) input.value = '';
+                } else {
+                    alert('Please enter email');
+                }
+            });
+        }
     }
     
     // Theme Toggle
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
     
-    // Initialize all
+    // Initialize Everything
     initTheme();
     fetchNews();
     loadCategories();
