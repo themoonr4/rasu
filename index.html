@@ -689,126 +689,129 @@
         <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
     <div class="copyright">
-        <p>© 2026 THE MOON. All rights reserved. | Made with THE MOON for world-class journalism</p>
+        <p>© 2026 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
     </div>
 </footer>
 
 <script>
-    // ============================================
-    // THE MOON - Main JavaScript (FULL VERSION)
-    // All Features: Categories, Trending, AI Picks, Search, Weather, Newsletter, Dark Theme, Sidebar, Mobile Nav
-    // Data Source: JSONBin.io (100% Working, No CORS, No Network Block)
-    // ============================================
-    
-    // 🔑 JSONBin Configuration (REPLACE WITH YOUR KEYS)
-    const JSONBIN_BIN_ID = '6a0e59526610dd3ae87c34b0';      // ← YOUR BIN ID
-    const JSONBIN_API_KEY = '$2a$10$XwNCR4Isg.yQhycQ3sfPfe.GxA7sSObIt8JbSbr.B1GbvBTnk1fja'; // ← YOUR MASTER KEY
-    
-    // Gemini API Key for AI Features
-    const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
-    
-    // Global Variables
-    let currentCategory = 'all';
-    let allNews = [];
-    let categoriesList = ['Technology', 'Sports', 'Business', 'Politics', 'Study'];
-    
-    // ========== THEME FUNCTIONS ==========
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-        }
+// ============================================
+// THE MOON - Main JavaScript (FINAL WORKING)
+// All features intact: Categories, Trending, AI Picks, Search, Weather, Newsletter, Dark Theme, Sidebar, Mobile Nav
+// Data Source: JSONBin.io (100% Working, No CORS, No Network Block)
+// ============================================
+
+// 🔑 JSONBin Configuration
+const JSONBIN_BIN_ID = '6a0e59526610dd3ae87c34b0';
+const JSONBIN_API_KEY = '$2a$10$XwNCR4Isg.yQhycQ3sfPfe.GxA7sSObIt8JbSbr.B1GbvBTnk1fja';
+
+// Gemini API Key for AI Features
+const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
+
+// Global Variables
+let currentCategory = 'all';
+let allNews = [];
+let categoriesList = ['Technology', 'Sports', 'Business', 'Politics', 'Study'];
+
+// ========== THEME FUNCTIONS ==========
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
     }
-    
-    function toggleTheme() {
-        if (document.body.hasAttribute('data-theme')) {
-            document.body.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-        } else {
-            document.body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-        }
+}
+
+function toggleTheme() {
+    if (document.body.hasAttribute('data-theme')) {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+    } else {
+        document.body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
     }
-    
-    // ========== AI FUNCTIONS ==========
-    async function generateAISummary(text) {
-        if (!text || text.length < 50) return text.substring(0, 100);
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Summarize this news in 2 short sentences in simple Hindi/English mix (max 100 words): ${text.substring(0, 1500)}` }] }]
-                })
-            });
-            const data = await response.json();
-            return data.candidates?.[0]?.content?.parts?.[0]?.text || text.substring(0, 100);
-        } catch(error) {
-            return text.substring(0, 100);
-        }
-    }
-    
-    async function enhanceHeadline(title) {
-        if (!title) return title;
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Make this news headline more attractive, clickable, and engaging (keep under 70 characters, add emoji if needed): ${title}` }] }]
-                })
-            });
-            const data = await response.json();
-            const enhanced = data.candidates?.[0]?.content?.parts?.[0]?.text || title;
-            return enhanced.length > 80 ? title : enhanced;
-        } catch(error) {
-            return title;
-        }
-    }
-    
-    async function getAIPickWithReason(news) {
-        if (!news || news.length === 0) return null;
-        try {
-            const headlines = news.slice(0, 10).map((n, i) => `${i+1}. ${n.title}`).join('\n');
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `From these headlines, pick the ONE most important news for Indian readers today. Return in this format: "TITLE|REASON IN ONE LINE"\n\n${headlines}` }] }]
-                })
-            });
-            const data = await response.json();
-            const result = data.candidates?.[0]?.content?.parts?.[0]?.text || `${news[0].title}|Most important news of the day`;
-            const [title, reason] = result.split('|');
-            return { title: title || news[0].title, reason: reason || 'Must read for today' };
-        } catch(error) {
-            return { title: news[0]?.title, reason: 'Top trending news' };
-        }
-    }
-    
-    // ========== HELPER FUNCTIONS ==========
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
+}
+
+// ========== AI FUNCTIONS ==========
+async function generateAISummary(text) {
+    if (!text || text.length < 50) return text.substring(0, 100);
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `Summarize this news in 2 short sentences in simple Hindi/English mix (max 100 words): ${text.substring(0, 1500)}` }] }]
+            })
         });
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || text.substring(0, 100);
+    } catch(error) {
+        return text.substring(0, 100);
     }
-    
-    function displayNews(newsToShow) {
-        const grid = document.getElementById('newsGrid');
-        if (!grid) return;
-        if (!newsToShow || newsToShow.length === 0) {
-            grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
-            return;
-        }
-        grid.innerHTML = newsToShow.map(article => `
+}
+
+async function enhanceHeadline(title) {
+    if (!title) return title;
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `Make this news headline more attractive, clickable, and engaging (keep under 70 characters, add emoji if needed): ${title}` }] }]
+            })
+        });
+        const data = await response.json();
+        const enhanced = data.candidates?.[0]?.content?.parts?.[0]?.text || title;
+        return enhanced.length > 80 ? title : enhanced;
+    } catch(error) {
+        return title;
+    }
+}
+
+async function getAIPickWithReason(news) {
+    if (!news || news.length === 0) return null;
+    try {
+        const headlines = news.slice(0, 10).map((n, i) => `${i+1}. ${n.title}`).join('\n');
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `From these headlines, pick the ONE most important news for Indian readers today. Return in format: "TITLE|REASON"\n\n${headlines}` }] }]
+            })
+        });
+        const data = await response.json();
+        const result = data.candidates?.[0]?.content?.parts?.[0]?.text || `${news[0].title}|Most important news of the day`;
+        const [title, reason] = result.split('|');
+        return { title: title || news[0].title, reason: reason || 'Must read for today' };
+    } catch(error) {
+        return { title: news[0]?.title, reason: 'Top trending news' };
+    }
+}
+
+// ========== HELPER FUNCTIONS ==========
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+function displayNews(newsToShow) {
+    const grid = document.getElementById('newsGrid');
+    if (!grid) return;
+    if (!newsToShow || newsToShow.length === 0) {
+        grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
+        return;
+    }
+    grid.innerHTML = newsToShow.map(article => {
+        const imgUrl = article.image_url || `https://picsum.photos/400/200?random=${article.id}`;
+        return `
             <div class="news-card">
+                <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/400/200?random=1'">
                 <div class="news-content">
                     <span class="news-category">${article.category || 'News'}</span>
                     <h3 class="news-title">${escapeHtml(article.ai_title || article.title)}</h3>
@@ -820,19 +823,20 @@
                     </div>
                 </div>
             </div>
-        `).join('');
+        `;
+    }).join('');
+}
+
+function filterNewsByCategory() {
+    if (currentCategory === 'all') {
+        displayNews(allNews);
+    } else {
+        const filtered = allNews.filter(n => n.category?.toLowerCase() === currentCategory);
+        displayNews(filtered);
     }
-    
-    function filterNewsByCategory() {
-        if (currentCategory === 'all') {
-            displayNews(allNews);
-        } else {
-            const filtered = allNews.filter(n => n.category?.toLowerCase() === currentCategory);
-            displayNews(filtered);
-        }
-    }
-    
-    // ========== FETCH NEWS FROM JSONBin ==========
+}
+
+// ========== FETCH NEWS FROM JSONBin ==========
 async function fetchNews() {
     const grid = document.getElementById('newsGrid');
     if (!grid) return;
@@ -900,170 +904,118 @@ async function fetchNews() {
         grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
     }
 }
-            
-            // Apply AI enhancements to first 6 news items
-            const newsToEnhance = news.slice(0, 6);
-            const enhancedNews = await Promise.all(newsToEnhance.map(async (article) => {
-                const [summary, enhancedTitle] = await Promise.all([
-                    generateAISummary(article.content || article.excerpt || ''),
-                    enhanceHeadline(article.title)
-                ]);
-                return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
-            }));
-            
-            allNews = [...enhancedNews, ...news.slice(6).map(a => ({ ...a, ai_enhanced: false }))];
-            
-            // Update AI Picks Widget
-            const aiPick = await getAIPickWithReason(allNews);
-            const aiDiv = document.getElementById('aiPicks');
-            if (aiDiv && aiPick) {
-                aiDiv.innerHTML = `
-                    <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.75rem 0;">
-                        <div style="font-size:0.7rem;color:var(--brand-red);margin-bottom:0.25rem;">🤖 AI PICK OF THE DAY</div>
-                        <div class="trending-title" style="font-weight:bold;">${escapeHtml(aiPick.title)}</div>
-                        <div style="font-size:0.6rem;color:var(--text-tertiary);margin-top:0.25rem;">💡 ${escapeHtml(aiPick.reason)}</div>
-                    </div>
-                `;
-            }
-            
-            // Update Trending Widget
-            const trendingDiv = document.getElementById('trendingList');
-            if (trendingDiv && allNews.length > 0) {
-                const trending = [...allNews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
-                trendingDiv.innerHTML = trending.map((item, index) => `
-                    <div class="trending-item">
-                        <div class="trending-rank">#${index + 1}</div>
-                        <div class="trending-title">${escapeHtml(item.title)}</div>
-                        <div class="trending-views">👁️ ${item.views || 0} views</div>
-                    </div>
-                `).join('');
-            }
-            
-            // Update Ticker
-            const tickerContent = document.getElementById('tickerContent');
-            if (tickerContent && allNews.length > 0) {
-                tickerContent.innerHTML = '🔴 LIVE | ' + allNews.slice(0, 5).map(n => n.title).join(' | ') + ' | ';
-            }
-            
-            filterNewsByCategory();
-            
-        } catch (error) {
-            console.error('Fetch error:', error);
-            grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
-        }
-    }
+
+// ========== LOAD CATEGORIES ==========
+function loadCategories() {
+    const categoryGrid = document.getElementById('categoryGrid');
+    if (!categoryGrid) return;
     
-    // ========== LOAD CATEGORIES ==========
-    function loadCategories() {
-        const categoryGrid = document.getElementById('categoryGrid');
-        if (!categoryGrid) return;
-        
-        categoryGrid.innerHTML = categoriesList.map(cat => {
-            let icon = cat === 'Technology' ? '💻' : cat === 'Sports' ? '🏏' : cat === 'Business' ? '📊' : cat === 'Politics' ? '🏛️' : '📚';
-            return `<a href="#" class="category-card" data-category="${cat.toLowerCase()}">
-                <i>${icon}</i><span>${cat}</span><small>news</small>
-            </a>`;
-        }).join('');
-        
-        document.querySelectorAll('.category-card').forEach(el => {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentCategory = el.getAttribute('data-category');
-                filterNewsByCategory();
-                document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
-                el.classList.add('active');
-            });
+    categoryGrid.innerHTML = categoriesList.map(cat => {
+        let icon = cat === 'Technology' ? '💻' : cat === 'Sports' ? '🏏' : cat === 'Business' ? '📊' : cat === 'Politics' ? '🏛️' : '📚';
+        return `<a href="#" class="category-card" data-category="${cat.toLowerCase()}">
+            <i>${icon}</i><span>${cat}</span><small>news</small>
+        </a>`;
+    }).join('');
+    
+    document.querySelectorAll('.category-card').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentCategory = el.getAttribute('data-category');
+            filterNewsByCategory();
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        });
+    });
+}
+
+// ========== WEATHER ==========
+function getWeather() {
+    const tempDiv = document.getElementById('weatherTemp');
+    const locDiv = document.getElementById('weatherLocation');
+    if (tempDiv) tempDiv.textContent = '28°C';
+    if (locDiv) locDiv.textContent = 'New Delhi, IN';
+}
+
+// ========== TICKER ==========
+async function loadTicker() {
+    // Ticker is already updated in fetchNews()
+}
+
+// ========== SEARCH ==========
+function initSearch() {
+    const searchBtn = document.getElementById('searchBtn');
+    const searchInput = document.getElementById('searchInput');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+            searchInput.classList.toggle('active');
+            if (searchInput.classList.contains('active')) searchInput.focus();
         });
     }
-    
-    // ========== WEATHER ==========
-    function getWeather() {
-        const tempDiv = document.getElementById('weatherTemp');
-        const locDiv = document.getElementById('weatherLocation');
-        if (tempDiv) tempDiv.textContent = '28°C';
-        if (locDiv) locDiv.textContent = 'New Delhi, IN';
+    if (searchInput) {
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const term = searchInput.value.toLowerCase();
+                const filtered = allNews.filter(n => n.title.toLowerCase().includes(term));
+                displayNews(filtered);
+            }
+        });
     }
-    
-    // ========== TICKER ==========
-    async function loadTicker() {
-        // Ticker is already updated in fetchNews()
+}
+
+// ========== SIDEBAR ==========
+function initSidebar() {
+    const menuToggle = document.getElementById('menuToggle');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const overlay = document.getElementById('overlay');
+    const sidebar = document.getElementById('sidebar');
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.add('open');
+            if (overlay) overlay.classList.add('active');
+        });
     }
-    
-    // ========== SEARCH ==========
-    function initSearch() {
-        const searchBtn = document.getElementById('searchBtn');
-        const searchInput = document.getElementById('searchInput');
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => {
-                searchInput.classList.toggle('active');
-                if (searchInput.classList.contains('active')) searchInput.focus();
-            });
-        }
-        if (searchInput) {
-            searchInput.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') {
-                    const term = searchInput.value.toLowerCase();
-                    const filtered = allNews.filter(n => n.title.toLowerCase().includes(term));
-                    displayNews(filtered);
-                }
-            });
-        }
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+        });
     }
-    
-    // ========== SIDEBAR ==========
-    function initSidebar() {
-        const menuToggle = document.getElementById('menuToggle');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const overlay = document.getElementById('overlay');
-        const sidebar = document.getElementById('sidebar');
-        if (menuToggle) {
-            menuToggle.addEventListener('click', () => {
-                if (sidebar) sidebar.classList.add('open');
-                if (overlay) overlay.classList.add('active');
-            });
-        }
-        if (closeSidebar) {
-            closeSidebar.addEventListener('click', () => {
-                if (sidebar) sidebar.classList.remove('open');
-                if (overlay) overlay.classList.remove('active');
-            });
-        }
-        if (overlay) {
-            overlay.addEventListener('click', () => {
-                if (sidebar) sidebar.classList.remove('open');
-                if (overlay) overlay.classList.remove('active');
-            });
-        }
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+        });
     }
-    
-    // ========== NEWSLETTER ==========
-    function initNewsletter() {
-        const subscribeBtn = document.getElementById('subscribeBtn');
-        if (subscribeBtn) {
-            subscribeBtn.addEventListener('click', () => {
-                const email = document.getElementById('newsletterEmail')?.value;
-                if (email) {
-                    alert(`✅ Subscribed with ${email}!`);
-                    const input = document.getElementById('newsletterEmail');
-                    if (input) input.value = '';
-                } else {
-                    alert('⚠️ Please enter email');
-                }
-            });
-        }
+}
+
+// ========== NEWSLETTER ==========
+function initNewsletter() {
+    const subscribeBtn = document.getElementById('subscribeBtn');
+    if (subscribeBtn) {
+        subscribeBtn.addEventListener('click', () => {
+            const email = document.getElementById('newsletterEmail')?.value;
+            if (email) {
+                alert(`✅ Subscribed with ${email}!`);
+                const input = document.getElementById('newsletterEmail');
+                if (input) input.value = '';
+            } else {
+                alert('⚠️ Please enter email');
+            }
+        });
     }
-    
-    // ========== INITIALIZE ==========
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-    
-    initTheme();
-    loadCategories();
-    getWeather();
-    initSearch();
-    initSidebar();
-    initNewsletter();
-    fetchNews();
+}
+
+// ========== INITIALIZE ==========
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+initTheme();
+loadCategories();
+getWeather();
+initSearch();
+initSidebar();
+initNewsletter();
+fetchNews();
 </script>
 </body>
 </html>
