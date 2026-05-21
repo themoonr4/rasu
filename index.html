@@ -833,25 +833,73 @@
     }
     
     // ========== FETCH NEWS FROM JSONBin ==========
-    async function fetchNews() {
-        const grid = document.getElementById('newsGrid');
-        if (!grid) return;
-        grid.innerHTML = '<div class="loader"><div class="spinner"></div><p style="margin-top:10px;">🤖 AI is analyzing news...</p></div>';
+async function fetchNews() {
+    const grid = document.getElementById('newsGrid');
+    if (!grid) return;
+    grid.innerHTML = '<div class="loader"><div class="spinner"></div><p style="margin-top:10px;">🤖 AI is analyzing news...</p></div>';
+    
+    try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+            headers: { 'X-Master-Key': JSONBIN_API_KEY }
+        });
         
-        try {
-            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                headers: { 'X-Master-Key': JSONBIN_API_KEY }
-            });
-            
-            if (!response.ok) throw new Error('Failed to fetch');
-            
-            const data = await response.json();
-            let news = data.record.news || [];
-            
-            if (news.length === 0) {
-                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news to your JSONBin!</div>';
-                return;
-            }
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const data = await response.json();
+        let news = data.record.news || [];
+        
+        if (news.length === 0) {
+            grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news to your JSONBin!</div>';
+            return;
+        }
+        
+        const newsToEnhance = news.slice(0, 6);
+        const enhancedNews = await Promise.all(newsToEnhance.map(async (article) => {
+            const [summary, enhancedTitle] = await Promise.all([
+                generateAISummary(article.content || article.excerpt || ''),
+                enhanceHeadline(article.title)
+            ]);
+            return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
+        }));
+        
+        allNews = [...enhancedNews, ...news.slice(6).map(a => ({ ...a, ai_enhanced: false }))];
+        
+        const aiPick = await getAIPickWithReason(allNews);
+        const aiDiv = document.getElementById('aiPicks');
+        if (aiDiv && aiPick) {
+            aiDiv.innerHTML = `
+                <div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.75rem 0;">
+                    <div style="font-size:0.7rem;color:var(--brand-red);margin-bottom:0.25rem;">🤖 AI PICK OF THE DAY</div>
+                    <div class="trending-title" style="font-weight:bold;">${escapeHtml(aiPick.title)}</div>
+                    <div style="font-size:0.6rem;color:var(--text-tertiary);margin-top:0.25rem;">💡 ${escapeHtml(aiPick.reason)}</div>
+                </div>
+            `;
+        }
+        
+        const trendingDiv = document.getElementById('trendingList');
+        if (trendingDiv && allNews.length > 0) {
+            const trending = [...allNews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+            trendingDiv.innerHTML = trending.map((item, index) => `
+                <div class="trending-item">
+                    <div class="trending-rank">#${index + 1}</div>
+                    <div class="trending-title">${escapeHtml(item.title)}</div>
+                    <div class="trending-views">👁️ ${item.views || 0} views</div>
+                </div>
+            `).join('');
+        }
+        
+        const tickerContent = document.getElementById('tickerContent');
+        if (tickerContent && allNews.length > 0) {
+            tickerContent.innerHTML = '🔴 LIVE | ' + allNews.slice(0, 5).map(n => n.title).join(' | ') + ' | ';
+        }
+        
+        filterNewsByCategory();
+        
+    } catch (error) {
+        console.error('Fetch error:', error);
+        grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
+    }
+}
             
             // Apply AI enhancements to first 6 news items
             const newsToEnhance = news.slice(0, 6);
