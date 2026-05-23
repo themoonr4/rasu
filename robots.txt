@@ -1,15 +1,8 @@
-# Allow all crawlers
+# Allow all crawlers for THE MOON News
 User-agent: *
 Allow: /
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 
-# Sitemap location
-Sitemap: https://themoonr4.github.io/the-moon-supreme/sitemap.xml
-
-# Disable admin pages from search engines
+# Block admin page from search engines
 User-agent: *
-Disallow: /admin.html
-Disallow: /dashboard.html
-Disallow: /categories.html
-
-# Crawl delay for bots
-Crawl-delay: 5
+Disallow: /rasu/admin.html
