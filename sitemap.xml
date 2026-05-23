@@ -1,44 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/</loc>
-        <lastmod>2024-04-28</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-    </url>
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/index.html</loc>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-    </url>
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/search.html</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/bookmarks.html</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/profile.html</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/settings.html</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/privacy.html</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url>
-    <url>
-        <loc>https://themoonr4.github.io/the-moon-supreme/terms.html</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-23</news:publication_date>
+      <news:title>THE MOON - World Class News Platform</news:title>
+    </news:news>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/index.html</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/article.html</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/admin.html</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  
 </urlset>
