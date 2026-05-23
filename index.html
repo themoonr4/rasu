@@ -818,7 +818,7 @@ function displayNews(newsToShow) {
     grid.innerHTML = newsToShow.map(article => {
         const imgUrl = article.image_url || `https://picsum.photos/400/200?random=${article.id}`;
         return `
-            <div class="news-card">
+            <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
                 <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/400/200?random=1'">
                 <div class="news-content">
                     <span class="news-category">${article.category || 'News'}</span>
