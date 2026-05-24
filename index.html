@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-117B92ED81"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -31,7 +31,6 @@
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Your existing CSS (same as before) */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -477,10 +476,15 @@
             justify-content: center;
             gap: 1rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
         .footer-social a {
             color: var(--text-secondary);
             font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+        .footer-social a:hover {
+            color: var(--brand-red);
         }
         .copyright {
             font-size: 0.7rem;
@@ -529,7 +533,7 @@
                     <button id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
                 <button id="themeToggle"><i class="fas fa-moon"></i></button>
-                <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;">
+                <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;" aria-label="Profile">
                     <button style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px; border-radius: var(--radius-md);">
                         <i class="fas fa-user-circle"></i>
                     </button>
@@ -578,14 +582,10 @@
                 <p>World's Most Advanced News Platform | AI-Powered | Real-Time</p>
             </div>
             <div class="ticker" id="ticker">
-                <div class="ticker-content" id="tickerContent">
-                    🔴 LIVE | Breaking news will appear here
-                </div>
+                <div class="ticker-content" id="tickerContent">🔴 LIVE | Breaking news will appear here</div>
             </div>
             <div class="category-grid" id="categoryGrid"></div>
-            <div class="news-grid" id="newsGrid">
-                <div class="loader"><div class="spinner"></div></div>
-            </div>
+            <div class="news-grid" id="newsGrid"><div class="loader"><div class="spinner"></div></div></div>
         </div>
         
         <!-- Right Column (Sidebar) -->
@@ -626,12 +626,46 @@
         <a href="#">Advertise</a>
     </div>
     <div class="footer-social">
-        <a href="https://t.me/themoom247" target="_blank"><i class="fab fa-telegram"></i></a>
-        <a href="https://instagram.com/themoonr4" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <!-- Facebook Profile -->
+        <a href="https://www.facebook.com/share/1GwHQhgx4g/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Profile">
+            <i class="fab fa-facebook"></i>
+        </a>
+        <!-- Facebook Page 1 -->
+        <a href="https://www.facebook.com/share/1B1oYQXCqK/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Page 1">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        <!-- Facebook Page 2 -->
+        <a href="https://www.facebook.com/share/1DtjH7is3b/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Page 2">
+            <i class="fab fa-facebook-messenger"></i>
+        </a>
+        <!-- Instagram -->
+        <a href="https://instagram.com/themoonr4" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <!-- X (Twitter) -->
+        <a href="https://x.com/TheMoonZ60" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <i class="fab fa-twitter"></i>
+        </a>
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/rakesh-kumar-955988241" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
+        </a>
+        <!-- Telegram Channel -->
+        <a href="https://t.me/themoom247" target="_blank" rel="noopener noreferrer" aria-label="Telegram Channel">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+        <!-- Telegram Profile -->
+        <a href="https://t.me/Jr7ra57" target="_blank" rel="noopener noreferrer" aria-label="Telegram Admin">
+            <i class="fab fa-telegram"></i>
+        </a>
+        <!-- WhatsApp Channel -->
+        <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Channel">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <!-- WhatsApp Personal -->
+        <a href="https://wa.me/917980107414" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Personal">
+            <i class="fab fa-whatsapp-square"></i>
+        </a>
     </div>
     <div class="copyright">
         <p>© 2026 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
@@ -844,8 +878,6 @@ function getWeather() {
     if (tempDiv) tempDiv.textContent = '28°C';
     if (locDiv) locDiv.textContent = 'New Delhi, IN';
 }
-
-async function loadTicker() {}
 
 function initSearch() {
     const searchBtn = document.getElementById('searchBtn');
