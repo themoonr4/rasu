@@ -30,7 +30,9 @@
     <script>eruda.init();</script>
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* Your existing CSS - same as before */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -141,6 +143,7 @@
             color: var(--text-secondary);
             font-weight: 500;
             transition: var(--transition-fast);
+            cursor: pointer;
         }
         .nav-desktop a:hover,
         .nav-desktop a.active { color: var(--brand-red); }
@@ -203,6 +206,7 @@
             min-width: 44px;
             min-height: 44px;
             justify-content: center;
+            cursor: pointer;
         }
         .bottom-nav-item.active { color: var(--brand-red); }
         .bottom-nav-item i { font-size: 1.2rem; }
@@ -250,6 +254,7 @@
             color: var(--text-secondary);
             padding: 0.5rem 1rem;
             border-radius: var(--radius-md);
+            cursor: pointer;
         }
         .sidebar-nav a:hover,
         .sidebar-nav a.active {
@@ -288,6 +293,7 @@
             padding: 1.5rem;
             color: white;
             text-align: center;
+            margin-top: 1rem;
         }
         @media (min-width: 768px) {
             .hero { padding: 2rem; text-align: left; }
@@ -328,6 +334,7 @@
             text-align: center;
             text-decoration: none;
             transition: var(--transition-fast);
+            cursor: pointer;
         }
         .category-card:hover { transform: translateY(-2px); }
         .category-card i { font-size: 1.5rem; margin-bottom: 0.25rem; display: block; }
@@ -476,15 +483,10 @@
             justify-content: center;
             gap: 1rem;
             margin-bottom: 1rem;
-            flex-wrap: wrap;
         }
         .footer-social a {
             color: var(--text-secondary);
             font-size: 1.2rem;
-            transition: color 0.2s;
-        }
-        .footer-social a:hover {
-            color: var(--brand-red);
         }
         .copyright {
             font-size: 0.7rem;
@@ -521,11 +523,11 @@
             <a href="/rasu/" class="logo">🌙 THE MOON</a>
             <div class="nav-desktop">
                 <a href="#" data-category="all" class="active">All</a>
-                <a href="#" data-category="tech">Tech</a>
-                <a href="#" data-category="sports">Sports</a>
-                <a href="#" data-category="business">Business</a>
-                <a href="#" data-category="politics">Politics</a>
-                <a href="#" data-category="study">Study</a>
+                <a href="#" data-category="Technology">Tech</a>
+                <a href="#" data-category="Sports">Sports</a>
+                <a href="#" data-category="Business">Business</a>
+                <a href="#" data-category="Politics">Politics</a>
+                <a href="#" data-category="Study">Study</a>
             </div>
             <div class="header-actions">
                 <div class="search-container">
@@ -533,7 +535,7 @@
                     <button id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
                 <button id="themeToggle"><i class="fas fa-moon"></i></button>
-                <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;" aria-label="Profile">
+                <a href="/rasu/profile.html" style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center;">
                     <button style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; min-width: 40px; min-height: 40px; border-radius: var(--radius-md);">
                         <i class="fas fa-user-circle"></i>
                     </button>
@@ -551,11 +553,11 @@
     </div>
     <div class="sidebar-nav">
         <a href="#" data-category="all">🏠 Home</a>
-        <a href="#" data-category="tech">💻 Technology</a>
-        <a href="#" data-category="sports">🏏 Sports</a>
-        <a href="#" data-category="business">📊 Business</a>
-        <a href="#" data-category="politics">🏛️ Politics</a>
-        <a href="#" data-category="study">📚 Study</a>
+        <a href="#" data-category="Technology">💻 Technology</a>
+        <a href="#" data-category="Sports">🏏 Sports</a>
+        <a href="#" data-category="Business">📊 Business</a>
+        <a href="#" data-category="Politics">🏛️ Politics</a>
+        <a href="#" data-category="Study">📚 Study</a>
         <a href="#" data-page="bookmarks">🔖 Bookmarks</a>
         <a href="#" data-page="settings">⚙️ Settings</a>
     </div>
@@ -566,8 +568,8 @@
 <!-- Bottom Navigation (Mobile) -->
 <div class="bottom-nav">
     <a href="#" class="bottom-nav-item active" data-category="all"><i class="fas fa-home"></i><span>Home</span></a>
-    <a href="#" class="bottom-nav-item" data-category="tech"><i class="fas fa-microchip"></i><span>Tech</span></a>
-    <a href="#" class="bottom-nav-item" data-category="sports"><i class="fas fa-futbol"></i><span>Sports</span></a>
+    <a href="#" class="bottom-nav-item" data-category="Technology"><i class="fas fa-microchip"></i><span>Tech</span></a>
+    <a href="#" class="bottom-nav-item" data-category="Sports"><i class="fas fa-futbol"></i><span>Sports</span></a>
     <a href="#" class="bottom-nav-item" id="mobileSearchBtn"><i class="fas fa-search"></i><span>Search</span></a>
     <a href="#" class="bottom-nav-item" id="mobileProfileBtn"><i class="fas fa-user"></i><span>Profile</span></a>
 </div>
@@ -582,10 +584,14 @@
                 <p>World's Most Advanced News Platform | AI-Powered | Real-Time</p>
             </div>
             <div class="ticker" id="ticker">
-                <div class="ticker-content" id="tickerContent">🔴 LIVE | Breaking news will appear here</div>
+                <div class="ticker-content" id="tickerContent">
+                    🔴 LIVE | Loading news...
+                </div>
             </div>
             <div class="category-grid" id="categoryGrid"></div>
-            <div class="news-grid" id="newsGrid"><div class="loader"><div class="spinner"></div></div></div>
+            <div class="news-grid" id="newsGrid">
+                <div class="loader"><div class="spinner"></div></div>
+            </div>
         </div>
         
         <!-- Right Column (Sidebar) -->
@@ -626,46 +632,11 @@
         <a href="#">Advertise</a>
     </div>
     <div class="footer-social">
-        <!-- Facebook Profile -->
-        <a href="https://www.facebook.com/share/1GwHQhgx4g/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Profile">
-            <i class="fab fa-facebook"></i>
-        </a>
-        <!-- Facebook Page 1 -->
-        <a href="https://www.facebook.com/share/1B1oYQXCqK/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Page 1">
-            <i class="fab fa-facebook-f"></i>
-        </a>
-        <!-- Facebook Page 2 -->
-        <a href="https://www.facebook.com/share/1DtjH7is3b/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Page 2">
-            <i class="fab fa-facebook-messenger"></i>
-        </a>
-        <!-- Instagram -->
-        <a href="https://instagram.com/themoonr4" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-        </a>
-        <!-- X (Twitter) -->
-        <a href="https://x.com/TheMoonZ60" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-            <i class="fab fa-twitter"></i>
-        </a>
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/in/rakesh-kumar-955988241" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i>
-        </a>
-        <!-- Telegram Channel -->
-        <a href="https://t.me/themoom247" target="_blank" rel="noopener noreferrer" aria-label="Telegram Channel">
-            <i class="fab fa-telegram-plane"></i>
-        </a>
-        <!-- Telegram Profile -->
-        <a href="https://t.me/Jr7ra57" target="_blank" rel="noopener noreferrer" aria-label="Telegram Admin">
-            <i class="fab fa-telegram"></i>
-        </a>
-        <!-- WhatsApp Channel -->
-        <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Channel">
-            <i class="fab fa-whatsapp"></i>
-        </a>
-        <!-- WhatsApp Personal -->
-        <a href="https://wa.me/917980107414" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Personal">
-            <i class="fab fa-whatsapp-square"></i>
-        </a>
+        <a href="https://t.me/themoom247" target="_blank"><i class="fab fa-telegram"></i></a>
+        <a href="https://instagram.com/themoonr4" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com/share/1GwHQhgx4g/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://x.com/TheMoonZ60" target="_blank"><i class="fab fa-twitter"></i></a>
+        <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
     <div class="copyright">
         <p>© 2026 THE MOON. All rights reserved. | Made with ❤️ for world-class journalism</p>
@@ -674,11 +645,12 @@
 
 <script>
 // ============================================
-// THE MOON - Main JavaScript (FINAL WORKING)
+// SUPABASE CONFIGURATION - 🔴 YAHAN APNI KEYS DALO 🔴
 // ============================================
+const SUPABASE_URL = 'https://yjtbezrejkgzjjnfjigt.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_e3KAI6KBmyGvCRK3_VwJXA_TfjSGZJ_';
 
-const JSONBIN_BIN_ID = '6a0e59526610dd3ae87c34b0';
-const JSONBIN_API_KEY = '$2a$10$XwNCR4Isg.yQhycQ3sfPfe.GxA7sSObIt8JbSbr.B1GbvBTnk1fja';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
 
 let currentCategory = 'all';
@@ -770,7 +742,7 @@ function displayNews(newsToShow) {
                 <div class="news-content">
                     <span class="news-category">${article.category || 'News'}</span>
                     <h3 class="news-title">${escapeHtml(article.ai_title || article.title)}</h3>
-                    <p class="news-excerpt">${escapeHtml(article.ai_summary || article.excerpt || (article.content ? article.content.substring(0, 100) : ''))}...</p>
+                    <p class="news-excerpt">${escapeHtml(article.ai_summary || article.summary || (article.content ? article.content.substring(0, 100) : ''))}...</p>
                     <div class="news-meta">
                         <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
                         <span>👁️ ${article.views || 0}</span>
@@ -786,7 +758,7 @@ function filterNewsByCategory() {
     if (currentCategory === 'all') {
         displayNews(allNews);
     } else {
-        const filtered = allNews.filter(n => n.category?.toLowerCase() === currentCategory);
+        const filtered = allNews.filter(n => n.category === currentCategory);
         displayNews(filtered);
     }
 }
@@ -797,28 +769,28 @@ async function fetchNews() {
     grid.innerHTML = '<div class="loader"><div class="spinner"></div><p style="margin-top:10px;">🤖 AI is analyzing news...</p></div>';
     
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-            headers: { 'X-Master-Key': JSONBIN_API_KEY }
-        });
-        if (!response.ok) throw new Error('Failed to fetch');
-        const data = await response.json();
-        let news = data.record.news || [];
+        const { data, error } = await supabase
+            .from('news')
+            .select('*')
+            .order('published_at', { ascending: false });
         
-        if (news.length === 0) {
-            grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news to your JSONBin!</div>';
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+            grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news from admin panel!</div>';
             return;
         }
         
-        const newsToEnhance = news.slice(0, 6);
+        const newsToEnhance = data.slice(0, 6);
         const enhancedNews = await Promise.all(newsToEnhance.map(async (article) => {
             const [summary, enhancedTitle] = await Promise.all([
-                generateAISummary(article.content || article.excerpt || ''),
+                generateAISummary(article.content || article.summary || ''),
                 enhanceHeadline(article.title)
             ]);
             return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
         }));
         
-        allNews = [...enhancedNews, ...news.slice(6).map(a => ({ ...a, ai_enhanced: false }))];
+        allNews = [...enhancedNews, ...data.slice(6).map(a => ({ ...a, ai_enhanced: false }))];
         
         const aiPick = await getAIPickWithReason(allNews);
         const aiDiv = document.getElementById('aiPicks');
@@ -833,7 +805,7 @@ async function fetchNews() {
         const trendingDiv = document.getElementById('trendingList');
         if (trendingDiv && allNews.length > 0) {
             const trending = [...allNews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
-            trendingDiv.innerHTML = trending.map((item, index) => `<div class="trending-item">
+            trendingDiv.innerHTML = trending.map((item, index) => `<div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
                 <div class="trending-rank">#${index + 1}</div>
                 <div class="trending-title">${escapeHtml(item.title)}</div>
                 <div class="trending-views">👁️ ${item.views || 0} views</div>
@@ -848,7 +820,7 @@ async function fetchNews() {
         filterNewsByCategory();
     } catch (error) {
         console.error('Fetch error:', error);
-        grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
+        grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">⚠️ Error loading news. Please refresh.</div>';
     }
 }
 
@@ -857,17 +829,20 @@ function loadCategories() {
     if (!categoryGrid) return;
     categoryGrid.innerHTML = categoriesList.map(cat => {
         let icon = cat === 'Technology' ? '💻' : cat === 'Sports' ? '🏏' : cat === 'Business' ? '📊' : cat === 'Politics' ? '🏛️' : '📚';
-        return `<a href="#" class="category-card" data-category="${cat.toLowerCase()}">
+        return `<div class="category-card" data-category="${cat}">
             <i>${icon}</i><span>${cat}</span><small>news</small>
-        </a>`;
+        </div>`;
     }).join('');
     document.querySelectorAll('.category-card').forEach(el => {
         el.addEventListener('click', (e) => {
-            e.preventDefault();
             currentCategory = el.getAttribute('data-category');
             filterNewsByCategory();
             document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
+            document.querySelectorAll('.nav-desktop a').forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('data-category') === currentCategory) a.classList.add('active');
+            });
         });
     });
 }
@@ -876,7 +851,7 @@ function getWeather() {
     const tempDiv = document.getElementById('weatherTemp');
     const locDiv = document.getElementById('weatherLocation');
     if (tempDiv) tempDiv.textContent = '28°C';
-    if (locDiv) locDiv.textContent = 'New Delhi, IN';
+    if (locDiv) locDiv.textContent = 'Mumbai, IN';
 }
 
 function initSearch() {
@@ -892,7 +867,7 @@ function initSearch() {
         searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') {
                 const term = searchInput.value.toLowerCase();
-                const filtered = allNews.filter(n => n.title.toLowerCase().includes(term));
+                const filtered = allNews.filter(n => n.title?.toLowerCase().includes(term));
                 displayNews(filtered);
             }
         });
@@ -905,35 +880,71 @@ function initSidebar() {
     const overlay = document.getElementById('overlay');
     const sidebar = document.getElementById('sidebar');
     if (menuToggle) menuToggle.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.add('open');
-        if (overlay) overlay.classList.add('active');
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
     });
     if (closeSidebar) closeSidebar.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.remove('open');
-        if (overlay) overlay.classList.remove('active');
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
     });
     if (overlay) overlay.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.remove('open');
-        if (overlay) overlay.classList.remove('active');
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
     });
 }
 
 function initNewsletter() {
     const subscribeBtn = document.getElementById('subscribeBtn');
     if (subscribeBtn) {
-        subscribeBtn.addEventListener('click', () => {
+        subscribeBtn.addEventListener('click', async () => {
             const email = document.getElementById('newsletterEmail')?.value;
-            if (email) {
-                alert(`✅ Subscribed with ${email}!`);
-                const input = document.getElementById('newsletterEmail');
-                if (input) input.value = '';
-            } else { alert('⚠️ Please enter email'); }
+            if (email && email.includes('@')) {
+                try {
+                    const { error } = await supabase.from('subscribers').insert([{ email }]);
+                    if (error) throw error;
+                    alert('✅ Subscribed successfully!');
+                    document.getElementById('newsletterEmail').value = '';
+                } catch(e) {
+                    if (e.code === '23505') alert('📧 Email already subscribed!');
+                    else alert('❌ Subscription failed');
+                }
+            } else {
+                alert('⚠️ Please enter valid email');
+            }
         });
     }
 }
 
-const themeToggle = document.getElementById('themeToggle');
-if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+// Navigation
+document.querySelectorAll('.nav-desktop a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentCategory = link.getAttribute('data-category');
+        filterNewsByCategory();
+        document.querySelectorAll('.nav-desktop a').forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+        const matchingCat = document.querySelector(`.category-card[data-category="${currentCategory}"]`);
+        if (matchingCat) matchingCat.classList.add('active');
+    });
+});
+
+document.querySelectorAll('.sidebar-nav a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = link.getAttribute('data-category');
+        if (category) {
+            currentCategory = category;
+            filterNewsByCategory();
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+            document.getElementById('sidebar')?.classList.remove('open');
+            document.getElementById('overlay')?.classList.remove('active');
+        }
+    });
+});
+
+document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
 
 initTheme();
 loadCategories();
