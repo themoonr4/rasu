@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Your existing CSS - same as before */
+        /* Your existing CSS (same as before) */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -293,7 +293,6 @@
             padding: 1.5rem;
             color: white;
             text-align: center;
-            margin-top: 1rem;
         }
         @media (min-width: 768px) {
             .hero { padding: 2rem; text-align: left; }
@@ -585,7 +584,7 @@
             </div>
             <div class="ticker" id="ticker">
                 <div class="ticker-content" id="tickerContent">
-                    🔴 LIVE | Loading news...
+                    🔴 LIVE | Breaking news will appear here
                 </div>
             </div>
             <div class="category-grid" id="categoryGrid"></div>
@@ -645,12 +644,15 @@
 
 <script>
 // ============================================
-// SUPABASE CONFIGURATION - 🔴 YAHAN APNI KEYS DALO 🔴
+// THE MOON - SUPABASE VERSION (No design changes)
 // ============================================
+
+// Supabase Configuration
 const SUPABASE_URL = 'https://yjtbezrejkgzjjnfjigt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_e3KAI6KBmyGvCRK3_VwJXA_TfjSGZJ_';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Create supabase client
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
 
 let currentCategory = 'all';
@@ -769,19 +771,22 @@ async function fetchNews() {
     grid.innerHTML = '<div class="loader"><div class="spinner"></div><p style="margin-top:10px;">🤖 AI is analyzing news...</p></div>';
     
     try {
-        const { data, error } = await supabase
+        // Fetch from Supabase instead of JSONBin
+        const { data, error } = await supabaseClient
             .from('news')
             .select('*')
             .order('published_at', { ascending: false });
         
         if (error) throw error;
         
-        if (!data || data.length === 0) {
+        let news = data || [];
+        
+        if (news.length === 0) {
             grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news from admin panel!</div>';
             return;
         }
         
-        const newsToEnhance = data.slice(0, 6);
+        const newsToEnhance = news.slice(0, 6);
         const enhancedNews = await Promise.all(newsToEnhance.map(async (article) => {
             const [summary, enhancedTitle] = await Promise.all([
                 generateAISummary(article.content || article.summary || ''),
@@ -790,7 +795,7 @@ async function fetchNews() {
             return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
         }));
         
-        allNews = [...enhancedNews, ...data.slice(6).map(a => ({ ...a, ai_enhanced: false }))];
+        allNews = [...enhancedNews, ...news.slice(6).map(a => ({ ...a, ai_enhanced: false }))];
         
         const aiPick = await getAIPickWithReason(allNews);
         const aiDiv = document.getElementById('aiPicks');
@@ -820,7 +825,7 @@ async function fetchNews() {
         filterNewsByCategory();
     } catch (error) {
         console.error('Fetch error:', error);
-        grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">⚠️ Error loading news. Please refresh.</div>';
+        grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
     }
 }
 
@@ -835,14 +840,11 @@ function loadCategories() {
     }).join('');
     document.querySelectorAll('.category-card').forEach(el => {
         el.addEventListener('click', (e) => {
+            e.preventDefault();
             currentCategory = el.getAttribute('data-category');
             filterNewsByCategory();
             document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
-            document.querySelectorAll('.nav-desktop a').forEach(a => {
-                a.classList.remove('active');
-                if (a.getAttribute('data-category') === currentCategory) a.classList.add('active');
-            });
         });
     });
 }
@@ -879,34 +881,44 @@ function initSidebar() {
     const closeSidebar = document.getElementById('closeSidebar');
     const overlay = document.getElementById('overlay');
     const sidebar = document.getElementById('sidebar');
-    if (menuToggle) menuToggle.addEventListener('click', () => {
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-    });
-    if (closeSidebar) closeSidebar.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-    });
-    if (overlay) overlay.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-    });
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.add('open');
+            if (overlay) overlay.classList.add('active');
+        });
+    }
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+        });
+    }
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+        });
+    }
 }
 
-function initNewsletter() {
+async function initNewsletter() {
     const subscribeBtn = document.getElementById('subscribeBtn');
     if (subscribeBtn) {
         subscribeBtn.addEventListener('click', async () => {
             const email = document.getElementById('newsletterEmail')?.value;
             if (email && email.includes('@')) {
                 try {
-                    const { error } = await supabase.from('subscribers').insert([{ email }]);
-                    if (error) throw error;
-                    alert('✅ Subscribed successfully!');
-                    document.getElementById('newsletterEmail').value = '';
+                    const { error } = await supabaseClient.from('subscribers').insert([{ email }]);
+                    if (error && error.code === '23505') {
+                        alert('📧 Email already subscribed!');
+                    } else if (!error) {
+                        alert(`✅ Subscribed with ${email}!`);
+                        document.getElementById('newsletterEmail').value = '';
+                    } else {
+                        alert('❌ Subscription failed');
+                    }
                 } catch(e) {
-                    if (e.code === '23505') alert('📧 Email already subscribed!');
-                    else alert('❌ Subscription failed');
+                    alert('❌ Subscription failed');
                 }
             } else {
                 alert('⚠️ Please enter valid email');
@@ -915,7 +927,7 @@ function initNewsletter() {
     }
 }
 
-// Navigation
+// Navigation - Desktop
 document.querySelectorAll('.nav-desktop a').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -929,6 +941,7 @@ document.querySelectorAll('.nav-desktop a').forEach(link => {
     });
 });
 
+// Navigation - Sidebar
 document.querySelectorAll('.sidebar-nav a').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -944,7 +957,22 @@ document.querySelectorAll('.sidebar-nav a').forEach(link => {
     });
 });
 
-document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+// Navigation - Bottom Mobile
+document.querySelectorAll('.bottom-nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = item.getAttribute('data-category');
+        if (category) {
+            currentCategory = category;
+            filterNewsByCategory();
+            document.querySelectorAll('.bottom-nav-item').forEach(a => a.classList.remove('active'));
+            item.classList.add('active');
+        }
+    });
+});
+
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
 
 initTheme();
 loadCategories();
