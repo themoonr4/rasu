@@ -7,6 +7,7 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; }
@@ -17,7 +18,7 @@
         .sidebar-logo p { color: #64748b; font-size: 0.7rem; }
         .sidebar-menu { list-style: none; }
         .sidebar-menu li { margin-bottom: 5px; }
-        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; cursor: pointer; }
         .sidebar-menu a:hover, .sidebar-menu a.active { background: #1a1a1a; border-left-color: #dc2626; color: #fff; }
         .main-content { flex: 1; margin-left: 280px; padding: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
@@ -59,15 +60,15 @@
     <div class="sidebar">
         <div class="sidebar-logo"><h2>🌙 THE MOON</h2><p>World Class Admin Panel</p></div>
         <ul class="sidebar-menu">
-            <li><a href="#" onclick="showSection('dashboard'); return false;" class="active" id="nav-dashboard">📊 Dashboard</a></li>
-            <li><a href="#" onclick="showSection('publish'); return false;" id="nav-publish">✍️ Publish News</a></li>
-            <li><a href="#" onclick="showSection('schedule'); return false;" id="nav-schedule">⏰ Schedule Posts</a></li>
-            <li><a href="#" onclick="showSection('analytics'); return false;" id="nav-analytics">📈 Analytics</a></li>
-            <li><a href="#" onclick="showSection('seo'); return false;" id="nav-seo">🔍 SEO Tools</a></li>
-            <li><a href="#" onclick="showSection('ai'); return false;" id="nav-ai">🤖 AI Tools</a></li>
-            <li><a href="#" onclick="showSection('monetize'); return false;" id="nav-monetize">💰 Monetization</a></li>
-            <li><a href="#" onclick="showSection('security'); return false;" id="nav-security">🔐 Security</a></li>
-            <li><a href="#" onclick="showSection('settings'); return false;" id="nav-settings">⚙️ Settings</a></li>
+            <li><a onclick="showSection('dashboard'); return false;" class="active" id="nav-dashboard">📊 Dashboard</a></li>
+            <li><a onclick="showSection('publish'); return false;" id="nav-publish">✍️ Publish News</a></li>
+            <li><a onclick="showSection('schedule'); return false;" id="nav-schedule">⏰ Schedule Posts</a></li>
+            <li><a onclick="showSection('analytics'); return false;" id="nav-analytics">📈 Analytics</a></li>
+            <li><a onclick="showSection('seo'); return false;" id="nav-seo">🔍 SEO Tools</a></li>
+            <li><a onclick="showSection('ai'); return false;" id="nav-ai">🤖 AI Tools</a></li>
+            <li><a onclick="showSection('monetize'); return false;" id="nav-monetize">💰 Monetization</a></li>
+            <li><a onclick="showSection('security'); return false;" id="nav-security">🔐 Security</a></li>
+            <li><a onclick="showSection('settings'); return false;" id="nav-settings">⚙️ Settings</a></li>
         </ul>
     </div>
 
@@ -164,211 +165,239 @@
 </div>
 
 <script>
-    const JSONBIN_BIN_ID = '6a0e59526610dd3ae87c34b0';
-    const JSONBIN_API_KEY = '$2a$10$XwNCR4Isg.yQhycQ3sfPfe.GxA7sSObIt8JbSbr.B1GbvBTnk1fja';
-    const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
-    
-    let selectedBadges = [];
-    let scheduledPosts = JSON.parse(localStorage.getItem('scheduledPosts') || '[]');
-    let quillEditor;
-    
-    setTimeout(() => {
-        if (document.getElementById('editor')) {
-            quillEditor = new Quill('#editor', { theme: 'snow', placeholder: 'Write your news content here...', modules: { toolbar: [['bold', 'italic', 'underline', 'strike'], ['blockquote', 'code-block'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'size': ['small', false, 'large', 'huge'] }], [{ 'color': [] }, { 'background': [] }], ['link', 'image'], ['clean']] } });
-            quillEditor.on('text-change', function() { document.getElementById('content').value = quillEditor.root.innerHTML; });
+// ============================================
+// SUPABASE CONFIGURATION
+// ============================================
+const SUPABASE_URL = 'https://yjtbezrejkgzjjnfjigt.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_e3KAI6KBmyGvCRK3_VwJXA_TfjSGZJ_';
+const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let selectedBadges = [];
+let scheduledPosts = JSON.parse(localStorage.getItem('scheduledPosts') || '[]');
+let quillEditor;
+let allNews = [];
+
+setTimeout(() => {
+    if (document.getElementById('editor')) {
+        quillEditor = new Quill('#editor', { theme: 'snow', placeholder: 'Write your news content here...', modules: { toolbar: [['bold', 'italic', 'underline', 'strike'], ['blockquote', 'code-block'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'size': ['small', false, 'large', 'huge'] }], [{ 'color': [] }, { 'background': [] }], ['link', 'image'], ['clean']] } });
+        quillEditor.on('text-change', function() { document.getElementById('content').value = quillEditor.root.innerHTML; });
+    }
+}, 100);
+
+function showSection(section) {
+    document.querySelectorAll('[id$="-section"]').forEach(el => el.style.display = 'none');
+    document.getElementById(`${section}-section`).style.display = 'block';
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    document.getElementById(`nav-${section}`).classList.add('active');
+    if (section === 'dashboard') loadDashboard();
+    if (section === 'analytics') loadAnalytics();
+}
+
+async function loadDashboard() {
+    try {
+        const { data, error } = await supabase
+            .from('news')
+            .select('*')
+            .order('published_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        allNews = data || [];
+        document.getElementById('totalNews').innerText = allNews.length;
+        document.getElementById('todayViews').innerText = allNews.reduce((sum, n) => sum + (n.views || 0), 0);
+        document.getElementById('activeReaders').innerText = Math.floor(Math.random() * 100) + 50;
+        
+        const topNews = [...allNews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+        document.getElementById('topNewsList').innerHTML = topNews.map(n => `<div style="padding:10px;border-bottom:1px solid #222;"><strong>🔥 ${n.title}</strong> - ${n.views || 0} views</div>`).join('');
+        
+        const ctx = document.getElementById('viewsChart')?.getContext('2d');
+        if (ctx && allNews.length > 0) {
+            new Chart(ctx, { type: 'line', data: { labels: allNews.slice(0, 7).map(n => n.title?.substring(0, 20) || 'News'), datasets: [{ label: 'Views', data: allNews.slice(0, 7).map(n => n.views || 0), borderColor: '#dc2626' }] } });
         }
-    }, 100);
-    
-    function showSection(section) {
-        document.querySelectorAll('[id$="-section"]').forEach(el => el.style.display = 'none');
-        document.getElementById(`${section}-section`).style.display = 'block';
-        document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
-        document.getElementById(`nav-${section}`).classList.add('active');
-        if (section === 'dashboard') loadDashboard();
-        if (section === 'analytics') loadAnalytics();
+    } catch(e) { console.error(e); }
+}
+
+async function aiWriteNews() {
+    const keyword = document.getElementById('aiKeyword').value;
+    if (!keyword) { alert('Enter keyword first'); return; }
+    document.getElementById('aiSuggestion').style.display = 'block';
+    document.getElementById('aiSuggestion').innerHTML = '<div class="suggestion-item">🤖 AI is writing news for you...</div>';
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Write a complete news article about "${keyword}". Include a catchy title, 3 paragraphs of content, and a conclusion. Write in Hindi/English mix.` }] }] }) });
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const lines = text.split('\n');
+        const title = lines.find(l => l.includes('Title') || l.includes('title')) || lines[0] || keyword;
+        const content = lines.filter(l => !l.includes('Title')).join('\n');
+        document.getElementById('aiSuggestion').innerHTML = `<div class="suggestion-item" onclick="useAISuggestion('${title.replace(/'/g, "\\'")}', \`${content.replace(/'/g, "\\'")}\`)">📝 <strong>Use this news</strong><br><strong>Title:</strong> ${title.substring(0, 100)}<br><strong>Preview:</strong> ${content.substring(0, 150)}...</div>`;
+    } catch(e) { document.getElementById('aiSuggestion').innerHTML = '<div class="suggestion-item">Error! Check API key.</div>'; }
+}
+
+function useAISuggestion(title, content) { 
+    document.getElementById('title').value = title; 
+    if (quillEditor) quillEditor.root.innerHTML = content; 
+    document.getElementById('aiSuggestion').style.display = 'none'; 
+}
+
+async function generateHashtags() {
+    const topic = document.getElementById('hashtagTopic').value;
+    if (!topic) return;
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Generate 10 trending hashtags for topic: ${topic}. Return only hashtags separated by spaces.` }] }] }) });
+        const data = await response.json();
+        const hashtags = data.candidates?.[0]?.content?.parts?.[0]?.text || '#news #trending';
+        document.getElementById('hashtagResult').style.display = 'block';
+        document.getElementById('hashtagResult').innerHTML = `<strong>Suggested Hashtags:</strong><br>${hashtags}`;
+    } catch(e) { alert('Error!'); }
+}
+
+async function summarizeText() {
+    const text = document.getElementById('summarizeText').value;
+    if (!text) return;
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Summarize this in 2 short sentences: ${text.substring(0, 1000)}` }] }] }) });
+        const data = await response.json();
+        const summary = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Summary not available';
+        document.getElementById('summaryResult').style.display = 'block';
+        document.getElementById('summaryResult').innerHTML = `<strong>Summary:</strong><br>${summary}`;
+    } catch(e) { alert('Error!'); }
+}
+
+function checkSEO() {
+    const title = document.getElementById('seoCheckTitle').value;
+    let score = 0, feedback = [];
+    if (title.length >= 30 && title.length <= 70) { score += 30; feedback.push('✅ Good title length'); }
+    else if (title.length > 70) { score += 10; feedback.push('⚠️ Title too long (max 70)'); }
+    else { feedback.push('❌ Title too short (min 30)'); }
+    document.getElementById('seoResult').innerHTML = `<div class="ai-suggestion"><strong>SEO Score: ${score}/100</strong><br>${feedback.join('<br>')}</div>`;
+}
+
+function changePassword() { alert('Password changed! (Demo)'); }
+function setup2FA() { alert('2FA setup email sent! (Demo)'); }
+function saveSettings() { alert('Settings saved!'); }
+
+function loadAnalytics() {
+    const ctx = document.getElementById('trafficChart')?.getContext('2d');
+    if (ctx) { new Chart(ctx, { type: 'bar', data: { labels: ['Google', 'WhatsApp', 'Direct', 'Telegram', 'Other'], datasets: [{ label: 'Traffic', data: [45, 30, 15, 8, 2], backgroundColor: '#dc2626' }] } }); }
+    document.getElementById('trafficSources').innerHTML = `<div style="padding:10px;">🌐 Google Search: 45%</div><div style="padding:10px;">📱 WhatsApp: 30%</div><div style="padding:10px;">🔗 Direct: 15%</div><div style="padding:10px;">📢 Telegram: 8%</div><div style="padding:10px;">🐦 Twitter/X: 2%</div>`;
+}
+
+function updateShareLinks(newsId, title) {
+    const siteUrl = 'https://themoonr4.github.io/rasu';
+    const articleUrl = `${siteUrl}/article.html?id=${newsId}`;
+    const encodedUrl = encodeURIComponent(articleUrl);
+    const encodedTitle = encodeURIComponent(title);
+    const elements = {
+        shareFacebookProfile: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        shareFacebookPage1: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        shareFacebookPage2: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        shareInstagram: `https://www.instagram.com/themoonr4/`,
+        shareTwitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+        shareLinkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+        shareTelegramChannel: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+        shareTelegramProfile: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+        shareWhatsappChannel: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+        shareWhatsappPersonal: `https://wa.me/917980107414?text=${encodedTitle}%20${encodedUrl}`
+    };
+    for (const [id, url] of Object.entries(elements)) {
+        const el = document.getElementById(id);
+        if (el) el.href = url;
     }
+}
+
+async function publishNews(event) {
+    event.preventDefault();
+    const title = document.getElementById('title').value.trim();
+    const category = document.getElementById('category').value;
+    const content = quillEditor ? quillEditor.root.innerHTML : document.getElementById('content').value;
+    const metaDesc = document.getElementById('metaDesc').value;
+    const tags = document.getElementById('tags').value;
+    const imageUrl = document.getElementById('imageUrl').value || `https://picsum.photos/400/200?random=${Date.now()}`;
+    const author = document.getElementById('author').value;
+    const badges = document.getElementById('selectedBadges').value;
     
-    async function loadDashboard() {
-        try {
-            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
-            const data = await response.json();
-            const news = data.record.news || [];
-            document.getElementById('totalNews').innerText = news.length;
-            document.getElementById('todayViews').innerText = news.reduce((sum, n) => sum + (n.views || 0), 0);
-            document.getElementById('activeReaders').innerText = Math.floor(Math.random() * 100) + 50;
-            const topNews = [...news].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
-            document.getElementById('topNewsList').innerHTML = topNews.map(n => `<div style="padding:10px;border-bottom:1px solid #222;"><strong>🔥 ${n.title}</strong> - ${n.views || 0} views</div>`).join('');
-            const ctx = document.getElementById('viewsChart')?.getContext('2d');
-            if (ctx) { new Chart(ctx, { type: 'line', data: { labels: news.slice(0, 7).map(n => n.title.substring(0, 20)), datasets: [{ label: 'Views', data: news.slice(0, 7).map(n => n.views || 0), borderColor: '#dc2626' }] } }); }
-        } catch(e) { console.error(e); }
-    }
+    if (!title || !content) { showMessage('Title and Content required!', 'error'); return; }
     
-    async function aiWriteNews() {
-        const keyword = document.getElementById('aiKeyword').value;
-        if (!keyword) { alert('Enter keyword first'); return; }
-        document.getElementById('aiSuggestion').style.display = 'block';
-        document.getElementById('aiSuggestion').innerHTML = '<div class="suggestion-item">🤖 AI is writing news for you...</div>';
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Write a complete news article about "${keyword}". Include a catchy title, 3 paragraphs of content, and a conclusion. Write in Hindi/English mix.` }] }] }) });
-            const data = await response.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            const lines = text.split('\n');
-            const title = lines.find(l => l.includes('Title') || l.includes('title')) || lines[0] || keyword;
-            const content = lines.filter(l => !l.includes('Title')).join('\n');
-            document.getElementById('aiSuggestion').innerHTML = `<div class="suggestion-item" onclick="useAISuggestion('${title.replace(/'/g, "\\'")}', \`${content.replace(/'/g, "\\'")}\`)">📝 <strong>Use this news</strong><br><strong>Title:</strong> ${title.substring(0, 100)}<br><strong>Preview:</strong> ${content.substring(0, 150)}...</div>`;
-        } catch(e) { document.getElementById('aiSuggestion').innerHTML = '<div class="suggestion-item">Error! Check API key.</div>'; }
-    }
+    const btn = document.querySelector('#publish-section button[type="submit"]');
+    btn.textContent = '⏳ Publishing...';
+    btn.disabled = true;
     
-    function useAISuggestion(title, content) { document.getElementById('title').value = title; if (quillEditor) quillEditor.root.innerHTML = content; document.getElementById('aiSuggestion').style.display = 'none'; }
-    
-    async function generateHashtags() {
-        const topic = document.getElementById('hashtagTopic').value;
-        if (!topic) return;
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Generate 10 trending hashtags for topic: ${topic}. Return only hashtags separated by spaces.` }] }] }) });
-            const data = await response.json();
-            const hashtags = data.candidates?.[0]?.content?.parts?.[0]?.text || '#news #trending';
-            document.getElementById('hashtagResult').style.display = 'block';
-            document.getElementById('hashtagResult').innerHTML = `<strong>Suggested Hashtags:</strong><br>${hashtags}`;
-        } catch(e) { alert('Error!'); }
-    }
-    
-    async function summarizeText() {
-        const text = document.getElementById('summarizeText').value;
-        if (!text) return;
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Summarize this in 2 short sentences: ${text.substring(0, 1000)}` }] }] }) });
-            const data = await response.json();
-            const summary = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Summary not available';
-            document.getElementById('summaryResult').style.display = 'block';
-            document.getElementById('summaryResult').innerHTML = `<strong>Summary:</strong><br>${summary}`;
-        } catch(e) { alert('Error!'); }
-    }
-    
-    function checkSEO() {
-        const title = document.getElementById('seoCheckTitle').value;
-        let score = 0, feedback = [];
-        if (title.length >= 30 && title.length <= 70) { score += 30; feedback.push('✅ Good title length'); }
-        else if (title.length > 70) { score += 10; feedback.push('⚠️ Title too long (max 70)'); }
-        else { feedback.push('❌ Title too short (min 30)'); }
-        document.getElementById('seoResult').innerHTML = `<div class="ai-suggestion"><strong>SEO Score: ${score}/100</strong><br>${feedback.join('<br>')}</div>`;
-    }
-    
-    function changePassword() { alert('Password changed! (Demo)'); }
-    function setup2FA() { alert('2FA setup email sent! (Demo)'); }
-    function saveSettings() { alert('Settings saved!'); }
-    
-    function loadAnalytics() {
-        const ctx = document.getElementById('trafficChart')?.getContext('2d');
-        if (ctx) { new Chart(ctx, { type: 'bar', data: { labels: ['Google', 'WhatsApp', 'Direct', 'Telegram', 'Other'], datasets: [{ label: 'Traffic', data: [45, 30, 15, 8, 2], backgroundColor: '#dc2626' }] } }); }
-        document.getElementById('trafficSources').innerHTML = `<div style="padding:10px;">🌐 Google Search: 45%</div><div style="padding:10px;">📱 WhatsApp: 30%</div><div style="padding:10px;">🔗 Direct: 15%</div><div style="padding:10px;">📢 Telegram: 8%</div><div style="padding:10px;">🐦 Twitter/X: 2%</div>`;
-    }
-    
-    function updateShareLinks(newsId, title) {
-        const siteUrl = 'https://themoonr4.github.io/rasu';
-        const articleUrl = `${siteUrl}/article.html?id=${newsId}`;
-        const encodedUrl = encodeURIComponent(articleUrl);
-        const encodedTitle = encodeURIComponent(title);
-        const elements = {
-            shareFacebookProfile: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-            shareFacebookPage1: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-            shareFacebookPage2: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-            shareInstagram: `https://www.instagram.com/themoonr4/`,
-            shareTwitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
-            shareLinkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-            shareTelegramChannel: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
-            shareTelegramProfile: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
-            shareWhatsappChannel: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
-            shareWhatsappPersonal: `https://wa.me/917980107414?text=${encodedTitle}%20${encodedUrl}`
+    try {
+        const newNews = {
+            title: title,
+            content: content,
+            summary: metaDesc || content.substring(0, 160).replace(/<[^>]*>/g, ''),
+            image_url: imageUrl,
+            category: category,
+            tags: tags,
+            badge: badges,
+            meta_description: metaDesc,
+            author: author,
+            published_at: new Date().toISOString(),
+            views: 0
         };
-        for (const [id, url] of Object.entries(elements)) {
-            const el = document.getElementById(id);
-            if (el) el.href = url;
-        }
-    }
-    
-    async function publishNews(event) {
-        event.preventDefault();
-        const title = document.getElementById('title').value.trim();
-        const category = document.getElementById('category').value;
-        const content = quillEditor ? quillEditor.root.innerHTML : document.getElementById('content').value;
-        const metaDesc = document.getElementById('metaDesc').value;
-        const tags = document.getElementById('tags').value;
-        const imageUrl = document.getElementById('imageUrl').value || `https://picsum.photos/400/200?random=${Date.now()}`;
-        const ogImage = document.getElementById('ogImage').value || imageUrl;
-        const author = document.getElementById('author').value;
-        const affiliateLink = document.getElementById('affiliateLink').value;
-        const sourceUrl = document.getElementById('sourceUrl').value;
-        const badges = document.getElementById('selectedBadges').value;
-        const scheduleDate = document.getElementById('scheduleDate').value;
         
-        if (!title || !content) { showMessage('Title and Content required!', 'error'); return; }
+        const { data, error } = await supabase
+            .from('news')
+            .insert([newNews])
+            .select();
         
-        const btn = document.querySelector('#publish-section button[type="submit"]');
-        btn.textContent = '⏳ Publishing...';
-        btn.disabled = true;
+        if (error) throw error;
         
-        try {
-            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
-            const data = await response.json();
-            let currentData = data.record;
-            if (!currentData.news) currentData.news = [];
-            
-            const maxId = currentData.news.length > 0 ? Math.max(...currentData.news.map(n => n.id)) : 0;
-            const newId = maxId + 1;
-            const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-            
-            const newNews = { id: newId, title, slug, content, meta_description: metaDesc || content.substring(0, 160), tags: tags ? tags.split(',').map(t => t.trim()) : [], published_at: new Date().toISOString(), views: 0, category: category, image_url: imageUrl, og_image: ogImage, author: author, source_url: sourceUrl, affiliate_link: affiliateLink, badges: badges ? badges.split(',') : [], reading_time: Math.ceil(content.split(' ').length / 200) };
-            
-            currentData.news.unshift(newNews);
-            await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY }, body: JSON.stringify(currentData) });
-            
-            showMessage(`✅ Published! ID: ${newId} - Now visible to the world!`, 'success');
-            updateShareLinks(newId, title);
-            
-            document.getElementById('title').value = '';
-            if (quillEditor) quillEditor.root.innerHTML = '';
-            document.getElementById('metaDesc').value = '';
-            document.getElementById('tags').value = '';
-            document.getElementById('imageUrl').value = '';
-            document.getElementById('affiliateLink').value = '';
-            document.querySelectorAll('.badge-option').forEach(b => b.classList.remove('selected'));
-            selectedBadges = [];
-            document.getElementById('selectedBadges').value = '';
-            loadDashboard();
-        } catch(e) { showMessage('Error: ' + e.message, 'error'); } 
-        finally { btn.textContent = '🚀 PUBLISH TO WORLD'; btn.disabled = false; }
+        const newsId = data[0]?.id;
+        showMessage(`✅ Published successfully! Now visible to the world!`, 'success');
+        updateShareLinks(newsId, title);
+        
+        document.getElementById('title').value = '';
+        if (quillEditor) quillEditor.root.innerHTML = '';
+        document.getElementById('metaDesc').value = '';
+        document.getElementById('tags').value = '';
+        document.getElementById('imageUrl').value = '';
+        document.getElementById('affiliateLink').value = '';
+        document.querySelectorAll('.badge-option').forEach(b => b.classList.remove('selected'));
+        selectedBadges = [];
+        document.getElementById('selectedBadges').value = '';
+        loadDashboard();
+        
+    } catch(e) { 
+        showMessage('Error: ' + e.message, 'error'); 
+    } finally { 
+        btn.textContent = '🚀 PUBLISH TO WORLD'; 
+        btn.disabled = false; 
     }
-    
-    document.querySelectorAll('.badge-option').forEach(badge => {
-        badge.addEventListener('click', function() {
-            this.classList.toggle('selected');
-            const val = this.getAttribute('data-badge');
-            if (this.classList.contains('selected')) selectedBadges.push(val);
-            else selectedBadges = selectedBadges.filter(b => b !== val);
-            document.getElementById('selectedBadges').value = selectedBadges.join(',');
-        });
+}
+
+document.querySelectorAll('.badge-option').forEach(badge => {
+    badge.addEventListener('click', function() {
+        this.classList.toggle('selected');
+        const val = this.getAttribute('data-badge');
+        if (this.classList.contains('selected')) selectedBadges.push(val);
+        else selectedBadges = selectedBadges.filter(b => b !== val);
+        document.getElementById('selectedBadges').value = selectedBadges.join(',');
     });
-    
-    document.getElementById('title')?.addEventListener('input', function(e) {
-        document.getElementById('titleCount').innerHTML = `${e.target.value.length}/70`;
-        document.getElementById('previewTitle').innerHTML = e.target.value || 'THE MOON';
-        document.getElementById('previewUrl').innerHTML = `themoonr4.github.io/rasu/${e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-    });
-    document.getElementById('metaDesc')?.addEventListener('input', function(e) {
-        document.getElementById('metaCount').innerHTML = `${e.target.value.length}/160`;
-        document.getElementById('previewDesc').innerHTML = e.target.value || 'Your news description...';
-    });
-    
-    function showMessage(msg, type) {
-        const msgDiv = document.getElementById('message');
-        msgDiv.textContent = msg;
-        msgDiv.className = `message ${type}`;
-        setTimeout(() => msgDiv.className = 'message', 4000);
-    }
-    
-    document.getElementById('newsForm')?.addEventListener('submit', publishNews);
-    loadDashboard();
+});
+
+document.getElementById('title')?.addEventListener('input', function(e) {
+    document.getElementById('titleCount').innerHTML = `${e.target.value.length}/70`;
+    document.getElementById('previewTitle').innerHTML = e.target.value || 'THE MOON';
+    document.getElementById('previewUrl').innerHTML = `themoonr4.github.io/rasu/${e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+});
+document.getElementById('metaDesc')?.addEventListener('input', function(e) {
+    document.getElementById('metaCount').innerHTML = `${e.target.value.length}/160`;
+    document.getElementById('previewDesc').innerHTML = e.target.value || 'Your news description...';
+});
+
+function showMessage(msg, type) {
+    const msgDiv = document.getElementById('message');
+    msgDiv.textContent = msg;
+    msgDiv.className = `message ${type}`;
+    setTimeout(() => msgDiv.className = 'message', 4000);
+}
+
+document.getElementById('newsForm')?.addEventListener('submit', publishNews);
+loadDashboard();
 </script>
 </body>
 </html>
