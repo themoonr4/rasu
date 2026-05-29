@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>THE MOON - World Class Admin Panel</title>
+    <!-- Quill Editor CSS -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Quill Editor JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; }
@@ -48,9 +51,11 @@
         .share-section { margin-top: 20px; padding: 15px; background: #1a1a1a; border-radius: 12px; }
         .share-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
         .share-btn { padding: 8px 16px; border-radius: 30px; text-decoration: none; color: white; font-size: 12px; display: inline-block; }
-        .ql-container { min-height: 200px; background: #1a1a1a; }
+        .ql-container { min-height: 250px; background: #1a1a1a; }
         .ql-toolbar { background: #1a1a1a; border-color: #333 !important; }
+        .ql-editor { color: #fff; }
         .footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; }
+        canvas { max-height: 300px; }
         @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .row-2, .row-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -62,17 +67,14 @@
         <ul class="sidebar-menu">
             <li><a onclick="showSection('dashboard'); return false;" class="active" id="nav-dashboard">📊 Dashboard</a></li>
             <li><a onclick="showSection('publish'); return false;" id="nav-publish">✍️ Publish News</a></li>
-            <li><a onclick="showSection('schedule'); return false;" id="nav-schedule">⏰ Schedule Posts</a></li>
             <li><a onclick="showSection('analytics'); return false;" id="nav-analytics">📈 Analytics</a></li>
-            <li><a onclick="showSection('seo'); return false;" id="nav-seo">🔍 SEO Tools</a></li>
             <li><a onclick="showSection('ai'); return false;" id="nav-ai">🤖 AI Tools</a></li>
-            <li><a onclick="showSection('monetize'); return false;" id="nav-monetize">💰 Monetization</a></li>
-            <li><a onclick="showSection('security'); return false;" id="nav-security">🔐 Security</a></li>
             <li><a onclick="showSection('settings'); return false;" id="nav-settings">⚙️ Settings</a></li>
         </ul>
     </div>
 
     <div class="main-content">
+        <!-- Dashboard Section -->
         <div id="dashboard-section">
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-value" id="totalNews">0</div><div class="stat-label">Total News</div></div>
@@ -84,6 +86,7 @@
             <div class="card"><h3>🔥 Top Performing News</h3><div id="topNewsList"></div></div>
         </div>
 
+        <!-- Publish Section -->
         <div id="publish-section" style="display: none;">
             <div class="card">
                 <h3>🤖 AI Quick Write</h3>
@@ -113,11 +116,10 @@
                     <div class="form-group">
                         <label>⭐ Special Badges</label>
                         <div class="badge-group" id="badgeGroup">
-                            <div class="badge-option" data-badge="breaking">🔴 BREAKING</div>
-                            <div class="badge-option" data-badge="trending">📈 TRENDING</div>
-                            <div class="badge-option" data-badge="exclusive">✨ EXCLUSIVE</div>
-                            <div class="badge-option" data-badge="verified">✅ VERIFIED</div>
-                            <div class="badge-option" data-badge="sponsored">💎 SPONSORED</div>
+                            <div class="badge-option" data-badge="BREAKING">🔴 BREAKING</div>
+                            <div class="badge-option" data-badge="TRENDING">📈 TRENDING</div>
+                            <div class="badge-option" data-badge="EXCLUSIVE">✨ EXCLUSIVE</div>
+                            <div class="badge-option" data-badge="VERIFIED">✅ VERIFIED</div>
                         </div>
                         <input type="hidden" id="selectedBadges">
                     </div>
@@ -152,13 +154,22 @@
             </div>
         </div>
 
-        <div id="schedule-section" style="display: none;"><div class="card"><h3>⏰ Scheduled Posts</h3><div id="scheduledList" class="schedule-list"></div></div></div>
-        <div id="analytics-section" style="display: none;"><div class="card"><h3>📊 Real-time Analytics</h3><canvas id="trafficChart" height="200"></canvas></div><div class="card"><h3>🌍 Traffic Sources</h3><div id="trafficSources"></div></div></div>
-        <div id="seo-section" style="display: none;"><div class="card"><h3>🔍 SEO Checker</h3><div class="form-group"><label>Check Your Title & Meta</label><input type="text" id="seoCheckTitle" placeholder="Enter title to check"><button onclick="checkSEO()" style="margin-top:10px;">Analyze SEO</button></div><div id="seoResult"></div></div></div>
-        <div id="ai-section" style="display: none;"><div class="card"><h3>🤖 AI Hashtag Generator</h3><input type="text" id="hashtagTopic" placeholder="Enter topic for hashtags"><button onclick="generateHashtags()">Generate Hashtags</button><div id="hashtagResult" class="ai-suggestion" style="display:none; margin-top:15px;"></div></div><div class="card"><h3>📝 AI Summarizer</h3><textarea id="summarizeText" rows="5" placeholder="Paste long news here..."></textarea><button onclick="summarizeText()">Summarize</button><div id="summaryResult" class="ai-suggestion" style="display:none; margin-top:15px;"></div></div></div>
-        <div id="monetize-section" style="display: none;"><div class="card"><h3>💰 Earnings Dashboard</h3><div class="stats-grid"><div class="stat-card"><div class="stat-value">₹0</div><div class="stat-label">Today</div></div><div class="stat-card"><div class="stat-value">₹0</div><div class="stat-label">This Month</div></div><div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Affiliate Clicks</div></div></div></div></div>
-        <div id="security-section" style="display: none;"><div class="card"><h3>🔐 Security Settings</h3><div class="form-group"><label>Change Admin Password</label><input type="password" id="newPassword" placeholder="New password"><button onclick="changePassword()" style="margin-top:10px;">Update Password</button></div><div class="form-group"><label>2-Factor Authentication</label><button onclick="setup2FA()">Enable 2FA</button></div></div></div>
-        <div id="settings-section" style="display: none;"><div class="card"><h3>⚙️ General Settings</h3><div class="form-group"><label>Website Name</label><input type="text" id="siteName" value="THE MOON"></div><div class="form-group"><label>Default Category</label><select id="defaultCategory"><option>Technology</option><option>Sports</option><option>Business</option></select></div><button onclick="saveSettings()">Save Settings</button></div></div>
+        <!-- Analytics Section -->
+        <div id="analytics-section" style="display: none;">
+            <div class="card"><h3>📊 Real-time Analytics</h3><canvas id="trafficChart" height="200"></canvas></div>
+            <div class="card"><h3>🌍 Traffic Sources</h3><div id="trafficSources"></div></div>
+        </div>
+
+        <!-- AI Tools Section -->
+        <div id="ai-section" style="display: none;">
+            <div class="card"><h3>🤖 AI Hashtag Generator</h3><input type="text" id="hashtagTopic" placeholder="Enter topic for hashtags"><button onclick="generateHashtags()">Generate Hashtags</button><div id="hashtagResult" class="ai-suggestion" style="display:none; margin-top:15px;"></div></div>
+            <div class="card"><h3>📝 AI Summarizer</h3><textarea id="summarizeText" rows="5" placeholder="Paste long news here..."></textarea><button onclick="summarizeText()">Summarize</button><div id="summaryResult" class="ai-suggestion" style="display:none; margin-top:15px;"></div></div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings-section" style="display: none;">
+            <div class="card"><h3>⚙️ General Settings</h3><div class="form-group"><label>Website Name</label><input type="text" id="siteName" value="THE MOON"></div><div class="form-group"><label>Default Category</label><select id="defaultCategory"><option>Technology</option><option>Sports</option><option>Business</option></select></div><button onclick="saveSettings()">Save Settings</button></div>
+        </div>
 
         <div class="footer"><p>© 2026 THE MOON — World's Most Advanced News Platform</p></div>
     </div>
@@ -166,24 +177,41 @@
 
 <script>
 // ============================================
-// SUPABASE CONFIGURATION - ADMIN PANEL
+// SUPABASE CONFIGURATION
 // ============================================
-// 🔴🔴🔴 SIRF YAHAN KEYS CHANGE KARI HAIN 🔴🔴🔴
 const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
 
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 let selectedBadges = [];
-let scheduledPosts = JSON.parse(localStorage.getItem('scheduledPosts') || '[]');
 let quillEditor;
 let allNews = [];
+let viewsChart = null;
+let trafficChart = null;
 
+// Initialize Quill Editor
 setTimeout(() => {
     if (document.getElementById('editor')) {
-        quillEditor = new Quill('#editor', { theme: 'snow', placeholder: 'Write your news content here...', modules: { toolbar: [['bold', 'italic', 'underline', 'strike'], ['blockquote', 'code-block'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'size': ['small', false, 'large', 'huge'] }], [{ 'color': [] }, { 'background': [] }], ['link', 'image'], ['clean']] } });
-        quillEditor.on('text-change', function() { document.getElementById('content').value = quillEditor.root.innerHTML; });
+        quillEditor = new Quill('#editor', { 
+            theme: 'snow', 
+            placeholder: 'Write your news content here...', 
+            modules: { 
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['link', 'image'],
+                    ['clean']
+                ] 
+            } 
+        });
+        quillEditor.on('text-change', function() { 
+            document.getElementById('content').value = quillEditor.root.innerHTML; 
+        });
     }
 }, 100);
 
@@ -213,11 +241,53 @@ async function loadDashboard() {
         const topNews = [...allNews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
         document.getElementById('topNewsList').innerHTML = topNews.map(n => `<div style="padding:10px;border-bottom:1px solid #222;"><strong>🔥 ${n.title}</strong> - ${n.views || 0} views</div>`).join('');
         
+        // Update Chart
         const ctx = document.getElementById('viewsChart')?.getContext('2d');
         if (ctx && allNews.length > 0) {
-            new Chart(ctx, { type: 'line', data: { labels: allNews.slice(0, 7).map(n => n.title?.substring(0, 20) || 'News'), datasets: [{ label: 'Views', data: allNews.slice(0, 7).map(n => n.views || 0), borderColor: '#dc2626' }] } });
+            if (viewsChart) viewsChart.destroy();
+            viewsChart = new Chart(ctx, { 
+                type: 'line', 
+                data: { 
+                    labels: allNews.slice(0, 7).map(n => n.title?.substring(0, 20) || 'News'), 
+                    datasets: [{ 
+                        label: 'Views', 
+                        data: allNews.slice(0, 7).map(n => n.views || 0), 
+                        borderColor: '#dc2626',
+                        backgroundColor: 'rgba(220,38,38,0.1)',
+                        fill: true
+                    }] 
+                },
+                options: { responsive: true, maintainAspectRatio: true }
+            });
         }
     } catch(e) { console.error(e); }
+}
+
+function loadAnalytics() {
+    const ctx = document.getElementById('trafficChart')?.getContext('2d');
+    if (ctx) {
+        if (trafficChart) trafficChart.destroy();
+        trafficChart = new Chart(ctx, { 
+            type: 'bar', 
+            data: { 
+                labels: ['Google', 'WhatsApp', 'Direct', 'Telegram', 'Other'], 
+                datasets: [{ 
+                    label: 'Traffic (%)', 
+                    data: [45, 30, 15, 8, 2], 
+                    backgroundColor: '#dc2626',
+                    borderRadius: 8
+                }] 
+            },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+    document.getElementById('trafficSources').innerHTML = `
+        <div style="padding:10px;border-bottom:1px solid #222;">🌐 Google Search: 45%</div>
+        <div style="padding:10px;border-bottom:1px solid #222;">📱 WhatsApp: 30%</div>
+        <div style="padding:10px;border-bottom:1px solid #222;">🔗 Direct: 15%</div>
+        <div style="padding:10px;border-bottom:1px solid #222;">📢 Telegram: 8%</div>
+        <div style="padding:10px;">🐦 Twitter/X: 2%</div>
+    `;
 }
 
 async function aiWriteNews() {
@@ -226,7 +296,10 @@ async function aiWriteNews() {
     document.getElementById('aiSuggestion').style.display = 'block';
     document.getElementById('aiSuggestion').innerHTML = '<div class="suggestion-item">🤖 AI is writing news for you...</div>';
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Write a complete news article about "${keyword}". Include a catchy title, 3 paragraphs of content, and a conclusion. Write in Hindi/English mix.` }] }] }) });
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { 
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ contents: [{ parts: [{ text: `Write a complete news article about "${keyword}". Include a catchy title, 3 paragraphs of content, and a conclusion. Write in Hindi/English mix.` }] }] }) 
+        });
         const data = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
         const lines = text.split('\n');
@@ -266,50 +339,29 @@ async function summarizeText() {
     } catch(e) { alert('Error!'); }
 }
 
-function checkSEO() {
-    const title = document.getElementById('seoCheckTitle').value;
-    let score = 0, feedback = [];
-    if (title.length >= 30 && title.length <= 70) { score += 30; feedback.push('✅ Good title length'); }
-    else if (title.length > 70) { score += 10; feedback.push('⚠️ Title too long (max 70)'); }
-    else { feedback.push('❌ Title too short (min 30)'); }
-    document.getElementById('seoResult').innerHTML = `<div class="ai-suggestion"><strong>SEO Score: ${score}/100</strong><br>${feedback.join('<br>')}</div>`;
-}
-
-function changePassword() { alert('Password changed! (Demo)'); }
-function setup2FA() { alert('2FA setup email sent! (Demo)'); }
 function saveSettings() { alert('Settings saved!'); }
-
-function loadAnalytics() {
-    const ctx = document.getElementById('trafficChart')?.getContext('2d');
-    if (ctx) { new Chart(ctx, { type: 'bar', data: { labels: ['Google', 'WhatsApp', 'Direct', 'Telegram', 'Other'], datasets: [{ label: 'Traffic', data: [45, 30, 15, 8, 2], backgroundColor: '#dc2626' }] } }); }
-    document.getElementById('trafficSources').innerHTML = `<div style="padding:10px;">🌐 Google Search: 45%</div><div style="padding:10px;">📱 WhatsApp: 30%</div><div style="padding:10px;">🔗 Direct: 15%</div><div style="padding:10px;">📢 Telegram: 8%</div><div style="padding:10px;">🐦 Twitter/X: 2%</div>`;
-}
 
 function updateShareLinks(newsId, title) {
     const siteUrl = 'https://themoonr4.github.io/rasu';
     const articleUrl = `${siteUrl}/article.html?id=${newsId}`;
     const encodedUrl = encodeURIComponent(articleUrl);
     const encodedTitle = encodeURIComponent(title);
-    const elements = {
-        shareFacebookProfile: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-        shareFacebookPage1: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-        shareFacebookPage2: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-        shareInstagram: `https://www.instagram.com/themoonr4/`,
-        shareTwitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
-        shareLinkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-        shareTelegramChannel: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
-        shareTelegramProfile: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
-        shareWhatsappChannel: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
-        shareWhatsappPersonal: `https://wa.me/917980107414?text=${encodedTitle}%20${encodedUrl}`
-    };
-    for (const [id, url] of Object.entries(elements)) {
-        const el = document.getElementById(id);
-        if (el) el.href = url;
-    }
+    
+    document.getElementById('shareFacebookProfile').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+    document.getElementById('shareFacebookPage1').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+    document.getElementById('shareFacebookPage2').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+    document.getElementById('shareInstagram').href = `https://www.instagram.com/themoonr4/`;
+    document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+    document.getElementById('shareLinkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+    document.getElementById('shareTelegramChannel').href = `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`;
+    document.getElementById('shareTelegramProfile').href = `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`;
+    document.getElementById('shareWhatsappChannel').href = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
+    document.getElementById('shareWhatsappPersonal').href = `https://wa.me/917980107414?text=${encodedTitle}%20${encodedUrl}`;
 }
 
 async function publishNews(event) {
     event.preventDefault();
+    
     const title = document.getElementById('title').value.trim();
     const category = document.getElementById('category').value;
     const content = quillEditor ? quillEditor.root.innerHTML : document.getElementById('content').value;
@@ -319,7 +371,10 @@ async function publishNews(event) {
     const author = document.getElementById('author').value;
     const badges = document.getElementById('selectedBadges').value;
     
-    if (!title || !content) { showMessage('Title and Content required!', 'error'); return; }
+    if (!title || !content) {
+        showMessage('Title and Content required!', 'error');
+        return;
+    }
     
     const btn = document.querySelector('#publish-section button[type="submit"]');
     btn.textContent = '⏳ Publishing...';
@@ -348,9 +403,10 @@ async function publishNews(event) {
         if (error) throw error;
         
         const newsId = data[0]?.id;
-        showMessage(`✅ Published successfully! Now visible to the world!`, 'success');
+        showMessage('✅ Published successfully! Now visible to the world!', 'success');
         updateShareLinks(newsId, title);
         
+        // Clear form
         document.getElementById('title').value = '';
         if (quillEditor) quillEditor.root.innerHTML = '';
         document.getElementById('metaDesc').value = '';
@@ -360,6 +416,7 @@ async function publishNews(event) {
         document.querySelectorAll('.badge-option').forEach(b => b.classList.remove('selected'));
         selectedBadges = [];
         document.getElementById('selectedBadges').value = '';
+        
         loadDashboard();
         
     } catch(e) { 
@@ -370,6 +427,7 @@ async function publishNews(event) {
     }
 }
 
+// Badge selection
 document.querySelectorAll('.badge-option').forEach(badge => {
     badge.addEventListener('click', function() {
         this.classList.toggle('selected');
@@ -380,10 +438,12 @@ document.querySelectorAll('.badge-option').forEach(badge => {
     });
 });
 
+// Preview
 document.getElementById('title')?.addEventListener('input', function(e) {
     document.getElementById('titleCount').innerHTML = `${e.target.value.length}/70`;
     document.getElementById('previewTitle').innerHTML = e.target.value || 'THE MOON';
-    document.getElementById('previewUrl').innerHTML = `themoonr4.github.io/rasu/${e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    const slug = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    document.getElementById('previewUrl').innerHTML = `themoonr4.github.io/rasu/${slug}`;
 });
 document.getElementById('metaDesc')?.addEventListener('input', function(e) {
     document.getElementById('metaCount').innerHTML = `${e.target.value.length}/160`;
@@ -399,6 +459,7 @@ function showMessage(msg, type) {
 
 document.getElementById('newsForm')?.addEventListener('submit', publishNews);
 loadDashboard();
+loadAnalytics();
 </script>
 </body>
 </html>
