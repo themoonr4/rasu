@@ -12,40 +12,8 @@
             background: #0a0a0a;
             color: #ffffff;
         }
-        .admin-container { display: flex; min-height: 100vh; }
-        .sidebar {
-            width: 280px;
-            background: #0f0f0f;
-            border-right: 1px solid #222;
-            padding: 20px 0;
-            position: fixed;
-            height: 100vh;
-        }
-        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .sidebar-logo h2 { color: #dc2626; }
-        .sidebar-menu { list-style: none; }
-        .sidebar-menu li { margin-bottom: 5px; }
-        .sidebar-menu button {
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            color: #cbd5e1;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
-        }
-        .sidebar-menu button:hover, .sidebar-menu button.active {
-            background: #1a1a1a;
-            border-left-color: #dc2626;
-            color: #fff;
-        }
-        .main-content { flex: 1; margin-left: 280px; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #dc2626; margin-bottom: 20px; text-align: center; }
         .card {
             background: #111;
             border: 1px solid #222;
@@ -55,7 +23,7 @@
         }
         .card h3 { margin-bottom: 20px; }
         .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: #cbd5e1; }
+        label { display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 500; }
         input, select, textarea {
             width: 100%;
             padding: 12px;
@@ -65,7 +33,7 @@
             color: #fff;
             font-size: 14px;
         }
-        button.submit {
+        button {
             background: #dc2626;
             color: white;
             border: none;
@@ -76,7 +44,7 @@
             cursor: pointer;
             width: 100%;
         }
-        button.submit:hover { background: #b91c1c; }
+        button:hover { background: #b91c1c; }
         .message {
             margin-top: 15px;
             padding: 12px;
@@ -86,248 +54,213 @@
         }
         .message.success { background: #15803d; display: block; }
         .message.error { background: #b91c1c; display: block; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px; text-align: center; }
-        .stat-card .stat-value { font-size: 2rem; font-weight: bold; color: #dc2626; }
-        .stat-card .stat-label { color: #94a3b8; font-size: 0.8rem; margin-top: 5px; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-card .value { font-size: 24px; font-weight: bold; color: #dc2626; }
+        .stat-card .label { font-size: 12px; color: #94a3b8; margin-top: 5px; }
         .footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; }
-        .hidden { display: none; }
-        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } }
     </style>
 </head>
 <body>
-
-<div class="admin-container">
-    <div class="sidebar">
-        <div class="sidebar-logo"><h2>🌙 THE MOON</h2><p>Admin Panel</p></div>
-        <ul class="sidebar-menu">
-            <li><button id="btnDashboard" class="active">📊 Dashboard</button></li>
-            <li><button id="btnPublish">✍️ Publish News</button></li>
-            <li><button id="btnAnalytics">📈 Analytics</button></li>
-        </ul>
-    </div>
-
-    <div class="main-content">
-        <!-- Dashboard Section -->
-        <div id="dashboardSection">
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value" id="totalNews">0</div><div class="stat-label">Total News</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalViews">0</div><div class="stat-label">Total Views</div></div>
-                <div class="stat-card"><div class="stat-value" id="todayNews">0</div><div class="stat-label">Today's News</div></div>
+    <div class="container">
+        <h1>🌙 THE MOON — Admin Panel</h1>
+        
+        <!-- Stats Section -->
+        <div class="card">
+            <h3>📊 Dashboard</h3>
+            <div class="stats">
+                <div class="stat-card"><div class="value" id="totalNews">0</div><div class="label">Total News</div></div>
+                <div class="stat-card"><div class="value" id="totalViews">0</div><div class="label">Total Views</div></div>
+                <div class="stat-card"><div class="value" id="todayCount">0</div><div class="label">Published Today</div></div>
             </div>
-            <div class="card">
-                <h3>📰 Recent News</h3>
-                <div id="recentNewsList">Loading...</div>
-            </div>
+            <div id="recentList" style="margin-top: 15px; max-height: 200px; overflow-y: auto;"></div>
         </div>
-
+        
         <!-- Publish Section -->
-        <div id="publishSection" class="hidden">
-            <div class="card">
-                <h3>✍️ Create New News</h3>
-                <form id="newsForm">
-                    <div class="form-group">
-                        <label>📰 Title *</label>
-                        <input type="text" id="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label>📂 Category *</label>
-                        <select id="category">
-                            <option value="Technology">Technology</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Business">Business</option>
-                            <option value="Politics">Politics</option>
-                            <option value="Study">Study</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>📝 Summary (Short description)</label>
-                        <textarea id="summary" rows="2"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>📄 Full Content *</label>
-                        <textarea id="content" rows="6" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>🖼️ Image URL</label>
-                        <input type="text" id="imageUrl" placeholder="https://picsum.photos/400/200">
-                    </div>
-                    <div class="form-group">
-                        <label>⭐ Badge (Optional)</label>
-                        <select id="badge">
-                            <option value="">None</option>
-                            <option value="BREAKING">🔴 BREAKING</option>
-                            <option value="TRENDING">📈 TRENDING</option>
-                            <option value="EXCLUSIVE">✨ EXCLUSIVE</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="submit">🚀 PUBLISH TO WORLD</button>
-                    <div id="message" class="message"></div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Analytics Section -->
-        <div id="analyticsSection" class="hidden">
-            <div class="card">
-                <h3>📊 Traffic Sources</h3>
-                <div id="trafficSources">
-                    <p>🌐 Google Search: 45%</p>
-                    <p>📱 WhatsApp: 30%</p>
-                    <p>🔗 Direct: 15%</p>
-                    <p>📢 Telegram: 8%</p>
-                    <p>🐦 Twitter: 2%</p>
+        <div class="card">
+            <h3>✍️ Publish News</h3>
+            <form id="newsForm">
+                <div class="form-group">
+                    <label>📰 Title *</label>
+                    <input type="text" id="title" placeholder="Breaking news title..." required>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label>📂 Category *</label>
+                    <select id="category">
+                        <option value="Technology">💻 Technology</option>
+                        <option value="Sports">🏏 Sports</option>
+                        <option value="Business">📊 Business</option>
+                        <option value="Politics">🏛️ Politics</option>
+                        <option value="Study">📚 Study</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>📝 Summary (Short description)</label>
+                    <textarea id="summary" rows="2" placeholder="Brief summary of the news..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>📄 Full Content *</label>
+                    <textarea id="content" rows="6" placeholder="Write your full news content here..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>🖼️ Image URL</label>
+                    <input type="text" id="imageUrl" placeholder="https://picsum.photos/400/200">
+                </div>
+                <div class="form-group">
+                    <label>⭐ Badge (Optional)</label>
+                    <select id="badge">
+                        <option value="">None</option>
+                        <option value="BREAKING">🔴 BREAKING</option>
+                        <option value="TRENDING">📈 TRENDING</option>
+                        <option value="EXCLUSIVE">✨ EXCLUSIVE</option>
+                    </select>
+                </div>
+                <button type="submit" id="publishBtn">🚀 PUBLISH TO WORLD</button>
+                <div id="message" class="message"></div>
+            </form>
         </div>
-
-        <div class="footer"><p>© 2026 THE MOON — Admin Panel</p></div>
+        
+        <div class="footer">
+            <p>© 2026 THE MOON — Admin Panel</p>
+        </div>
     </div>
-</div>
 
-<script>
-    // ============================================
-    // SUPABASE CONFIGURATION
-    // ============================================
-    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // --- Navigation Logic (No errors, clicks will work) ---
-    document.getElementById('btnDashboard').addEventListener('click', () => showSection('dashboard'));
-    document.getElementById('btnPublish').addEventListener('click', () => showSection('publish'));
-    document.getElementById('btnAnalytics').addEventListener('click', () => showSection('analytics'));
-
-    function showSection(section) {
-        // Hide all sections
-        document.getElementById('dashboardSection').classList.add('hidden');
-        document.getElementById('publishSection').classList.add('hidden');
-        document.getElementById('analyticsSection').classList.add('hidden');
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Show selected section
-        document.getElementById(`${section}Section`).classList.remove('hidden');
+        let allNews = [];
         
-        // Update active button
-        document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
-        if (section === 'dashboard') document.getElementById('btnDashboard').classList.add('active');
-        if (section === 'publish') document.getElementById('btnPublish').classList.add('active');
-        if (section === 'analytics') document.getElementById('btnAnalytics').classList.add('active');
-        
-        // Reload data for dashboard if needed
-        if (section === 'dashboard') loadDashboard();
-    }
-
-    // --- Dashboard Functions ---
-    async function loadDashboard() {
-        try {
-            const { data, error } = await supabase
-                .from('news')
-                .select('*')
-                .order('published_at', { ascending: false });
-            
-            if (error) throw error;
-            
-            const news = data || [];
-            document.getElementById('totalNews').innerText = news.length;
-            document.getElementById('totalViews').innerText = news.reduce((sum, n) => sum + (n.views || 0), 0);
-            
-            const today = new Date().toDateString();
-            const todayNews = news.filter(n => new Date(n.published_at).toDateString() === today).length;
-            document.getElementById('todayNews').innerText = todayNews;
-            
-            const recentHtml = news.slice(0, 5).map(n => `
-                <div style="padding: 10px; border-bottom: 1px solid #222;">
-                    <strong>${escapeHtml(n.title)}</strong><br>
-                    <small>📅 ${new Date(n.published_at).toLocaleDateString()} | 👁️ ${n.views || 0} views</small>
-                </div>
-            `).join('');
-            
-            document.getElementById('recentNewsList').innerHTML = recentHtml || '<p>No news yet</p>';
-            
-        } catch(e) {
-            console.error(e);
-            document.getElementById('recentNewsList').innerHTML = '<p>Error loading news</p>';
-        }
-    }
-
-    // --- Helper Functions ---
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // --- Publish Logic ---
-    async function publishNews(event) {
-        event.preventDefault();
-        
-        const title = document.getElementById('title').value.trim();
-        const category = document.getElementById('category').value;
-        const summary = document.getElementById('summary').value;
-        const content = document.getElementById('content').value;
-        const imageUrl = document.getElementById('imageUrl').value || 'https://picsum.photos/400/200';
-        const badge = document.getElementById('badge').value;
-        
-        if (!title || !content) {
-            showMessage('Title and Content are required!', 'error');
-            return;
+        // Load Dashboard
+        async function loadDashboard() {
+            try {
+                const { data, error } = await supabase
+                    .from('news')
+                    .select('*')
+                    .order('published_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                allNews = data || [];
+                
+                // Update stats
+                document.getElementById('totalNews').innerText = allNews.length;
+                document.getElementById('totalViews').innerText = allNews.reduce((sum, n) => sum + (n.views || 0), 0);
+                
+                // Today's count
+                const today = new Date().toDateString();
+                const todayCount = allNews.filter(n => new Date(n.published_at).toDateString() === today).length;
+                document.getElementById('todayCount').innerText = todayCount;
+                
+                // Recent news list
+                const recentHtml = allNews.slice(0, 5).map(n => `
+                    <div style="padding: 10px; border-bottom: 1px solid #222;">
+                        <strong>${escapeHtml(n.title)}</strong><br>
+                        <small>📅 ${new Date(n.published_at).toLocaleDateString()} | 👁️ ${n.views || 0} views | 🏷️ ${n.category || 'News'}</small>
+                    </div>
+                `).join('');
+                
+                document.getElementById('recentList').innerHTML = recentHtml || '<p>No news yet. Publish your first news!</p>';
+                
+            } catch(e) {
+                console.error('Dashboard error:', e);
+                document.getElementById('recentList').innerHTML = '<p>Error loading news. Check console.</p>';
+            }
         }
         
-        const btn = document.querySelector('#publishSection button.submit');
-        btn.textContent = '⏳ Publishing...';
-        btn.disabled = true;
-        
-        try {
-            const { error } = await supabase
-                .from('news')
-                .insert([{
-                    title: title,
-                    content: content,
-                    summary: summary || content.substring(0, 160),
-                    image_url: imageUrl,
-                    category: category,
-                    badge: badge,
-                    published_at: new Date().toISOString(),
-                    views: 0
-                }]);
+        // Publish News
+        async function publishNews(event) {
+            event.preventDefault();
             
-            if (error) throw error;
+            const title = document.getElementById('title').value.trim();
+            const category = document.getElementById('category').value;
+            const summary = document.getElementById('summary').value;
+            const content = document.getElementById('content').value;
+            const imageUrl = document.getElementById('imageUrl').value || 'https://picsum.photos/400/200';
+            const badge = document.getElementById('badge').value;
             
-            showMessage('✅ Published successfully! News is live on the website!', 'success');
+            if (!title || !content) {
+                showMessage('Title and Content are required!', 'error');
+                return;
+            }
             
-            // Clear form
-            document.getElementById('title').value = '';
-            document.getElementById('summary').value = '';
-            document.getElementById('content').value = '';
-            document.getElementById('imageUrl').value = '';
-            document.getElementById('badge').value = '';
+            const btn = document.getElementById('publishBtn');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Publishing...';
+            btn.disabled = true;
             
-            loadDashboard();
-            
-        } catch(e) { 
-            showMessage('Error: ' + e.message, 'error'); 
-        } finally { 
-            btn.textContent = '🚀 PUBLISH TO WORLD'; 
-            btn.disabled = false; 
+            try {
+                const { error } = await supabase
+                    .from('news')
+                    .insert([{
+                        title: title,
+                        content: content,
+                        summary: summary || content.substring(0, 160),
+                        image_url: imageUrl,
+                        category: category,
+                        badge: badge,
+                        published_at: new Date().toISOString(),
+                        views: 0
+                    }]);
+                
+                if (error) throw error;
+                
+                showMessage('✅ Published successfully! News is now live on the website!', 'success');
+                
+                // Clear form
+                document.getElementById('title').value = '';
+                document.getElementById('summary').value = '';
+                document.getElementById('content').value = '';
+                document.getElementById('imageUrl').value = '';
+                document.getElementById('badge').value = '';
+                
+                // Reload dashboard
+                loadDashboard();
+                
+            } catch(e) { 
+                showMessage('Error: ' + e.message, 'error'); 
+            } finally { 
+                btn.textContent = originalText; 
+                btn.disabled = false; 
+            }
         }
-    }
-
-    function showMessage(msg, type) {
-        const msgDiv = document.getElementById('message');
-        msgDiv.textContent = msg;
-        msgDiv.className = `message ${type}`;
-        setTimeout(() => msgDiv.className = 'message', 4000);
-    }
-
-    // --- Event Listeners ---
-    document.getElementById('newsForm')?.addEventListener('submit', publishNews);
-
-    // --- Initial Load ---
-    loadDashboard();
-</script>
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function showMessage(msg, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = msg;
+            msgDiv.className = `message ${type}`;
+            setTimeout(() => msgDiv.className = 'message', 5000);
+        }
+        
+        // Form submit
+        document.getElementById('newsForm').addEventListener('submit', publishNews);
+        
+        // Initial load
+        loadDashboard();
+    </script>
 </body>
 </html>
