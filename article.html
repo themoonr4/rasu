@@ -86,14 +86,11 @@ function escapeHtml(str) {
     });
 }
 
-// Format content with paragraphs
 function formatContent(content) {
     if (!content) return 'No content available';
-    // If content already has HTML tags, return as is
     if (content.includes('<p>') || content.includes('<div>')) {
         return content;
     }
-    // Otherwise wrap paragraphs
     return content.split('\n\n').map(para => `<p>${escapeHtml(para)}</p>`).join('');
 }
 
@@ -120,20 +117,10 @@ async function loadArticle() {
         const shareText = encodeURIComponent(article.title);
         const shareUrl = encodeURIComponent(window.location.href);
         
-        // Build badge HTML
         let badgeHtml = '';
         if (article.badge) {
             const badges = article.badge.split(',');
             badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
-        }
-        
-        // Build affiliate HTML
-        let affiliateHtml = '';
-        if (article.affiliate_link) {
-            affiliateHtml = `<div style="margin-top:20px;padding:15px;background:linear-gradient(135deg,#1e293b,#0f172a);border-radius:12px;text-align:center;">
-                <p>🛍️ <strong>Check this out!</strong></p>
-                <a href="${article.affiliate_link}" target="_blank" style="background:#dc2626;color:white;padding:8px 20px;border-radius:30px;text-decoration:none;display:inline-block;margin-top:10px;">Buy Now on Amazon →</a>
-            </div>`;
         }
         
         document.getElementById('articleContent').innerHTML = `
@@ -150,7 +137,6 @@ async function loadArticle() {
                 <div class="article-content">
                     ${formatContent(article.content || article.summary || 'No content available')}
                 </div>
-                ${affiliateHtml}
                 <div class="share-buttons">
                     <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                     <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter"><i class="fab fa-twitter"></i> Twitter</a>
@@ -161,11 +147,13 @@ async function loadArticle() {
             </div>
         `;
         
-        // Update page title
         document.title = `${article.title} | THE MOON`;
         
-        // Increment views (optional - uncomment if needed)
-        // await supabase.from('news').update({ views: (article.views || 0) + 1 }).eq('id', article.id);
+        // Increment views
+        await supabase
+            .from('news')
+            .update({ views: (article.views || 0) + 1 })
+            .eq('id', article.id);
         
     } catch (error) {
         console.error('Error:', error);
@@ -174,6 +162,10 @@ async function loadArticle() {
 }
 
 loadArticle();
+
+// Theme toggle
+const isDark = localStorage.getItem('theme') === 'dark';
+if (isDark) document.body.classList.add('dark');
 </script>
 </body>
 </html>
