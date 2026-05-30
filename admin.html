@@ -3,157 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - Admin Panel</title>
+    <title>THE MOON - World Class Admin</title>
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #0a0a0a; color: #fff; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
-        h1 { color: #dc2626; text-align: center; margin-bottom: 20px; }
-        .card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px; }
-        button { background: #dc2626; color: #fff; padding: 12px; border: none; cursor: pointer; width: 100%; border-radius: 8px; font-size: 16px; }
-        button:hover { background: #b91c1c; }
-        .success { background: #15803d; padding: 10px; border-radius: 8px; margin-top: 10px; display: none; }
-        .error { background: #b91c1c; padding: 10px; border-radius: 8px; margin-top: 10px; display: none; }
-        .stats { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .stat-box { background: #1a1a1a; padding: 15px; border-radius: 12px; flex: 1; text-align: center; }
-        .stat-number { font-size: 28px; font-weight: bold; color: #dc2626; }
-        .nav-buttons { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .nav-btn { background: #1a1a1a; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; color: #fff; width: auto; }
-        .nav-btn.active { background: #dc2626; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #fff; }
+        .app { display: flex; min-height: 100vh; }
+        /* Sidebar */
+        .sidebar { width: 280px; background: #0f0f0f; border-right: 1px solid #222; padding: 20px 0; position: fixed; height: 100vh; }
+        .logo { padding: 0 20px 20px; border-bottom: 1px solid #222; margin-bottom: 20px; }
+        .logo h2 { color: #dc2626; }
+        .nav-item { width: 100%; text-align: left; background: none; border: none; padding: 12px 20px; color: #cbd5e1; cursor: pointer; display: flex; gap: 12px; font-size: 15px; border-left: 3px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: #1a1a1a; border-left-color: #dc2626; color: #fff; }
+        /* Main Content */
+        .main { margin-left: 280px; padding: 20px; flex: 1; }
+        .card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 25px; margin-bottom: 25px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
+        .stat-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #dc2626; }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; }
+        button.btn-primary { background: #dc2626; color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+        .badge-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .badge-opt { background: #1a1a1a; border: 1px solid #333; border-radius: 30px; padding: 6px 14px; cursor: pointer; font-size: 12px; }
+        .badge-opt.selected { background: #dc2626; }
         .hidden { display: none; }
+        .message { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; }
+        .message.success { background: #15803d; display: block; }
+        .message.error { background: #b91c1c; display: block; }
+        .ql-container { min-height: 200px; background: #1a1a1a; }
+        .ql-toolbar { background: #1a1a1a; border-color: #333 !important; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🌙 THE MOON — Admin Panel</h1>
-        
-        <!-- Navigation Buttons -->
-        <div class="nav-buttons">
-            <button class="nav-btn active" id="btnDashboard">📊 Dashboard</button>
-            <button class="nav-btn" id="btnPublish">✍️ Publish</button>
-            <button class="nav-btn" id="btnStats">📈 Stats</button>
-        </div>
-        
-        <!-- Dashboard Section -->
-        <div id="dashboardSection">
-            <div class="stats">
-                <div class="stat-box"><div class="stat-number" id="totalNews">0</div><div>Total News</div></div>
-                <div class="stat-box"><div class="stat-number" id="totalViews">0</div><div>Total Views</div></div>
+<div class="app">
+    <div class="sidebar">
+        <div class="logo"><h2>🌙 THE MOON</h2></div>
+        <button class="nav-item active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="nav-item" data-tab="publish">✍️ Publish News</button>
+        <button class="nav-item" data-tab="analytics">📈 Analytics</button>
+        <button class="nav-item" data-tab="ai">🤖 AI Tools</button>
+    </div>
+    <div class="main">
+        <!-- Dashboard -->
+        <div id="dashboardTab">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value" id="totalNews">0</div><div>Total News</div></div>
+                <div class="stat-card"><div class="stat-value" id="totalViews">0</div><div>Total Views</div></div>
+                <div class="stat-card"><div class="stat-value" id="activeReaders">0</div><div>Active Readers</div></div>
+                <div class="stat-card"><div class="stat-value" id="totalEarnings">₹0</div><div>Earnings</div></div>
             </div>
+            <div class="card"><h3>📊 Performance</h3><canvas id="viewsChart" height="200"></canvas></div>
+            <div class="card"><h3>🔥 Top News</h3><div id="topNewsList"></div></div>
+        </div>
+        <!-- Publish -->
+        <div id="publishTab" class="hidden">
             <div class="card">
-                <h3>📰 Recent News</h3>
-                <div id="recentList">Loading...</div>
+                <h3>🤖 AI Quick Write</h3>
+                <div class="row-2"><input type="text" id="aiKeyword" placeholder="Enter keyword"><button class="btn-primary" id="aiWriteBtn">✨ AI Write</button></div>
+                <div id="aiSuggestion" class="hidden" style="background:#1e293b; padding:15px; margin-top:15px; border-radius:10px;"></div>
             </div>
-        </div>
-        
-        <!-- Publish Section -->
-        <div id="publishSection" class="hidden">
             <div class="card">
                 <h3>✍️ Create News</h3>
-                <input type="text" id="title" placeholder="Title">
-                <select id="category">
-                    <option>Technology</option><option>Sports</option><option>Business</option>
-                    <option>Politics</option><option>Study</option>
-                </select>
-                <textarea id="summary" rows="2" placeholder="Short summary"></textarea>
-                <textarea id="content" rows="5" placeholder="Full content"></textarea>
-                <input type="text" id="imageUrl" placeholder="Image URL (optional)">
-                <button id="publishBtn">🚀 PUBLISH</button>
-                <div id="msg"></div>
+                <form id="newsForm">
+                    <div class="row-2">
+                        <input type="text" id="title" placeholder="Title" required>
+                        <select id="category"><option>Technology</option><option>Sports</option><option>Business</option><option>Politics</option><option>Study</option></select>
+                    </div>
+                    <textarea id="metaDesc" rows="2" placeholder="Meta Description (SEO)"></textarea>
+                    <div id="editor" style="min-height: 200px;"></div>
+                    <textarea id="content" style="display:none;"></textarea>
+                    <div class="row-3">
+                        <input type="text" id="imageUrl" placeholder="Image URL">
+                        <input type="text" id="author" placeholder="Author" value="THE MOON Team">
+                        <input type="text" id="tags" placeholder="Tags (comma)">
+                    </div>
+                    <div class="badge-group" id="badgeGroup">
+                        <div class="badge-opt" data-badge="BREAKING">🔴 BREAKING</div>
+                        <div class="badge-opt" data-badge="TRENDING">📈 TRENDING</div>
+                        <div class="badge-opt" data-badge="EXCLUSIVE">✨ EXCLUSIVE</div>
+                    </div>
+                    <input type="hidden" id="selectedBadges">
+                    <button type="submit" class="btn-primary">🚀 PUBLISH</button>
+                    <div id="publishMsg" class="message"></div>
+                </form>
             </div>
         </div>
-        
-        <!-- Stats Section -->
-        <div id="statsSection" class="hidden">
-            <div class="card">
-                <h3>📊 Traffic Sources</h3>
-                <p>🌐 Google: 45%</p>
-                <p>📱 WhatsApp: 30%</p>
-                <p>🔗 Direct: 15%</p>
-                <p>📢 Telegram: 10%</p>
-            </div>
+        <!-- Analytics -->
+        <div id="analyticsTab" class="hidden">
+            <div class="card"><h3>📊 Traffic Sources</h3><canvas id="trafficChart" height="200"></canvas></div>
+            <div class="card"><div id="trafficDetails"></div></div>
+        </div>
+        <!-- AI Tools -->
+        <div id="aiTab" class="hidden">
+            <div class="card"><h3>🤖 Hashtag Generator</h3><input type="text" id="hashtagTopic" placeholder="Topic"><button class="btn-primary" id="genHashBtn" style="margin-top:10px;">Generate</button><div id="hashResult" class="hidden" style="margin-top:15px;background:#1e293b;padding:15px;border-radius:10px;"></div></div>
         </div>
     </div>
-
-    <script>
-        // Supabase Config
-        const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Navigation
-        document.getElementById('btnDashboard').onclick = () => { show('dashboard'); };
-        document.getElementById('btnPublish').onclick = () => { show('publish'); };
-        document.getElementById('btnStats').onclick = () => { show('stats'); };
-        
-        function show(section) {
-            document.getElementById('dashboardSection').classList.add('hidden');
-            document.getElementById('publishSection').classList.add('hidden');
-            document.getElementById('statsSection').classList.add('hidden');
-            document.getElementById(`${section}Section`).classList.remove('hidden');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            if (section === 'dashboard') document.getElementById('btnDashboard').classList.add('active');
-            if (section === 'publish') document.getElementById('btnPublish').classList.add('active');
-            if (section === 'stats') document.getElementById('btnStats').classList.add('active');
-            
-            if (section === 'dashboard') loadDashboard();
-        }
-        
-        // Load Dashboard
-        async function loadDashboard() {
-            try {
-                const { data, error } = await supabase.from('news').select('*').order('published_at', { ascending: false });
-                if (error) throw error;
-                document.getElementById('totalNews').innerText = data?.length || 0;
-                document.getElementById('totalViews').innerText = data?.reduce((s, n) => s + (n.views || 0), 0) || 0;
-                const html = data?.slice(0, 5).map(n => `<div style="padding:10px; border-bottom:1px solid #222;">📰 ${n.title} (${n.views || 0} views)</div>`).join('');
-                document.getElementById('recentList').innerHTML = html || 'No news yet';
-            } catch(e) { document.getElementById('recentList').innerHTML = 'Error loading news'; }
-        }
-        
-        // Publish News
-        document.getElementById('publishBtn').onclick = async () => {
-            const title = document.getElementById('title').value.trim();
-            const content = document.getElementById('content').value.trim();
-            if (!title || !content) { showMsg('Title and Content required!', 'error'); return; }
-            
-            const btn = document.getElementById('publishBtn');
-            btn.innerText = 'Publishing...';
-            btn.disabled = true;
-            
-            try {
-                const { error } = await supabase.from('news').insert([{
-                    title: title,
-                    content: content,
-                    summary: document.getElementById('summary').value,
-                    category: document.getElementById('category').value,
-                    image_url: document.getElementById('imageUrl').value,
-                    published_at: new Date().toISOString(),
-                    views: 0
-                }]);
-                if (error) throw error;
-                showMsg('✅ Published successfully!', 'success');
-                document.getElementById('title').value = '';
-                document.getElementById('summary').value = '';
-                document.getElementById('content').value = '';
-                document.getElementById('imageUrl').value = '';
-                loadDashboard();
-            } catch(e) { showMsg('Error: ' + e.message, 'error'); }
-            finally { btn.innerText = '🚀 PUBLISH'; btn.disabled = false; }
-        };
-        
-        function showMsg(msg, type) {
-            const div = document.getElementById('msg');
-            div.innerText = msg;
-            div.className = type;
-            div.style.display = 'block';
-            setTimeout(() => div.style.display = 'none', 5000);
-        }
-        
+</div>
+<script>
+    // Config
+    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+    const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    let quill, allNews = [], viewsChart, trafficChart, selectedBadges = [];
+    
+    // Init Quill
+    setTimeout(() => { if(document.getElementById('editor')) quill = new Quill('#editor', { theme: 'snow', modules: { toolbar: [['bold','italic','underline'],['link','image'],['clean']] } }); }, 100);
+    
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tab = btn.getAttribute('data-tab');
+            document.getElementById('dashboardTab').classList.add('hidden');
+            document.getElementById('publishTab').classList.add('hidden');
+            document.getElementById('analyticsTab').classList.add('hidden');
+            document.getElementById('aiTab').classList.add('hidden');
+            document.getElementById(`${tab}Tab`).classList.remove('hidden');
+            if(tab === 'dashboard') loadDashboard();
+            if(tab === 'analytics') loadAnalytics();
+        });
+    });
+    
+    // Dashboard
+    async function loadDashboard() {
+        const { data } = await supabase.from('news').select('*').order('published_at', {ascending:false});
+        allNews = data || [];
+        document.getElementById('totalNews').innerText = allNews.length;
+        document.getElementById('totalViews').innerText = allNews.reduce((s,n)=>s+(n.views||0),0);
+        document.getElementById('topNewsList').innerHTML = allNews.slice(0,5).map(n=>`<div style="padding:10px;border-bottom:1px solid #222;">🔥 ${n.title} - ${n.views||0} views</div>`).join('');
+        if(viewsChart) viewsChart.destroy();
+        const ctx = document.getElementById('viewsChart')?.getContext('2d');
+        if(ctx && allNews.length) viewsChart = new Chart(ctx, { type:'line', data:{ labels:allNews.slice(0,7).map(n=>n.title?.slice(0,20)), datasets:[{ label:'Views', data:allNews.slice(0,7).map(n=>n.views||0), borderColor:'#dc2626' }] } });
+    }
+    
+    // Analytics
+    function loadAnalytics() {
+        if(trafficChart) trafficChart.destroy();
+        const ctx = document.getElementById('trafficChart')?.getContext('2d');
+        if(ctx) trafficChart = new Chart(ctx, { type:'bar', data:{ labels:['Google','WhatsApp','Direct','Telegram'], datasets:[{ label:'Traffic %', data:[45,30,15,10], backgroundColor:'#dc2626' }] } });
+        document.getElementById('trafficDetails').innerHTML = '<p>🌐 Google: 45%</p><p>📱 WhatsApp: 30%</p><p>🔗 Direct: 15%</p><p>📢 Telegram: 10%</p>';
+    }
+    
+    // Badges
+    document.querySelectorAll('.badge-opt').forEach(b => {
+        b.addEventListener('click', () => {
+            b.classList.toggle('selected');
+            const val = b.getAttribute('data-badge');
+            if(b.classList.contains('selected')) selectedBadges.push(val);
+            else selectedBadges = selectedBadges.filter(v=> v !== val);
+            document.getElementById('selectedBadges').value = selectedBadges.join(',');
+        });
+    });
+    
+    // AI Write
+    document.getElementById('aiWriteBtn')?.addEventListener('click', async () => {
+        const kw = document.getElementById('aiKeyword').value;
+        if(!kw) return alert('Enter keyword');
+        document.getElementById('aiSuggestion').classList.remove('hidden');
+        document.getElementById('aiSuggestion').innerHTML = 'Generating...';
+        try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ contents:[{ parts:[{ text:`Write a news article about ${kw}. Give title and content.` }] }] }) });
+            const data = await res.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const titleMatch = text.match(/Title:?(.*?)(\n|$)/i);
+            const title = titleMatch ? titleMatch[1].trim() : kw;
+            document.getElementById('aiSuggestion').innerHTML = `<div onclick="useSuggestion('${title.replace(/'/g,"\\'")}', \`${text.replace(/'/g,"\\'")}\`)">📝 Use this: ${title}</div>`;
+        } catch(e) { document.getElementById('aiSuggestion').innerHTML = 'Error generating'; }
+    });
+    window.useSuggestion = (title, content) => { document.getElementById('title').value = title; if(quill) quill.root.innerHTML = content; document.getElementById('aiSuggestion').classList.add('hidden'); };
+    
+    // Publish
+    document.getElementById('newsForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('title').value.trim();
+        const content = quill ? quill.root.innerHTML : '';
+        if(!title || !content) return showMsg('publishMsg', 'Title & Content required', 'error');
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true; btn.innerText = 'Publishing...';
+        const { error } = await supabase.from('news').insert([{ title, content, summary: document.getElementById('metaDesc').value, category: document.getElementById('category').value, image_url: document.getElementById('imageUrl').value, author: document.getElementById('author').value, tags: document.getElementById('tags').value, badge: document.getElementById('selectedBadges').value, published_at: new Date().toISOString() }]);
+        if(error) showMsg('publishMsg', error.message, 'error');
+        else { showMsg('publishMsg', '✅ Published!', 'success'); e.target.reset(); if(quill) quill.root.innerHTML = ''; }
+        btn.disabled = false; btn.innerText = '🚀 PUBLISH';
         loadDashboard();
-    </script>
+    });
+    
+    // AI Hashtag
+    document.getElementById('genHashBtn')?.addEventListener('click', async () => {
+        const topic = document.getElementById('hashtagTopic').value;
+        if(!topic) return;
+        document.getElementById('hashResult').classList.remove('hidden');
+        document.getElementById('hashResult').innerHTML = 'Generating...';
+        try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ contents:[{ parts:[{ text:`Generate 10 trending hashtags for ${topic}. Return only hashtags separated by spaces.` }] }] }) });
+            const data = await res.json();
+            document.getElementById('hashResult').innerHTML = data.candidates?.[0]?.content?.parts?.[0]?.text || '#news';
+        } catch(e) { document.getElementById('hashResult').innerHTML = 'Error'; }
+    });
+    
+    function showMsg(elId, msg, type) { const d = document.getElementById(elId); d.innerText = msg; d.className = `message ${type}`; d.style.display = 'block'; setTimeout(() => d.style.display = 'none', 5000); }
+    loadDashboard(); loadAnalytics();
+</script>
 </body>
 </html>
