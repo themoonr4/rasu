@@ -104,7 +104,6 @@
             <li><button id="btnDashboard" class="active">📊 Dashboard</button></li>
             <li><button id="btnPublish">✍️ Publish News</button></li>
             <li><button id="btnAnalytics">📈 Analytics</button></li>
-            <li><button id="btnSettings">⚙️ Settings</button></li>
         </ul>
     </div>
 
@@ -182,157 +181,153 @@
             </div>
         </div>
 
-        <!-- Settings Section -->
-        <div id="settingsSection" class="hidden">
-            <div class="card">
-                <h3>⚙️ Settings</h3>
-                <p>Settings panel coming soon...</p>
-            </div>
-        </div>
-
         <div class="footer"><p>© 2026 THE MOON — Admin Panel</p></div>
     </div>
 </div>
 
 <script>
-// Supabase Config
-const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // ============================================
+    // SUPABASE CONFIGURATION
+    // ============================================
+    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Navigation
-document.getElementById('btnDashboard').addEventListener('click', () => showSection('dashboard'));
-document.getElementById('btnPublish').addEventListener('click', () => showSection('publish'));
-document.getElementById('btnAnalytics').addEventListener('click', () => showSection('analytics'));
-document.getElementById('btnSettings').addEventListener('click', () => showSection('settings'));
+    // --- Navigation Logic (No errors, clicks will work) ---
+    document.getElementById('btnDashboard').addEventListener('click', () => showSection('dashboard'));
+    document.getElementById('btnPublish').addEventListener('click', () => showSection('publish'));
+    document.getElementById('btnAnalytics').addEventListener('click', () => showSection('analytics'));
 
-function showSection(section) {
-    // Hide all sections
-    document.getElementById('dashboardSection').classList.add('hidden');
-    document.getElementById('publishSection').classList.add('hidden');
-    document.getElementById('analyticsSection').classList.add('hidden');
-    document.getElementById('settingsSection').classList.add('hidden');
-    
-    // Show selected section
-    document.getElementById(`${section}Section`).classList.remove('hidden');
-    
-    // Update active button
-    document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
-    if (section === 'dashboard') document.getElementById('btnDashboard').classList.add('active');
-    if (section === 'publish') document.getElementById('btnPublish').classList.add('active');
-    if (section === 'analytics') document.getElementById('btnAnalytics').classList.add('active');
-    if (section === 'settings') document.getElementById('btnSettings').classList.add('active');
-    
-    // Load data if needed
-    if (section === 'dashboard') loadDashboard();
-}
-
-async function loadDashboard() {
-    try {
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .order('published_at', { ascending: false });
+    function showSection(section) {
+        // Hide all sections
+        document.getElementById('dashboardSection').classList.add('hidden');
+        document.getElementById('publishSection').classList.add('hidden');
+        document.getElementById('analyticsSection').classList.add('hidden');
         
-        if (error) throw error;
+        // Show selected section
+        document.getElementById(`${section}Section`).classList.remove('hidden');
         
-        document.getElementById('totalNews').innerText = data?.length || 0;
-        document.getElementById('totalViews').innerText = data?.reduce((sum, n) => sum + (n.views || 0), 0) || 0;
+        // Update active button
+        document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
+        if (section === 'dashboard') document.getElementById('btnDashboard').classList.add('active');
+        if (section === 'publish') document.getElementById('btnPublish').classList.add('active');
+        if (section === 'analytics') document.getElementById('btnAnalytics').classList.add('active');
         
-        const today = new Date().toDateString();
-        const todayNews = data?.filter(n => new Date(n.published_at).toDateString() === today).length || 0;
-        document.getElementById('todayNews').innerText = todayNews;
-        
-        const recentHtml = data?.slice(0, 5).map(n => `
-            <div style="padding: 10px; border-bottom: 1px solid #222;">
-                <strong>${escapeHtml(n.title)}</strong><br>
-                <small>📅 ${new Date(n.published_at).toLocaleDateString()} | 👁️ ${n.views || 0} views</small>
-            </div>
-        `).join('');
-        
-        document.getElementById('recentNewsList').innerHTML = recentHtml || '<p>No news yet</p>';
-        
-    } catch(e) {
-        console.error(e);
-        document.getElementById('recentNewsList').innerHTML = '<p>Error loading news</p>';
+        // Reload data for dashboard if needed
+        if (section === 'dashboard') loadDashboard();
     }
-}
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-
-async function publishNews(event) {
-    event.preventDefault();
-    
-    const title = document.getElementById('title').value.trim();
-    const category = document.getElementById('category').value;
-    const summary = document.getElementById('summary').value;
-    const content = document.getElementById('content').value;
-    const imageUrl = document.getElementById('imageUrl').value || 'https://picsum.photos/400/200';
-    const badge = document.getElementById('badge').value;
-    
-    if (!title || !content) {
-        showMessage('Title and Content required!', 'error');
-        return;
+    // --- Dashboard Functions ---
+    async function loadDashboard() {
+        try {
+            const { data, error } = await supabase
+                .from('news')
+                .select('*')
+                .order('published_at', { ascending: false });
+            
+            if (error) throw error;
+            
+            const news = data || [];
+            document.getElementById('totalNews').innerText = news.length;
+            document.getElementById('totalViews').innerText = news.reduce((sum, n) => sum + (n.views || 0), 0);
+            
+            const today = new Date().toDateString();
+            const todayNews = news.filter(n => new Date(n.published_at).toDateString() === today).length;
+            document.getElementById('todayNews').innerText = todayNews;
+            
+            const recentHtml = news.slice(0, 5).map(n => `
+                <div style="padding: 10px; border-bottom: 1px solid #222;">
+                    <strong>${escapeHtml(n.title)}</strong><br>
+                    <small>📅 ${new Date(n.published_at).toLocaleDateString()} | 👁️ ${n.views || 0} views</small>
+                </div>
+            `).join('');
+            
+            document.getElementById('recentNewsList').innerHTML = recentHtml || '<p>No news yet</p>';
+            
+        } catch(e) {
+            console.error(e);
+            document.getElementById('recentNewsList').innerHTML = '<p>Error loading news</p>';
+        }
     }
-    
-    const btn = document.querySelector('#publishSection button.submit');
-    btn.textContent = '⏳ Publishing...';
-    btn.disabled = true;
-    
-    try {
-        const { error } = await supabase
-            .from('news')
-            .insert([{
-                title: title,
-                content: content,
-                summary: summary || content.substring(0, 160),
-                image_url: imageUrl,
-                category: category,
-                badge: badge,
-                published_at: new Date().toISOString(),
-                views: 0
-            }]);
-        
-        if (error) throw error;
-        
-        showMessage('✅ Published successfully!', 'success');
-        
-        // Clear form
-        document.getElementById('title').value = '';
-        document.getElementById('summary').value = '';
-        document.getElementById('content').value = '';
-        document.getElementById('imageUrl').value = '';
-        document.getElementById('badge').value = '';
-        
-        loadDashboard();
-        
-    } catch(e) { 
-        showMessage('Error: ' + e.message, 'error'); 
-    } finally { 
-        btn.textContent = '🚀 PUBLISH TO WORLD'; 
-        btn.disabled = false; 
+
+    // --- Helper Functions ---
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
     }
-}
 
-function showMessage(msg, type) {
-    const msgDiv = document.getElementById('message');
-    msgDiv.textContent = msg;
-    msgDiv.className = `message ${type}`;
-    setTimeout(() => msgDiv.className = 'message', 4000);
-}
+    // --- Publish Logic ---
+    async function publishNews(event) {
+        event.preventDefault();
+        
+        const title = document.getElementById('title').value.trim();
+        const category = document.getElementById('category').value;
+        const summary = document.getElementById('summary').value;
+        const content = document.getElementById('content').value;
+        const imageUrl = document.getElementById('imageUrl').value || 'https://picsum.photos/400/200';
+        const badge = document.getElementById('badge').value;
+        
+        if (!title || !content) {
+            showMessage('Title and Content are required!', 'error');
+            return;
+        }
+        
+        const btn = document.querySelector('#publishSection button.submit');
+        btn.textContent = '⏳ Publishing...';
+        btn.disabled = true;
+        
+        try {
+            const { error } = await supabase
+                .from('news')
+                .insert([{
+                    title: title,
+                    content: content,
+                    summary: summary || content.substring(0, 160),
+                    image_url: imageUrl,
+                    category: category,
+                    badge: badge,
+                    published_at: new Date().toISOString(),
+                    views: 0
+                }]);
+            
+            if (error) throw error;
+            
+            showMessage('✅ Published successfully! News is live on the website!', 'success');
+            
+            // Clear form
+            document.getElementById('title').value = '';
+            document.getElementById('summary').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('badge').value = '';
+            
+            loadDashboard();
+            
+        } catch(e) { 
+            showMessage('Error: ' + e.message, 'error'); 
+        } finally { 
+            btn.textContent = '🚀 PUBLISH TO WORLD'; 
+            btn.disabled = false; 
+        }
+    }
 
-document.getElementById('newsForm')?.addEventListener('submit', publishNews);
+    function showMessage(msg, type) {
+        const msgDiv = document.getElementById('message');
+        msgDiv.textContent = msg;
+        msgDiv.className = `message ${type}`;
+        setTimeout(() => msgDiv.className = 'message', 4000);
+    }
 
-// Load dashboard on start
-loadDashboard();
+    // --- Event Listeners ---
+    document.getElementById('newsForm')?.addEventListener('submit', publishNews);
+
+    // --- Initial Load ---
+    loadDashboard();
 </script>
 </body>
 </html>
