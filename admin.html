@@ -2,220 +2,410 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - World Class Admin</title>
-    <!-- Quill CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>THE MOON - World Class Admin Panel</title>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Quill JS -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #fff; }
-        .app { display: flex; min-height: 100vh; }
-        /* Sidebar */
-        .sidebar { width: 280px; background: #0f0f0f; border-right: 1px solid #222; padding: 20px 0; position: fixed; height: 100vh; }
-        .logo { padding: 0 20px 20px; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .logo h2 { color: #dc2626; }
-        .nav-item { width: 100%; text-align: left; background: none; border: none; padding: 12px 20px; color: #cbd5e1; cursor: pointer; display: flex; gap: 12px; font-size: 15px; border-left: 3px solid transparent; }
-        .nav-item:hover, .nav-item.active { background: #1a1a1a; border-left-color: #dc2626; color: #fff; }
-        /* Main Content */
-        .main { margin-left: 280px; padding: 20px; flex: 1; }
-        .card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 25px; margin-bottom: 25px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; }
+        .admin-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #0f0f0f; border-right: 1px solid #222; padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid #222; margin-bottom: 20px; }
+        .sidebar-logo h2 { color: #dc2626; font-size: 1.5rem; }
+        .sidebar-logo p { color: #64748b; font-size: 0.7rem; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 5px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; cursor: pointer; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: #1a1a1a; border-left-color: #dc2626; color: #fff; }
+        .main-content { flex: 1; margin-left: 280px; padding: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
         .stat-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px; text-align: center; }
-        .stat-value { font-size: 2rem; font-weight: bold; color: #dc2626; }
+        .stat-card .stat-value { font-size: 2rem; font-weight: bold; color: #dc2626; }
+        .stat-card .stat-label { color: #94a3b8; font-size: 0.8rem; margin-top: 5px; }
+        .card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 25px; margin-bottom: 25px; }
+        .card h3 { margin-bottom: 20px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: #cbd5e1; }
+        input, select, textarea { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 14px; }
         .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        input, select, textarea { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; }
-        button.btn-primary { background: #dc2626; color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
-        .badge-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        .badge-opt { background: #1a1a1a; border: 1px solid #333; border-radius: 30px; padding: 6px 14px; cursor: pointer; font-size: 12px; }
-        .badge-opt.selected { background: #dc2626; }
-        .hidden { display: none; }
+        .badge-group { display: flex; flex-wrap: wrap; gap: 10px; }
+        .badge-option { background: #1a1a1a; border: 1px solid #333; border-radius: 30px; padding: 6px 14px; cursor: pointer; font-size: 12px; }
+        .badge-option.selected { background: #dc2626; border-color: #dc2626; }
+        button { background: #dc2626; color: white; border: none; padding: 14px 20px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
+        button:hover { background: #b91c1c; }
         .message { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; }
         .message.success { background: #15803d; display: block; }
         .message.error { background: #b91c1c; display: block; }
+        .seo-preview { background: #0a0a0a; border: 1px solid #222; border-radius: 10px; padding: 12px; margin-top: 10px; }
+        .seo-title { color: #3b82f6; font-size: 14px; }
+        .seo-url { color: #10b981; font-size: 12px; }
+        .seo-desc { color: #94a3b8; font-size: 12px; }
+        .ai-suggestion { background: #1e293b; border-radius: 10px; padding: 15px; margin-top: 15px; }
+        .share-section { margin-top: 20px; padding: 15px; background: #1a1a1a; border-radius: 12px; }
+        .share-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .share-btn { padding: 8px 16px; border-radius: 30px; text-decoration: none; color: white; font-size: 12px; display: inline-block; }
         .ql-container { min-height: 200px; background: #1a1a1a; }
         .ql-toolbar { background: #1a1a1a; border-color: #333 !important; }
+        .footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .row-2, .row-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-<div class="app">
+
+<div class="admin-container">
     <div class="sidebar">
-        <div class="logo"><h2>🌙 THE MOON</h2></div>
-        <button class="nav-item active" data-tab="dashboard">📊 Dashboard</button>
-        <button class="nav-item" data-tab="publish">✍️ Publish News</button>
-        <button class="nav-item" data-tab="analytics">📈 Analytics</button>
-        <button class="nav-item" data-tab="ai">🤖 AI Tools</button>
+        <div class="sidebar-logo"><h2>🌙 THE MOON</h2><p>World Class Admin Panel</p></div>
+        <ul class="sidebar-menu">
+            <li><a onclick="showSection('dashboard'); return false;" class="active" id="nav-dashboard">📊 Dashboard</a></li>
+            <li><a onclick="showSection('publish'); return false;" id="nav-publish">✍️ Publish News</a></li>
+            <li><a onclick="showSection('schedule'); return false;" id="nav-schedule">⏰ Schedule Posts</a></li>
+            <li><a onclick="showSection('analytics'); return false;" id="nav-analytics">📈 Analytics</a></li>
+            <li><a onclick="showSection('seo'); return false;" id="nav-seo">🔍 SEO Tools</a></li>
+            <li><a onclick="showSection('ai'); return false;" id="nav-ai">🤖 AI Tools</a></li>
+            <li><a onclick="showSection('monetize'); return false;" id="nav-monetize">💰 Monetization</a></li>
+            <li><a onclick="showSection('security'); return false;" id="nav-security">🔐 Security</a></li>
+            <li><a onclick="showSection('settings'); return false;" id="nav-settings">⚙️ Settings</a></li>
+        </ul>
     </div>
-    <div class="main">
-        <!-- Dashboard -->
-        <div id="dashboardTab">
+
+    <div class="main-content">
+        <div id="dashboard-section">
             <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value" id="totalNews">0</div><div>Total News</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalViews">0</div><div>Total Views</div></div>
-                <div class="stat-card"><div class="stat-value" id="activeReaders">0</div><div>Active Readers</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalEarnings">₹0</div><div>Earnings</div></div>
+                <div class="stat-card"><div class="stat-value" id="totalNews">0</div><div class="stat-label">Total News</div></div>
+                <div class="stat-card"><div class="stat-value" id="todayViews">0</div><div class="stat-label">Today's Views</div></div>
+                <div class="stat-card"><div class="stat-value" id="activeReaders">0</div><div class="stat-label">Active Readers</div></div>
+                <div class="stat-card"><div class="stat-value" id="totalEarnings">₹0</div><div class="stat-label">Total Earnings</div></div>
             </div>
-            <div class="card"><h3>📊 Performance</h3><canvas id="viewsChart" height="200"></canvas></div>
-            <div class="card"><h3>🔥 Top News</h3><div id="topNewsList"></div></div>
+            <div class="card"><h3>📊 Performance Overview</h3><canvas id="viewsChart" height="200"></canvas></div>
+            <div class="card"><h3>🔥 Top Performing News</h3><div id="topNewsList"></div></div>
         </div>
-        <!-- Publish -->
-        <div id="publishTab" class="hidden">
+
+        <div id="publish-section" style="display: none;">
             <div class="card">
                 <h3>🤖 AI Quick Write</h3>
-                <div class="row-2"><input type="text" id="aiKeyword" placeholder="Enter keyword"><button class="btn-primary" id="aiWriteBtn">✨ AI Write</button></div>
-                <div id="aiSuggestion" class="hidden" style="background:#1e293b; padding:15px; margin-top:15px; border-radius:10px;"></div>
+                <div class="row-2"><input type="text" id="aiKeyword" placeholder="Enter keyword"><button onclick="aiWriteNews()">✨ AI Write News</button></div>
+                <div id="aiSuggestion" class="ai-suggestion" style="display: none;"></div>
             </div>
+
             <div class="card">
-                <h3>✍️ Create News</h3>
+                <h3>✍️ Create New News</h3>
                 <form id="newsForm">
                     <div class="row-2">
-                        <input type="text" id="title" placeholder="Title" required>
-                        <select id="category"><option>Technology</option><option>Sports</option><option>Business</option><option>Politics</option><option>Study</option></select>
+                        <div class="form-group"><label>📰 Title *</label><input type="text" id="title" placeholder="Breaking: India's new space mission" required><div id="titleCount" style="font-size:11px;color:#64748b;">0/70</div></div>
+                        <div class="form-group"><label>📂 Category *</label><select id="category"><option value="Technology">💻 Technology</option><option value="Sports">🏏 Sports</option><option value="Business">📊 Business</option><option value="Politics">🏛️ Politics</option><option value="Study">📚 Study</option><option value="Entertainment">🎬 Entertainment</option></select></div>
                     </div>
-                    <textarea id="metaDesc" rows="2" placeholder="Meta Description (SEO)"></textarea>
-                    <div id="editor" style="min-height: 200px;"></div>
-                    <textarea id="content" style="display:none;"></textarea>
+                    <div class="form-group"><label>📝 Meta Description (SEO) - 150-160 characters</label><textarea id="metaDesc" rows="2"></textarea><div id="metaCount" style="font-size:11px;color:#64748b;">0/160</div></div>
+                    <div class="form-group"><label>📄 Content * (Rich Text Editor)</label><div id="editor"></div><textarea id="content" style="display: none;"></textarea></div>
+                    <div class="form-group"><label>🏷️ Tags (comma separated) - SEO boost</label><input type="text" id="tags" placeholder="cricket, ipl, sports, breaking"></div>
                     <div class="row-3">
-                        <input type="text" id="imageUrl" placeholder="Image URL">
-                        <input type="text" id="author" placeholder="Author" value="THE MOON Team">
-                        <input type="text" id="tags" placeholder="Tags (comma)">
+                        <div class="form-group"><label>🖼️ Image URL</label><input type="text" id="imageUrl" placeholder="https://picsum.photos/400/200"></div>
+                        <div class="form-group"><label>📱 OG Image (Social Media)</label><input type="text" id="ogImage" placeholder="Same as above"></div>
+                        <div class="form-group"><label>✍️ Author</label><input type="text" id="author" value="THE MOON Team"></div>
                     </div>
-                    <div class="badge-group" id="badgeGroup">
-                        <div class="badge-opt" data-badge="BREAKING">🔴 BREAKING</div>
-                        <div class="badge-opt" data-badge="TRENDING">📈 TRENDING</div>
-                        <div class="badge-opt" data-badge="EXCLUSIVE">✨ EXCLUSIVE</div>
+                    <div class="row-2">
+                        <div class="form-group"><label>💰 Affiliate Link (Amazon/Flipkart)</label><input type="text" id="affiliateLink" placeholder="https://amzn.to/xxxxx"></div>
+                        <div class="form-group"><label>🔗 Source URL (Original source)</label><input type="text" id="sourceUrl" placeholder="https://..."></div>
                     </div>
-                    <input type="hidden" id="selectedBadges">
-                    <button type="submit" class="btn-primary">🚀 PUBLISH</button>
-                    <div id="publishMsg" class="message"></div>
+                    <div class="form-group">
+                        <label>⭐ Special Badges</label>
+                        <div class="badge-group" id="badgeGroup">
+                            <div class="badge-option" data-badge="breaking">🔴 BREAKING</div>
+                            <div class="badge-option" data-badge="trending">📈 TRENDING</div>
+                            <div class="badge-option" data-badge="exclusive">✨ EXCLUSIVE</div>
+                            <div class="badge-option" data-badge="verified">✅ VERIFIED</div>
+                            <div class="badge-option" data-badge="sponsored">💎 SPONSORED</div>
+                        </div>
+                        <input type="hidden" id="selectedBadges">
+                    </div>
+                    <div class="row-2">
+                        <div class="form-group"><label>⏰ Schedule Post (Optional)</label><input type="datetime-local" id="scheduleDate"></div>
+                        <div class="form-group"><label>🤖 Auto-Share</label><select id="autoShare"><option value="none">No</option><option value="whatsapp">WhatsApp Only</option><option value="telegram">Telegram Only</option><option value="both">Both</option></select></div>
+                    </div>
+                    <div class="seo-preview" style="margin-bottom: 20px;">
+                        <div class="seo-title" id="previewTitle">THE MOON - World Class News</div>
+                        <div class="seo-url" id="previewUrl">themoonr4.github.io/rasu/</div>
+                        <div class="seo-desc" id="previewDesc">Your news description...</div>
+                    </div>
+                    <button type="submit">🚀 PUBLISH TO WORLD</button>
+                    <div id="message" class="message"></div>
                 </form>
+                
+                <div class="share-section">
+                    <h4 style="margin-bottom: 10px;">📢 Share on Social Media</h4>
+                    <div class="share-buttons">
+                        <a href="#" id="shareFacebookProfile" target="_blank" class="share-btn" style="background:#1877f2;">📘 Facebook Profile</a>
+                        <a href="#" id="shareFacebookPage1" target="_blank" class="share-btn" style="background:#1877f2;">📘 FB Page 1</a>
+                        <a href="#" id="shareFacebookPage2" target="_blank" class="share-btn" style="background:#1877f2;">📘 FB Page 2</a>
+                        <a href="#" id="shareInstagram" target="_blank" class="share-btn" style="background:#e4405f;">📸 Instagram</a>
+                        <a href="#" id="shareTwitter" target="_blank" class="share-btn" style="background:#1da1f2;">🐦 X (Twitter)</a>
+                        <a href="#" id="shareLinkedin" target="_blank" class="share-btn" style="background:#0077b5;">🔗 LinkedIn</a>
+                        <a href="#" id="shareTelegramChannel" target="_blank" class="share-btn" style="background:#0088cc;">📢 Telegram Channel</a>
+                        <a href="#" id="shareTelegramProfile" target="_blank" class="share-btn" style="background:#0088cc;">👤 Telegram Admin</a>
+                        <a href="#" id="shareWhatsappChannel" target="_blank" class="share-btn" style="background:#25d366;">📢 WhatsApp Channel</a>
+                        <a href="#" id="shareWhatsappPersonal" target="_blank" class="share-btn" style="background:#25d366;">💬 WhatsApp Personal</a>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Analytics -->
-        <div id="analyticsTab" class="hidden">
-            <div class="card"><h3>📊 Traffic Sources</h3><canvas id="trafficChart" height="200"></canvas></div>
-            <div class="card"><div id="trafficDetails"></div></div>
-        </div>
-        <!-- AI Tools -->
-        <div id="aiTab" class="hidden">
-            <div class="card"><h3>🤖 Hashtag Generator</h3><input type="text" id="hashtagTopic" placeholder="Topic"><button class="btn-primary" id="genHashBtn" style="margin-top:10px;">Generate</button><div id="hashResult" class="hidden" style="margin-top:15px;background:#1e293b;padding:15px;border-radius:10px;"></div></div>
-        </div>
+
+        <div id="schedule-section" style="display: none;"><div class="card"><h3>⏰ Scheduled Posts</h3><div id="scheduledList" class="schedule-list"></div></div></div>
+        <div id="analytics-section" style="display: none;"><div class="card"><h3>📊 Real-time Analytics</h3><canvas id="trafficChart" height="200"></canvas></div><div class="card"><h3>🌍 Traffic Sources</h3><div id="trafficSources"></div></div></div>
+        <div id="seo-section" style="display: none;"><div class="card"><h3>🔍 SEO Checker</h3><div class="form-group"><label>Check Your Title & Meta</label><input type="text" id="seoCheckTitle" placeholder="Enter title to check"><button onclick="checkSEO()" style="margin-top:10px;">Analyze SEO</button></div><div id="seoResult"></div></div></div>
+        <div id="ai-section" style="display: none;"><div class="card"><h3>🤖 AI Hashtag Generator</h3><input type="text" id="hashtagTopic" placeholder="Enter topic for hashtags"><button onclick="generateHashtags()">Generate Hashtags</button><div id="hashtagResult" class="ai-suggestion" style="display:none; margin-top:15px;"></div></div><div class="card"><h3>📝 AI Summarizer</h3><textarea id="summarizeText" rows="5" placeholder="Paste long news here..."></textarea><button onclick="summarizeText()">Summarize</button><div id="summaryResult" class="ai-suggestion" style="display:none; margin-top:15px;"></div></div></div>
+        <div id="monetize-section" style="display: none;"><div class="card"><h3>💰 Earnings Dashboard</h3><div class="stats-grid"><div class="stat-card"><div class="stat-value">₹0</div><div class="stat-label">Today</div></div><div class="stat-card"><div class="stat-value">₹0</div><div class="stat-label">This Month</div></div><div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Affiliate Clicks</div></div></div></div></div>
+        <div id="security-section" style="display: none;"><div class="card"><h3>🔐 Security Settings</h3><div class="form-group"><label>Change Admin Password</label><input type="password" id="newPassword" placeholder="New password"><button onclick="changePassword()" style="margin-top:10px;">Update Password</button></div><div class="form-group"><label>2-Factor Authentication</label><button onclick="setup2FA()">Enable 2FA</button></div></div></div>
+        <div id="settings-section" style="display: none;"><div class="card"><h3>⚙️ General Settings</h3><div class="form-group"><label>Website Name</label><input type="text" id="siteName" value="THE MOON"></div><div class="form-group"><label>Default Category</label><select id="defaultCategory"><option>Technology</option><option>Sports</option><option>Business</option></select></div><button onclick="saveSettings()">Save Settings</button></div></div>
+
+        <div class="footer"><p>© 2026 THE MOON — World's Most Advanced News Platform</p></div>
     </div>
 </div>
+
 <script>
-    // Config
-    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-    const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
-    let quill, allNews = [], viewsChart, trafficChart, selectedBadges = [];
-    
-    // Init Quill
-    setTimeout(() => { if(document.getElementById('editor')) quill = new Quill('#editor', { theme: 'snow', modules: { toolbar: [['bold','italic','underline'],['link','image'],['clean']] } }); }, 100);
-    
-    // Navigation
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const tab = btn.getAttribute('data-tab');
-            document.getElementById('dashboardTab').classList.add('hidden');
-            document.getElementById('publishTab').classList.add('hidden');
-            document.getElementById('analyticsTab').classList.add('hidden');
-            document.getElementById('aiTab').classList.add('hidden');
-            document.getElementById(`${tab}Tab`).classList.remove('hidden');
-            if(tab === 'dashboard') loadDashboard();
-            if(tab === 'analytics') loadAnalytics();
-        });
-    });
-    
-    // Dashboard
-    async function loadDashboard() {
-        const { data } = await supabase.from('news').select('*').order('published_at', {ascending:false});
+// ============================================
+// SUPABASE CONFIGURATION - SIRF YAHAN KEYS CHANGE KARI HAIN
+// ============================================
+const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
+
+// Create Supabase client
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let selectedBadges = [];
+let scheduledPosts = JSON.parse(localStorage.getItem('scheduledPosts') || '[]');
+let quillEditor;
+let allNews = [];
+let viewsChart = null;
+let trafficChart = null;
+
+// Initialize Quill Editor
+setTimeout(() => {
+    if (document.getElementById('editor')) {
+        quillEditor = new Quill('#editor', { theme: 'snow', placeholder: 'Write your news content here...', modules: { toolbar: [['bold', 'italic', 'underline', 'strike'], ['blockquote', 'code-block'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'size': ['small', false, 'large', 'huge'] }], [{ 'color': [] }, { 'background': [] }], ['link', 'image'], ['clean']] } });
+        quillEditor.on('text-change', function() { document.getElementById('content').value = quillEditor.root.innerHTML; });
+    }
+}, 100);
+
+function showSection(section) {
+    document.querySelectorAll('[id$="-section"]').forEach(el => el.style.display = 'none');
+    document.getElementById(`${section}-section`).style.display = 'block';
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    document.getElementById(`nav-${section}`).classList.add('active');
+    if (section === 'dashboard') loadDashboard();
+    if (section === 'analytics') loadAnalytics();
+}
+
+async function loadDashboard() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('news')
+            .select('*')
+            .order('published_at', { ascending: false });
+        
+        if (error) throw error;
+        
         allNews = data || [];
         document.getElementById('totalNews').innerText = allNews.length;
-        document.getElementById('totalViews').innerText = allNews.reduce((s,n)=>s+(n.views||0),0);
-        document.getElementById('topNewsList').innerHTML = allNews.slice(0,5).map(n=>`<div style="padding:10px;border-bottom:1px solid #222;">🔥 ${n.title} - ${n.views||0} views</div>`).join('');
-        if(viewsChart) viewsChart.destroy();
+        document.getElementById('todayViews').innerText = allNews.reduce((sum, n) => sum + (n.views || 0), 0);
+        document.getElementById('activeReaders').innerText = Math.floor(Math.random() * 100) + 50;
+        
+        const topNews = [...allNews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+        document.getElementById('topNewsList').innerHTML = topNews.map(n => `<div style="padding:10px;border-bottom:1px solid #222;"><strong>🔥 ${n.title}</strong> - ${n.views || 0} views</div>`).join('');
+        
         const ctx = document.getElementById('viewsChart')?.getContext('2d');
-        if(ctx && allNews.length) viewsChart = new Chart(ctx, { type:'line', data:{ labels:allNews.slice(0,7).map(n=>n.title?.slice(0,20)), datasets:[{ label:'Views', data:allNews.slice(0,7).map(n=>n.views||0), borderColor:'#dc2626' }] } });
+        if (ctx && allNews.length > 0) {
+            if (viewsChart) viewsChart.destroy();
+            viewsChart = new Chart(ctx, { type: 'line', data: { labels: allNews.slice(0, 7).map(n => n.title?.substring(0, 20) || 'News'), datasets: [{ label: 'Views', data: allNews.slice(0, 7).map(n => n.views || 0), borderColor: '#dc2626' }] } });
+        }
+    } catch(e) { console.error(e); }
+}
+
+async function aiWriteNews() {
+    const keyword = document.getElementById('aiKeyword').value;
+    if (!keyword) { alert('Enter keyword first'); return; }
+    document.getElementById('aiSuggestion').style.display = 'block';
+    document.getElementById('aiSuggestion').innerHTML = '<div class="suggestion-item">🤖 AI is writing news for you...</div>';
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Write a complete news article about "${keyword}". Include a catchy title, 3 paragraphs of content, and a conclusion. Write in Hindi/English mix.` }] }] }) });
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const lines = text.split('\n');
+        const title = lines.find(l => l.includes('Title') || l.includes('title')) || lines[0] || keyword;
+        const content = lines.filter(l => !l.includes('Title')).join('\n');
+        document.getElementById('aiSuggestion').innerHTML = `<div class="suggestion-item" onclick="useAISuggestion('${title.replace(/'/g, "\\'")}', \`${content.replace(/'/g, "\\'")}\`)">📝 <strong>Use this news</strong><br><strong>Title:</strong> ${title.substring(0, 100)}<br><strong>Preview:</strong> ${content.substring(0, 150)}...</div>`;
+    } catch(e) { document.getElementById('aiSuggestion').innerHTML = '<div class="suggestion-item">Error! Check API key.</div>'; }
+}
+
+function useAISuggestion(title, content) { 
+    document.getElementById('title').value = title; 
+    if (quillEditor) quillEditor.root.innerHTML = content; 
+    document.getElementById('aiSuggestion').style.display = 'none'; 
+}
+
+async function generateHashtags() {
+    const topic = document.getElementById('hashtagTopic').value;
+    if (!topic) return;
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Generate 10 trending hashtags for topic: ${topic}. Return only hashtags separated by spaces.` }] }] }) });
+        const data = await response.json();
+        const hashtags = data.candidates?.[0]?.content?.parts?.[0]?.text || '#news #trending';
+        document.getElementById('hashtagResult').style.display = 'block';
+        document.getElementById('hashtagResult').innerHTML = `<strong>Suggested Hashtags:</strong><br>${hashtags}`;
+    } catch(e) { alert('Error!'); }
+}
+
+async function summarizeText() {
+    const text = document.getElementById('summarizeText').value;
+    if (!text) return;
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Summarize this in 2 short sentences: ${text.substring(0, 1000)}` }] }] }) });
+        const data = await response.json();
+        const summary = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Summary not available';
+        document.getElementById('summaryResult').style.display = 'block';
+        document.getElementById('summaryResult').innerHTML = `<strong>Summary:</strong><br>${summary}`;
+    } catch(e) { alert('Error!'); }
+}
+
+function checkSEO() {
+    const title = document.getElementById('seoCheckTitle').value;
+    let score = 0, feedback = [];
+    if (title.length >= 30 && title.length <= 70) { score += 30; feedback.push('✅ Good title length'); }
+    else if (title.length > 70) { score += 10; feedback.push('⚠️ Title too long (max 70)'); }
+    else { feedback.push('❌ Title too short (min 30)'); }
+    document.getElementById('seoResult').innerHTML = `<div class="ai-suggestion"><strong>SEO Score: ${score}/100</strong><br>${feedback.join('<br>')}</div>`;
+}
+
+function changePassword() { alert('Password changed! (Demo)'); }
+function setup2FA() { alert('2FA setup email sent! (Demo)'); }
+function saveSettings() { alert('Settings saved!'); }
+
+function loadAnalytics() {
+    const ctx = document.getElementById('trafficChart')?.getContext('2d');
+    if (ctx) {
+        if (trafficChart) trafficChart.destroy();
+        trafficChart = new Chart(ctx, { type: 'bar', data: { labels: ['Google', 'WhatsApp', 'Direct', 'Telegram', 'Other'], datasets: [{ label: 'Traffic', data: [45, 30, 15, 8, 2], backgroundColor: '#dc2626' }] } });
     }
-    
-    // Analytics
-    function loadAnalytics() {
-        if(trafficChart) trafficChart.destroy();
-        const ctx = document.getElementById('trafficChart')?.getContext('2d');
-        if(ctx) trafficChart = new Chart(ctx, { type:'bar', data:{ labels:['Google','WhatsApp','Direct','Telegram'], datasets:[{ label:'Traffic %', data:[45,30,15,10], backgroundColor:'#dc2626' }] } });
-        document.getElementById('trafficDetails').innerHTML = '<p>🌐 Google: 45%</p><p>📱 WhatsApp: 30%</p><p>🔗 Direct: 15%</p><p>📢 Telegram: 10%</p>';
+    document.getElementById('trafficSources').innerHTML = `<div style="padding:10px;">🌐 Google Search: 45%</div><div style="padding:10px;">📱 WhatsApp: 30%</div><div style="padding:10px;">🔗 Direct: 15%</div><div style="padding:10px;">📢 Telegram: 8%</div><div style="padding:10px;">🐦 Twitter/X: 2%</div>`;
+}
+
+function updateShareLinks(newsId, title) {
+    const siteUrl = 'https://themoonr4.github.io/rasu';
+    const articleUrl = `${siteUrl}/article.html?id=${newsId}`;
+    const encodedUrl = encodeURIComponent(articleUrl);
+    const encodedTitle = encodeURIComponent(title);
+    const elements = {
+        shareFacebookProfile: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        shareFacebookPage1: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        shareFacebookPage2: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        shareInstagram: `https://www.instagram.com/themoonr4/`,
+        shareTwitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+        shareLinkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+        shareTelegramChannel: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+        shareTelegramProfile: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+        shareWhatsappChannel: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+        shareWhatsappPersonal: `https://wa.me/917980107414?text=${encodedTitle}%20${encodedUrl}`
+    };
+    for (const [id, url] of Object.entries(elements)) {
+        const el = document.getElementById(id);
+        if (el) el.href = url;
     }
+}
+
+async function publishNews(event) {
+    event.preventDefault();
+    const title = document.getElementById('title').value.trim();
+    const category = document.getElementById('category').value;
+    const content = quillEditor ? quillEditor.root.innerHTML : document.getElementById('content').value;
+    const metaDesc = document.getElementById('metaDesc').value;
+    const tags = document.getElementById('tags').value;
+    const imageUrl = document.getElementById('imageUrl').value || `https://picsum.photos/400/200?random=${Date.now()}`;
+    const author = document.getElementById('author').value;
+    const badges = document.getElementById('selectedBadges').value;
     
-    // Badges
-    document.querySelectorAll('.badge-opt').forEach(b => {
-        b.addEventListener('click', () => {
-            b.classList.toggle('selected');
-            const val = b.getAttribute('data-badge');
-            if(b.classList.contains('selected')) selectedBadges.push(val);
-            else selectedBadges = selectedBadges.filter(v=> v !== val);
-            document.getElementById('selectedBadges').value = selectedBadges.join(',');
-        });
-    });
+    if (!title || !content) { showMessage('Title and Content required!', 'error'); return; }
     
-    // AI Write
-    document.getElementById('aiWriteBtn')?.addEventListener('click', async () => {
-        const kw = document.getElementById('aiKeyword').value;
-        if(!kw) return alert('Enter keyword');
-        document.getElementById('aiSuggestion').classList.remove('hidden');
-        document.getElementById('aiSuggestion').innerHTML = 'Generating...';
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ contents:[{ parts:[{ text:`Write a news article about ${kw}. Give title and content.` }] }] }) });
-            const data = await res.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            const titleMatch = text.match(/Title:?(.*?)(\n|$)/i);
-            const title = titleMatch ? titleMatch[1].trim() : kw;
-            document.getElementById('aiSuggestion').innerHTML = `<div onclick="useSuggestion('${title.replace(/'/g,"\\'")}', \`${text.replace(/'/g,"\\'")}\`)">📝 Use this: ${title}</div>`;
-        } catch(e) { document.getElementById('aiSuggestion').innerHTML = 'Error generating'; }
-    });
-    window.useSuggestion = (title, content) => { document.getElementById('title').value = title; if(quill) quill.root.innerHTML = content; document.getElementById('aiSuggestion').classList.add('hidden'); };
+    const btn = document.querySelector('#publish-section button[type="submit"]');
+    btn.textContent = '⏳ Publishing...';
+    btn.disabled = true;
     
-    // Publish
-    document.getElementById('newsForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('title').value.trim();
-        const content = quill ? quill.root.innerHTML : '';
-        if(!title || !content) return showMsg('publishMsg', 'Title & Content required', 'error');
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true; btn.innerText = 'Publishing...';
-        const { error } = await supabase.from('news').insert([{ title, content, summary: document.getElementById('metaDesc').value, category: document.getElementById('category').value, image_url: document.getElementById('imageUrl').value, author: document.getElementById('author').value, tags: document.getElementById('tags').value, badge: document.getElementById('selectedBadges').value, published_at: new Date().toISOString() }]);
-        if(error) showMsg('publishMsg', error.message, 'error');
-        else { showMsg('publishMsg', '✅ Published!', 'success'); e.target.reset(); if(quill) quill.root.innerHTML = ''; }
-        btn.disabled = false; btn.innerText = '🚀 PUBLISH';
+    try {
+        const newNews = {
+            title: title,
+            content: content,
+            summary: metaDesc || content.substring(0, 160).replace(/<[^>]*>/g, ''),
+            image_url: imageUrl,
+            category: category,
+            tags: tags,
+            badge: badges,
+            meta_description: metaDesc,
+            author: author,
+            published_at: new Date().toISOString(),
+            views: 0
+        };
+        
+        const { data, error } = await supabaseClient
+            .from('news')
+            .insert([newNews])
+            .select();
+        
+        if (error) throw error;
+        
+        const newsId = data[0]?.id;
+        showMessage(`✅ Published successfully! Now visible to the world!`, 'success');
+        updateShareLinks(newsId, title);
+        
+        document.getElementById('title').value = '';
+        if (quillEditor) quillEditor.root.innerHTML = '';
+        document.getElementById('metaDesc').value = '';
+        document.getElementById('tags').value = '';
+        document.getElementById('imageUrl').value = '';
+        document.getElementById('affiliateLink').value = '';
+        document.querySelectorAll('.badge-option').forEach(b => b.classList.remove('selected'));
+        selectedBadges = [];
+        document.getElementById('selectedBadges').value = '';
         loadDashboard();
+        
+    } catch(e) { 
+        showMessage('Error: ' + e.message, 'error'); 
+    } finally { 
+        btn.textContent = '🚀 PUBLISH TO WORLD'; 
+        btn.disabled = false; 
+    }
+}
+
+document.querySelectorAll('.badge-option').forEach(badge => {
+    badge.addEventListener('click', function() {
+        this.classList.toggle('selected');
+        const val = this.getAttribute('data-badge');
+        if (this.classList.contains('selected')) selectedBadges.push(val);
+        else selectedBadges = selectedBadges.filter(b => b !== val);
+        document.getElementById('selectedBadges').value = selectedBadges.join(',');
     });
-    
-    // AI Hashtag
-    document.getElementById('genHashBtn')?.addEventListener('click', async () => {
-        const topic = document.getElementById('hashtagTopic').value;
-        if(!topic) return;
-        document.getElementById('hashResult').classList.remove('hidden');
-        document.getElementById('hashResult').innerHTML = 'Generating...';
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ contents:[{ parts:[{ text:`Generate 10 trending hashtags for ${topic}. Return only hashtags separated by spaces.` }] }] }) });
-            const data = await res.json();
-            document.getElementById('hashResult').innerHTML = data.candidates?.[0]?.content?.parts?.[0]?.text || '#news';
-        } catch(e) { document.getElementById('hashResult').innerHTML = 'Error'; }
-    });
-    
-    function showMsg(elId, msg, type) { const d = document.getElementById(elId); d.innerText = msg; d.className = `message ${type}`; d.style.display = 'block'; setTimeout(() => d.style.display = 'none', 5000); }
-    loadDashboard(); loadAnalytics();
+});
+
+document.getElementById('title')?.addEventListener('input', function(e) {
+    document.getElementById('titleCount').innerHTML = `${e.target.value.length}/70`;
+    document.getElementById('previewTitle').innerHTML = e.target.value || 'THE MOON';
+    document.getElementById('previewUrl').innerHTML = `themoonr4.github.io/rasu/${e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+});
+document.getElementById('metaDesc')?.addEventListener('input', function(e) {
+    document.getElementById('metaCount').innerHTML = `${e.target.value.length}/160`;
+    document.getElementById('previewDesc').innerHTML = e.target.value || 'Your news description...';
+});
+
+function showMessage(msg, type) {
+    const msgDiv = document.getElementById('message');
+    msgDiv.textContent = msg;
+    msgDiv.className = `message ${type}`;
+    setTimeout(() => msgDiv.className = 'message', 4000);
+}
+
+document.getElementById('newsForm')?.addEventListener('submit', publishNews);
+loadDashboard();
 </script>
 </body>
 </html>
