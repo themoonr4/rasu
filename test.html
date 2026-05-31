@@ -1,110 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>THE MOON - Login Test</title>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <style>
-        body{font-family:sans-serif;background:#0a0a0a;color:#fff;display:flex;justify-content:center;align-items:center;min-height:100vh;}
-        .box{background:#111;padding:2rem;border-radius:16px;width:350px;}
-        input,button{width:100%;padding:0.75rem;margin-bottom:0.75rem;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:#fff;}
-        button{background:#dc2626;color:#fff;border:none;cursor:pointer;}
-        button:hover{background:#b91c1c;}
-        .error{color:#dc3545;margin-top:0.5rem;}
-        .success{color:#28a745;}
-        .info{color:#64748b;font-size:0.8rem;margin-top:1rem;padding:0.5rem;background:#1a1a1a;border-radius:8px;}
-        hr{margin:1rem 0;border-color:#333;}
-    </style>
-</head>
+<html>
+<head><title>Simple Test</title></head>
 <body>
-    <div class="box">
-        <h2>🌙 THE MOON - Login Test</h2>
-        <input type="email" id="email" placeholder="Email" value="test@themoon.com">
-        <input type="password" id="password" placeholder="Password" value="Test@123">
-        <button onclick="testLogin()">Test Login</button>
-        <div id="result"></div>
-        <hr>
-        <div class="info">
-            🔍 <strong>Test Instructions:</strong><br>
-            1. Click "Test Login" button<br>
-            2. Pehle account banega, phir login hoga<br>
-            3. Agar "User already registered" aata hai, toh direct login ho jayega
-        </div>
-    </div>
+    <h1>Simple Test</h1>
+    <button onclick="test()">Click Me</button>
+    <p id="result"></p>
 
     <script>
-        // 🔴🔴🔴 CURRENT ACTIVE SUPABASE PROJECT 🔴🔴🔴
-        const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-        
-        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const resultDiv = document.getElementById('result');
-
-        async function testLogin() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+        async function test() {
+            document.getElementById('result').innerHTML = 'Connecting...';
             
-            resultDiv.innerHTML = '<div>🔌 Connecting to Supabase...</div>';
-            
-            if (!email || !password) {
-                resultDiv.innerHTML = '<div class="error">❌ Please enter email and password</div>';
-                return;
-            }
+            const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
             
             try {
-                // Step 1: Try sign up
-                resultDiv.innerHTML = '<div>📝 Trying sign up...</div>';
-                const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ 
-                    email, 
-                    password,
-                    options: { data: { name: email.split('@')[0] } }
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/news?select=title&limit=1`, {
+                    headers: { 'apikey': SUPABASE_KEY }
                 });
-                
-                if (signUpError && signUpError.message.includes('already registered')) {
-                    resultDiv.innerHTML = '<div>ℹ️ User already exists, trying login...</div>';
-                } else if (signUpError) {
-                    resultDiv.innerHTML = `<div class="error">❌ Sign Up Error: ${signUpError.message}</div>`;
-                    return;
-                } else if (signUpData.user) {
-                    resultDiv.innerHTML = '<div class="success">✅ Account created! Logging in...</div>';
-                }
-                
-                // Step 2: Try sign in
-                resultDiv.innerHTML = '<div>🔐 Trying login...</div>';
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                
-                if (error) {
-                    resultDiv.innerHTML = `<div class="error">❌ Login Error: ${error.message}</div>`;
-                    return;
-                }
-                
-                if (data && data.user) {
-                    resultDiv.innerHTML = `
-                        <div class="success">✅ LOGIN SUCCESSFUL!</div>
-                        <div class="info" style="margin-top:10px;">
-                            📧 Email: ${data.user.email}<br>
-                            🆔 User ID: ${data.user.id.substring(0, 15)}...<br>
-                            🔑 Session Active: Yes
-                        </div>
-                    `;
-                    console.log("User:", data.user);
-                } else {
-                    resultDiv.innerHTML = '<div class="error">❌ Login failed - No user data</div>';
-                }
-                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = '✅ Success! News: ' + data[0].title;
             } catch(err) {
-                resultDiv.innerHTML = `<div class="error">💥 Exception: ${err.message}</div>`;
+                document.getElementById('result').innerHTML = '❌ Error: ' + err.message;
             }
         }
-        
-        // Check existing session on load
-        async function checkSession() {
-            const { data } = await supabase.auth.getSession();
-            if (data.session) {
-                resultDiv.innerHTML = `<div class="success">✅ Already logged in as: ${data.session.user.email}</div>`;
-            }
-        }
-        checkSession();
     </script>
 </body>
 </html>
