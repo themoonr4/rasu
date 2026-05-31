@@ -2,26 +2,24 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MOON - Article</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:Arial,sans-serif;background:#fff;color:#0f172a;line-height:1.6;}
+        body{font-family:Arial,sans-serif;background:#fff;color:#333;line-height:1.6;}
         .container{max-width:800px;margin:0 auto;padding:20px;}
-        .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:15px 0;}
-        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#dc2626,#b91c1c);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;}
-        .article-card{background:#f8fafc;border-radius:16px;padding:25px;margin-top:20px;}
-        .article-title{font-size:1.8rem;margin-bottom:15px;}
-        .article-meta{display:flex;gap:15px;color:#64748b;font-size:0.8rem;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #e2e8f0;}
+        .header{background:#fff;border-bottom:1px solid #ddd;padding:15px 0;margin-bottom:20px;}
+        .logo{font-size:1.5rem;font-weight:bold;color:#dc2626;text-decoration:none;}
+        .article-card{background:#f9f9f9;border-radius:16px;padding:25px;}
+        .article-title{font-size:1.8rem;margin-bottom:15px;color:#222;}
+        .article-meta{display:flex;gap:15px;color:#666;font-size:0.8rem;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #ddd;}
         .article-image{width:100%;border-radius:12px;margin:20px 0;}
-        .back-btn{display:inline-flex;align-items:center;gap:8px;background:#f1f5f9;border:1px solid #e2e8f0;padding:8px 16px;border-radius:30px;text-decoration:none;color:#0f172a;margin-bottom:20px;}
-        .share-buttons{display:flex;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid #e2e8f0;}
+        .back-btn{display:inline-block;background:#f0f0f0;padding:8px 16px;border-radius:30px;text-decoration:none;color:#333;margin-bottom:20px;}
+        .share-buttons{display:flex;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid #ddd;}
         .share-btn{padding:8px 16px;border-radius:30px;text-decoration:none;color:white;font-size:0.8rem;}
-        .whatsapp{background:#25D366;}.twitter{background:#1DA1F2;}.telegram{background:#0088CC;}.facebook{background:#1877f2;}
+        .whatsapp{background:#25D366;}.twitter{background:#1DA1F2;}.telegram{background:#0088CC;}
         .loader{text-align:center;padding:50px;}
-        .spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
-        @keyframes spin{to{transform:rotate(360deg);}}
+        .error{color:red;padding:20px;background:#ffe0e0;border-radius:10px;}
     </style>
 </head>
 <body>
@@ -33,30 +31,23 @@
 </header>
 
 <div class="container">
-    <a href="/rasu/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    <a href="/rasu/" class="back-btn">← Back to Home</a>
     
     <div id="articleContent">
-        <div class="loader"><div class="spinner"></div><p>Loading article...</p></div>
+        <div class="loader">Loading article...</div>
     </div>
     
-    <div class="footer" style="text-align:center;padding:30px;color:#94a3b8;">
+    <div style="text-align:center;padding:30px;color:#999;">
         <p>© 2026 THE MOON. All rights reserved.</p>
     </div>
 </div>
 
 <script>
-// ============================================
-// FINAL WORKING CODE - NO EXTERNAL DEPENDENCIES
-// ============================================
 const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
 
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get('id');
-
-console.log("Article ID from URL:", articleId);
 
 function escapeHtml(str) {
     if (!str) return '';
@@ -70,33 +61,25 @@ function escapeHtml(str) {
 
 async function loadArticle() {
     if (!articleId) {
-        document.getElementById('articleContent').innerHTML = '<div class="article-card"><h2>❌ No Article ID</h2><p>Please go back to homepage and click on a news card.</p></div>';
+        document.getElementById('articleContent').innerHTML = '<div class="error">❌ No article ID found. Use ?id=1</div>';
         return;
     }
     
     try {
-        console.log("Fetching article ID:", articleId);
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
+            headers: { 'apikey': SUPABASE_KEY }
+        });
         
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .eq('id', parseInt(articleId))
-            .single();
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         
-        if (error) {
-            console.error("Supabase error:", error);
-            document.getElementById('articleContent').innerHTML = `<div class="article-card"><h2>❌ Error</h2><p>${error.message}</p></div>`;
+        const data = await response.json();
+        
+        if (!data || data.length === 0) {
+            document.getElementById('articleContent').innerHTML = '<div class="error">❌ Article not found with ID: ' + articleId + '</div>';
             return;
         }
         
-        if (!data) {
-            document.getElementById('articleContent').innerHTML = `<div class="article-card"><h2>📭 Article Not Found</h2><p>No article exists with ID: ${articleId}</p></div>`;
-            return;
-        }
-        
-        console.log("Article found:", data.title);
-        
-        const article = data;
+        const article = data[0];
         const shareText = encodeURIComponent(article.title);
         const shareUrl = encodeURIComponent(window.location.href);
         
@@ -108,36 +91,29 @@ async function loadArticle() {
         
         document.getElementById('articleContent').innerHTML = `
             <div class="article-card">
-                ${article.image_url ? `<img class="article-image" src="${article.image_url}" alt="${escapeHtml(article.title)}" onerror="this.style.display='none'">` : ''}
+                ${article.image_url ? `<img class="article-image" src="${article.image_url}" onerror="this.style.display='none'">` : ''}
                 <h1 class="article-title">${escapeHtml(article.title)}</h1>
                 <div class="article-meta">
-                    <span><i class="fas fa-calendar"></i> ${new Date(article.published_at).toLocaleDateString()}</span>
-                    <span><i class="fas fa-eye"></i> ${article.views || 0} views</span>
-                    <span><i class="fas fa-tag"></i> ${article.category || 'News'}</span>
-                    ${article.author ? `<span><i class="fas fa-user"></i> ${escapeHtml(article.author)}</span>` : ''}
+                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                    <span>👁️ ${article.views || 0} views</span>
+                    <span>🏷️ ${article.category || 'News'}</span>
                 </div>
                 ${badgeHtml}
                 <div class="article-content">
-                    ${article.content || article.summary || 'No content available'}
+                    ${escapeHtml(article.content || article.summary || 'No content available')}
                 </div>
                 <div class="share-buttons">
-                    <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                    <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter"><i class="fab fa-twitter"></i> Twitter</a>
-                    <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram"><i class="fab fa-telegram"></i> Telegram</a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" class="share-btn facebook"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp">📱 WhatsApp</a>
+                    <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter">🐦 Twitter</a>
+                    <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram">📢 Telegram</a>
                 </div>
             </div>
         `;
         
         document.title = `${article.title} | THE MOON`;
         
-        // Update view count
-        await supabase.from('news').update({ views: (article.views || 0) + 1 }).eq('id', article.id);
-        console.log("View count updated");
-        
-    } catch (err) {
-        console.error("Exception:", err);
-        document.getElementById('articleContent').innerHTML = `<div class="article-card"><h2>⚠️ Error</h2><p>${err.message}</p></div>`;
+    } catch(err) {
+        document.getElementById('articleContent').innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
     }
 }
 
