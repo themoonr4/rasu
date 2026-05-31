@@ -2,165 +2,99 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - Article</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>THE MOON - Article Debug</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;background:#fff;color:#0f172a;line-height:1.6;}
-        body.dark{background:#0f0f0f;color:#f8fafc;}
-        .container{max-width:800px;margin:0 auto;padding:20px;}
-        .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:15px 0;position:sticky;top:0;}
-        body.dark .header{background:#0f0f0f;border-bottom-color:#2a2a2a;}
-        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#dc2626,#b91c1c);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;}
-        .article-card{background:#f8fafc;border-radius:16px;padding:25px;margin-top:20px;}
-        body.dark .article-card{background:#1a1a1a;}
-        .article-title{font-size:1.8rem;margin-bottom:15px;}
-        .article-meta{display:flex;gap:15px;color:#64748b;font-size:0.8rem;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;}
-        body.dark .article-meta{color:#94a3b8;border-bottom-color:#2a2a2a;}
-        .article-image{width:100%;border-radius:12px;margin:20px 0;}
-        .article-content{font-size:1rem;line-height:1.7;color:#475569;}
-        body.dark .article-content{color:#cbd5e1;}
-        .article-content p{margin-bottom:15px;}
-        .back-btn{display:inline-flex;align-items:center;gap:8px;background:#f1f5f9;border:1px solid #e2e8f0;padding:8px 16px;border-radius:30px;text-decoration:none;color:#0f172a;margin-bottom:20px;}
-        body.dark .back-btn{background:#1e293b;border-color:#334155;color:#f8fafc;}
-        .share-buttons{display:flex;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid #e2e8f0;flex-wrap:wrap;}
-        body.dark .share-buttons{border-top-color:#2a2a2a;}
-        .share-btn{padding:8px 16px;border-radius:30px;text-decoration:none;color:white;font-size:0.8rem;}
-        .whatsapp{background:#25D366;}.twitter{background:#1DA1F2;}.telegram{background:#0088CC;}.facebook{background:#1877f2;}.linkedin{background:#0077b5;}
-        .footer{text-align:center;padding:30px;color:#94a3b8;font-size:0.7rem;margin-top:40px;}
-        .loader{text-align:center;padding:50px;}
-        .spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#dc2626;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
-        @keyframes spin{to{transform:rotate(360deg);}}
+        body{font-family: monospace; padding: 20px; max-width: 800px; margin: 0 auto; background: #0a0a0a; color: #fff;}
+        .error{background: #7f1a1a; padding: 15px; border-radius: 8px; margin: 20px 0;}
+        .success{background: #14532d; padding: 15px; border-radius: 8px;}
+        .info{background: #1e293b; padding: 10px; margin: 10px 0; border-radius: 8px;}
+        .loader{text-align: center; padding: 50px;}
     </style>
 </head>
 <body>
+    <h1>🔍 THE MOON - Article Debug</h1>
+    <div id="output" class="info">Loading debug info...</div>
 
-<header class="header">
-    <div class="container">
-        <a href="/rasu/" class="logo">🌙 THE MOON</a>
-    </div>
-</header>
-
-<div class="container">
-    <a href="/rasu/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
-    
-    <div id="articleContent">
-        <div class="loader"><div class="spinner"></div><p>Loading article...</p></div>
-    </div>
-    
-    <div class="footer">
-        <p>© 2026 THE MOON. All rights reserved.</p>
-    </div>
-</div>
-
-<script>
-// ============================================
-// SUPABASE CONFIGURATION - SINGLE DECLARATION
-// ============================================
-const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-
-// Create client ONLY ONCE - No duplicate!
-if (typeof window.supabaseClient === 'undefined') {
-    window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
-const supabase = window.supabaseClient;
-
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-
-function formatContent(content) {
-    if (!content) return 'No content available';
-    if (content.includes('<p>')) return content;
-    return content.split('\n\n').map(para => `<p>${escapeHtml(para)}</p>`).join('');
-}
-
-async function loadArticle() {
-    const articleId = getQueryParam('id');
-    if (!articleId) {
-        document.getElementById('articleContent').innerHTML = '<div class="article-card"><h2>No article selected</h2><p>Please go back to homepage.</p></div>';
-        return;
-    }
-    
-    try {
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .eq('id', parseInt(articleId))
-            .single();
-        
-        if (error || !data) {
-            document.getElementById('articleContent').innerHTML = '<div class="article-card"><h2>Article not found</h2><p>The article you\'re looking for doesn\'t exist.</p></div>';
-            return;
-        }
-        
-        const article = data;
-        const shareText = encodeURIComponent(article.title);
-        const shareUrl = encodeURIComponent(window.location.href);
-        
-        let badgeHtml = '';
-        if (article.badge) {
-            const badges = article.badge.split(',');
-            badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
-        }
-        
-        document.getElementById('articleContent').innerHTML = `
-            <div class="article-card">
-                ${article.image_url ? `<img class="article-image" src="${article.image_url}" alt="${escapeHtml(article.title)}" onerror="this.style.display='none'">` : ''}
-                <h1 class="article-title">${escapeHtml(article.title)}</h1>
-                <div class="article-meta">
-                    <span><i class="fas fa-calendar"></i> ${new Date(article.published_at).toLocaleDateString()}</span>
-                    <span><i class="fas fa-eye"></i> ${article.views || 0} views</span>
-                    <span><i class="fas fa-tag"></i> ${article.category || 'News'}</span>
-                    ${article.author ? `<span><i class="fas fa-user"></i> ${escapeHtml(article.author)}</span>` : ''}
-                </div>
-                ${badgeHtml}
-                <div class="article-content">
-                    ${formatContent(article.content || article.summary || 'No content available')}
-                </div>
-                <div class="share-buttons">
-                    <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                    <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter"><i class="fab fa-twitter"></i> Twitter</a>
-                    <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram"><i class="fab fa-telegram"></i> Telegram</a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" class="share-btn facebook"><i class="fab fa-facebook"></i> Facebook</a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" class="share-btn linkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                </div>
-            </div>
-        `;
-        
-        document.title = `${article.title} | THE MOON`;
-        
-        // Increment views
-        await supabase
-            .from('news')
-            .update({ views: (article.views || 0) + 1 })
-            .eq('id', article.id);
-        
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('articleContent').innerHTML = '<div class="article-card"><h2>Error loading article</h2><p>Please try again later.</p></div>';
-    }
-}
-
-loadArticle();
-
-// Theme toggle
-const isDark = localStorage.getItem('theme') === 'dark';
-if (isDark) document.body.classList.add('dark');
-</script>
+    <script>
+        (async function() {
+            const output = document.getElementById('output');
+            
+            // Config
+            const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+            
+            // Get article ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('id');
+            
+            let html = '';
+            
+            // 1. URL Info
+            html += `<div class="info">📍 Current URL: ${window.location.href}</div>`;
+            html += `<div class="info">📌 Article ID: ${articleId || 'NOT FOUND!'}</div>`;
+            
+            if (!articleId) {
+                html += `<div class="error">❌ No article ID found! Use ?id=1 in URL</div>`;
+                output.innerHTML = html;
+                return;
+            }
+            
+            html += `<div class="info">🔄 Connecting to Supabase...</div>`;
+            output.innerHTML = html;
+            
+            try {
+                // Create client
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                html += `<div class="info">✅ Supabase client created</div>`;
+                
+                // Try to fetch
+                html += `<div class="info">🔍 Fetching article ID: ${articleId}...</div>`;
+                output.innerHTML = html;
+                
+                const { data, error } = await supabase
+                    .from('news')
+                    .select('*')
+                    .eq('id', parseInt(articleId))
+                    .single();
+                
+                if (error) {
+                    html += `<div class="error">❌ Supabase Error: ${error.message}</div>`;
+                    html += `<div class="info">Error Code: ${error.code}</div>`;
+                    html += `<div class="info">Hint: ${error.hint || 'None'}</div>`;
+                    output.innerHTML = html;
+                    return;
+                }
+                
+                if (!data) {
+                    html += `<div class="error">❌ No article found with ID: ${articleId}</div>`;
+                    output.innerHTML = html;
+                    return;
+                }
+                
+                // Success!
+                html += `<div class="success">✅ ARTICLE FOUND!</div>`;
+                html += `<div class="info"><strong>Title:</strong> ${data.title}</div>`;
+                html += `<div class="info"><strong>Category:</strong> ${data.category}</div>`;
+                html += `<div class="info"><strong>Published:</strong> ${new Date(data.published_at).toLocaleDateString()}</div>`;
+                html += `<div class="info"><strong>Content Preview:</strong> ${(data.content || '').substring(0, 200)}...</div>`;
+                
+                // Also show full content in a styled box
+                html += `<div class="success" style="margin-top:20px;"><strong>📄 Full Article View:</strong></div>`;
+                html += `<div style="background:#1a1a1a; padding:15px; border-radius:8px; margin-top:10px;">
+                    <h2>${data.title}</h2>
+                    <p><em>${new Date(data.published_at).toLocaleDateString()} | ${data.category || 'News'}</em></p>
+                    <hr style="border-color:#333;">
+                    <div>${data.content || data.summary || 'No content available'}</div>
+                </div>`;
+                
+                output.innerHTML = html;
+                
+            } catch(err) {
+                html += `<div class="error">💥 Exception: ${err.message}</div>`;
+                output.innerHTML = html;
+            }
+        })();
+    </script>
 </body>
 </html>
