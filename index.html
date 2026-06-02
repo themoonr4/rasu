@@ -566,13 +566,13 @@
 
 <div class="overlay" id="overlay"></div>
 
-<!-- Bottom Navigation (Mobile) -->
+<!-- Bottom Navigation (Mobile) - MODIFIED -->
 <div class="bottom-nav">
     <a href="#" class="bottom-nav-item active" data-category="all"><i class="fas fa-home"></i><span>Home</span></a>
-    <a href="#" class="bottom-nav-item" data-category="Technology"><i class="fas fa-microchip"></i><span>Tech</span></a>
-    <a href="#" class="bottom-nav-item" data-category="Sports"><i class="fas fa-futbol"></i><span>Sports</span></a>
-    <a href="#" class="bottom-nav-item" id="mobileSearchBtn"><i class="fas fa-search"></i><span>Search</span></a>
-    <a href="#" class="bottom-nav-item" id="mobileProfileBtn"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a href="#" class="bottom-nav-item" id="affiliateNavBtn"><i class="fas fa-tags"></i><span>Affiliate</span></a>
+    <a href="#" class="bottom-nav-item" id="earningNavBtn"><i class="fas fa-coins"></i><span>Earning</span></a>
+    <a href="#" class="bottom-nav-item" id="workspaceNavBtn"><i class="fas fa-briefcase"></i><span>Workspace</span></a>
+    <a href="#" class="bottom-nav-item" id="languageNavBtn"><i class="fas fa-language"></i><span>Language</span></a>
 </div>
 
 <!-- Main Content -->
@@ -626,11 +626,10 @@
 <!-- Footer -->
 <footer class="footer">
     <div class="footer-links">
-        <a href="#">About</a>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Contact</a>
-        <a href="#">Advertise</a>
+        <a href="/rasu/about.html">About</a>
+        <a href="/rasu/privacy.html">Privacy</a>
+        <a href="/rasu/contact.html">Contact</a>
+        <a href="/rasu/admin.html">Advertise</a>
     </div>
     <div class="footer-social">
         <a href="https://t.me/themoom247" target="_blank"><i class="fab fa-telegram"></i></a>
@@ -834,7 +833,7 @@ function loadCategories() {
     if (!categoryGrid) return;
     categoryGrid.innerHTML = categoriesList.map(cat => {
         let icon = cat === 'Technology' ? '💻' : cat === 'Sports' ? '🏏' : cat === 'Business' ? '📊' : cat === 'Politics' ? '🏛️' : '📚';
-        return `<div class="category-card" data-category="${cat}">
+        return `<div class="category-card" data-category="${cat}" style="background: #2563eb; color: white;">
             <i>${icon}</i><span>${cat}</span><small>news</small>
         </div>`;
     }).join('');
@@ -899,6 +898,33 @@ function initSidebar() {
             if (overlay) overlay.classList.remove('active');
         });
     }
+    
+    // Sidebar navigation
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = link.getAttribute('data-category');
+            if (category) {
+                currentCategory = category;
+                filterNewsByCategory();
+                document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+                link.classList.add('active');
+                document.getElementById('sidebar')?.classList.remove('open');
+                document.getElementById('overlay')?.classList.remove('active');
+            }
+            const page = link.getAttribute('data-page');
+            if (page === 'bookmarks') {
+                alert('🔖 Bookmarks feature coming soon!');
+                document.getElementById('sidebar')?.classList.remove('open');
+                document.getElementById('overlay')?.classList.remove('active');
+            }
+            if (page === 'settings') {
+                alert('⚙️ Settings panel coming soon!');
+                document.getElementById('sidebar')?.classList.remove('open');
+                document.getElementById('overlay')?.classList.remove('active');
+            }
+        });
+    });
 }
 
 async function initNewsletter() {
@@ -941,24 +967,26 @@ document.querySelectorAll('.nav-desktop a').forEach(link => {
     });
 });
 
-// Navigation - Sidebar
-document.querySelectorAll('.sidebar-nav a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const category = link.getAttribute('data-category');
-        if (category) {
-            currentCategory = category;
-            filterNewsByCategory();
-            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-            link.classList.add('active');
-            document.getElementById('sidebar')?.classList.remove('open');
-            document.getElementById('overlay')?.classList.remove('active');
-        }
-    });
+// Navigation - Bottom Mobile (New buttons)
+document.getElementById('affiliateNavBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('💰 Affiliate Programs:\n\n1. Amazon Affiliate - Earn up to 10%\n2. Flipkart Affiliate - Join now\n3. Share your affiliate links in news articles\n\nVisit admin panel to add affiliate links!');
+});
+document.getElementById('earningNavBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('💵 Earning Options:\n\n• Google AdSense (Coming Soon)\n• Affiliate Marketing\n• Sponsored Posts\n• Donations via UPI\n\nStart earning by publishing quality news!');
+});
+document.getElementById('workspaceNavBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.open('/rasu/admin.html', '_blank');
+});
+document.getElementById('languageNavBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('🌐 Language Options:\n\n• English (Default)\n• Hindi (Coming Soon)\n• Marathi (Coming Soon)\n• Tamil (Coming Soon)\n• Bengali (Coming Soon)');
 });
 
-// Navigation - Bottom Mobile
-document.querySelectorAll('.bottom-nav-item').forEach(item => {
+// Bottom navigation category links
+document.querySelectorAll('.bottom-nav-item[data-category]').forEach(item => {
     item.addEventListener('click', (e) => {
         e.preventDefault();
         const category = item.getAttribute('data-category');
