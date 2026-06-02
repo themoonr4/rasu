@@ -31,7 +31,7 @@
         label { display: block; margin-bottom: 8px; font-weight: 500; color: #cbd5e1; }
         input, select, textarea { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 14px; }
         .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .row-3 { display: grid; grid-template-columns: repeat(3, 1fr; gap: 15px; }
         .badge-group { display: flex; flex-wrap: wrap; gap: 10px; }
         .badge-option { background: #1a1a1a; border: 1px solid #333; border-radius: 30px; padding: 6px 14px; cursor: pointer; font-size: 12px; }
         .badge-option.selected { background: #dc2626; border-color: #dc2626; }
@@ -51,6 +51,17 @@
         .ql-container { min-height: 200px; background: #1a1a1a; }
         .ql-toolbar { background: #1a1a1a; border-color: #333 !important; }
         .footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; }
+        
+        /* Freelance Approval Section Styles */
+        .freelance-table { width: 100%; overflow-x: auto; }
+        .freelance-table table { width: 100%; border-collapse: collapse; }
+        .freelance-table th, .freelance-table td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        .freelance-table th { background: #1a1a1a; color: #cbd5e1; }
+        .approve-btn { background: #10b981; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
+        .reject-btn { background: #ef4444; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+        .pending-badge { background: #f59e0b; color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; display: inline-block; }
+        .approved-badge { background: #10b981; color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; display: inline-block; }
+        
         @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .row-2, .row-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -62,6 +73,7 @@
         <ul class="sidebar-menu">
             <li><a onclick="showSection('dashboard'); return false;" class="active" id="nav-dashboard">📊 Dashboard</a></li>
             <li><a onclick="showSection('publish'); return false;" id="nav-publish">✍️ Publish News</a></li>
+            <li><a onclick="showSection('freelance'); return false;" id="nav-freelance">👥 Freelance Approval</a></li>
             <li><a onclick="showSection('schedule'); return false;" id="nav-schedule">⏰ Schedule Posts</a></li>
             <li><a onclick="showSection('analytics'); return false;" id="nav-analytics">📈 Analytics</a></li>
             <li><a onclick="showSection('seo'); return false;" id="nav-seo">🔍 SEO Tools</a></li>
@@ -152,6 +164,17 @@
             </div>
         </div>
 
+        <!-- Freelance Approval Section -->
+        <div id="freelance-section" style="display: none;">
+            <div class="card">
+                <h3>👥 Freelance Service Approvals</h3>
+                <p>Review and approve/reject services posted by sellers on the freelance marketplace.</p>
+                <div id="freelanceList" class="freelance-table">
+                    <div class="loader">Loading pending services...</div>
+                </div>
+            </div>
+        </div>
+
         <div id="schedule-section" style="display: none;"><div class="card"><h3>⏰ Scheduled Posts</h3><div id="scheduledList" class="schedule-list"></div></div></div>
         <div id="analytics-section" style="display: none;"><div class="card"><h3>📊 Real-time Analytics</h3><canvas id="trafficChart" height="200"></canvas></div><div class="card"><h3>🌍 Traffic Sources</h3><div id="trafficSources"></div></div></div>
         <div id="seo-section" style="display: none;"><div class="card"><h3>🔍 SEO Checker</h3><div class="form-group"><label>Check Your Title & Meta</label><input type="text" id="seoCheckTitle" placeholder="Enter title to check"><button onclick="checkSEO()" style="margin-top:10px;">Analyze SEO</button></div><div id="seoResult"></div></div></div>
@@ -197,6 +220,132 @@ function showSection(section) {
     document.getElementById(`nav-${section}`).classList.add('active');
     if (section === 'dashboard') loadDashboard();
     if (section === 'analytics') loadAnalytics();
+    if (section === 'freelance') loadFreelanceRequests();
+}
+
+// ============================================
+// FREELANCE APPROVAL FUNCTIONS
+// ============================================
+
+async function loadFreelanceRequests() {
+    const container = document.getElementById('freelanceList');
+    if (!container) return;
+    
+    container.innerHTML = '<div class="loader">Loading pending services...</div>';
+    
+    try {
+        const { data, error } = await supabaseClient
+            .from('freelance_services')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;">No freelance services found.</div>';
+            return;
+        }
+        
+        const pending = data.filter(s => s.status === 'pending');
+        const approved = data.filter(s => s.status === 'approved');
+        
+        let html = '';
+        
+        if (pending.length > 0) {
+            html += `<h4 style="margin: 15px 0 10px; color: #f59e0b;">⏳ Pending Approval (${pending.length})</h4>`;
+            html += `<table>`;
+            html += `<tr><th>ID</th><th>Title</th><th>Category</th><th>Price</th><th>Seller</th><th>WhatsApp</th><th>Actions</th></tr>`;
+            pending.forEach(service => {
+                html += `
+                    <tr>
+                        <td>${service.id}</td>
+                        <td><strong>${escapeHtml(service.title)}</strong><br><small>${escapeHtml(service.description.substring(0, 50))}...</small></td>
+                        <td>${escapeHtml(service.category)}</td>
+                        <td>₹${service.price}</td>
+                        <td>${escapeHtml(service.seller_name)}</td>
+                        <td><a href="https://wa.me/${service.seller_whatsapp}" target="_blank" style="color:#10b981;">${service.seller_whatsapp}</a></td>
+                        <td>
+                            <button class="approve-btn" onclick="approveService(${service.id})">✅ Approve</button>
+                            <button class="reject-btn" onclick="rejectService(${service.id})">❌ Reject</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            html += `</table>`;
+        }
+        
+        if (approved.length > 0) {
+            html += `<h4 style="margin: 20px 0 10px; color: #10b981;">✅ Approved Services (${approved.length})</h4>`;
+            html += `<table>`;
+            html += `<tr><th>ID</th><th>Title</th><th>Category</th><th>Price</th><th>Seller</th><th>Orders</th><th>Status</th></tr>`;
+            approved.slice(0, 10).forEach(service => {
+                html += `
+                    <tr>
+                        <td>${service.id}</td>
+                        <td><strong>${escapeHtml(service.title)}</strong></td>
+                        <td>${escapeHtml(service.category)}</td>
+                        <td>₹${service.price}</td>
+                        <td>${escapeHtml(service.seller_name)}</td>
+                        <td>${service.seller_orders_count || 0}</td>
+                        <td><span class="approved-badge">Approved</span></td>
+                    </tr>
+                `;
+            });
+            html += `</table>`;
+            if (approved.length > 10) {
+                html += `<p style="text-align:center; margin-top:10px;">+${approved.length - 10} more approved services</p>`;
+            }
+        }
+        
+        if (pending.length === 0 && approved.length === 0) {
+            html = '<div style="text-align:center;padding:20px;">No freelance services found.</div>';
+        }
+        
+        container.innerHTML = html;
+        
+    } catch(e) {
+        console.error('Error loading freelance:', e);
+        container.innerHTML = '<div style="color:red;text-align:center;padding:20px;">Error loading freelance services</div>';
+    }
+}
+
+async function approveService(serviceId) {
+    if (!confirm('Are you sure you want to APPROVE this service? It will appear on the freelance marketplace.')) return;
+    
+    try {
+        const { error } = await supabaseClient
+            .from('freelance_services')
+            .update({ status: 'approved' })
+            .eq('id', serviceId);
+        
+        if (error) throw error;
+        
+        alert('✅ Service approved successfully! It will now appear on the freelance marketplace.');
+        loadFreelanceRequests();
+        loadDashboard();
+        
+    } catch(e) {
+        alert('Error: ' + e.message);
+    }
+}
+
+async function rejectService(serviceId) {
+    if (!confirm('Are you sure you want to REJECT this service?')) return;
+    
+    try {
+        const { error } = await supabaseClient
+            .from('freelance_services')
+            .update({ status: 'rejected' })
+            .eq('id', serviceId);
+        
+        if (error) throw error;
+        
+        alert('❌ Service rejected.');
+        loadFreelanceRequests();
+        
+    } catch(e) {
+        alert('Error: ' + e.message);
+    }
 }
 
 async function loadDashboard() {
@@ -375,6 +524,16 @@ async function publishNews(event) {
         btn.textContent = '🚀 PUBLISH TO WORLD'; 
         btn.disabled = false; 
     }
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
 }
 
 document.querySelectorAll('.badge-option').forEach(badge => {
