@@ -5,106 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MOON - Article</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: #fff;
-            color: #333;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            background: #fff;
-            border-bottom: 1px solid #ddd;
-            padding: 15px 0;
-            margin-bottom: 20px;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #dc2626;
-            text-decoration: none;
-        }
-        .article-card {
-            background: #f9f9f9;
-            border-radius: 16px;
-            padding: 25px;
-        }
-        .article-title {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: #222;
-        }
-        .article-meta {
-            display: flex;
-            gap: 15px;
-            color: #666;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
-        }
-        .article-image {
-            width: 100%;
-            border-radius: 12px;
-            margin: 20px 0;
-        }
-        .back-btn {
-            display: inline-block;
-            background: #f0f0f0;
-            padding: 8px 16px;
-            border-radius: 30px;
-            text-decoration: none;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .share-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-        .share-btn {
-            padding: 8px 16px;
-            border-radius: 30px;
-            text-decoration: none;
-            color: white;
-            font-size: 0.8rem;
-        }
-        .whatsapp {
-            background: #25D366;
-        }
-        .twitter {
-            background: #1DA1F2;
-        }
-        .telegram {
-            background: #0088CC;
-        }
-        .loader {
-            text-align: center;
-            padding: 50px;
-        }
-        .error {
-            color: red;
-            padding: 20px;
-            background: #ffe0e0;
-            border-radius: 10px;
-        }
-        .article-content p {
-            margin-bottom: 15px;
-        }
-        .article-content h2 {
-            margin: 20px 0 10px;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#fff;color:#333;line-height:1.6;}
+        .container{max-width:800px;margin:0 auto;padding:20px;}
+        .header{background:#fff;border-bottom:1px solid #ddd;padding:15px 0;margin-bottom:20px;}
+        .logo{font-size:1.5rem;font-weight:bold;color:#dc2626;text-decoration:none;}
+        .article-card{background:#f9f9f9;border-radius:16px;padding:25px;}
+        .article-title{font-size:1.8rem;margin-bottom:15px;color:#222;}
+        .article-meta{display:flex;gap:15px;color:#666;font-size:0.8rem;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #ddd;}
+        .article-image{width:100%;border-radius:12px;margin:20px 0;}
+        .back-btn{display:inline-block;background:#f0f0f0;padding:8px 16px;border-radius:30px;text-decoration:none;color:#333;margin-bottom:20px;}
+        .share-buttons{display:flex;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid #ddd;}
+        .share-btn{padding:8px 16px;border-radius:30px;text-decoration:none;color:white;font-size:0.8rem;}
+        .whatsapp{background:#25D366;}.twitter{background:#1DA1F2;}.telegram{background:#0088CC;}
+        .loader{text-align:center;padding:50px;}
+        .error{color:red;padding:20px;background:#ffe0e0;border-radius:10px;}
+        .article-content p { margin-bottom: 15px; }
+        .article-content h2 { margin: 20px 0 10px; }
+        .article-content h3 { margin: 15px 0 8px; }
     </style>
 </head>
 <body>
@@ -128,81 +46,95 @@
 </div>
 
 <script>
-    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const articleId = urlParams.get('id');
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
+const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+
+const urlParams = new URLSearchParams(window.location.search);
+const articleId = urlParams.get('id');
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// Clean content - remove any problematic patterns
+function cleanContent(content) {
+    if (!content) return 'No content available';
+    // Fix double paragraph tags
+    let cleaned = content.replace(/<\/p><p><p>/g, '</p><p>');
+    cleaned = cleaned.replace(/<p><p>/g, '<p>');
+    cleaned = cleaned.replace(/<\/p><\/p>/g, '</p>');
+    return cleaned;
+}
+
+async function loadArticle() {
+    if (!articleId) {
+        document.getElementById('articleContent').innerHTML = '<div class="error">❌ No article ID found. Use ?id=1</div>';
+        return;
     }
     
-    async function loadArticle() {
-        if (!articleId) {
-            document.getElementById('articleContent').innerHTML = '<div class="error">❌ No article ID found. Use ?id=1</div>';
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
+            headers: { 'apikey': SUPABASE_KEY }
+        });
+        
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        
+        const data = await response.json();
+        
+        if (!data || data.length === 0) {
+            document.getElementById('articleContent').innerHTML = '<div class="error">❌ Article not found with ID: ' + articleId + '</div>';
             return;
         }
         
-        try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
-                headers: { 'apikey': SUPABASE_KEY }
-            });
-            
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-            
-            const data = await response.json();
-            
-            if (!data || data.length === 0) {
-                document.getElementById('articleContent').innerHTML = '<div class="error">❌ Article not found with ID: ' + articleId + '</div>';
-                return;
-            }
-            
-            const article = data[0];
-            const shareText = encodeURIComponent(article.title);
-            const shareUrl = encodeURIComponent(window.location.href);
-            
-            let badgeHtml = '';
-            if (article.badge) {
-                const badges = article.badge.split(',');
-                badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
-            }
-            
-            document.getElementById('articleContent').innerHTML = `
-                <div class="article-card">
-                    ${article.image_url ? `<img class="article-image" src="${article.image_url}" onerror="this.style.display='none'">` : ''}
-                    <h1 class="article-title">${escapeHtml(article.title)}</h1>
-                    <div class="article-meta">
-                        <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
-                        <span>👁️ ${article.views || 0} views</span>
-                        <span>🏷️ ${article.category || 'News'}</span>
-                    </div>
-                    ${badgeHtml}
-                    <div class="article-content">
-                        ${article.content || article.summary || 'No content available'}
-                    </div>
-                    <div class="share-buttons">
-                        <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp">📱 WhatsApp</a>
-                        <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter">🐦 Twitter</a>
-                        <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram">📢 Telegram</a>
-                    </div>
-                </div>
-            `;
-            
-            document.title = `${article.title} | THE MOON`;
-            
-        } catch(err) {
-            document.getElementById('articleContent').innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
+        const article = data[0];
+        const shareText = encodeURIComponent(article.title);
+        const shareUrl = encodeURIComponent(window.location.href);
+        
+        let badgeHtml = '';
+        if (article.badge) {
+            const badges = article.badge.split(',');
+            badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
         }
+        
+        // Get content and clean it
+        let contentHtml = article.content || article.summary || 'No content available';
+        contentHtml = cleanContent(contentHtml);
+        
+        document.getElementById('articleContent').innerHTML = `
+            <div class="article-card">
+                ${article.image_url ? `<img class="article-image" src="${article.image_url}" onerror="this.style.display='none'">` : ''}
+                <h1 class="article-title">${escapeHtml(article.title)}</h1>
+                <div class="article-meta">
+                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                    <span>👁️ ${article.views || 0} views</span>
+                    <span>🏷️ ${article.category || 'News'}</span>
+                </div>
+                ${badgeHtml}
+                <div class="article-content">
+                    ${contentHtml}
+                </div>
+                <div class="share-buttons">
+                    <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp">📱 WhatsApp</a>
+                    <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter">🐦 Twitter</a>
+                    <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram">📢 Telegram</a>
+                </div>
+            </div>
+        `;
+        
+        document.title = `${article.title} | THE MOON`;
+        
+    } catch(err) {
+        document.getElementById('articleContent').innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
     }
-    
-    loadArticle();
+}
+
+loadArticle();
 </script>
 </body>
 </html>
