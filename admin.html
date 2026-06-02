@@ -59,8 +59,18 @@
         .freelance-table th { background: #1a1a1a; color: #cbd5e1; }
         .approve-btn { background: #10b981; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
         .reject-btn { background: #ef4444; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+        .edit-whatsapp-btn { background: #3b82f6; color: white; border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-left: 5px; font-size: 10px; }
         .pending-badge { background: #f59e0b; color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; display: inline-block; }
         .approved-badge { background: #10b981; color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; display: inline-block; }
+        
+        /* Modal Styles */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #1a1a1a; padding: 25px; border-radius: 16px; max-width: 400px; width: 90%; }
+        .modal-content input { width: 100%; padding: 10px; background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #fff; margin-bottom: 15px; }
+        .modal-buttons { display: flex; gap: 10px; }
+        .modal-buttons button { padding: 10px; border-radius: 8px; cursor: pointer; flex: 1; }
+        .save-btn { background: #10b981; color: white; border: none; }
+        .cancel-btn { background: #333; color: white; border: none; }
         
         @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .row-2, .row-3 { grid-template-columns: 1fr; } }
     </style>
@@ -175,6 +185,19 @@
             </div>
         </div>
 
+        <!-- Edit WhatsApp Modal -->
+        <div id="editWhatsappModal" class="modal">
+            <div class="modal-content">
+                <h3 style="margin-bottom: 15px;">✏️ Edit Seller WhatsApp</h3>
+                <p id="editServiceTitle" style="margin-bottom: 10px; color: #cbd5e1;"></p>
+                <input type="text" id="editWhatsappNumber" placeholder="WhatsApp Number (e.g., 918050398357)">
+                <div class="modal-buttons">
+                    <button class="save-btn" onclick="saveWhatsappAndApprove()">💾 Save & Approve</button>
+                    <button class="cancel-btn" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <div id="schedule-section" style="display: none;"><div class="card"><h3>⏰ Scheduled Posts</h3><div id="scheduledList" class="schedule-list"></div></div></div>
         <div id="analytics-section" style="display: none;"><div class="card"><h3>📊 Real-time Analytics</h3><canvas id="trafficChart" height="200"></canvas></div><div class="card"><h3>🌍 Traffic Sources</h3><div id="trafficSources"></div></div></div>
         <div id="seo-section" style="display: none;"><div class="card"><h3>🔍 SEO Checker</h3><div class="form-group"><label>Check Your Title & Meta</label><input type="text" id="seoCheckTitle" placeholder="Enter title to check"><button onclick="checkSEO()" style="margin-top:10px;">Analyze SEO</button></div><div id="seoResult"></div></div></div>
@@ -195,7 +218,6 @@ const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
 const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
 
-// Create Supabase client
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let selectedBadges = [];
@@ -204,6 +226,7 @@ let quillEditor;
 let allNews = [];
 let viewsChart = null;
 let trafficChart = null;
+let currentEditingService = null;
 
 // Initialize Quill Editor
 setTimeout(() => {
@@ -224,74 +247,36 @@ function showSection(section) {
 }
 
 // ============================================
-// FREELANCE APPROVAL FUNCTIONS - FIXED
+// FREELANCE APPROVAL FUNCTIONS WITH EDIT
 // ============================================
 
 async function loadFreelanceRequests() {
     const container = document.getElementById('freelanceList');
     if (!container) return;
     
-    container.innerHTML = '<div class="loader">🔄 Checking freelance_services table...</div>';
+    container.innerHTML = '<div class="loader">🔄 Loading freelance services...</div>';
     
     try {
-        // First check if table exists by trying to select
-        const { data, error, status } = await supabaseClient
-            .from('freelance_services')
-            .select('*')
-            .limit(1);
-        
-        // If table doesn't exist, error will have relation not found
-        if (error && error.message.includes('relation') && error.message.includes('does not exist')) {
-            container.innerHTML = `
-                <div style="color: #f59e0b; text-align:center; padding:20px;">
-                    <strong>⚠️ Table 'freelance_services' not found!</strong><br><br>
-                    Please run this SQL in Supabase SQL Editor:<br>
-                    <code style="display:block; background:#1a1a1a; padding:10px; margin-top:10px; text-align:left; font-size:11px;">
-CREATE TABLE freelance_services (<br>
-&nbsp;&nbsp;id SERIAL PRIMARY KEY,<br>
-&nbsp;&nbsp;title TEXT NOT NULL,<br>
-&nbsp;&nbsp;category TEXT NOT NULL,<br>
-&nbsp;&nbsp;description TEXT NOT NULL,<br>
-&nbsp;&nbsp;price INTEGER NOT NULL,<br>
-&nbsp;&nbsp;delivery_time TEXT NOT NULL,<br>
-&nbsp;&nbsp;seller_name TEXT NOT NULL,<br>
-&nbsp;&nbsp;seller_whatsapp TEXT NOT NULL,<br>
-&nbsp;&nbsp;status TEXT DEFAULT 'pending',<br>
-&nbsp;&nbsp;created_at TIMESTAMP DEFAULT NOW()<br>
-);
-                    </code>
-                    <button onclick="location.reload()" style="margin-top:10px; background:#dc2626; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">⟳ Refresh after SQL</button>
-                </div>
-            `;
-            return;
-        }
-        
-        if (error) {
-            container.innerHTML = `<div style="color:red;text-align:center;padding:20px;">❌ Error: ${error.message}</div>`;
-            return;
-        }
-        
-        // Get all data
-        const { data: allData, error: allError } = await supabaseClient
+        const { data, error } = await supabaseClient
             .from('freelance_services')
             .select('*')
             .order('created_at', { ascending: false });
         
-        if (allError) throw allError;
+        if (error) throw error;
         
-        if (!allData || allData.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:20px;">📭 No freelance services found. Sellers need to post services first.</div>';
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;">📭 No freelance services found.</div>';
             return;
         }
         
-        const pending = allData.filter(s => s.status === 'pending');
-        const approved = allData.filter(s => s.status === 'approved');
+        const pending = data.filter(s => s.status === 'pending');
+        const approved = data.filter(s => s.status === 'approved');
         
         let html = '';
         
         if (pending.length > 0) {
             html += `<h4 style="margin: 15px 0 10px; color: #f59e0b;">⏳ Pending Approval (${pending.length})</h4>`;
-            html += `<td>`;
+            html += `<table>`;
             html += `<tr><th>ID</th><th>Title</th><th>Category</th><th>Price</th><th>Seller</th><th>WhatsApp</th><th>Actions</th></tr>`;
             pending.forEach(service => {
                 html += `
@@ -301,7 +286,10 @@ CREATE TABLE freelance_services (<br>
                         <td>${escapeHtml(service.category)}</td>
                         <td>₹${service.price}</td>
                         <td>${escapeHtml(service.seller_name)}</td>
-                        <td><a href="https://wa.me/${service.seller_whatsapp}" target="_blank" style="color:#10b981;">${service.seller_whatsapp}</a></td>
+                        <td>
+                            ${service.seller_whatsapp}
+                            <button class="edit-whatsapp-btn" onclick="openEditModal(${service.id}, '${escapeHtml(service.title)}', '${service.seller_whatsapp}')">✏️ Edit</button>
+                        </td>
                         <td>
                             <button class="approve-btn" onclick="approveService(${service.id})">✅ Approve</button>
                             <button class="reject-btn" onclick="rejectService(${service.id})">❌ Reject</button>
@@ -314,7 +302,7 @@ CREATE TABLE freelance_services (<br>
         
         if (approved.length > 0) {
             html += `<h4 style="margin: 20px 0 10px; color: #10b981;">✅ Approved Services (${approved.length})</h4>`;
-            html += `<table>`;
+            html += `</table>`;
             html += `<tr><th>ID</th><th>Title</th><th>Category</th><th>Price</th><th>Seller</th><th>Orders</th><th>Status</th></tr>`;
             approved.slice(0, 10).forEach(service => {
                 html += `
@@ -336,12 +324,63 @@ CREATE TABLE freelance_services (<br>
         
     } catch(e) {
         console.error('Error:', e);
-        container.innerHTML = `<div style="color:red;text-align:center;padding:20px;">💥 Error: ${e.message}</div>`;
+        container.innerHTML = `<div style="color:red;text-align:center;padding:20px;">❌ Error: ${e.message}</div>`;
+    }
+}
+
+function openEditModal(serviceId, title, currentWhatsapp) {
+    currentEditingService = serviceId;
+    document.getElementById('editServiceTitle').innerHTML = `<strong>${escapeHtml(title)}</strong>`;
+    document.getElementById('editWhatsappNumber').value = currentWhatsapp;
+    document.getElementById('editWhatsappModal').style.display = 'flex';
+}
+
+function closeEditModal() {
+    document.getElementById('editWhatsappModal').style.display = 'none';
+    currentEditingService = null;
+}
+
+async function saveWhatsappAndApprove() {
+    if (!currentEditingService) return;
+    
+    const newWhatsapp = document.getElementById('editWhatsappNumber').value.trim();
+    if (!newWhatsapp) {
+        alert('Please enter WhatsApp number');
+        return;
+    }
+    
+    try {
+        const { error } = await supabaseClient
+            .from('freelance_services')
+            .update({ seller_whatsapp: newWhatsapp, status: 'approved' })
+            .eq('id', currentEditingService);
+        
+        if (error) throw error;
+        
+        alert('✅ WhatsApp number updated and service approved successfully!');
+        closeEditModal();
+        loadFreelanceRequests();
+        loadDashboard();
+        
+    } catch(e) {
+        alert('Error: ' + e.message);
     }
 }
 
 async function approveService(serviceId) {
-    if (!confirm('Are you sure you want to APPROVE this service? It will appear on the freelance marketplace.')) return;
+    if (!confirm('Do you want to approve this service?\n\nClick OK to approve directly\nClick Cancel to edit WhatsApp first')) {
+        // Get service details to edit
+        const { data } = await supabaseClient
+            .from('freelance_services')
+            .select('title, seller_whatsapp')
+            .eq('id', serviceId)
+            .single();
+        
+        if (data) {
+            openEditModal(serviceId, data.title, data.seller_whatsapp);
+        }
+        return;
+    }
     
     try {
         const { error } = await supabaseClient
@@ -380,7 +419,7 @@ async function rejectService(serviceId) {
 }
 
 // ============================================
-// REST OF ORIGINAL FUNCTIONS (UNCHANGED)
+// REST OF ORIGINAL FUNCTIONS
 // ============================================
 
 async function loadDashboard() {
@@ -571,6 +610,14 @@ function escapeHtml(str) {
     });
 }
 
+function showMessage(msg, type) {
+    const msgDiv = document.getElementById('message');
+    msgDiv.textContent = msg;
+    msgDiv.className = `message ${type}`;
+    setTimeout(() => msgDiv.className = 'message', 4000);
+}
+
+// Badge selection
 document.querySelectorAll('.badge-option').forEach(badge => {
     badge.addEventListener('click', function() {
         this.classList.toggle('selected');
@@ -586,17 +633,11 @@ document.getElementById('title')?.addEventListener('input', function(e) {
     document.getElementById('previewTitle').innerHTML = e.target.value || 'THE MOON';
     document.getElementById('previewUrl').innerHTML = `themoonr4.github.io/rasu/${e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 });
+
 document.getElementById('metaDesc')?.addEventListener('input', function(e) {
     document.getElementById('metaCount').innerHTML = `${e.target.value.length}/160`;
     document.getElementById('previewDesc').innerHTML = e.target.value || 'Your news description...';
 });
-
-function showMessage(msg, type) {
-    const msgDiv = document.getElementById('message');
-    msgDiv.textContent = msg;
-    msgDiv.className = `message ${type}`;
-    setTimeout(() => msgDiv.className = 'message', 4000);
-}
 
 document.getElementById('newsForm')?.addEventListener('submit', publishNews);
 loadDashboard();
