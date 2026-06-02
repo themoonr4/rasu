@@ -189,7 +189,7 @@
 
 <script>
 // ============================================
-// SUPABASE CONFIGURATION - SIRF YAHAN KEYS CHANGE KARI HAIN
+// SUPABASE CONFIGURATION
 // ============================================
 const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
@@ -224,42 +224,80 @@ function showSection(section) {
 }
 
 // ============================================
-// FREELANCE APPROVAL FUNCTIONS
+// FREELANCE APPROVAL FUNCTIONS - FIXED
 // ============================================
 
 async function loadFreelanceRequests() {
     const container = document.getElementById('freelanceList');
     if (!container) return;
     
-    container.innerHTML = '<div class="loader">Loading pending services...</div>';
+    container.innerHTML = '<div class="loader">🔄 Checking freelance_services table...</div>';
     
     try {
-        const { data, error } = await supabaseClient
+        // First check if table exists by trying to select
+        const { data, error, status } = await supabaseClient
+            .from('freelance_services')
+            .select('*')
+            .limit(1);
+        
+        // If table doesn't exist, error will have relation not found
+        if (error && error.message.includes('relation') && error.message.includes('does not exist')) {
+            container.innerHTML = `
+                <div style="color: #f59e0b; text-align:center; padding:20px;">
+                    <strong>⚠️ Table 'freelance_services' not found!</strong><br><br>
+                    Please run this SQL in Supabase SQL Editor:<br>
+                    <code style="display:block; background:#1a1a1a; padding:10px; margin-top:10px; text-align:left; font-size:11px;">
+CREATE TABLE freelance_services (<br>
+&nbsp;&nbsp;id SERIAL PRIMARY KEY,<br>
+&nbsp;&nbsp;title TEXT NOT NULL,<br>
+&nbsp;&nbsp;category TEXT NOT NULL,<br>
+&nbsp;&nbsp;description TEXT NOT NULL,<br>
+&nbsp;&nbsp;price INTEGER NOT NULL,<br>
+&nbsp;&nbsp;delivery_time TEXT NOT NULL,<br>
+&nbsp;&nbsp;seller_name TEXT NOT NULL,<br>
+&nbsp;&nbsp;seller_whatsapp TEXT NOT NULL,<br>
+&nbsp;&nbsp;status TEXT DEFAULT 'pending',<br>
+&nbsp;&nbsp;created_at TIMESTAMP DEFAULT NOW()<br>
+);
+                    </code>
+                    <button onclick="location.reload()" style="margin-top:10px; background:#dc2626; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">⟳ Refresh after SQL</button>
+                </div>
+            `;
+            return;
+        }
+        
+        if (error) {
+            container.innerHTML = `<div style="color:red;text-align:center;padding:20px;">❌ Error: ${error.message}</div>`;
+            return;
+        }
+        
+        // Get all data
+        const { data: allData, error: allError } = await supabaseClient
             .from('freelance_services')
             .select('*')
             .order('created_at', { ascending: false });
         
-        if (error) throw error;
+        if (allError) throw allError;
         
-        if (!data || data.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:20px;">No freelance services found.</div>';
+        if (!allData || allData.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;">📭 No freelance services found. Sellers need to post services first.</div>';
             return;
         }
         
-        const pending = data.filter(s => s.status === 'pending');
-        const approved = data.filter(s => s.status === 'approved');
+        const pending = allData.filter(s => s.status === 'pending');
+        const approved = allData.filter(s => s.status === 'approved');
         
         let html = '';
         
         if (pending.length > 0) {
             html += `<h4 style="margin: 15px 0 10px; color: #f59e0b;">⏳ Pending Approval (${pending.length})</h4>`;
-            html += `<table>`;
+            html += `<td>`;
             html += `<tr><th>ID</th><th>Title</th><th>Category</th><th>Price</th><th>Seller</th><th>WhatsApp</th><th>Actions</th></tr>`;
             pending.forEach(service => {
                 html += `
                     <tr>
                         <td>${service.id}</td>
-                        <td><strong>${escapeHtml(service.title)}</strong><br><small>${escapeHtml(service.description.substring(0, 50))}...</small></td>
+                        <td><strong>${escapeHtml(service.title)}</strong><br><small>${escapeHtml((service.description || '').substring(0, 50))}...</small></td>
                         <td>${escapeHtml(service.category)}</td>
                         <td>₹${service.price}</td>
                         <td>${escapeHtml(service.seller_name)}</td>
@@ -292,20 +330,13 @@ async function loadFreelanceRequests() {
                 `;
             });
             html += `</table>`;
-            if (approved.length > 10) {
-                html += `<p style="text-align:center; margin-top:10px;">+${approved.length - 10} more approved services</p>`;
-            }
-        }
-        
-        if (pending.length === 0 && approved.length === 0) {
-            html = '<div style="text-align:center;padding:20px;">No freelance services found.</div>';
         }
         
         container.innerHTML = html;
         
     } catch(e) {
-        console.error('Error loading freelance:', e);
-        container.innerHTML = '<div style="color:red;text-align:center;padding:20px;">Error loading freelance services</div>';
+        console.error('Error:', e);
+        container.innerHTML = `<div style="color:red;text-align:center;padding:20px;">💥 Error: ${e.message}</div>`;
     }
 }
 
@@ -320,7 +351,7 @@ async function approveService(serviceId) {
         
         if (error) throw error;
         
-        alert('✅ Service approved successfully! It will now appear on the freelance marketplace.');
+        alert('✅ Service approved successfully!');
         loadFreelanceRequests();
         loadDashboard();
         
@@ -347,6 +378,10 @@ async function rejectService(serviceId) {
         alert('Error: ' + e.message);
     }
 }
+
+// ============================================
+// REST OF ORIGINAL FUNCTIONS (UNCHANGED)
+// ============================================
 
 async function loadDashboard() {
     try {
