@@ -99,6 +99,12 @@
             background: #ffe0e0;
             border-radius: 10px;
         }
+        .article-content p {
+            margin-bottom: 15px;
+        }
+        .article-content h2 {
+            margin: 20px 0 10px;
+        }
     </style>
 </head>
 <body>
@@ -179,7 +185,7 @@
                     </div>
                     ${badgeHtml}
                     <div class="article-content">
-                        ${escapeHtml(article.content || article.summary || 'No content available')}
+                        ${article.content || article.summary || 'No content available'}
                     </div>
                     <div class="share-buttons">
                         <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp">📱 WhatsApp</a>
