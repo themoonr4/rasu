@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - Complete Freelance Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --secondary: #2563eb;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+        }
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #2a2a2a;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+        
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+        .btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; border-radius: 50%; }
+        .btn-icon:hover { background: var(--bg-secondary); }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            margin: 2rem 0;
+            color: white;
+            text-align: center;
+        }
+        .hero h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .hero p { opacity: 0.9; font-size: 0.9rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary { background: white; color: var(--primary); }
+        .btn-outline { border: 1px solid white; color: white; background: transparent; }
+        .btn-primary:hover, .btn-outline:hover { transform: translateY(-2px); }
+        
+        /* Commission Banner */
+        .commission-banner {
+            background: linear-gradient(135deg, var(--success), var(--secondary));
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: white;
+        }
+        .commission-banner h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+        .commission-banner p { font-size: 0.8rem; opacity: 0.9; }
+        
+        /* Category Grid - 4 per row on desktop */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .category-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+        .category-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow-md); }
+        .category-card i { font-size: 1.8rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .category-card h4 { font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .category-card p { font-size: 0.65rem; color: var(--text-muted); }
+        
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .service-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .service-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .service-image { width: 100%; height: 120px; object-fit: cover; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; }
+        .service-image i { font-size: 2.5rem; color: white; }
+        .service-content { padding: 1rem; }
+        .service-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .service-seller { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
+        .service-price { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin-bottom: 0.5rem; }
+        .service-desc { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .service-delivery { font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .service-orders { font-size: 0.65rem; color: var(--text-muted); }
+        .order-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .order-btn:hover { background: var(--primary-dark); }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            max-width: 550px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 { margin-bottom: 1rem; }
+        .modal-content input, .modal-content select, .modal-content textarea {
+            width: 100%;
+            padding: 0.7rem;
+            margin: 0.5rem 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        .modal-content button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .close-modal { float: right; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .filter-bar select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .search-box input {
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            width: 200px;
+        }
+        .search-box button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        
+        /* Footer */
+        .footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .hero { padding: 1.5rem; }
+            .hero h1 { font-size: 1.3rem; }
+            .category-grid { grid-template-columns: repeat(2, 1fr); }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .search-box input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="/rasu/" class="logo">🌙 THE MOON</a>
+            <div style="display: flex; gap: 0.5rem;">
+                <button id="becomeSellerBtn" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 40px; cursor: pointer;">➕ Become Seller</button>
+                <button id="themeToggle" class="btn-icon"><i class="fas fa-moon"></i></button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="hero">
+        <h1><i class="fas fa-briefcase"></i> THE MOON Freelance Marketplace</h1>
+        <p>India's Largest Freelance Platform | 45+ Categories | 500+ Services</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" id="buyerBtn">🔍 Hire a Freelancer</button>
+            <button class="btn btn-outline" id="sellerBtn">💰 Start Selling</button>
+        </div>
+    </div>
+    
+    <!-- Flexible Commission Banner -->
+    <div class="commission-banner">
+        <h3><i class="fas fa-gift"></i> Flexible Commission System</h3>
+        <p>✨ First 5 orders → 0% Commission | After 5 orders → Only 5% Commission</p>
+        <p style="font-size: 0.7rem;">Lowest in India! Fiverr takes 20%, Upwork takes 10%.</p>
+    </div>
+    
+    <!-- Categories - 25 Categories -->
+    <h2><i class="fas fa-th-large"></i> All Categories</h2>
+    <div class="category-grid" id="categoryGrid"></div>
+    
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <h2><i class="fas fa-store"></i> Browse Services</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <select id="categoryFilter">
+                <option value="all">All Categories</option>
+            </select>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search services...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="servicesGrid" class="services-grid">
+        <div class="loader" style="text-align: center; padding: 2rem;">Loading services...</div>
+    </div>
+</div>
+
+<div class="footer">
+    <p>© 2026 THE MOON Freelance Marketplace | 45+ Categories | 500+ Services</p>
+    <p><small>✨ Flexible Commission: 0% for first 5 orders, 5% thereafter ✨</small></p>
+</div>
+
+<!-- Modal for Service Form -->
+<div id="serviceModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3><i class="fas fa-plus-circle"></i> Post a Service</h3>
+        <form id="serviceForm">
+            <input type="text" id="serviceTitle" placeholder="Service Title (e.g., Logo Design, Website Development)" required>
+            <select id="serviceCategory" required>
+                <option value="">Select Category</option>
+                <option value="Web Development">💻 Web Development</option>
+                <option value="Mobile App Development">📱 Mobile App Development</option>
+                <option value="Graphic Design">🎨 Graphic Design</option>
+                <option value="Content Writing">✍️ Content Writing</option>
+                <option value="Copywriting">📝 Copywriting</option>
+                <option value="SEO & Digital Marketing">📈 SEO & Digital Marketing</option>
+                <option value="Social Media Marketing">📱 Social Media Marketing</option>
+                <option value="Video Editing">🎬 Video Editing</option>
+                <option value="Animation & 3D">🎨 Animation & 3D</option>
+                <option value="Voice & Audio">🎙️ Voice & Audio</option>
+                <option value="Photography & Editing">📸 Photography & Editing</option>
+                <option value="Data Entry">📊 Data Entry</option>
+                <option value="Virtual Assistant">👩‍💻 Virtual Assistant</option>
+                <option value="Translation">🌐 Translation</option>
+                <option value="AI & ChatGPT Services">🤖 AI & ChatGPT Services</option>
+                <option value="E-commerce Development">🛒 E-commerce Development</option>
+                <option value="WordPress Development">📄 WordPress Development</option>
+                <option value="Shopify Development">🛍️ Shopify Development</option>
+                <option value="App Development">📱 App Development</option>
+                <option value="UI/UX Design">🎨 UI/UX Design</option>
+                <option value="Logo Design">🏷️ Logo Design</option>
+                <option value="Business Cards">💳 Business Cards</option>
+                <option value="Flyer & Brochure">📜 Flyer & Brochure</option>
+                <option value="Podcast Editing">🎙️ Podcast Editing</option>
+                <option value="Legal Consulting">⚖️ Legal Consulting</option>
+                <option value="Financial Consulting">💰 Financial Consulting</option>
+                <option value="Business Consulting">💼 Business Consulting</option>
+                <option value="IT Support">🖥️ IT Support</option>
+                <option value="Cybersecurity">🔒 Cybersecurity</option>
+                <option value="Data Science">📊 Data Science</option>
+                <option value="Machine Learning">🤖 Machine Learning</option>
+                <option value="Blockchain Development">⛓️ Blockchain Development</option>
+                <option value="Game Development">🎮 Game Development</option>
+                <option value="Email Marketing">📧 Email Marketing</option>
+                <option value="Influencer Marketing">⭐ Influencer Marketing</option>
+                <option value="Brand Strategy">🏷️ Brand Strategy</option>
+                <option value="Market Research">📈 Market Research</option>
+                <option value="Grant Writing">📝 Grant Writing</option>
+                <option value="Resume Writing">📄 Resume Writing</option>
+                <option value="Online Tutoring">📚 Online Tutoring</option>
+                <option value="Assignment Help">✏️ Assignment Help</option>
+                <option value="Proofreading">🔍 Proofreading</option>
+                <option value="Transcription">🎤 Transcription</option>
+                <option value="Lead Generation">🎯 Lead Generation</option>
+                <option value="CRM Setup">📋 CRM Setup</option>
+                <option value="Google Ads">📢 Google Ads</option>
+                <option value="Facebook Ads">📘 Facebook Ads</option>
+                <option value="YouTube Marketing">📺 YouTube Marketing</option>
+            </select>
+            <textarea id="serviceDesc" rows="3" placeholder="Describe your service in detail..." required></textarea>
+            <input type="number" id="servicePrice" placeholder="Price (₹) - e.g., 999" required>
+            <input type="text" id="serviceDelivery" placeholder="Delivery Time (e.g., 2 days, 1 week)" required>
+            <input type="text" id="sellerName" placeholder="Your Name / Business Name" required>
+            <input type="text" id="sellerWhatsapp" placeholder="WhatsApp Number (for orders)" required>
+            <button type="submit">🚀 Post Service (Free)</button>
+        </form>
+        <p style="font-size: 0.7rem; margin-top: 1rem; text-align: center; color: var(--success);">💡 First 5 orders: 0% commission | After 5 orders: 5% commission</p>
+    </div>
+</div>
+
+<!-- Modal for Order -->
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <span class="close-order-modal">&times;</span>
+        <h3><i class="fas fa-shopping-cart"></i> Place Order</h3>
+        <div id="orderDetails"></div>
+        <input type="text" id="buyerName" placeholder="Your Full Name" required>
+        <input type="text" id="buyerEmail" placeholder="Your Email Address" required>
+        <input type="text" id="buyerWhatsapp" placeholder="Your WhatsApp Number" required>
+        <textarea id="orderRequirements" rows="3" placeholder="Tell the seller about your requirements..."></textarea>
+        <button id="confirmOrderBtn">📞 Contact Seller on WhatsApp</button>
+        <p style="font-size: 0.7rem; margin-top: 0.5rem;">💡 After placing order, seller will contact you within 24 hours.</p>
+    </div>
+</div>
+
+<script>
+    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    let currentServices = [];
+    let currentOrderService = null;
+    
+    // All Categories (45+ categories)
+    const categories = [
+        { name: 'Web Development', icon: 'fa-code', color: '#3b82f6', count: '0' },
+        { name: 'Mobile App Development', icon: 'fa-mobile-alt', color: '#10b981', count: '0' },
+        { name: 'Graphic Design', icon: 'fa-palette', color: '#ec4899', count: '0' },
+        { name: 'Content Writing', icon: 'fa-pen-fancy', color: '#f59e0b', count: '0' },
+        { name: 'Copywriting', icon: 'fa-file-alt', color: '#14b8a6', count: '0' },
+        { name: 'SEO & Digital Marketing', icon: 'fa-chart-line', color: '#8b5cf6', count: '0' },
+        { name: 'Social Media Marketing', icon: 'fa-hashtag', color: '#06b6d4', count: '0' },
+        { name: 'Video Editing', icon: 'fa-video', color: '#ef4444', count: '0' },
+        { name: 'Animation & 3D', icon: 'fa-cube', color: '#a855f7', count: '0' },
+        { name: 'Voice & Audio', icon: 'fa-microphone', color: '#14b8a6', count: '0' },
+        { name: 'Photography & Editing', icon: 'fa-camera', color: '#ec4899', count: '0' },
+        { name: 'Data Entry', icon: 'fa-table', color: '#6b7280', count: '0' },
+        { name: 'Virtual Assistant', icon: 'fa-headset', color: '#10b981', count: '0' },
+        { name: 'Translation', icon: 'fa-language', color: '#8b5cf6', count: '0' },
+        { name: 'AI & ChatGPT Services', icon: 'fa-robot', color: '#06b6d4', count: '0' },
+        { name: 'E-commerce Development', icon: 'fa-shopping-cart', color: '#f59e0b', count: '0' },
+        { name: 'WordPress Development', icon: 'fa-wordpress', color: '#3b82f6', count: '0' },
+        { name: 'Shopify Development', icon: 'fa-shopify', color: '#10b981', count: '0' },
+        { name: 'UI/UX Design', icon: 'fa-drafting-compass', color: '#ec4899', count: '0' },
+        { name: 'Logo Design', icon: 'fa-trademark', color: '#f59e0b', count: '0' },
+        { name: 'Legal Consulting', icon: 'fa-gavel', color: '#8b5cf6', count: '0' },
+        { name: 'Financial Consulting', icon: 'fa-chart-pie', color: '#14b8a6', count: '0' },
+        { name: 'Business Consulting', icon: 'fa-briefcase', color: '#06b6d4', count: '0' },
+        { name: 'IT Support', icon: 'fa-laptop-code', color: '#6b7280', count: '0' },
+        { name: 'Cybersecurity', icon: 'fa-shield-alt', color: '#ef4444', count: '0' },
+        { name: 'Data Science', icon: 'fa-database', color: '#3b82f6', count: '0' },
+        { name: 'Machine Learning', icon: 'fa-brain', color: '#a855f7', count: '0' },
+        { name: 'Blockchain Development', icon: 'fa-link', color: '#f59e0b', count: '0' },
+        { name: 'Game Development', icon: 'fa-gamepad', color: '#ec4899', count: '0' },
+        { name: 'Email Marketing', icon: 'fa-envelope', color: '#10b981', count: '0' },
+        { name: 'Lead Generation', icon: 'fa-bullhorn', color: '#ef4444', count: '0' },
+        { name: 'Google Ads', icon: 'fa-google', color: '#3b82f6', count: '0' },
+        { name: 'Facebook Ads', icon: 'fa-facebook', color: '#1877f2', count: '0' },
+        { name: 'YouTube Marketing', icon: 'fa-youtube', color: '#ff0000', count: '0' },
+        { name: 'Influencer Marketing', icon: 'fa-star', color: '#f59e0b', count: '0' },
+        { name: 'Brand Strategy', icon: 'fa-building', color: '#8b5cf6', count: '0' },
+        { name: 'Market Research', icon: 'fa-chart-bar', color: '#14b8a6', count: '0' },
+        { name: 'Grant Writing', icon: 'fa-file-invoice', color: '#06b6d4', count: '0' },
+        { name: 'Resume Writing', icon: 'fa-file-alt', color: '#6b7280', count: '0' },
+        { name: 'Online Tutoring', icon: 'fa-chalkboard', color: '#10b981', count: '0' },
+        { name: 'Assignment Help', icon: 'fa-book', color: '#f59e0b', count: '0' },
+        { name: 'Proofreading', icon: 'fa-spell-check', color: '#8b5cf6', count: '0' },
+        { name: 'Transcription', icon: 'fa-headphones', color: '#14b8a6', count: '0' },
+        { name: 'Podcast Editing', icon: 'fa-podcast', color: '#ec4899', count: '0' },
+        { name: 'CRM Setup', icon: 'fa-users', color: '#3b82f6', count: '0' }
+    ];
+    
+    function loadCategories() {
+        const grid = document.getElementById('categoryGrid');
+        const filter = document.getElementById('categoryFilter');
+        
+        grid.innerHTML = categories.map(cat => `
+            <div class="category-card" data-category="${cat.name}">
+                <i class="fas ${cat.icon}" style="color: ${cat.color};"></i>
+                <h4>${cat.name}</h4>
+                <p>${cat.count} services</p>
+            </div>
+        `).join('');
+        
+        filter.innerHTML = '<option value="all">All Categories (45+)</option>' + 
+            categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
+        
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const category = card.getAttribute('data-category');
+                document.getElementById('categoryFilter').value = category;
+                loadServices(category);
+            });
+        });
+    }
+    
+    async function loadServices(category = 'all', searchTerm = '') {
+        const grid = document.getElementById('servicesGrid');
+        grid.innerHTML = '<div style="text-align:center; padding:2rem;"><div class="spinner" style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem;"></div>Loading services...</div>';
+        
+        let query = supabase.from('freelance_services').select('*').eq('status', 'approved');
+        if (category !== 'all') {
+            query = query.eq('category', category);
+        }
+        
+        const { data, error } = await query.order('created_at', { ascending: false });
+        
+        if (error || !data || data.length === 0) {
+            grid.innerHTML = '<div style="text-align:center; padding:2rem;">No services yet. Be the first seller! <button onclick="openSellerModal()" style="background:var(--primary);color:white;border:none;padding:0.5rem 1rem;border-radius:40px;margin-top:1rem;">Post Service</button></div>';
+            return;
+        }
+        
+        let filteredData = data;
+        if (searchTerm) {
+            filteredData = data.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase()) || s.description.toLowerCase().includes(searchTerm.toLowerCase()));
+        }
+        
+        currentServices = filteredData;
+        
+        if (filteredData.length === 0) {
+            grid.innerHTML = '<div style="text-align:center; padding:2rem;">No matching services found. Try a different search term.</div>';
+            return;
+        }
+        
+        grid.innerHTML = filteredData.map(service => {
+            const commissionText = service.seller_orders_count >= 5 ? '5% commission applies' : '0% commission (First 5 orders)';
+            const commissionColor = service.seller_orders_count >= 5 ? 'var(--warning)' : 'var(--success)';
+            return `
+            <div class="service-card" onclick="openOrderModal(${service.id})">
+                <div class="service-image" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                    <i class="fas ${getCategoryIcon(service.category)}"></i>
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">${escapeHtml(service.title)}</h3>
+                    <div class="service-seller"><i class="fas fa-user-circle"></i> ${escapeHtml(service.seller_name)}</div>
+                    <div class="service-price">₹${service.price}</div>
+                    <div class="service-desc">${escapeHtml(service.description.substring(0, 100))}...</div>
+                    <div class="service-delivery"><i class="fas fa-clock"></i> Delivery: ${service.delivery_time}</div>
+                    <div class="service-orders"><i class="fas fa-chart-line"></i> Orders: ${service.seller_orders_count || 0} | <span style="color: ${commissionColor};">${commissionText}</span></div>
+                    <button class="order-btn" onclick="event.stopPropagation(); openOrderModal(${service.id})"><i class="fas fa-shopping-cart"></i> Order Now</button>
+                </div>
+            </div>
+        `}).join('');
+    }
+    
+    function getCategoryIcon(category) {
+        const found = categories.find(c => c.name === category);
+        return found ? found.icon : 'fa-briefcase';
+    }
+    
+    async function publishService(event) {
+        event.preventDefault();
+        const title = document.getElementById('serviceTitle').value;
+        const category = document.getElementById('serviceCategory').value;
+        const description = document.getElementById('serviceDesc').value;
+        const price = parseInt(document.getElementById('servicePrice').value);
+        const deliveryTime = document.getElementById('serviceDelivery').value;
+        const sellerName = document.getElementById('sellerName').value;
+        const sellerWhatsapp = document.getElementById('sellerWhatsapp').value;
+        
+        if (!title || !category || !description || !price || !deliveryTime || !sellerName || !sellerWhatsapp) {
+            alert('Please fill all fields');
+            return;
+        }
+        
+        const { error } = await supabase.from('freelance_services').insert([{
+            title, category, description, price, delivery_time: deliveryTime,
+            seller_name: sellerName, seller_whatsapp: sellerWhatsapp,
+            seller_orders_count: 0,
+            status: 'pending', created_at: new Date()
+        }]);
+        
+        if (error) {
+            alert('Error: ' + error.message);
+        } else {
+            alert('✅ Service posted! Will be visible after admin approval (within 24 hours).');
+            document.getElementById('serviceModal').style.display = 'none';
+            document.getElementById('serviceForm').reset();
+            loadServices();
+        }
+    }
+    
+    function openOrderModal(serviceId) {
+        const service = currentServices.find(s => s.id === serviceId);
+        if (!service) return;
+        currentOrderService = service;
+        const ordersCount = service.seller_orders_count || 0;
+        const commissionPercent = ordersCount >= 5 ? 5 : 0;
+        const commissionAmount = (service.price * commissionPercent) / 100;
+        const freelancerGets = service.price - commissionAmount;
+        
+        document.getElementById('orderDetails').innerHTML = `
+            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
+                <strong><i class="fas fa-box"></i> ${escapeHtml(service.title)}</strong><br>
+                <i class="fas fa-user"></i> Seller: ${escapeHtml(service.seller_name)}<br>
+                <i class="fas fa-rupee-sign"></i> Price: ₹${service.price}<br>
+                <i class="fas fa-clock"></i> Delivery: ${service.delivery_time}<br>
+                <hr style="margin: 0.7rem 0; border-color: var(--border);">
+                <small><i class="fas fa-percent"></i> Commission: ${commissionPercent}% (${ordersCount >= 5 ? 'Standard rate' : 'First 5 orders free'})</small><br>
+                <small><i class="fas fa-hand-holding-usd"></i> You pay: ₹${service.price} | Freelancer gets: ₹${freelancerGets}</small>
+            </div>
+        `;
+        document.getElementById('orderModal').style.display = 'flex';
+    }
+    
+    document.getElementById('confirmOrderBtn')?.addEventListener('click', async () => {
+        if (!currentOrderService) return;
+        const name = document.getElementById('buyerName').value;
+        const email = document.getElementById('buyerEmail').value;
+        const whatsapp = document.getElementById('buyerWhatsapp').value;
+        const requirements = document.getElementById('orderRequirements').value;
+        
+        if (!name || !email || !whatsapp) {
+            alert('Please fill your details');
+            return;
+        }
+        
+        const ordersCount = currentOrderService.seller_orders_count || 0;
+        const commissionPercent = ordersCount >= 5 ? 5 : 0;
+        const commissionAmount = (currentOrderService.price * commissionPercent) / 100;
+        const freelancerGets = currentOrderService.price - commissionAmount;
+        
+        await supabase.from('freelance_orders').insert([{
+            service_id: currentOrderService.id,
+            order_number: ordersCount + 1,
+            buyer_name: name,
+            buyer_email: email,
+            buyer_whatsapp: whatsapp,
+            amount: currentOrderService.price,
+            commission_percent: commissionPercent,
+            commission_amount: commissionAmount,
+            freelancer_gets: freelancerGets,
+            platform_earns: commissionAmount
+        }]);
+        
+        await supabase.from('freelance_services')
+            .update({ seller_orders_count: ordersCount + 1 })
+            .eq('id', currentOrderService.id);
+        
+        const message = `*🚀 NEW ORDER FROM THE MOON MARKETPLACE*%0A%0A` +
+            `*Service:* ${currentOrderService.title}%0A` +
+            `*Order #:* ${ordersCount + 1}%0A` +
+            `*Amount:* ₹${currentOrderService.price}%0A` +
+            `*Commission:* ${commissionPercent}% (You receive ₹${freelancerGets})%0A%0A` +
+            `*Buyer Details:*%0A` +
+            `Name: ${name}%0A` +
+            `Email: ${email}%0A` +
+            `WhatsApp: ${whatsapp}%0A%0A` +
+            `*Requirements:* ${requirements || 'Not specified'}%0A%0A` +
+            `Please contact the buyer to complete the order. THE MOON earned: ₹${commissionAmount}`;
+        
+        window.open(`https://wa.me/${currentOrderService.seller_whatsapp}?text=${message}`, '_blank');
+        document.getElementById('orderModal').style.display = 'none';
+        alert('✅ Order placed! Redirecting to WhatsApp. Please discuss requirements with the seller.');
+        
+        document.getElementById('buyerName').value = '';
+        document.getElementById('buyerEmail').value = '';
+        document.getElementById('buyerWhatsapp').value = '';
+        document.getElementById('orderRequirements').value = '';
+        
+        loadServices();
+    });
+    
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+    
+    function openSellerModal() { document.getElementById('serviceModal').style.display = 'flex'; }
+    document.getElementById('becomeSellerBtn').onclick = openSellerModal;
+    document.getElementById('sellerBtn').onclick = openSellerModal;
+    document.getElementById('buyerBtn').onclick = () => document.getElementById('servicesGrid').scrollIntoView({ behavior: 'smooth' });
+    
+    document.querySelector('.close-modal').onclick = () => document.getElementById('serviceModal').style.display = 'none';
+    document.querySelector('.close-order-modal').onclick = () => document.getElementById('orderModal').style.display = 'none';
+    window.onclick = (e) => { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; };
+    
+    document.getElementById('categoryFilter').addEventListener('change', (e) => loadServices(e.target.value));
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        const searchTerm = document.getElementById('searchInput').value;
+        const category = document.getElementById('categoryFilter').value;
+        loadServices(category, searchTerm);
+    });
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const searchTerm = document.getElementById('searchInput').value;
+            const category = document.getElementById('categoryFilter').value;
+            loadServices(category, searchTerm);
+        }
+    });
+    
+    document.getElementById('serviceForm').addEventListener('submit', publishService);
+    
+    // Theme Functions
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    }
+    function toggleTheme() {
+        if (document.body.hasAttribute('data-theme')) {
+            document.body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        loadCategories();
+        loadServices();
+    }
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    
+    // Add spin animation
+    const style = document.createElement('style');
+    style.textContent = `@keyframes spin { to { transform: rotate(360deg); } } .spinner { animation: spin 1s linear infinite; }`;
+    document.head.appendChild(style);
+    
+    initTheme();
+    loadCategories();
+    loadServices();
+</script>
+</body>
+</html>
