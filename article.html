@@ -2,518 +2,102 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Read the latest news on THE MOON - India's most advanced AI-powered news platform">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MOON - Article</title>
-    
-    <!-- Open Graph Tags for Social Sharing -->
-    <meta property="og:title" content="THE MOON - Article">
-    <meta property="og:description" content="Read the full article on THE MOON">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <meta name="twitter:card" content="summary_large_image">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-        /* ============================================ */
-        /* PREMIUM ARTICLE PAGE CSS - PROFESSIONAL DESIGN */
-        /* ============================================ */
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --primary: #dc2626;
-            --primary-dark: #b91c1c;
-            --secondary: #2563eb;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --radius-sm: 0.5rem;
-            --radius-md: 0.75rem;
-            --radius-lg: 1rem;
-            --radius-xl: 1.5rem;
-        }
-        
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #64748b;
-            --border: #2a2a2a;
-            --gray-50: #1a1a1a;
-            --gray-100: #222222;
-            --gray-200: #2a2a2a;
-            --gray-300: #333333;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Georgia', serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.7;
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #333;
+            line-height: 1.6;
         }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-        
         .container {
-            max-width: 860px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 20px;
         }
-        
-        /* Header */
         .header {
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            background: rgba(var(--bg-primary), 0.95);
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+            margin-bottom: 20px;
         }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
         .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc2626;
             text-decoration: none;
         }
-        
-        .logo-icon {
-            font-size: 1.6rem;
+        .article-card {
+            background: #f9f9f9;
+            border-radius: 16px;
+            padding: 25px;
         }
-        
-        .back-btn {
-            background: var(--gray-100);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            text-decoration: none;
-            color: var(--text-primary);
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .back-btn:hover {
-            background: var(--gray-200);
-            transform: translateX(-3px);
-        }
-        
-        /* Theme Toggle */
-        .theme-btn {
-            background: var(--gray-100);
-            border: 1px solid var(--border);
-            padding: 0.5rem;
-            border-radius: 50%;
-            cursor: pointer;
-            color: var(--text-primary);
-            font-size: 1rem;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .theme-btn:hover {
-            background: var(--gray-200);
-        }
-        
-        /* Article Card */
-        .article-wrapper {
-            margin: 2rem 0;
-        }
-        
-        .article-header {
-            margin-bottom: 2rem;
-        }
-        
-        .article-category {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-        }
-        
         .article-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            line-height: 1.3;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #222;
         }
-        
-        @media (min-width: 768px) {
-            .article-title {
-                font-size: 2.8rem;
-            }
-        }
-        
-        /* Article Meta */
         .article-meta {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .meta-item i {
-            font-size: 0.9rem;
-        }
-        
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: var(--gray-50);
-            border-radius: var(--radius-md);
-        }
-        
-        .author-avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: white;
-        }
-        
-        .author-details {
-            flex: 1;
-        }
-        
-        .author-name {
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-        }
-        
-        .author-bio {
+            gap: 15px;
+            color: #666;
             font-size: 0.8rem;
-            color: var(--text-muted);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
         }
-        
-        /* Featured Image */
-        .featured-image {
+        .article-image {
             width: 100%;
-            border-radius: var(--radius-xl);
-            margin: 1.5rem 0;
-            box-shadow: var(--shadow-lg);
+            border-radius: 12px;
+            margin: 20px 0;
         }
-        
-        /* Article Content */
-        .article-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
+        .back-btn {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #333;
+            margin-bottom: 20px;
         }
-        
-        .article-content p {
-            margin-bottom: 1.5rem;
-        }
-        
-        .article-content h2 {
-            font-size: 1.6rem;
-            margin: 2rem 0 1rem;
-            color: var(--text-primary);
-        }
-        
-        .article-content h3 {
-            font-size: 1.3rem;
-            margin: 1.5rem 0 0.8rem;
-            color: var(--text-primary);
-        }
-        
-        .article-content blockquote {
-            border-left: 4px solid var(--primary);
-            padding-left: 1.5rem;
-            margin: 1.5rem 0;
-            font-style: italic;
-            color: var(--text-muted);
-        }
-        
-        .article-content ul, .article-content ol {
-            margin: 1rem 0 1rem 2rem;
-        }
-        
-        .article-content li {
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Badges */
-        .badge-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .badge {
-            background: var(--primary);
-            color: white;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        /* Share Section */
-        .share-section {
-            margin: 2rem 0;
-            padding: 1.5rem 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .share-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
         .share-buttons {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
         }
-        
         .share-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 40px;
+            padding: 8px 16px;
+            border-radius: 30px;
             text-decoration: none;
             color: white;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-size: 0.8rem;
         }
-        
-        .share-btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.05);
+        .whatsapp {
+            background: #25D366;
         }
-        
-        .share-btn.whatsapp { background: #25D366; }
-        .share-btn.twitter { background: #1DA1F2; }
-        .share-btn.telegram { background: #0088CC; }
-        .share-btn.facebook { background: #1877F2; }
-        .share-btn.linkedin { background: #0077B5; }
-        .share-btn.copy { background: var(--gray-600); color: white; }
-        
-        /* Related Articles */
-        .related-section {
-            margin: 3rem 0;
+        .twitter {
+            background: #1DA1F2;
         }
-        
-        .related-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
+        .telegram {
+            background: #0088CC;
         }
-        
-        .related-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--primary);
-        }
-        
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.2rem;
-        }
-        
-        .related-card {
-            background: var(--gray-50);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid var(--border);
-        }
-        
-        .related-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary);
-        }
-        
-        .related-image {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-        }
-        
-        .related-content {
-            padding: 0.8rem;
-        }
-        
-        .related-category {
-            font-size: 0.65rem;
-            color: var(--primary);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .related-card-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-top: 0.3rem;
-            line-height: 1.4;
-        }
-        
-        /* Loader */
         .loader {
             text-align: center;
-            padding: 4rem;
+            padding: 50px;
         }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Error Box */
-        .error-box {
-            background: linear-gradient(135deg, #fee2e2, #fecaca);
-            border: 1px solid #f87171;
-            border-radius: var(--radius-lg);
-            padding: 2rem;
-            text-align: center;
-            margin: 2rem 0;
-        }
-        
-        .error-box h3 {
-            color: #dc2626;
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gray-800);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            z-index: 1000;
-            animation: fadeInUp 0.3s ease;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            border-top: 1px solid var(--border);
-            margin-top: 3rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-            .article-title {
-                font-size: 1.8rem;
-            }
-            .share-buttons {
-                justify-content: center;
-            }
-            .author-info {
-                flex-direction: column;
-                text-align: center;
-            }
+        .error {
+            color: red;
+            padding: 20px;
+            background: #ffe0e0;
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -521,347 +105,98 @@
 
 <header class="header">
     <div class="container">
-        <div class="header-content">
-            <a href="/rasu/" class="logo">
-                <span class="logo-icon">🌙</span> THE MOON
-            </a>
-            <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
+        <a href="/rasu/" class="logo">🌙 THE MOON</a>
     </div>
 </header>
 
 <div class="container">
-    <a href="/rasu/" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Back to Home
-    </a>
+    <a href="/rasu/" class="back-btn">← Back to Home</a>
     
     <div id="articleContent">
-        <div class="loader">
-            <div class="spinner"></div>
-            <p>Loading article...</p>
-        </div>
+        <div class="loader">Loading article...</div>
     </div>
     
-    <div class="footer">
-        <p>© 2026 THE MOON — India's Most Advanced AI-Powered News Platform</p>
+    <div style="text-align:center;padding:30px;color:#999;">
+        <p>© 2026 THE MOON. All rights reserved.</p>
     </div>
 </div>
 
 <script>
-// ============================================
-// SUPABASE CONFIGURATION
-// ============================================
-const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ============================================
-// URL PARAMETERS
-// ============================================
-const urlParams = new URLSearchParams(window.location.search);
-const articleId = urlParams.get('id');
-
-// ============================================
-// GLOBAL VARIABLES
-// ============================================
-let currentArticle = null;
-let relatedArticles = [];
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-
-function formatDate(dateString) {
-    if (!dateString) return 'Unknown date';
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-}
-
-function readingTime(content) {
-    if (!content) return '1 min read';
-    const wordsPerMinute = 200;
-    const words = content.replace(/<[^>]*>/g, '').split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
-}
-
-function formatContent(content) {
-    if (!content) return '<p>No content available</p>';
-    if (content.includes('<p>')) return content;
-    return content.split('\n\n').map(para => `<p>${escapeHtml(para)}</p>`).join('');
-}
-
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        showToast('✅ Link copied to clipboard!');
-    }).catch(() => {
-        showToast('❌ Failed to copy link');
-    });
-}
-
-// ============================================
-// UPDATE VIEW COUNT
-// ============================================
-async function updateViewCount(articleId, currentViews) {
-    try {
-        await supabase
-            .from('news')
-            .update({ views: (currentViews || 0) + 1 })
-            .eq('id', articleId);
-    } catch(e) {
-        console.log('View count update failed:', e);
-    }
-}
-
-// ============================================
-// LOAD RELATED ARTICLES
-// ============================================
-async function loadRelatedArticles(category, currentId) {
-    try {
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .eq('category', category)
-            .neq('id', currentId)
-            .order('published_at', { ascending: false })
-            .limit(3);
-        
-        if (error) throw error;
-        relatedArticles = data || [];
-        renderRelatedArticles();
-    } catch(e) {
-        console.log('Related articles error:', e);
-    }
-}
-
-function renderRelatedArticles() {
-    const relatedContainer = document.getElementById('relatedArticles');
-    if (!relatedContainer) return;
+    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
     
-    if (!relatedArticles || relatedArticles.length === 0) {
-        relatedContainer.innerHTML = '<p>No related articles found.</p>';
-        return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
     }
     
-    relatedContainer.innerHTML = relatedArticles.map(article => `
-        <div class="related-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-            <img class="related-image" src="${article.image_url || 'https://picsum.photos/400/200'}" onerror="this.src='https://picsum.photos/400/200'">
-            <div class="related-content">
-                <div class="related-category">${article.category || 'News'}</div>
-                <div class="related-card-title">${escapeHtml(article.title)}</div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// ============================================
-// SHARE FUNCTIONS
-// ============================================
-function shareArticle(platform) {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(currentArticle?.title || 'THE MOON News');
-    let shareUrl = '';
-    
-    switch(platform) {
-        case 'whatsapp':
-            shareUrl = `https://wa.me/?text=${title}%20${url}`;
-            break;
-        case 'telegram':
-            shareUrl = `https://t.me/share/url?url=${url}&text=${title}`;
-            break;
-        case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?text=${title}&url=${url}`;
-            break;
-        case 'facebook':
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-            break;
-        case 'linkedin':
-            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-            break;
-    }
-    
-    if (shareUrl) {
-        window.open(shareUrl, '_blank');
-    }
-}
-
-// ============================================
-// THEME FUNCTIONS
-// ============================================
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-    }
-}
-
-function toggleTheme() {
-    if (document.body.hasAttribute('data-theme')) {
-        document.body.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-    } else {
-        document.body.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-    }
-}
-
-// ============================================
-// LOAD MAIN ARTICLE
-// ============================================
-async function loadArticle() {
-    if (!articleId) {
-        document.getElementById('articleContent').innerHTML = `
-            <div class="error-box">
-                <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:inline-block;"></i>
-                <h3>No Article Selected</h3>
-                <p>Please go back to the homepage and click on a news article.</p>
-                <a href="/rasu/" class="back-btn" style="margin-top:1rem; display:inline-block;">← Back to Home</a>
-            </div>
-        `;
-        return;
-    }
-    
-    try {
-        const { data, error } = await supabase
-            .from('news')
-            .select('*')
-            .eq('id', parseInt(articleId))
-            .single();
-        
-        if (error || !data) {
-            document.getElementById('articleContent').innerHTML = `
-                <div class="error-box">
-                    <i class="fas fa-search" style="font-size:2rem; margin-bottom:1rem; display:inline-block;"></i>
-                    <h3>Article Not Found</h3>
-                    <p>No article exists with ID: ${articleId}</p>
-                    <a href="/rasu/" class="back-btn" style="margin-top:1rem; display:inline-block;">← Browse News</a>
-                </div>
-            `;
+    async function loadArticle() {
+        if (!articleId) {
+            document.getElementById('articleContent').innerHTML = '<div class="error">❌ No article ID found. Use ?id=1</div>';
             return;
         }
         
-        currentArticle = data;
-        
-        // Update view count
-        updateViewCount(data.id, data.views);
-        
-        // Load related articles
-        if (data.category) {
-            loadRelatedArticles(data.category, data.id);
-        }
-        
-        // Build badges HTML
-        let badgeHtml = '';
-        if (data.badge) {
-            const badges = data.badge.split(',');
-            badgeHtml = `<div class="badge-group">${badges.map(b => `<span class="badge">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
-        }
-        
-        // Update page title
-        document.title = `${data.title} | THE MOON`;
-        
-        // Update Open Graph tags
-        document.querySelector('meta[property="og:title"]').setAttribute('content', data.title);
-        document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
-        if (data.image_url) {
-            document.querySelector('meta[property="og:image"]').setAttribute('content', data.image_url);
-        }
-        
-        // Render article
-        document.getElementById('articleContent').innerHTML = `
-            <div class="article-wrapper">
-                <div class="article-header">
-                    <span class="article-category">${data.category || 'Latest News'}</span>
-                    <h1 class="article-title">${escapeHtml(data.title)}</h1>
-                    <div class="article-meta">
-                        <span class="meta-item"><i class="far fa-calendar-alt"></i> ${formatDate(data.published_at)}</span>
-                        <span class="meta-item"><i class="far fa-eye"></i> ${(data.views || 0) + 1} views</span>
-                        <span class="meta-item"><i class="far fa-clock"></i> ${readingTime(data.content)}</span>
-                    </div>
-                </div>
-                
-                ${badgeHtml}
-                
-                <div class="author-info">
-                    <div class="author-avatar">
-                        <i class="fas fa-user-astronaut"></i>
-                    </div>
-                    <div class="author-details">
-                        <div class="author-name">${escapeHtml(data.author || 'THE MOON Team')}</div>
-                        <div class="author-bio">AI-Powered Journalism | Delivering truth since 2026</div>
-                    </div>
-                </div>
-                
-                ${data.image_url ? `<img class="featured-image" src="${data.image_url}" alt="${escapeHtml(data.title)}" onerror="this.style.display='none'">` : ''}
-                
-                <div class="article-content">
-                    ${formatContent(data.content || data.summary || 'No content available')}
-                </div>
-                
-                <div class="share-section">
-                    <div class="share-title"><i class="fas fa-share-alt"></i> Share this article</div>
-                    <div class="share-buttons">
-                        <button class="share-btn whatsapp" onclick="shareArticle('whatsapp')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                        <button class="share-btn twitter" onclick="shareArticle('twitter')"><i class="fab fa-twitter"></i> Twitter</button>
-                        <button class="share-btn telegram" onclick="shareArticle('telegram')"><i class="fab fa-telegram"></i> Telegram</button>
-                        <button class="share-btn facebook" onclick="shareArticle('facebook')"><i class="fab fa-facebook-f"></i> Facebook</button>
-                        <button class="share-btn linkedin" onclick="shareArticle('linkedin')"><i class="fab fa-linkedin-in"></i> LinkedIn</button>
-                        <button class="share-btn copy" onclick="copyToClipboard(window.location.href)"><i class="fas fa-link"></i> Copy Link</button>
-                    </div>
-                </div>
-            </div>
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
+                headers: { 'apikey': SUPABASE_KEY }
+            });
             
-            <div class="related-section">
-                <h3 class="related-title"><i class="fas fa-newspaper"></i> Related Articles</h3>
-                <div id="relatedArticles" class="related-grid">
-                    <div class="loader" style="padding: 1rem;"><div class="spinner" style="width:30px;height:30px;"></div></div>
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            
+            const data = await response.json();
+            
+            if (!data || data.length === 0) {
+                document.getElementById('articleContent').innerHTML = '<div class="error">❌ Article not found with ID: ' + articleId + '</div>';
+                return;
+            }
+            
+            const article = data[0];
+            const shareText = encodeURIComponent(article.title);
+            const shareUrl = encodeURIComponent(window.location.href);
+            
+            let badgeHtml = '';
+            if (article.badge) {
+                const badges = article.badge.split(',');
+                badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
+            }
+            
+            document.getElementById('articleContent').innerHTML = `
+                <div class="article-card">
+                    ${article.image_url ? `<img class="article-image" src="${article.image_url}" onerror="this.style.display='none'">` : ''}
+                    <h1 class="article-title">${escapeHtml(article.title)}</h1>
+                    <div class="article-meta">
+                        <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                        <span>👁️ ${article.views || 0} views</span>
+                        <span>🏷️ ${article.category || 'News'}</span>
+                    </div>
+                    ${badgeHtml}
+                    <div class="article-content">
+                        ${escapeHtml(article.content || article.summary || 'No content available')}
+                    </div>
+                    <div class="share-buttons">
+                        <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp">📱 WhatsApp</a>
+                        <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter">🐦 Twitter</a>
+                        <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram">📢 Telegram</a>
+                    </div>
                 </div>
-            </div>
-        `;
-        
-    } catch(err) {
-        console.error('Error:', err);
-        document.getElementById('articleContent').innerHTML = `
-            <div class="error-box">
-                <i class="fas fa-exclamation-circle" style="font-size:2rem; margin-bottom:1rem; display:inline-block;"></i>
-                <h3>Error Loading Article</h3>
-                <p>${err.message || 'Something went wrong. Please try again.'}</p>
-                <button onclick="location.reload()" class="back-btn" style="margin-top:1rem;">⟳ Refresh Page</button>
-            </div>
-        `;
+            `;
+            
+            document.title = `${article.title} | THE MOON`;
+            
+        } catch(err) {
+            document.getElementById('articleContent').innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
+        }
     }
-}
-
-// ============================================
-// INITIALIZE
-// ============================================
-document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
-initTheme();
-loadArticle();
+    
+    loadArticle();
 </script>
 </body>
 </html>
