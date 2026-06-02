@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - THE MOON</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;background:#fff;color:#0f172a;line-height:1.6;}
+        body.dark{background:#0f0f0f;color:#f8fafc;}
+        .container{max-width:900px;margin:0 auto;padding:20px;}
+        .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:15px 0;position:sticky;top:0;z-index:100;}
+        body.dark .header{background:#0f0f0f;border-bottom-color:#2a2a2a;}
+        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#dc2626,#b91c1c);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;}
+        .page-title{font-size:2rem;margin:20px 0;color:#dc2626;}
+        .section{margin-bottom:30px;}
+        .section h2{font-size:1.3rem;margin-bottom:15px;padding-bottom:10px;border-bottom:2px solid #e2e8f0;}
+        body.dark .section h2{border-bottom-color:#2a2a2a;}
+        .mission-box{background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;padding:30px;border-radius:16px;text-align:center;margin:20px 0;}
+        .mission-box h3{font-size:1.5rem;margin-bottom:10px;}
+        .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px;}
+        .team-card{background:#f1f5f9;padding:20px;border-radius:12px;text-align:center;}
+        body.dark .team-card{background:#1e293b;}
+        .team-icon{font-size:3rem;color:#dc2626;margin-bottom:10px;}
+        .footer{text-align:center;padding:30px;color:#94a3b8;font-size:0.8rem;margin-top:40px;border-top:1px solid #e2e8f0;}
+        body.dark .footer{border-top-color:#2a2a2a;}
+        .back-btn{display:inline-block;margin-bottom:20px;color:#dc2626;text-decoration:none;}
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+    </div>
+</header>
+
+<div class="container">
+    <a href="/rasu/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    
+    <h1 class="page-title">About THE MOON</h1>
+
+    <div class="mission-box">
+        <h3>🌙 Our Mission</h3>
+        <p>To deliver truth, knowledge, and unbiased news to every Indian — powered by AI and human intelligence.</p>
+    </div>
+
+    <div class="section">
+        <h2>📖 Our Story</h2>
+        <p>THE MOON was founded in 2026 with a simple vision: create a news platform that combines the speed of AI with the credibility of human journalism.</p>
+        <p>We cover Technology, Sports, Business, Politics, and Study — delivering news that matters to you, when it matters.</p>
+    </div>
+
+    <div class="section">
+        <h2>🤖 AI-Powered Journalism</h2>
+        <p>We use Google's Gemini AI to:</p>
+        <p>✓ Generate smart summaries of long articles</p>
+        <p>✓ Enhance headlines for better engagement</p>
+        <p>✓ Curate the most important news of the day</p>
+        <p>All AI-generated content is reviewed by human editors before publishing.</p>
+    </div>
+
+    <div class="section">
+        <h2>✨ What Makes Us Different</h2>
+        <p><strong>🔐 Truth First:</strong> We verify facts before publishing.</p>
+        <p><strong>⚡ Real-Time:</strong> Breaking news delivered instantly.</p>
+        <p><strong>📱 Mobile First:</strong> Optimized for all devices.</p>
+        <p><strong>🔔 Push Notifications:</strong> Never miss important updates.</p>
+        <p><strong>🌙 Dark Mode:</strong> Read comfortably any time.</p>
+    </div>
+
+    <div class="section">
+        <h2>📊 Our Reach</h2>
+        <p>✓ Readers across India and United States</p>
+        <p>✓ 19+ active weekly users</p>
+        <p>✓ Growing daily</p>
+    </div>
+
+    <div class="section">
+        <h2>👥 Our Team</h2>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-icon"><i class="fas fa-user-astronaut"></i></div>
+                <h3>Rakesh Kumar</h3>
+                <p>Founder & Editor-in-Chief</p>
+            </div>
+            <div class="team-card">
+                <div class="team-icon"><i class="fas fa-robot"></i></div>
+                <h3>Gemini AI</h3>
+                <p>AI Content Assistant</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📬 Work With Us</h2>
+        <p>Interested in contributing, advertising, or partnering? Contact us at <strong>themoonnewsindia@gmail.com</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 THE MOON. All rights reserved. | <a href="/rasu/privacy.html">Privacy Policy</a> | <a href="/rasu/about.html">About Us</a> | <a href="/rasu/contact.html">Contact</a></p>
+    </div>
+</div>
+
+<script>
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+</script>
+</body>
+</html>
