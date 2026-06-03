@@ -3,463 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MOON - Complete Freelance Marketplace</title>
+    <title>THE MOON - Freelance Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-        }
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-card: #ffffff;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --primary: #dc2626;
-            --primary-dark: #b91c1c;
-            --secondary: #2563eb;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --radius-2xl: 1.5rem;
-        }
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: #1a1a1a;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #64748b;
-            --border: #2a2a2a;
-        }
-        
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
-        
-        /* Header */
-        .header {
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-        .header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-decoration: none;
-        }
-        .btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-primary); padding: 0.5rem; border-radius: 50%; }
-        .btn-icon:hover { background: var(--bg-secondary); }
-        
-        /* Hero */
-        .hero {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: var(--radius-2xl);
-            padding: 2rem;
-            margin: 2rem 0;
-            color: white;
-            text-align: center;
-        }
-        .hero h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .hero p { opacity: 0.9; font-size: 0.9rem; }
-        .hero-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border-radius: 40px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-primary { background: white; color: var(--primary); }
-        .btn-outline { border: 1px solid white; color: white; background: transparent; }
-        .btn-primary:hover, .btn-outline:hover { transform: translateY(-2px); }
-        
-        /* Commission Banner */
-        .commission-banner {
-            background: linear-gradient(135deg, var(--success), var(--secondary));
-            border-radius: var(--radius-lg);
-            padding: 1rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: white;
-        }
-        .commission-banner h3 { font-size: 1rem; margin-bottom: 0.3rem; }
-        .commission-banner p { font-size: 0.8rem; opacity: 0.9; }
-        
-        /* Category Grid */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-        .category-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 0.8rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid var(--border);
-        }
-        .category-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow-md); }
-        .category-card i { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.3rem; display: block; }
-        .category-card h4 { font-size: 0.8rem; margin-bottom: 0.2rem; }
-        .category-card p { font-size: 0.6rem; color: var(--text-muted); }
-        
-        /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        .service-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .service-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
-        .service-image { width: 100%; height: 120px; object-fit: cover; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; }
+        body { font-family: Arial, sans-serif; background: #ffffff; color: #0f172a; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        .header { background: #fff; border-bottom: 1px solid #ddd; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #dc2626; text-decoration: none; }
+        .hero { background: linear-gradient(135deg, #dc2626, #b91c1c); border-radius: 1rem; padding: 2rem; margin: 1rem 0; color: white; text-align: center; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .service-card { background: #f8fafc; border-radius: 0.75rem; overflow: hidden; border: 1px solid #ddd; cursor: pointer; }
+        .service-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .service-image { height: 120px; background: linear-gradient(135deg, #dc2626, #2563eb); display: flex; align-items: center; justify-content: center; }
         .service-image i { font-size: 2.5rem; color: white; }
         .service-content { padding: 1rem; }
-        .service-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .service-seller { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
-        .service-price { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin-bottom: 0.5rem; }
-        .service-desc { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .service-delivery { font-size: 0.7rem; color: var(--accent); margin-bottom: 0.5rem; }
-        .service-orders { font-size: 0.65rem; color: var(--text-muted); }
-        .order-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-        .order-btn:hover { background: var(--primary-dark); }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: var(--bg-card);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            max-width: 550px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .modal-content h3 { margin-bottom: 1rem; }
-        .modal-content input, .modal-content select, .modal-content textarea {
-            width: 100%;
-            padding: 0.7rem;
-            margin: 0.5rem 0;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-        .modal-content button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.7rem;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 600;
-            margin-top: 0.5rem;
-        }
-        .close-modal { float: right; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
-        
-        /* Filter Bar */
-        .filter-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .filter-bar select {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            color: var(--text-primary);
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        .search-box {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .search-box input {
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            width: 220px;
-        }
-        .search-box button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            cursor: pointer;
-        }
-        
-        /* Footer */
-        .footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem; }
-        
-        @media (max-width: 768px) {
-            .container { padding: 0 1rem; }
-            .hero { padding: 1.5rem; }
-            .hero h1 { font-size: 1.3rem; }
-            .category-grid { grid-template-columns: repeat(3, 1fr); }
-            .filter-bar { flex-direction: column; align-items: stretch; }
-            .search-box input { width: 100%; }
-        }
+        .service-title { font-size: 1rem; font-weight: bold; }
+        .service-seller { font-size: 0.7rem; color: #64748b; margin: 0.3rem 0; }
+        .service-price { font-size: 1.1rem; font-weight: bold; color: #dc2626; }
+        .service-desc { font-size: 0.75rem; color: #475569; margin: 0.5rem 0; }
+        .order-btn { background: #dc2626; color: white; border: none; padding: 0.5rem; border-radius: 40px; cursor: pointer; width: 100%; margin-top: 0.5rem; }
+        .loader { text-align: center; padding: 2rem; }
+        .error-box { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; text-align: center; }
+        button { background: none; border: none; cursor: pointer; }
+        .btn-primary { background: white; color: #dc2626; padding: 0.5rem 1rem; border-radius: 40px; font-weight: bold; }
+        .btn-outline { border: 1px solid white; color: white; background: transparent; padding: 0.5rem 1rem; border-radius: 40px; }
+        .commission-banner { background: #10b981; color: white; padding: 1rem; border-radius: 0.75rem; text-align: center; margin: 1rem 0; }
     </style>
 </head>
 <body>
 
 <header class="header">
     <div class="container">
-        <div class="header-content">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
             <a href="/rasu/" class="logo">🌙 THE MOON</a>
-            <div style="display: flex; gap: 0.5rem;">
-                <button id="becomeSellerBtn" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 40px; cursor: pointer;">➕ Become Seller</button>
-                <button id="themeToggle" class="btn-icon"><i class="fas fa-moon"></i></button>
-            </div>
+            <button id="becomeSellerBtn" style="background: #dc2626; color: white; padding: 0.5rem 1rem; border-radius: 40px;">➕ Become Seller</button>
         </div>
     </div>
 </header>
 
 <div class="container">
     <div class="hero">
-        <h1><i class="fas fa-briefcase"></i> THE MOON Freelance Marketplace</h1>
-        <p>India's Largest Freelance Platform | 50+ Categories | 1000+ Services</p>
-        <div class="hero-buttons">
-            <button class="btn btn-primary" id="buyerBtn">🔍 Hire a Freelancer</button>
-            <button class="btn btn-outline" id="sellerBtn">💰 Start Selling</button>
+        <h1>Freelance Marketplace</h1>
+        <p>First 5 orders: 0% Commission | After 5 orders: 5% Commission</p>
+        <div style="margin-top: 1rem;">
+            <button class="btn-primary" id="buyerBtn">🔍 Hire a Freelancer</button>
+            <button class="btn-outline" id="sellerBtn" style="margin-left: 0.5rem;">💰 Start Selling</button>
         </div>
     </div>
     
     <div class="commission-banner">
-        <h3><i class="fas fa-gift"></i> Flexible Commission System</h3>
-        <p>✨ First 5 orders → 0% Commission | After 5 orders → Only 5% Commission</p>
-        <p style="font-size: 0.7rem;">Lowest in India! Fiverr takes 20%, Upwork takes 10%.</p>
-    </div>
-    
-    <h2><i class="fas fa-th-large"></i> Browse by Category</h2>
-    <div class="category-grid" id="categoryGrid"></div>
-    
-    <div class="filter-bar">
-        <h2><i class="fas fa-store"></i> Available Services</h2>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <select id="categoryFilter">
-                <option value="all">All Categories (50+)</option>
-            </select>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search services...">
-                <button id="searchBtn"><i class="fas fa-search"></i></button>
-            </div>
-        </div>
+        ✨ Lowest Commission in India! Fiverr takes 20%, Upwork takes 10% ✨
     </div>
     
     <div id="servicesGrid" class="services-grid">
-        <div class="loader" style="text-align: center; padding: 2rem;">Loading services...</div>
+        <div class="loader">Loading services...</div>
     </div>
 </div>
 
-<div class="footer">
-    <p>© 2026 THE MOON Freelance Marketplace | 50+ Categories | Flexible Commission</p>
-    <p><small>✨ First 5 orders: 0% commission | After 5 orders: 5% commission ✨</small></p>
+<div style="text-align: center; padding: 2rem; color: #64748b;">
+    <p>© 2026 THE MOON Freelance Marketplace | 0% commission on first 5 orders</p>
 </div>
 
-<!-- Modal for Service Form -->
-<div id="serviceModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h3><i class="fas fa-plus-circle"></i> Post a Service</h3>
+<!-- Post Service Modal -->
+<div id="serviceModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:#1a1a1a; padding:1.5rem; border-radius:1rem; max-width:500px; width:90%; color:white;">
+        <h3>Post a Service</h3>
         <form id="serviceForm">
-            <input type="text" id="serviceTitle" placeholder="Service Title (e.g., Logo Design, Website Development)" required>
-            <select id="serviceCategory" required>
-                <option value="">Select Category</option>
+            <input type="text" id="serviceTitle" placeholder="Service Title" style="width:100%; padding:0.5rem; margin:0.5rem 0; background:#0f0f0f; border:1px solid #333; color:white; border-radius:0.5rem;">
+            <select id="serviceCategory" style="width:100%; padding:0.5rem; margin:0.5rem 0; background:#0f0f0f; border:1px solid #333; color:white; border-radius:0.5rem;">
+                <option value="Web Development">Web Development</option>
+                <option value="Graphic Design">Graphic Design</option>
+                <option value="Content Writing">Content Writing</option>
+                <option value="SEO & Marketing">SEO & Marketing</option>
+                <option value="Video Editing">Video Editing</option>
             </select>
-            <textarea id="serviceDesc" rows="3" placeholder="Describe your service in detail..." required></textarea>
-            <input type="number" id="servicePrice" placeholder="Price (₹) - e.g., 999" required>
-            <input type="text" id="serviceDelivery" placeholder="Delivery Time (e.g., 2 days, 1 week)" required>
-            <input type="text" id="sellerName" placeholder="Your Name / Business Name" required>
-            <input type="text" id="sellerWhatsapp" placeholder="WhatsApp Number (for orders)" required>
-            <button type="submit">🚀 Post Service (Free)</button>
+            <textarea id="serviceDesc" rows="3" placeholder="Description" style="width:100%; padding:0.5rem; margin:0.5rem 0; background:#0f0f0f; border:1px solid #333; color:white; border-radius:0.5rem;"></textarea>
+            <input type="number" id="servicePrice" placeholder="Price (₹)" style="width:100%; padding:0.5rem; margin:0.5rem 0; background:#0f0f0f; border:1px solid #333; color:white; border-radius:0.5rem;">
+            <input type="text" id="serviceDelivery" placeholder="Delivery Time" style="width:100%; padding:0.5rem; margin:0.5rem 0; background:#0f0f0f; border:1px solid #333; color:white; border-radius:0.5rem;">
+            <input type="text" id="sellerName" placeholder="Your Name" style="width:100%; padding:0.5rem; margin:0.5rem 0; background:#0f0f0f; border:1px solid #333; color:white; border-radius:0.5rem;">
+            <input type="text" id="sellerWhatsapp" placeholder="WhatsApp Number" style="width:100%; padding:0.5rem; margin:0.5rem 0; background:#0f0f0f; border:1px solid #333; color:white; border-radius:0.5rem;">
+            <button type="submit" style="background:#dc2626; color:white; padding:0.5rem; border:none; border-radius:0.5rem; width:100%; margin-top:0.5rem;">Post Service</button>
         </form>
-        <p style="font-size: 0.7rem; margin-top: 1rem; text-align: center; color: var(--success);">💡 First 5 orders: 0% commission | After 5 orders: 5% commission</p>
-    </div>
-</div>
-
-<!-- Modal for Order -->
-<div id="orderModal" class="modal">
-    <div class="modal-content">
-        <span class="close-order-modal">&times;</span>
-        <h3><i class="fas fa-shopping-cart"></i> Place Order</h3>
-        <div id="orderDetails"></div>
-        <input type="text" id="buyerName" placeholder="Your Full Name" required>
-        <input type="text" id="buyerEmail" placeholder="Your Email Address" required>
-        <input type="text" id="buyerWhatsapp" placeholder="Your WhatsApp Number" required>
-        <textarea id="orderRequirements" rows="3" placeholder="Tell the seller about your requirements..."></textarea>
-        <button id="confirmOrderBtn">📞 Contact Seller on WhatsApp</button>
-        <p style="font-size: 0.7rem; margin-top: 0.5rem;">💡 After placing order, seller will contact you within 24 hours.</p>
+        <button onclick="closeModal()" style="margin-top:0.5rem; background:#333; width:100%; padding:0.5rem; border:none; border-radius:0.5rem; color:white;">Cancel</button>
     </div>
 </div>
 
 <script>
     const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
     let currentServices = [];
-    let currentOrderService = null;
     
-    // ============================================
-    // 50+ CATEGORIES
-    // ============================================
-    const categories = [
-        { name: 'Web Development', icon: 'fa-code', color: '#3b82f6' },
-        { name: 'Mobile App Development', icon: 'fa-mobile-alt', color: '#10b981' },
-        { name: 'Graphic Design', icon: 'fa-palette', color: '#ec4899' },
-        { name: 'Logo Design', icon: 'fa-trademark', color: '#f59e0b' },
-        { name: 'UI/UX Design', icon: 'fa-drafting-compass', color: '#8b5cf6' },
-        { name: 'Content Writing', icon: 'fa-pen-fancy', color: '#14b8a6' },
-        { name: 'Copywriting', icon: 'fa-file-alt', color: '#06b6d4' },
-        { name: 'SEO & Digital Marketing', icon: 'fa-chart-line', color: '#f59e0b' },
-        { name: 'Social Media Marketing', icon: 'fa-hashtag', color: '#ef4444' },
-        { name: 'Video Editing', icon: 'fa-video', color: '#ec4899' },
-        { name: 'Animation & 3D', icon: 'fa-cube', color: '#a855f7' },
-        { name: 'Voice & Audio', icon: 'fa-microphone', color: '#14b8a6' },
-        { name: 'Photography & Editing', icon: 'fa-camera', color: '#10b981' },
-        { name: 'Data Entry', icon: 'fa-table', color: '#6b7280' },
-        { name: 'Virtual Assistant', icon: 'fa-headset', color: '#8b5cf6' },
-        { name: 'Translation', icon: 'fa-language', color: '#06b6d4' },
-        { name: 'AI & ChatGPT Services', icon: 'fa-robot', color: '#3b82f6' },
-        { name: 'WordPress Development', icon: 'fa-wordpress', color: '#1da1f2' },
-        { name: 'Shopify Development', icon: 'fa-shopify', color: '#10b981' },
-        { name: 'E-commerce Development', icon: 'fa-shopping-cart', color: '#f59e0b' },
-        { name: 'Legal Consulting', icon: 'fa-gavel', color: '#8b5cf6' },
-        { name: 'Financial Consulting', icon: 'fa-chart-pie', color: '#14b8a6' },
-        { name: 'Business Consulting', icon: 'fa-briefcase', color: '#06b6d4' },
-        { name: 'IT Support', icon: 'fa-laptop-code', color: '#3b82f6' },
-        { name: 'Cybersecurity', icon: 'fa-shield-alt', color: '#ef4444' },
-        { name: 'Data Science', icon: 'fa-database', color: '#10b981' },
-        { name: 'Machine Learning', icon: 'fa-brain', color: '#a855f7' },
-        { name: 'Blockchain Development', icon: 'fa-link', color: '#f59e0b' },
-        { name: 'Game Development', icon: 'fa-gamepad', color: '#ec4899' },
-        { name: 'Email Marketing', icon: 'fa-envelope', color: '#14b8a6' },
-        { name: 'Lead Generation', icon: 'fa-bullhorn', color: '#ef4444' },
-        { name: 'Google Ads', icon: 'fa-google', color: '#3b82f6' },
-        { name: 'Facebook Ads', icon: 'fa-facebook', color: '#1877f2' },
-        { name: 'YouTube Marketing', icon: 'fa-youtube', color: '#ff0000' },
-        { name: 'Influencer Marketing', icon: 'fa-star', color: '#f59e0b' },
-        { name: 'Brand Strategy', icon: 'fa-building', color: '#8b5cf6' },
-        { name: 'Market Research', icon: 'fa-chart-bar', color: '#14b8a6' },
-        { name: 'Grant Writing', icon: 'fa-file-invoice', color: '#06b6d4' },
-        { name: 'Resume Writing', icon: 'fa-file-alt', color: '#6b7280' },
-        { name: 'Online Tutoring', icon: 'fa-chalkboard', color: '#10b981' },
-        { name: 'Assignment Help', icon: 'fa-book', color: '#f59e0b' },
-        { name: 'Proofreading', icon: 'fa-spell-check', color: '#8b5cf6' },
-        { name: 'Transcription', icon: 'fa-headphones', color: '#14b8a6' },
-        { name: 'Podcast Editing', icon: 'fa-podcast', color: '#ec4899' },
-        { name: 'CRM Setup', icon: 'fa-users', color: '#3b82f6' },
-        { name: 'Business Cards Design', icon: 'fa-id-card', color: '#06b6d4' },
-        { name: 'Flyer & Brochure Design', icon: 'fa-ad', color: '#f59e0b' },
-        { name: 'Packaging Design', icon: 'fa-box', color: '#10b981' },
-        { name: 'T-Shirt Design', icon: 'fa-tshirt', color: '#ec4899' },
-        { name: 'Book Cover Design', icon: 'fa-book-open', color: '#8b5cf6' }
-    ];
-    
-    function loadCategories() {
-        const grid = document.getElementById('categoryGrid');
-        const filter = document.getElementById('categoryFilter');
-        
-        grid.innerHTML = categories.map(cat => `
-            <div class="category-card" data-category="${cat.name}">
-                <i class="fas ${cat.icon}" style="color: ${cat.color};"></i>
-                <h4>${cat.name}</h4>
-                <p>available</p>
-            </div>
-        `).join('');
-        
-        filter.innerHTML = '<option value="all">All Categories (50+)</option>' + 
-            categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
-        
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const category = card.getAttribute('data-category');
-                document.getElementById('categoryFilter').value = category;
-                loadServices(category);
-            });
-        });
-    }
-    
-    // 🔴🔴🔴 SIRF YAHAN FIX KIYA HAI 🔴🔴🔴
-    async function loadServices(category = 'all', searchTerm = '') {
+    async function loadServices() {
         const grid = document.getElementById('servicesGrid');
-        grid.innerHTML = '<div style="text-align:center; padding:2rem;">Loading services...</div>';
+        grid.innerHTML = '<div class="loader">Loading services...</div>';
         
         try {
-            // Direct fetch with proper headers (bypassing Supabase client issues)
-            let url = `${SUPABASE_URL}/rest/v1/freelance_services?select=*`;
-            if (category !== 'all') {
-                url += `&category=eq.${encodeURIComponent(category)}`;
-            }
-            
-            const response = await fetch(url, {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/freelance_services?select=*`, {
+                method: 'GET',
                 headers: {
                     'apikey': SUPABASE_KEY,
                     'Authorization': `Bearer ${SUPABASE_KEY}`
@@ -470,57 +112,55 @@
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
-            let data = await response.json();
+            const data = await response.json();
             
             if (!data || data.length === 0) {
-                grid.innerHTML = '<div style="text-align:center; padding:2rem;">No services yet. Be the first seller! <button onclick="openSellerModal()" style="background:var(--primary);color:white;border:none;padding:0.5rem 1rem;border-radius:40px;margin-top:1rem;">Post Service</button></div>';
+                grid.innerHTML = '<div style="text-align:center; padding:2rem;">No services yet. Click "Become Seller" to post your first service!</div>';
                 return;
             }
             
-            // Filter by status (approved only)
-            data = data.filter(service => service.status === 'approved');
+            // Filter only approved services
+            const approvedServices = data.filter(s => s.status === 'approved');
             
-            if (searchTerm) {
-                data = data.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase()) || s.description.toLowerCase().includes(searchTerm.toLowerCase()));
-            }
-            
-            currentServices = data;
-            
-            if (data.length === 0) {
-                grid.innerHTML = '<div style="text-align:center; padding:2rem;">No matching services found. Try a different search term.</div>';
+            if (approvedServices.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:2rem;">No approved services yet. Your service will appear after admin approval.</div>';
                 return;
             }
             
-            grid.innerHTML = data.map(service => {
-                const ordersCount = service.seller_orders_count || 0;
-                const commissionText = ordersCount >= 5 ? '5% commission applies' : '0% commission (First 5 orders)';
-                const commissionColor = ordersCount >= 5 ? '#f59e0b' : '#10b981';
-                return `
-                <div class="service-card" onclick="openOrderModal(${service.id})">
-                    <div class="service-image" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
-                        <i class="fas ${getCategoryIcon(service.category)}"></i>
+            currentServices = approvedServices;
+            
+            grid.innerHTML = approvedServices.map(service => `
+                <div class="service-card" onclick="orderService(${service.id})">
+                    <div class="service-image">
+                        <i class="fas fa-briefcase"></i>
                     </div>
                     <div class="service-content">
                         <h3 class="service-title">${escapeHtml(service.title)}</h3>
-                        <div class="service-seller"><i class="fas fa-user-circle"></i> ${escapeHtml(service.seller_name)}</div>
+                        <div class="service-seller">👤 ${escapeHtml(service.seller_name)}</div>
                         <div class="service-price">₹${service.price}</div>
                         <div class="service-desc">${escapeHtml(service.description.substring(0, 100))}...</div>
-                        <div class="service-delivery"><i class="fas fa-clock"></i> Delivery: ${service.delivery_time}</div>
-                        <div class="service-orders"><i class="fas fa-chart-line"></i> Orders: ${ordersCount} | <span style="color: ${commissionColor};">${commissionText}</span></div>
-                        <button class="order-btn" onclick="event.stopPropagation(); openOrderModal(${service.id})"><i class="fas fa-shopping-cart"></i> Order Now</button>
+                        <div class="service-seller">⏱️ Delivery: ${service.delivery_time}</div>
+                        <button class="order-btn" onclick="event.stopPropagation(); orderService(${service.id})">📞 Order Now</button>
                     </div>
                 </div>
-            `}).join('');
+            `).join('');
             
         } catch(err) {
             console.error('Error:', err);
-            grid.innerHTML = `<div style="text-align:center; padding:2rem; color:red;">❌ Error: ${err.message}<br><br>Please check console (F12) for details.</div>`;
+            grid.innerHTML = `<div class="error-box">❌ Error: ${err.message}<br><br>Please refresh the page or try again later.</div>`;
         }
     }
     
-    function getCategoryIcon(category) {
-        const found = categories.find(c => c.name === category);
-        return found ? found.icon : 'fa-briefcase';
+    function orderService(serviceId) {
+        const service = currentServices.find(s => s.id === serviceId);
+        if (!service) return;
+        
+        const message = `*New Order from THE MOON Marketplace*%0A%0A` +
+            `Service: ${service.title}%0A` +
+            `Price: ₹${service.price}%0A%0A` +
+            `Please contact me to discuss requirements.`;
+        
+        window.open(`https://wa.me/${service.seller_whatsapp}?text=${message}`, '_blank');
     }
     
     async function publishService(event) {
@@ -538,10 +178,10 @@
             return;
         }
         
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const { error } = await supabase.from('freelance_services').insert([{
             title, category, description, price, delivery_time: deliveryTime,
             seller_name: sellerName, seller_whatsapp: sellerWhatsapp,
-            seller_orders_count: 0,
             status: 'pending', created_at: new Date()
         }]);
         
@@ -549,138 +189,29 @@
             alert('Error: ' + error.message);
         } else {
             alert('✅ Service posted! Will be visible after admin approval.');
-            document.getElementById('serviceModal').style.display = 'none';
+            closeModal();
             document.getElementById('serviceForm').reset();
             loadServices();
         }
     }
     
-    function openOrderModal(serviceId) {
-        const service = currentServices.find(s => s.id === serviceId);
-        if (!service) return;
-        currentOrderService = service;
-        const ordersCount = service.seller_orders_count || 0;
-        const commissionPercent = ordersCount >= 5 ? 5 : 0;
-        const freelancerGets = service.price - ((service.price * commissionPercent) / 100);
-        
-        document.getElementById('orderDetails').innerHTML = `
-            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                <strong>${escapeHtml(service.title)}</strong><br>
-                Seller: ${escapeHtml(service.seller_name)}<br>
-                Price: ₹${service.price}<br>
-                Delivery: ${service.delivery_time}<br>
-                <hr>
-                <small>Commission: ${commissionPercent}% | Freelancer gets: ₹${freelancerGets}</small>
-            </div>
-        `;
-        document.getElementById('orderModal').style.display = 'flex';
+    function escapeHtml(str) { 
+        if (!str) return ''; 
+        return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); 
     }
     
-    document.getElementById('confirmOrderBtn')?.addEventListener('click', async () => {
-        if (!currentOrderService) return;
-        const name = document.getElementById('buyerName').value;
-        const email = document.getElementById('buyerEmail').value;
-        const whatsapp = document.getElementById('buyerWhatsapp').value;
-        const requirements = document.getElementById('orderRequirements').value;
-        
-        if (!name || !email || !whatsapp) {
-            alert('Please fill your details');
-            return;
-        }
-        
-        const ordersCount = currentOrderService.seller_orders_count || 0;
-        const commissionPercent = ordersCount >= 5 ? 5 : 0;
-        const commissionAmount = (currentOrderService.price * commissionPercent) / 100;
-        const freelancerGets = currentOrderService.price - commissionAmount;
-        
-        await supabase.from('freelance_orders').insert([{
-            service_id: currentOrderService.id,
-            order_number: ordersCount + 1,
-            buyer_name: name, buyer_email: email, buyer_whatsapp: whatsapp,
-            amount: currentOrderService.price, commission_percent: commissionPercent,
-            commission_amount: commissionAmount, freelancer_gets: freelancerGets, platform_earns: commissionAmount
-        }]);
-        
-        await supabase.from('freelance_services').update({ seller_orders_count: ordersCount + 1 }).eq('id', currentOrderService.id);
-        
-        const message = `*🚀 NEW ORDER FROM THE MOON MARKETPLACE*%0A%0A` +
-            `Service: ${currentOrderService.title}%0A` +
-            `Order #: ${ordersCount + 1}%0A` +
-            `Price: ₹${currentOrderService.price}%0A` +
-            `Commission: ${commissionPercent}% (You get ₹${freelancerGets})%0A%0A` +
-            `Buyer: ${name}%0A` +
-            `Email: ${email}%0A` +
-            `WhatsApp: ${whatsapp}%0A` +
-            `Requirements: ${requirements || 'Not specified'}%0A%0A` +
-            `Please contact buyer to complete the order. THE MOON earned: ₹${commissionAmount}`;
-        
-        window.open(`https://wa.me/${currentOrderService.seller_whatsapp}?text=${message}`, '_blank');
-        document.getElementById('orderModal').style.display = 'none';
-        alert('✅ Order placed! Redirecting to WhatsApp. Please discuss requirements with the seller.');
-        
-        document.getElementById('buyerName').value = '';
-        document.getElementById('buyerEmail').value = '';
-        document.getElementById('buyerWhatsapp').value = '';
-        document.getElementById('orderRequirements').value = '';
-        loadServices();
-    });
-    
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
-    
     function openSellerModal() { 
-        const select = document.getElementById('serviceCategory');
-        select.innerHTML = '<option value="">Select Category</option>' + 
-            categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
-        document.getElementById('serviceModal').style.display = 'flex';
+        document.getElementById('serviceModal').style.display = 'flex'; 
+    }
+    function closeModal() { 
+        document.getElementById('serviceModal').style.display = 'none'; 
     }
     
     document.getElementById('becomeSellerBtn').onclick = openSellerModal;
     document.getElementById('sellerBtn').onclick = openSellerModal;
     document.getElementById('buyerBtn').onclick = () => document.getElementById('servicesGrid').scrollIntoView({ behavior: 'smooth' });
-    
-    document.querySelector('.close-modal').onclick = () => document.getElementById('serviceModal').style.display = 'none';
-    document.querySelector('.close-order-modal').onclick = () => document.getElementById('orderModal').style.display = 'none';
-    window.onclick = (e) => { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; };
-    
-    document.getElementById('categoryFilter').addEventListener('change', (e) => loadServices(e.target.value));
-    document.getElementById('searchBtn').addEventListener('click', () => {
-        const searchTerm = document.getElementById('searchInput').value;
-        const category = document.getElementById('categoryFilter').value;
-        loadServices(category, searchTerm);
-    });
-    document.getElementById('searchInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const searchTerm = document.getElementById('searchInput').value;
-            const category = document.getElementById('categoryFilter').value;
-            loadServices(category, searchTerm);
-        }
-    });
-    
     document.getElementById('serviceForm').addEventListener('submit', publishService);
     
-    function initTheme() {
-        const saved = localStorage.getItem('theme');
-        if (saved === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-        }
-    }
-    function toggleTheme() {
-        if (document.body.hasAttribute('data-theme')) {
-            document.body.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-        } else {
-            document.body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-        }
-        loadServices();
-    }
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    
-    initTheme();
-    loadCategories();
     loadServices();
 </script>
 </body>
