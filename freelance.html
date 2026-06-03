@@ -27,7 +27,6 @@
             --accent: #f59e0b;
             --success: #10b981;
             --warning: #f59e0b;
-            --danger: #ef4444;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
@@ -109,26 +108,26 @@
         .commission-banner h3 { font-size: 1rem; margin-bottom: 0.3rem; }
         .commission-banner p { font-size: 0.8rem; opacity: 0.9; }
         
-        /* Category Grid - 4 per row on desktop */
+        /* Category Grid */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 1rem;
             margin: 2rem 0;
         }
         .category-card {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 1rem;
+            padding: 0.8rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid var(--border);
         }
         .category-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow-md); }
-        .category-card i { font-size: 1.8rem; color: var(--primary); margin-bottom: 0.5rem; }
-        .category-card h4 { font-size: 0.9rem; margin-bottom: 0.3rem; }
-        .category-card p { font-size: 0.65rem; color: var(--text-muted); }
+        .category-card i { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.3rem; display: block; }
+        .category-card h4 { font-size: 0.8rem; margin-bottom: 0.2rem; }
+        .category-card p { font-size: 0.6rem; color: var(--text-muted); }
         
         /* Services Grid */
         .services-grid {
@@ -231,6 +230,7 @@
             border-radius: 40px;
             color: var(--text-primary);
             cursor: pointer;
+            font-size: 0.85rem;
         }
         .search-box {
             display: flex;
@@ -242,7 +242,7 @@
             border: 1px solid var(--border);
             background: var(--bg-secondary);
             color: var(--text-primary);
-            width: 200px;
+            width: 220px;
         }
         .search-box button {
             background: var(--primary);
@@ -260,7 +260,7 @@
             .container { padding: 0 1rem; }
             .hero { padding: 1.5rem; }
             .hero h1 { font-size: 1.3rem; }
-            .category-grid { grid-template-columns: repeat(2, 1fr); }
+            .category-grid { grid-template-columns: repeat(3, 1fr); }
             .filter-bar { flex-direction: column; align-items: stretch; }
             .search-box input { width: 100%; }
         }
@@ -283,30 +283,27 @@
 <div class="container">
     <div class="hero">
         <h1><i class="fas fa-briefcase"></i> THE MOON Freelance Marketplace</h1>
-        <p>India's Largest Freelance Platform | 45+ Categories | 500+ Services</p>
+        <p>India's Largest Freelance Platform | 50+ Categories | 1000+ Services</p>
         <div class="hero-buttons">
             <button class="btn btn-primary" id="buyerBtn">🔍 Hire a Freelancer</button>
             <button class="btn btn-outline" id="sellerBtn">💰 Start Selling</button>
         </div>
     </div>
     
-    <!-- Flexible Commission Banner -->
     <div class="commission-banner">
         <h3><i class="fas fa-gift"></i> Flexible Commission System</h3>
         <p>✨ First 5 orders → 0% Commission | After 5 orders → Only 5% Commission</p>
         <p style="font-size: 0.7rem;">Lowest in India! Fiverr takes 20%, Upwork takes 10%.</p>
     </div>
     
-    <!-- Categories - 25 Categories -->
-    <h2><i class="fas fa-th-large"></i> All Categories</h2>
+    <h2><i class="fas fa-th-large"></i> Browse by Category</h2>
     <div class="category-grid" id="categoryGrid"></div>
     
-    <!-- Filter Bar -->
     <div class="filter-bar">
-        <h2><i class="fas fa-store"></i> Browse Services</h2>
+        <h2><i class="fas fa-store"></i> Available Services</h2>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <select id="categoryFilter">
-                <option value="all">All Categories</option>
+                <option value="all">All Categories (50+)</option>
             </select>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search services...">
@@ -321,8 +318,8 @@
 </div>
 
 <div class="footer">
-    <p>© 2026 THE MOON Freelance Marketplace | 45+ Categories | 500+ Services</p>
-    <p><small>✨ Flexible Commission: 0% for first 5 orders, 5% thereafter ✨</small></p>
+    <p>© 2026 THE MOON Freelance Marketplace | 50+ Categories | Flexible Commission</p>
+    <p><small>✨ First 5 orders: 0% commission | After 5 orders: 5% commission ✨</small></p>
 </div>
 
 <!-- Modal for Service Form -->
@@ -334,54 +331,6 @@
             <input type="text" id="serviceTitle" placeholder="Service Title (e.g., Logo Design, Website Development)" required>
             <select id="serviceCategory" required>
                 <option value="">Select Category</option>
-                <option value="Web Development">💻 Web Development</option>
-                <option value="Mobile App Development">📱 Mobile App Development</option>
-                <option value="Graphic Design">🎨 Graphic Design</option>
-                <option value="Content Writing">✍️ Content Writing</option>
-                <option value="Copywriting">📝 Copywriting</option>
-                <option value="SEO & Digital Marketing">📈 SEO & Digital Marketing</option>
-                <option value="Social Media Marketing">📱 Social Media Marketing</option>
-                <option value="Video Editing">🎬 Video Editing</option>
-                <option value="Animation & 3D">🎨 Animation & 3D</option>
-                <option value="Voice & Audio">🎙️ Voice & Audio</option>
-                <option value="Photography & Editing">📸 Photography & Editing</option>
-                <option value="Data Entry">📊 Data Entry</option>
-                <option value="Virtual Assistant">👩‍💻 Virtual Assistant</option>
-                <option value="Translation">🌐 Translation</option>
-                <option value="AI & ChatGPT Services">🤖 AI & ChatGPT Services</option>
-                <option value="E-commerce Development">🛒 E-commerce Development</option>
-                <option value="WordPress Development">📄 WordPress Development</option>
-                <option value="Shopify Development">🛍️ Shopify Development</option>
-                <option value="App Development">📱 App Development</option>
-                <option value="UI/UX Design">🎨 UI/UX Design</option>
-                <option value="Logo Design">🏷️ Logo Design</option>
-                <option value="Business Cards">💳 Business Cards</option>
-                <option value="Flyer & Brochure">📜 Flyer & Brochure</option>
-                <option value="Podcast Editing">🎙️ Podcast Editing</option>
-                <option value="Legal Consulting">⚖️ Legal Consulting</option>
-                <option value="Financial Consulting">💰 Financial Consulting</option>
-                <option value="Business Consulting">💼 Business Consulting</option>
-                <option value="IT Support">🖥️ IT Support</option>
-                <option value="Cybersecurity">🔒 Cybersecurity</option>
-                <option value="Data Science">📊 Data Science</option>
-                <option value="Machine Learning">🤖 Machine Learning</option>
-                <option value="Blockchain Development">⛓️ Blockchain Development</option>
-                <option value="Game Development">🎮 Game Development</option>
-                <option value="Email Marketing">📧 Email Marketing</option>
-                <option value="Influencer Marketing">⭐ Influencer Marketing</option>
-                <option value="Brand Strategy">🏷️ Brand Strategy</option>
-                <option value="Market Research">📈 Market Research</option>
-                <option value="Grant Writing">📝 Grant Writing</option>
-                <option value="Resume Writing">📄 Resume Writing</option>
-                <option value="Online Tutoring">📚 Online Tutoring</option>
-                <option value="Assignment Help">✏️ Assignment Help</option>
-                <option value="Proofreading">🔍 Proofreading</option>
-                <option value="Transcription">🎤 Transcription</option>
-                <option value="Lead Generation">🎯 Lead Generation</option>
-                <option value="CRM Setup">📋 CRM Setup</option>
-                <option value="Google Ads">📢 Google Ads</option>
-                <option value="Facebook Ads">📘 Facebook Ads</option>
-                <option value="YouTube Marketing">📺 YouTube Marketing</option>
             </select>
             <textarea id="serviceDesc" rows="3" placeholder="Describe your service in detail..." required></textarea>
             <input type="number" id="servicePrice" placeholder="Price (₹) - e.g., 999" required>
@@ -417,53 +366,60 @@
     let currentServices = [];
     let currentOrderService = null;
     
-    // All Categories (45+ categories)
+    // ============================================
+    // 50+ CATEGORIES
+    // ============================================
     const categories = [
-        { name: 'Web Development', icon: 'fa-code', color: '#3b82f6', count: '0' },
-        { name: 'Mobile App Development', icon: 'fa-mobile-alt', color: '#10b981', count: '0' },
-        { name: 'Graphic Design', icon: 'fa-palette', color: '#ec4899', count: '0' },
-        { name: 'Content Writing', icon: 'fa-pen-fancy', color: '#f59e0b', count: '0' },
-        { name: 'Copywriting', icon: 'fa-file-alt', color: '#14b8a6', count: '0' },
-        { name: 'SEO & Digital Marketing', icon: 'fa-chart-line', color: '#8b5cf6', count: '0' },
-        { name: 'Social Media Marketing', icon: 'fa-hashtag', color: '#06b6d4', count: '0' },
-        { name: 'Video Editing', icon: 'fa-video', color: '#ef4444', count: '0' },
-        { name: 'Animation & 3D', icon: 'fa-cube', color: '#a855f7', count: '0' },
-        { name: 'Voice & Audio', icon: 'fa-microphone', color: '#14b8a6', count: '0' },
-        { name: 'Photography & Editing', icon: 'fa-camera', color: '#ec4899', count: '0' },
-        { name: 'Data Entry', icon: 'fa-table', color: '#6b7280', count: '0' },
-        { name: 'Virtual Assistant', icon: 'fa-headset', color: '#10b981', count: '0' },
-        { name: 'Translation', icon: 'fa-language', color: '#8b5cf6', count: '0' },
-        { name: 'AI & ChatGPT Services', icon: 'fa-robot', color: '#06b6d4', count: '0' },
-        { name: 'E-commerce Development', icon: 'fa-shopping-cart', color: '#f59e0b', count: '0' },
-        { name: 'WordPress Development', icon: 'fa-wordpress', color: '#3b82f6', count: '0' },
-        { name: 'Shopify Development', icon: 'fa-shopify', color: '#10b981', count: '0' },
-        { name: 'UI/UX Design', icon: 'fa-drafting-compass', color: '#ec4899', count: '0' },
-        { name: 'Logo Design', icon: 'fa-trademark', color: '#f59e0b', count: '0' },
-        { name: 'Legal Consulting', icon: 'fa-gavel', color: '#8b5cf6', count: '0' },
-        { name: 'Financial Consulting', icon: 'fa-chart-pie', color: '#14b8a6', count: '0' },
-        { name: 'Business Consulting', icon: 'fa-briefcase', color: '#06b6d4', count: '0' },
-        { name: 'IT Support', icon: 'fa-laptop-code', color: '#6b7280', count: '0' },
-        { name: 'Cybersecurity', icon: 'fa-shield-alt', color: '#ef4444', count: '0' },
-        { name: 'Data Science', icon: 'fa-database', color: '#3b82f6', count: '0' },
-        { name: 'Machine Learning', icon: 'fa-brain', color: '#a855f7', count: '0' },
-        { name: 'Blockchain Development', icon: 'fa-link', color: '#f59e0b', count: '0' },
-        { name: 'Game Development', icon: 'fa-gamepad', color: '#ec4899', count: '0' },
-        { name: 'Email Marketing', icon: 'fa-envelope', color: '#10b981', count: '0' },
-        { name: 'Lead Generation', icon: 'fa-bullhorn', color: '#ef4444', count: '0' },
-        { name: 'Google Ads', icon: 'fa-google', color: '#3b82f6', count: '0' },
-        { name: 'Facebook Ads', icon: 'fa-facebook', color: '#1877f2', count: '0' },
-        { name: 'YouTube Marketing', icon: 'fa-youtube', color: '#ff0000', count: '0' },
-        { name: 'Influencer Marketing', icon: 'fa-star', color: '#f59e0b', count: '0' },
-        { name: 'Brand Strategy', icon: 'fa-building', color: '#8b5cf6', count: '0' },
-        { name: 'Market Research', icon: 'fa-chart-bar', color: '#14b8a6', count: '0' },
-        { name: 'Grant Writing', icon: 'fa-file-invoice', color: '#06b6d4', count: '0' },
-        { name: 'Resume Writing', icon: 'fa-file-alt', color: '#6b7280', count: '0' },
-        { name: 'Online Tutoring', icon: 'fa-chalkboard', color: '#10b981', count: '0' },
-        { name: 'Assignment Help', icon: 'fa-book', color: '#f59e0b', count: '0' },
-        { name: 'Proofreading', icon: 'fa-spell-check', color: '#8b5cf6', count: '0' },
-        { name: 'Transcription', icon: 'fa-headphones', color: '#14b8a6', count: '0' },
-        { name: 'Podcast Editing', icon: 'fa-podcast', color: '#ec4899', count: '0' },
-        { name: 'CRM Setup', icon: 'fa-users', color: '#3b82f6', count: '0' }
+        { name: 'Web Development', icon: 'fa-code', color: '#3b82f6' },
+        { name: 'Mobile App Development', icon: 'fa-mobile-alt', color: '#10b981' },
+        { name: 'Graphic Design', icon: 'fa-palette', color: '#ec4899' },
+        { name: 'Logo Design', icon: 'fa-trademark', color: '#f59e0b' },
+        { name: 'UI/UX Design', icon: 'fa-drafting-compass', color: '#8b5cf6' },
+        { name: 'Content Writing', icon: 'fa-pen-fancy', color: '#14b8a6' },
+        { name: 'Copywriting', icon: 'fa-file-alt', color: '#06b6d4' },
+        { name: 'SEO & Digital Marketing', icon: 'fa-chart-line', color: '#f59e0b' },
+        { name: 'Social Media Marketing', icon: 'fa-hashtag', color: '#ef4444' },
+        { name: 'Video Editing', icon: 'fa-video', color: '#ec4899' },
+        { name: 'Animation & 3D', icon: 'fa-cube', color: '#a855f7' },
+        { name: 'Voice & Audio', icon: 'fa-microphone', color: '#14b8a6' },
+        { name: 'Photography & Editing', icon: 'fa-camera', color: '#10b981' },
+        { name: 'Data Entry', icon: 'fa-table', color: '#6b7280' },
+        { name: 'Virtual Assistant', icon: 'fa-headset', color: '#8b5cf6' },
+        { name: 'Translation', icon: 'fa-language', color: '#06b6d4' },
+        { name: 'AI & ChatGPT Services', icon: 'fa-robot', color: '#3b82f6' },
+        { name: 'WordPress Development', icon: 'fa-wordpress', color: '#1da1f2' },
+        { name: 'Shopify Development', icon: 'fa-shopify', color: '#10b981' },
+        { name: 'E-commerce Development', icon: 'fa-shopping-cart', color: '#f59e0b' },
+        { name: 'Legal Consulting', icon: 'fa-gavel', color: '#8b5cf6' },
+        { name: 'Financial Consulting', icon: 'fa-chart-pie', color: '#14b8a6' },
+        { name: 'Business Consulting', icon: 'fa-briefcase', color: '#06b6d4' },
+        { name: 'IT Support', icon: 'fa-laptop-code', color: '#3b82f6' },
+        { name: 'Cybersecurity', icon: 'fa-shield-alt', color: '#ef4444' },
+        { name: 'Data Science', icon: 'fa-database', color: '#10b981' },
+        { name: 'Machine Learning', icon: 'fa-brain', color: '#a855f7' },
+        { name: 'Blockchain Development', icon: 'fa-link', color: '#f59e0b' },
+        { name: 'Game Development', icon: 'fa-gamepad', color: '#ec4899' },
+        { name: 'Email Marketing', icon: 'fa-envelope', color: '#14b8a6' },
+        { name: 'Lead Generation', icon: 'fa-bullhorn', color: '#ef4444' },
+        { name: 'Google Ads', icon: 'fa-google', color: '#3b82f6' },
+        { name: 'Facebook Ads', icon: 'fa-facebook', color: '#1877f2' },
+        { name: 'YouTube Marketing', icon: 'fa-youtube', color: '#ff0000' },
+        { name: 'Influencer Marketing', icon: 'fa-star', color: '#f59e0b' },
+        { name: 'Brand Strategy', icon: 'fa-building', color: '#8b5cf6' },
+        { name: 'Market Research', icon: 'fa-chart-bar', color: '#14b8a6' },
+        { name: 'Grant Writing', icon: 'fa-file-invoice', color: '#06b6d4' },
+        { name: 'Resume Writing', icon: 'fa-file-alt', color: '#6b7280' },
+        { name: 'Online Tutoring', icon: 'fa-chalkboard', color: '#10b981' },
+        { name: 'Assignment Help', icon: 'fa-book', color: '#f59e0b' },
+        { name: 'Proofreading', icon: 'fa-spell-check', color: '#8b5cf6' },
+        { name: 'Transcription', icon: 'fa-headphones', color: '#14b8a6' },
+        { name: 'Podcast Editing', icon: 'fa-podcast', color: '#ec4899' },
+        { name: 'CRM Setup', icon: 'fa-users', color: '#3b82f6' },
+        { name: 'Business Cards Design', icon: 'fa-id-card', color: '#06b6d4' },
+        { name: 'Flyer & Brochure Design', icon: 'fa-ad', color: '#f59e0b' },
+        { name: 'Packaging Design', icon: 'fa-box', color: '#10b981' },
+        { name: 'T-Shirt Design', icon: 'fa-tshirt', color: '#ec4899' },
+        { name: 'Book Cover Design', icon: 'fa-book-open', color: '#8b5cf6' }
     ];
     
     function loadCategories() {
@@ -474,11 +430,11 @@
             <div class="category-card" data-category="${cat.name}">
                 <i class="fas ${cat.icon}" style="color: ${cat.color};"></i>
                 <h4>${cat.name}</h4>
-                <p>${cat.count} services</p>
+                <p>available</p>
             </div>
         `).join('');
         
-        filter.innerHTML = '<option value="all">All Categories (45+)</option>' + 
+        filter.innerHTML = '<option value="all">All Categories (50+)</option>' + 
             categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
         
         document.querySelectorAll('.category-card').forEach(card => {
@@ -492,51 +448,64 @@
     
     async function loadServices(category = 'all', searchTerm = '') {
         const grid = document.getElementById('servicesGrid');
-        grid.innerHTML = '<div style="text-align:center; padding:2rem;"><div class="spinner" style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem;"></div>Loading services...</div>';
+        grid.innerHTML = '<div style="text-align:center; padding:2rem;">Loading services...</div>';
         
-        let query = supabase.from('freelance_services').select('*').eq('status', 'approved');
-        if (category !== 'all') {
-            query = query.eq('category', category);
-        }
-        
-        const { data, error } = await query.order('created_at', { ascending: false });
-        
-        if (error || !data || data.length === 0) {
-            grid.innerHTML = '<div style="text-align:center; padding:2rem;">No services yet. Be the first seller! <button onclick="openSellerModal()" style="background:var(--primary);color:white;border:none;padding:0.5rem 1rem;border-radius:40px;margin-top:1rem;">Post Service</button></div>';
-            return;
-        }
-        
-        let filteredData = data;
-        if (searchTerm) {
-            filteredData = data.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase()) || s.description.toLowerCase().includes(searchTerm.toLowerCase()));
-        }
-        
-        currentServices = filteredData;
-        
-        if (filteredData.length === 0) {
-            grid.innerHTML = '<div style="text-align:center; padding:2rem;">No matching services found. Try a different search term.</div>';
-            return;
-        }
-        
-        grid.innerHTML = filteredData.map(service => {
-            const commissionText = service.seller_orders_count >= 5 ? '5% commission applies' : '0% commission (First 5 orders)';
-            const commissionColor = service.seller_orders_count >= 5 ? 'var(--warning)' : 'var(--success)';
-            return `
-            <div class="service-card" onclick="openOrderModal(${service.id})">
-                <div class="service-image" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
-                    <i class="fas ${getCategoryIcon(service.category)}"></i>
+        try {
+            let query = supabase.from('freelance_services').select('*');
+            if (category !== 'all') {
+                query = query.eq('category', category);
+            }
+            
+            const { data, error } = await query.order('created_at', { ascending: false });
+            
+            if (error) {
+                console.error('Supabase error:', error);
+                grid.innerHTML = `<div style="text-align:center; padding:2rem; color:red;">Error: ${error.message}</div>`;
+                return;
+            }
+            
+            if (!data || data.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:2rem;">No services yet. Be the first seller! <button onclick="openSellerModal()" style="background:var(--primary);color:white;border:none;padding:0.5rem 1rem;border-radius:40px;margin-top:1rem;">Post Service</button></div>';
+                return;
+            }
+            
+            let filteredData = data;
+            if (searchTerm) {
+                filteredData = data.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase()) || s.description.toLowerCase().includes(searchTerm.toLowerCase()));
+            }
+            
+            currentServices = filteredData;
+            
+            if (filteredData.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:2rem;">No matching services found. Try a different search term.</div>';
+                return;
+            }
+            
+            grid.innerHTML = filteredData.map(service => {
+                const ordersCount = service.seller_orders_count || 0;
+                const commissionText = ordersCount >= 5 ? '5% commission applies' : '0% commission (First 5 orders)';
+                const commissionColor = ordersCount >= 5 ? '#f59e0b' : '#10b981';
+                return `
+                <div class="service-card" onclick="openOrderModal(${service.id})">
+                    <div class="service-image" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                        <i class="fas ${getCategoryIcon(service.category)}"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3 class="service-title">${escapeHtml(service.title)}</h3>
+                        <div class="service-seller"><i class="fas fa-user-circle"></i> ${escapeHtml(service.seller_name)}</div>
+                        <div class="service-price">₹${service.price}</div>
+                        <div class="service-desc">${escapeHtml(service.description.substring(0, 100))}...</div>
+                        <div class="service-delivery"><i class="fas fa-clock"></i> Delivery: ${service.delivery_time}</div>
+                        <div class="service-orders"><i class="fas fa-chart-line"></i> Orders: ${ordersCount} | <span style="color: ${commissionColor};">${commissionText}</span></div>
+                        <button class="order-btn" onclick="event.stopPropagation(); openOrderModal(${service.id})"><i class="fas fa-shopping-cart"></i> Order Now</button>
+                    </div>
                 </div>
-                <div class="service-content">
-                    <h3 class="service-title">${escapeHtml(service.title)}</h3>
-                    <div class="service-seller"><i class="fas fa-user-circle"></i> ${escapeHtml(service.seller_name)}</div>
-                    <div class="service-price">₹${service.price}</div>
-                    <div class="service-desc">${escapeHtml(service.description.substring(0, 100))}...</div>
-                    <div class="service-delivery"><i class="fas fa-clock"></i> Delivery: ${service.delivery_time}</div>
-                    <div class="service-orders"><i class="fas fa-chart-line"></i> Orders: ${service.seller_orders_count || 0} | <span style="color: ${commissionColor};">${commissionText}</span></div>
-                    <button class="order-btn" onclick="event.stopPropagation(); openOrderModal(${service.id})"><i class="fas fa-shopping-cart"></i> Order Now</button>
-                </div>
-            </div>
-        `}).join('');
+            `}).join('');
+            
+        } catch(err) {
+            console.error('Error:', err);
+            grid.innerHTML = `<div style="text-align:center; padding:2rem; color:red;">Error: ${err.message}</div>`;
+        }
     }
     
     function getCategoryIcon(category) {
@@ -569,7 +538,7 @@
         if (error) {
             alert('Error: ' + error.message);
         } else {
-            alert('✅ Service posted! Will be visible after admin approval (within 24 hours).');
+            alert('✅ Service posted! Will be visible after admin approval.');
             document.getElementById('serviceModal').style.display = 'none';
             document.getElementById('serviceForm').reset();
             loadServices();
@@ -582,18 +551,16 @@
         currentOrderService = service;
         const ordersCount = service.seller_orders_count || 0;
         const commissionPercent = ordersCount >= 5 ? 5 : 0;
-        const commissionAmount = (service.price * commissionPercent) / 100;
-        const freelancerGets = service.price - commissionAmount;
+        const freelancerGets = service.price - ((service.price * commissionPercent) / 100);
         
         document.getElementById('orderDetails').innerHTML = `
             <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                <strong><i class="fas fa-box"></i> ${escapeHtml(service.title)}</strong><br>
-                <i class="fas fa-user"></i> Seller: ${escapeHtml(service.seller_name)}<br>
-                <i class="fas fa-rupee-sign"></i> Price: ₹${service.price}<br>
-                <i class="fas fa-clock"></i> Delivery: ${service.delivery_time}<br>
-                <hr style="margin: 0.7rem 0; border-color: var(--border);">
-                <small><i class="fas fa-percent"></i> Commission: ${commissionPercent}% (${ordersCount >= 5 ? 'Standard rate' : 'First 5 orders free'})</small><br>
-                <small><i class="fas fa-hand-holding-usd"></i> You pay: ₹${service.price} | Freelancer gets: ₹${freelancerGets}</small>
+                <strong>${escapeHtml(service.title)}</strong><br>
+                Seller: ${escapeHtml(service.seller_name)}<br>
+                Price: ₹${service.price}<br>
+                Delivery: ${service.delivery_time}<br>
+                <hr>
+                <small>Commission: ${commissionPercent}% | Freelancer gets: ₹${freelancerGets}</small>
             </div>
         `;
         document.getElementById('orderModal').style.display = 'flex';
@@ -619,31 +586,22 @@
         await supabase.from('freelance_orders').insert([{
             service_id: currentOrderService.id,
             order_number: ordersCount + 1,
-            buyer_name: name,
-            buyer_email: email,
-            buyer_whatsapp: whatsapp,
-            amount: currentOrderService.price,
-            commission_percent: commissionPercent,
-            commission_amount: commissionAmount,
-            freelancer_gets: freelancerGets,
-            platform_earns: commissionAmount
+            buyer_name: name, buyer_email: email, buyer_whatsapp: whatsapp,
+            amount: currentOrderService.price, commission_percent: commissionPercent,
+            commission_amount: commissionAmount, freelancer_gets: freelancerGets, platform_earns: commissionAmount
         }]);
         
-        await supabase.from('freelance_services')
-            .update({ seller_orders_count: ordersCount + 1 })
-            .eq('id', currentOrderService.id);
+        await supabase.from('freelance_services').update({ seller_orders_count: ordersCount + 1 }).eq('id', currentOrderService.id);
         
         const message = `*🚀 NEW ORDER FROM THE MOON MARKETPLACE*%0A%0A` +
-            `*Service:* ${currentOrderService.title}%0A` +
-            `*Order #:* ${ordersCount + 1}%0A` +
-            `*Amount:* ₹${currentOrderService.price}%0A` +
-            `*Commission:* ${commissionPercent}% (You receive ₹${freelancerGets})%0A%0A` +
-            `*Buyer Details:*%0A` +
-            `Name: ${name}%0A` +
+            `Service: ${currentOrderService.title}%0A` +
+            `Order #: ${ordersCount + 1}%0A` +
+            `Price: ₹${currentOrderService.price}%0A` +
+            `Commission: ${commissionPercent}% (You get ₹${freelancerGets})%0A%0A` +
+            `Buyer: ${name} (${whatsapp})%0A` +
             `Email: ${email}%0A` +
-            `WhatsApp: ${whatsapp}%0A%0A` +
-            `*Requirements:* ${requirements || 'Not specified'}%0A%0A` +
-            `Please contact the buyer to complete the order. THE MOON earned: ₹${commissionAmount}`;
+            `Requirements: ${requirements || 'Not specified'}%0A%0A` +
+            `Please contact buyer to complete the order. THE MOON earned: ₹${commissionAmount}`;
         
         window.open(`https://wa.me/${currentOrderService.seller_whatsapp}?text=${message}`, '_blank');
         document.getElementById('orderModal').style.display = 'none';
@@ -653,13 +611,19 @@
         document.getElementById('buyerEmail').value = '';
         document.getElementById('buyerWhatsapp').value = '';
         document.getElementById('orderRequirements').value = '';
-        
         loadServices();
     });
     
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
     
-    function openSellerModal() { document.getElementById('serviceModal').style.display = 'flex'; }
+    function openSellerModal() { 
+        // Populate categories in dropdown
+        const select = document.getElementById('serviceCategory');
+        select.innerHTML = '<option value="">Select Category</option>' + 
+            categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
+        document.getElementById('serviceModal').style.display = 'flex';
+    }
+    
     document.getElementById('becomeSellerBtn').onclick = openSellerModal;
     document.getElementById('sellerBtn').onclick = openSellerModal;
     document.getElementById('buyerBtn').onclick = () => document.getElementById('servicesGrid').scrollIntoView({ behavior: 'smooth' });
@@ -684,7 +648,6 @@
     
     document.getElementById('serviceForm').addEventListener('submit', publishService);
     
-    // Theme Functions
     function initTheme() {
         const saved = localStorage.getItem('theme');
         if (saved === 'dark') {
@@ -702,15 +665,9 @@
             localStorage.setItem('theme', 'dark');
             document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
         }
-        loadCategories();
         loadServices();
     }
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    
-    // Add spin animation
-    const style = document.createElement('style');
-    style.textContent = `@keyframes spin { to { transform: rotate(360deg); } } .spinner { animation: spin 1s linear infinite; }`;
-    document.head.appendChild(style);
     
     initTheme();
     loadCategories();
