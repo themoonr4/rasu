@@ -27,6 +27,7 @@
             --accent: #f59e0b;
             --success: #10b981;
             --warning: #f59e0b;
+            --danger: #ef4444;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
@@ -446,42 +447,51 @@
         });
     }
     
+    // 🔴🔴🔴 SIRF YAHAN FIX KIYA HAI 🔴🔴🔴
     async function loadServices(category = 'all', searchTerm = '') {
         const grid = document.getElementById('servicesGrid');
         grid.innerHTML = '<div style="text-align:center; padding:2rem;">Loading services...</div>';
         
         try {
-            let query = supabase.from('freelance_services').select('*');
+            // Direct fetch with proper headers (bypassing Supabase client issues)
+            let url = `${SUPABASE_URL}/rest/v1/freelance_services?select=*`;
             if (category !== 'all') {
-                query = query.eq('category', category);
+                url += `&category=eq.${encodeURIComponent(category)}`;
             }
             
-            const { data, error } = await query.order('created_at', { ascending: false });
+            const response = await fetch(url, {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
             
-            if (error) {
-                console.error('Supabase error:', error);
-                grid.innerHTML = `<div style="text-align:center; padding:2rem; color:red;">Error: ${error.message}</div>`;
-                return;
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
+            
+            let data = await response.json();
             
             if (!data || data.length === 0) {
                 grid.innerHTML = '<div style="text-align:center; padding:2rem;">No services yet. Be the first seller! <button onclick="openSellerModal()" style="background:var(--primary);color:white;border:none;padding:0.5rem 1rem;border-radius:40px;margin-top:1rem;">Post Service</button></div>';
                 return;
             }
             
-            let filteredData = data;
+            // Filter by status (approved only)
+            data = data.filter(service => service.status === 'approved');
+            
             if (searchTerm) {
-                filteredData = data.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase()) || s.description.toLowerCase().includes(searchTerm.toLowerCase()));
+                data = data.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase()) || s.description.toLowerCase().includes(searchTerm.toLowerCase()));
             }
             
-            currentServices = filteredData;
+            currentServices = data;
             
-            if (filteredData.length === 0) {
+            if (data.length === 0) {
                 grid.innerHTML = '<div style="text-align:center; padding:2rem;">No matching services found. Try a different search term.</div>';
                 return;
             }
             
-            grid.innerHTML = filteredData.map(service => {
+            grid.innerHTML = data.map(service => {
                 const ordersCount = service.seller_orders_count || 0;
                 const commissionText = ordersCount >= 5 ? '5% commission applies' : '0% commission (First 5 orders)';
                 const commissionColor = ordersCount >= 5 ? '#f59e0b' : '#10b981';
@@ -504,7 +514,7 @@
             
         } catch(err) {
             console.error('Error:', err);
-            grid.innerHTML = `<div style="text-align:center; padding:2rem; color:red;">Error: ${err.message}</div>`;
+            grid.innerHTML = `<div style="text-align:center; padding:2rem; color:red;">❌ Error: ${err.message}<br><br>Please check console (F12) for details.</div>`;
         }
     }
     
@@ -598,8 +608,9 @@
             `Order #: ${ordersCount + 1}%0A` +
             `Price: ₹${currentOrderService.price}%0A` +
             `Commission: ${commissionPercent}% (You get ₹${freelancerGets})%0A%0A` +
-            `Buyer: ${name} (${whatsapp})%0A` +
+            `Buyer: ${name}%0A` +
             `Email: ${email}%0A` +
+            `WhatsApp: ${whatsapp}%0A` +
             `Requirements: ${requirements || 'Not specified'}%0A%0A` +
             `Please contact buyer to complete the order. THE MOON earned: ₹${commissionAmount}`;
         
@@ -617,7 +628,6 @@
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
     
     function openSellerModal() { 
-        // Populate categories in dropdown
         const select = document.getElementById('serviceCategory');
         select.innerHTML = '<option value="">Select Category</option>' + 
             categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
