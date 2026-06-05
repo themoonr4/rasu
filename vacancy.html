@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - India's Largest Vacancy Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #f59e0b;
+            --primary-dark: #d97706;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+        }
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #2a2a2a;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+        
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; text-decoration: none; }
+        .theme-btn { background: var(--bg-secondary); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 40px; cursor: pointer; color: var(--text-primary); }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            margin: 2rem 0;
+            color: white;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-number { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); }
+        
+        .filter-bar {
+            display: flex;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+        .job-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .job-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .job-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .job-org { font-size: 0.8rem; color: var(--primary); margin-bottom: 0.3rem; }
+        .job-meta { display: flex; gap: 1rem; font-size: 0.7rem; color: var(--text-muted); margin: 0.5rem 0; flex-wrap: wrap; }
+        .job-badge { display: inline-block; background: var(--primary); color: white; font-size: 0.6rem; padding: 0.2rem 0.6rem; border-radius: 20px; }
+        .job-deadline { color: var(--danger); font-size: 0.7rem; margin-top: 0.5rem; }
+        
+        .footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="/rasu/" class="logo"><i class="fas fa-bullhorn"></i> THE MOON Vacancy</a>
+            <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i> Theme</button>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="hero">
+        <h1><i class="fas fa-bullhorn"></i> India's Largest Vacancy Portal</h1>
+        <p>Government Jobs • Private Jobs • Internships • Work From Home • Freshers • Experienced</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="totalJobs">0</div><div class="stat-label">Active Jobs</div></div>
+        <div class="stat-card"><div class="stat-number">5000+</div><div class="stat-label">Companies</div></div>
+        <div class="stat-card"><div class="stat-number">50K+</div><div class="stat-label">Placements</div></div>
+        <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Updates</div></div>
+    </div>
+    
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All Jobs</button>
+        <button class="filter-btn" data-filter="government">🇮🇳 Government</button>
+        <button class="filter-btn" data-filter="private">🏢 Private</button>
+        <button class="filter-btn" data-filter="internship">🎓 Internship</button>
+        <button class="filter-btn" data-filter="workfromhome">🏠 Work From Home</button>
+        <button class="filter-btn" data-filter="fresher">👶 Fresher</button>
+    </div>
+    
+    <div id="jobsGrid" class="jobs-grid"></div>
+</div>
+
+<div class="footer">
+    <p>© 2026 THE MOON Vacancy Portal — Your Gateway to Dream Jobs</p>
+    <p><small>✨ 5000+ Active Jobs | Daily Updates | Free Job Alerts ✨</small></p>
+</div>
+
+<script>
+    // Complete Jobs Database
+    const jobs = [
+        // Government Jobs
+        { title: 'UPSC Civil Services 2026', org: 'UPSC', type: 'government', location: 'All India', lastDate: '15 June 2026', vacancies: '1056', salary: '₹56,100 - ₹2,50,000', qualification: 'Graduate' },
+        { title: 'SSC CGL 2026', org: 'Staff Selection Commission', type: 'government', location: 'All India', lastDate: '20 July 2026', vacancies: '4500+', salary: '₹35,400 - ₹1,12,400', qualification: 'Graduate' },
+        { title: 'IBPS PO 2026', org: 'IBPS', type: 'government', location: 'All India', lastDate: '25 Aug 2026', vacancies: '4500', salary: '₹36,000 - ₹63,000', qualification: 'Graduate' },
+        { title: 'RRB NTPC 2026', org: 'Railway Recruitment Board', type: 'government', location: 'All India', lastDate: '30 Sep 2026', vacancies: '15,000+', salary: '₹19,900 - ₹63,000', qualification: '10th/12th/Graduate' },
+        { title: 'RBI Grade B 2026', org: 'Reserve Bank of India', type: 'government', location: 'Mumbai/Delhi/Chennai', lastDate: '10 July 2026', vacancies: '250', salary: '₹77,208 - ₹1,20,000', qualification: 'Graduate' },
+        { title: 'SBI PO 2026', org: 'State Bank of India', type: 'government', location: 'All India', lastDate: '15 Aug 2026', vacancies: '2000', salary: '₹41,960 - ₹62,000', qualification: 'Graduate' },
+        { title: 'CTET 2026 Dec', org: 'CBSE', type: 'government', location: 'All India', lastDate: '15 Nov 2026', vacancies: 'N/A', salary: 'As per govt norms', qualification: '12th + D.El.Ed/B.Ed' },
+        { title: 'NDA 2026 (2)', org: 'UPSC', type: 'government', location: 'All India', lastDate: '4 Sep 2026', vacancies: '400', salary: '₹56,100 - ₹1,77,500', qualification: '12th' },
+        
+        // Private Jobs
+        { title: 'Software Engineer', org: 'Google India', type: 'private', location: 'Bangalore', lastDate: '30 June 2026', vacancies: '50', salary: '₹15-25 LPA', qualification: 'B.Tech/BE' },
+        { title: 'Full Stack Developer', org: 'Microsoft', type: 'private', location: 'Hyderabad', lastDate: '25 June 2026', vacancies: '30', salary: '₹12-20 LPA', qualification: 'B.Tech/BE/BCA' },
+        { title: 'Data Scientist', org: 'Amazon', type: 'private', location: 'Bangalore/Chennai', lastDate: '20 June 2026', vacancies: '25', salary: '₹18-30 LPA', qualification: 'B.Tech/M.Tech' },
+        { title: 'Product Manager', org: 'Flipkart', type: 'private', location: 'Bangalore', lastDate: '28 June 2026', vacancies: '15', salary: '₹20-35 LPA', qualification: 'MBA/B.Tech' },
+        { title: 'Digital Marketing Manager', org: 'Unacademy', type: 'private', location: 'Bangalore', lastDate: '22 June 2026', vacancies: '10', salary: '₹8-15 LPA', qualification: 'MBA/Any Graduate' },
+        { title: 'Content Strategist', org: 'BYJU\'S', type: 'private', location: 'Bangalore', lastDate: '18 June 2026', vacancies: '20', salary: '₹6-10 LPA', qualification: 'Any Graduate' },
+        
+        // Internships
+        { title: 'Web Development Intern', org: 'Amazon', type: 'internship', location: 'Remote', lastDate: '10 June 2026', vacancies: '20', salary: '₹25,000/month', qualification: 'Currently enrolled' },
+        { title: 'Digital Marketing Intern', org: 'Flipkart', type: 'internship', location: 'Work From Home', lastDate: '15 June 2026', vacancies: '15', salary: '₹20,000/month', qualification: 'Any Graduate' },
+        { title: 'Content Writing Intern', org: 'THE MOON', type: 'internship', location: 'Remote', lastDate: '30 June 2026', vacancies: '10', salary: '₹15,000/month', qualification: 'Good writing skills' },
+        { title: 'Graphic Design Intern', org: 'Spotify', type: 'internship', location: 'Mumbai', lastDate: '20 June 2026', vacancies: '5', salary: '₹18,000/month', qualification: 'Design portfolio' },
+        { title: 'Data Analytics Intern', org: 'Microsoft', type: 'internship', location: 'Hyderabad', lastDate: '12 June 2026', vacancies: '8', salary: '₹30,000/month', qualification: 'B.Tech/MCA' },
+        
+        // Work From Home
+        { title: 'Virtual Assistant', org: 'Global Tech Solutions', type: 'workfromhome', location: 'Remote', lastDate: '30 June 2026', vacancies: '50', salary: '₹25,000-35,000/month', qualification: 'Any Graduate' },
+        { title: 'Customer Support Executive', org: 'Amazon', type: 'workfromhome', location: 'Work From Home', lastDate: '25 June 2026', vacancies: '200', salary: '₹18,000-25,000/month', qualification: '12th/Any Graduate' },
+        { title: 'Social Media Manager', org: 'Digital Agency', type: 'workfromhome', location: 'Remote', lastDate: '28 June 2026', vacancies: '15', salary: '₹30,000-45,000/month', qualification: 'Any Graduate' },
+        
+        // Fresher Jobs
+        { title: 'Associate Software Engineer', org: 'Infosys', type: 'fresher', location: 'All India', lastDate: '25 June 2026', vacancies: '5000', salary: '₹3.6 LPA', qualification: 'B.Tech/BE/BCA' },
+        { title: 'Graduate Engineer Trainee', org: 'L&T', type: 'fresher', location: 'All India', lastDate: '20 June 2026', vacancies: '800', salary: '₹4.2 LPA', qualification: 'B.Tech' },
+        { title: 'Management Trainee', org: 'HDFC Bank', type: 'fresher', location: 'All India', lastDate: '15 June 2026', vacancies: '300', salary: '₹6 LPA', qualification: 'MBA/Any Graduate' }
+    ];
+    
+    let currentFilter = 'all';
+    
+    function loadJobs() {
+        const container = document.getElementById('jobsGrid');
+        let filtered = currentFilter === 'all' ? jobs : jobs.filter(j => j.type === currentFilter);
+        document.getElementById('totalJobs').innerText = filtered.length;
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:2rem;">No jobs found in this category.</div>';
+            return;
+        }
+        
+        container.innerHTML = filtered.map(job => `
+            <div class="job-card" onclick="window.open('https://wa.me/917980107414?text=I%20am%20interested%20in%20${encodeURIComponent(job.title)}%20position%20at%20${encodeURIComponent(job.org)}', '_blank')">
+                <div class="job-title">${job.title}</div>
+                <div class="job-org"><i class="fas fa-building"></i> ${job.org}</div>
+                <div class="job-meta">
+                    <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+                    <span><i class="fas fa-users"></i> ${job.vacancies} vacancies</span>
+                </div>
+                <div class="job-meta">
+                    <span><i class="fas fa-rupee-sign"></i> ${job.salary}</span>
+                    <span><i class="fas fa-graduation-cap"></i> ${job.qualification}</span>
+                </div>
+                <div class="job-deadline"><i class="fas fa-calendar"></i> Last Date: ${job.lastDate}</div>
+                <span class="job-badge">${job.type === 'government' ? '🇮🇳 Government' : job.type === 'private' ? '🏢 Private' : job.type === 'internship' ? '🎓 Internship' : job.type === 'workfromhome' ? '🏠 Work From Home' : '👶 Fresher'}</span>
+            </div>
+        `).join('');
+    }
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.getAttribute('data-filter');
+            loadJobs();
+        });
+    });
+    
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Theme';
+        }
+    }
+    function toggleTheme() {
+        if (document.body.hasAttribute('data-theme')) {
+            document.body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i> Theme';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Theme';
+        }
+    }
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    
+    initTheme();
+    loadJobs();
+</script>
+</body>
+</html>
