@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MOON - World's Best Study Campus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+        }
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #2a2a2a;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+        
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; text-decoration: none; }
+        .logo i { margin-right: 0.3rem; }
+        .theme-btn { background: var(--bg-secondary); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 40px; cursor: pointer; color: var(--text-primary); }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            margin: 2rem 0;
+            color: white;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .hero p { opacity: 0.9; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-number { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .category-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+        .category-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow-md); }
+        .category-card i { font-size: 1.8rem; margin-bottom: 0.5rem; display: block; }
+        .category-card h3 { font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .category-card p { font-size: 0.65rem; color: var(--text-muted); }
+        
+        .exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .exam-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .exam-card:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: var(--shadow-md); }
+        .exam-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .exam-date { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+        .exam-badge { display: inline-block; background: var(--primary); color: white; font-size: 0.6rem; padding: 0.2rem 0.6rem; border-radius: 20px; }
+        
+        .footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="/rasu/" class="logo"><i class="fas fa-graduation-cap"></i> THE MOON Study Campus</a>
+            <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i> Theme</button>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="hero">
+        <h1><i class="fas fa-graduation-cap"></i> World's Best Study Campus</h1>
+        <p>Hindi Medium • English Medium • Board Exams • Competitive Exams • Government Jobs</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Categories</div></div>
+        <div class="stat-card"><div class="stat-number">5000+</div><div class="stat-label">Study Materials</div></div>
+        <div class="stat-card"><div class="stat-number">2000+</div><div class="stat-label">Video Lectures</div></div>
+        <div class="stat-card"><div class="stat-number">100+</div><div class="stat-label">Exams</div></div>
+        <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Support</div></div>
+    </div>
+    
+    <div class="section-title"><i class="fas fa-th-large" style="color: var(--primary);"></i> Browse by Category</div>
+    <div class="category-grid" id="mainCategories"></div>
+    
+    <div class="section-title"><i class="fas fa-calendar-alt" style="color: var(--accent);"></i> Upcoming Exams 2026-27</div>
+    <div class="exams-grid" id="examsList"></div>
+    
+    <div class="section-title"><i class="fas fa-book" style="color: var(--purple);"></i> Trending Study Materials</div>
+    <div class="exams-grid" id="materialsList"></div>
+    
+    <div class="section-title"><i class="fas fa-video" style="color: var(--pink);"></i> Popular Video Lectures</div>
+    <div class="exams-grid" id="videosList"></div>
+</div>
+
+<div class="footer">
+    <p>© 2026 THE MOON Study Campus — India's Largest Free Learning Platform</p>
+    <p><small>✨ Hindi & English Medium | 10th, 12th Board Exams | Competitive Exams ✨</small></p>
+</div>
+
+<script>
+    // Complete Categories - Including Hindi & English Medium (10th, 12th)
+    const categories = [
+        // School Education (Hindi & English Medium)
+        { name: 'Hindi Medium (10th)', icon: 'fa-book', color: '#dc2626', count: '200+', desc: 'CBSE, UP Board, Bihar Board' },
+        { name: 'Hindi Medium (12th)', icon: 'fa-graduation-cap', color: '#dc2626', count: '250+', desc: 'Science, Commerce, Arts' },
+        { name: 'English Medium (10th)', icon: 'fa-book-open', color: '#3b82f6', count: '200+', desc: 'CBSE, ICSE, State Board' },
+        { name: 'English Medium (12th)', icon: 'fa-user-graduate', color: '#3b82f6', count: '250+', desc: 'Science, Commerce, Arts' },
+        
+        // Government Exams
+        { name: 'UPSC/IAS', icon: 'fa-landmark', color: '#dc2626', count: '250+', desc: 'Civil Services' },
+        { name: 'SSC CGL/CHSL', icon: 'fa-users', color: '#3b82f6', count: '300+', desc: 'Staff Selection' },
+        { name: 'Bank PO/Clerk', icon: 'fa-university', color: '#10b981', count: '200+', desc: 'IBPS, SBI, RBI' },
+        { name: 'Railway RRB', icon: 'fa-train', color: '#f59e0b', count: '150+', desc: 'NTPC, Group D' },
+        { name: 'Teaching Exams', icon: 'fa-chalkboard-user', color: '#8b5cf6', count: '180+', desc: 'CTET, UPTET, KVS' },
+        { name: 'Defence Exams', icon: 'fa-shield-haltered', color: '#ef4444', count: '120+', desc: 'NDA, CDS, AFCAT' },
+        { name: 'State PCS', icon: 'fa-building', color: '#14b8a6', count: '400+', desc: 'UP, BPSC, MPPSC' },
+        { name: 'Police Exams', icon: 'fa-shield', color: '#06b6d4', count: '100+', desc: 'SI, Constable' },
+        { name: 'Engineering', icon: 'fa-microchip', color: '#3b82f6', count: '600+', desc: 'JEE, BITSAT' },
+        { name: 'Medical', icon: 'fa-stethoscope', color: '#10b981', count: '300+', desc: 'NEET, AIIMS' },
+        { name: 'MBA Entrance', icon: 'fa-chart-line', color: '#f59e0b', count: '150+', desc: 'CAT, MAT, XAT' },
+        { name: 'Law Exams', icon: 'fa-gavel', color: '#8b5cf6', count: '100+', desc: 'CLAT, AILET' }
+    ];
+    
+    // Upcoming Exams
+    const exams = [
+        { name: 'UPSC Civil Services Prelims 2026', date: '25 May 2026', badge: 'Prelims', category: 'UPSC' },
+        { name: 'SSC CGL 2026 Tier 1', date: '15 June 2026', badge: 'Tier 1', category: 'SSC' },
+        { name: 'IBPS PO 2026 Prelims', date: '10 Oct 2026', badge: 'Prelims', category: 'Bank' },
+        { name: 'RRB NTPC 2026 CBT 1', date: '20 Aug 2026', badge: 'CBT 1', category: 'Railway' },
+        { name: 'CBSE Class 10 Board Exams 2027', date: 'Feb 2027', badge: 'Board Exam', category: 'English Medium (10th)' },
+        { name: 'CBSE Class 12 Board Exams 2027', date: 'Feb 2027', badge: 'Board Exam', category: 'English Medium (12th)' },
+        { name: 'UP Board Class 10 Exams 2027', date: 'Feb 2027', badge: 'Board Exam', category: 'Hindi Medium (10th)' },
+        { name: 'UP Board Class 12 Exams 2027', date: 'Feb 2027', badge: 'Board Exam', category: 'Hindi Medium (12th)' },
+        { name: 'NEET UG 2026', date: '5 May 2026', badge: 'UG', category: 'Medical' },
+        { name: 'JEE Main 2026 Session 2', date: '25 Apr 2026', badge: 'Session 2', category: 'Engineering' },
+        { name: 'CAT 2026', date: '27 Nov 2026', badge: 'MBA', category: 'MBA' },
+        { name: 'CTET 2026 Dec', date: '15 Dec 2026', badge: 'Teaching', category: 'Teaching' }
+    ];
+    
+    // Study Materials
+    const materials = [
+        { name: 'CBSE Class 10 Science Notes (English)', type: 'PDF', count: '50K+', category: 'English Medium (10th)' },
+        { name: 'CBSE Class 12 Maths Solutions (English)', type: 'PDF', count: '60K+', category: 'English Medium (12th)' },
+        { name: 'UP Board Class 10 Hindi Notes', type: 'PDF', count: '40K+', category: 'Hindi Medium (10th)' },
+        { name: 'UP Board Class 12 Physics Notes', type: 'PDF', count: '45K+', category: 'Hindi Medium (12th)' },
+        { name: 'UPSC Complete Notes (9 Books)', type: 'PDF', count: '50K+', category: 'UPSC' },
+        { name: 'SSC CGL Previous Year Papers', type: 'PDF', count: '100K+', category: 'SSC' },
+        { name: 'NEET Biology Complete Guide', type: 'PDF', count: '30K+', category: 'Medical' },
+        { name: 'JEE Main Formula Booklet', type: 'PDF', count: '80K+', category: 'Engineering' }
+    ];
+    
+    // Video Lectures
+    const videos = [
+        { name: 'CBSE Class 10 Full Course (Hindi)', duration: '20 hrs', views: '1M+', category: 'Hindi Medium (10th)' },
+        { name: 'CBSE Class 12 Full Course (English)', duration: '25 hrs', views: '1.5M+', category: 'English Medium (12th)' },
+        { name: 'UPSC History Marathon Class', duration: '6 hrs', views: '2M+', category: 'UPSC' },
+        { name: 'SSC CGL English Complete Course', duration: '12 hrs', views: '1.5M+', category: 'SSC' },
+        { name: 'NEET Biology One Shot', duration: '5 hrs', views: '800K+', category: 'Medical' }
+    ];
+    
+    function loadCategories() {
+        const container = document.getElementById('mainCategories');
+        container.innerHTML = categories.map(cat => `
+            <div class="category-card" onclick="alert('📚 ${cat.name} section will be available soon. Stay tuned!')">
+                <i class="fas ${cat.icon}" style="color: ${cat.color};"></i>
+                <h3>${cat.name}</h3>
+                <p>${cat.count} resources</p>
+            </div>
+        `).join('');
+    }
+    
+    function loadExams() {
+        const container = document.getElementById('examsList');
+        container.innerHTML = exams.map(exam => `
+            <div class="exam-card" onclick="window.open('https://wa.me/917980107414?text=I%20want%20information%20about%20${encodeURIComponent(exam.name)}', '_blank')">
+                <div class="exam-title">${exam.name}</div>
+                <div class="exam-date"><i class="fas fa-calendar"></i> ${exam.date}</div>
+                <span class="exam-badge">${exam.badge}</span>
+            </div>
+        `).join('');
+    }
+    
+    function loadMaterials() {
+        const container = document.getElementById('materialsList');
+        container.innerHTML = materials.map(m => `
+            <div class="exam-card" onclick="alert('📖 ${m.name} will be available for download soon!')">
+                <div class="exam-title">${m.name}</div>
+                <div class="exam-date"><i class="fas fa-file-pdf"></i> ${m.type} • ${m.count} downloads</div>
+            </div>
+        `).join('');
+    }
+    
+    function loadVideos() {
+        const container = document.getElementById('videosList');
+        container.innerHTML = videos.map(v => `
+            <div class="exam-card" onclick="alert('🎬 ${v.name} - Coming soon!')">
+                <div class="exam-title">${v.name}</div>
+                <div class="exam-date"><i class="fas fa-clock"></i> ${v.duration} • ${v.views} views</div>
+            </div>
+        `).join('');
+    }
+    
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Theme';
+        }
+    }
+    function toggleTheme() {
+        if (document.body.hasAttribute('data-theme')) {
+            document.body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i> Theme';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Theme';
+        }
+    }
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    
+    initTheme();
+    loadCategories();
+    loadExams();
+    loadMaterials();
+    loadVideos();
+</script>
+</body>
+</html>
