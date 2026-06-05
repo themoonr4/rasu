@@ -1,20 +1,63 @@
 {
-  "name": "THE MOON News",
+  "name": "THE MOON News Platform",
   "short_name": "THE MOON",
-  "description": "World's Most Advanced News Platform",
+  "description": "India's Most Advanced AI-Powered News Platform | Real-Time | Unbiased",
   "start_url": "/rasu/",
   "display": "standalone",
   "theme_color": "#dc2626",
   "background_color": "#0a0a0a",
+  "orientation": "portrait",
+  "scope": "/rasu/",
+  "lang": "en",
+  "categories": ["news", "magazines", "education", "business"],
   "icons": [
+    {
+      "src": "https://themoonr4.github.io/rasu/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://themoonr4.github.io/rasu/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://themoonr4.github.io/rasu/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "https://themoonr4.github.io/rasu/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://themoonr4.github.io/rasu/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://themoonr4.github.io/rasu/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "https://themoonr4.github.io/rasu/icon-512.png",
       "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://themoonr4.github.io/rasu/screenshot-1.png",
+      "sizes": "1280x720",
       "type": "image/png"
     }
   ]
