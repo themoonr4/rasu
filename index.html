@@ -618,7 +618,7 @@
         }
         
         /* ============================================ */
-        /* CATEGORY GRID */
+        /* CATEGORY GRID - SIRF 3 ICONS */
         /* ============================================ */
         .category-grid {
             display: grid;
@@ -629,7 +629,7 @@
         
         @media (min-width: 640px) {
             .category-grid {
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         
@@ -1145,7 +1145,6 @@
     // ============================================
     let currentCategory = 'all';
     let allNews = [];
-    let categoriesList = ['Technology', 'Sports', 'Business', 'Politics', 'Study'];
     
     // ============================================
     // THEME FUNCTIONS
@@ -1359,36 +1358,26 @@
     }
     
     // ============================================
-    // LOAD CATEGORIES
+    // LOAD CATEGORIES - SIRF 3 ICONS (Study, Freelancing, Vacancy)
     // ============================================
     function loadCategories() {
         const categoryGrid = document.getElementById('categoryGrid');
         if (!categoryGrid) return;
         
-        const icons = {
-            'Technology': '💻',
-            'Sports': '🏏',
-            'Business': '📊',
-            'Politics': '🏛️',
-            'Study': '📚'
-        };
+        const newCategories = [
+            { name: 'Study', icon: 'fa-graduation-cap', color: '#10b981', link: '/rasu/study.html' },
+            { name: 'Freelancing', icon: 'fa-briefcase', color: '#dc2626', link: '/rasu/freelance.html' },
+            { name: 'Vacancy', icon: 'fa-bullhorn', color: '#f59e0b', link: '/rasu/vacancy.html' }
+        ];
         
-        categoryGrid.innerHTML = categoriesList.map(cat => `
-            <div class="category-card" data-category="${cat}">
-                <i>${icons[cat]}</i>
-                <span>${cat}</span>
+        categoryGrid.innerHTML = newCategories.map(cat => `
+            <div class="category-card" data-category="${cat.name}" onclick="window.location.href='${cat.link}'" style="background: linear-gradient(135deg, ${cat.color}, ${cat.color}dd); cursor: pointer;">
+                <i class="fas ${cat.icon}" style="font-size: 1.5rem; margin-bottom: 0.25rem; display: block;"></i>
+                <span style="font-size: 0.75rem; font-weight: 600;">${cat.name}</span>
             </div>
         `).join('');
         
-        document.querySelectorAll('.category-card').forEach(el => {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentCategory = el.getAttribute('data-category');
-                displayNews(allNews);
-                document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
-                el.classList.add('active');
-            });
-        });
+        // Remove old event listeners since we are using onclick directly
     }
     
     // ============================================
