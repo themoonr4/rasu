@@ -2,22 +2,26 @@ const CACHE_NAME = 'the-moon-v3';
 const urlsToCache = [
   '/rasu/',
   '/rasu/index.html',
-  '/rasu/style.css',
-  '/rasu/script.js',
+  '/rasu/admin.html',
   '/rasu/article.html',
-  '/rasu/article.js',
-  '/rasu/profile.html',
-  '/rasu/profile.js',
-  '/rasu/manifest.json',
+  '/rasu/freelance.html',
+  '/rasu/study.html',
+  '/rasu/vacancy.html',
+  '/rasu/about.html',
+  '/rasu/privacy.html',
+  '/rasu/contact.html',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+  'https://cdn.quilljs.com/1.3.6/quill.snow.css',
+  'https://cdn.quilljs.com/1.3.6/quill.js',
+  'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('THE MOON - Cache opened');
         return cache.addAll(urlsToCache);
       })
       .then(() => self.skipWaiting())
@@ -54,6 +58,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
