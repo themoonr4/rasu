@@ -1,0 +1,272 @@
+// ==========================================
+// THE MOON - Advanced Bot Protection System
+// ==========================================
+// Yeh code automatically bot detect karega
+// Bina kisi existing code ko change kiye
+
+(function() {
+    'use strict';
+    
+    // Already loaded check
+    if(window._THE_MOON_BOT_PROTECTION_LOADED) return;
+    window._THE_MOON_BOT_PROTECTION_LOADED = true;
+    
+    // ==========================================
+    // Bot Detection
+    // ==========================================
+    
+    function isBot() {
+        const ua = navigator.userAgent.toLowerCase();
+        
+        // Bot patterns
+        const botPatterns = [
+            'bot', 'crawler', 'spider', 'scraper', 'curl', 'wget',
+            'python', 'java', 'headless', 'phantom', 'selenium',
+            'puppeteer', 'playwright', 'http', 'axios', 'postman',
+            'go-http', 'okhttp', 'scrapy', 'semrush', 'ahrefs',
+            'bingbot', 'googlebot', 'slurp', 'duckduckbot',
+            'baiduspider', 'yandexbot', 'facebot', 'facebookexternalhit',
+            'twitterbot', 'rogerbot', 'dotbot', 'mj12bot'
+        ];
+        
+        if(botPatterns.some(p => ua.includes(p))) return true;
+        
+        // Headless browser detection
+        if(navigator.webdriver === true) return true;
+        
+        // Missing plugins (common in bots)
+        if(navigator.plugins.length === 0) return true;
+        
+        // Tiny viewport
+        if(window.screen.width < 100 || window.screen.height < 100) return true;
+        
+        return false;
+    }
+    
+    // ==========================================
+    // Bot Blocking - Without Breaking Site
+    // ==========================================
+    
+    if(isBot()) {
+        // Mark as bot
+        sessionStorage.setItem('_tm_is_bot', 'true');
+        localStorage.setItem('_tm_bot_detected', Date.now().toString());
+        
+        // Disable Google Analytics without errors
+        if(window.gtag) {
+            window._tm_original_gtag = window.gtag;
+            window.gtag = function() {
+                // Silently ignore - no errors thrown
+                return;
+            };
+        }
+        
+        // Disable OneSignal tracking
+        if(window.OneSignalDeferred) {
+            window._tm_original_onesignal = window.OneSignalDeferred;
+            window.OneSignalDeferred = [];
+        }
+        
+        // Prevent dataLayer from tracking
+        Object.defineProperty(window, 'dataLayer', {
+            get: function() { return []; },
+            set: function() { }
+        });
+        
+        // Add attribute to body
+        document.body.setAttribute('data-tm-bot', 'true');
+        
+        // Optional: Show nothing to bots (site still works but no tracking)
+        console.log = function() {};
+        
+        return; // Stop here - bot handled
+    }
+    
+    // ==========================================
+    // Human Verification
+    // ==========================================
+    
+    let humanScore = 0;
+    let isHuman = false;
+    
+    function addScore(points) {
+        if(isHuman) return;
+        humanScore += points;
+        if(humanScore >= 30 && !isHuman) {
+            isHuman = true;
+            sessionStorage.setItem('_tm_is_human', 'true');
+            sessionStorage.setItem('_tm_human_score', humanScore);
+            document.body.setAttribute('data-tm-human', 'true');
+            
+            // Dispatch event for existing code
+            window.dispatchEvent(new CustomEvent('tmHumanVerified', {
+                detail: { score: humanScore }
+            }));
+        }
+    }
+    
+    // Track human behaviors (once each)
+    document.addEventListener('mousemove', () => addScore(10), { once: true });
+    document.addEventListener('scroll', () => addScore(15), { once: true });
+    document.addEventListener('click', () => addScore(20), { once: true });
+    document.addEventListener('keydown', () => addScore(10), { once: true });
+    document.addEventListener('touchstart', () => addScore(15), { once: true });
+    
+    // Time-based verification
+    setTimeout(() => addScore(25), 8000);
+    
+    // Visibility change
+    document.addEventListener('visibilitychange', () => {
+        if(document.visibilityState === 'visible') addScore(10);
+    }, { once: true });
+    
+    // ==========================================
+    // Rate Limiting (Silent)
+    // ==========================================
+    
+    const requestLog = new Map();
+    
+    window._tm_checkRateLimit = function(endpoint) {
+        const now = Date.now();
+        const sessionId = sessionStorage.getItem('_tm_session_id') || 'anon';
+        const key = `${endpoint}_${sessionId}`;
+        
+        if(!requestLog.has(key)) requestLog.set(key, []);
+        
+        const requests = requestLog.get(key).filter(t => now - t < 60000);
+        
+        if(requests.length > 30) return false;
+        
+        requests.push(now);
+        requestLog.set(key, requests);
+        return true;
+    };
+    
+    // Monitor fetch requests
+    const originalFetch = window.fetch;
+    window.fetch = function() {
+        if(!window._tm_checkRateLimit(arguments[0])) {
+            return Promise.reject(new Error('Rate limit exceeded'));
+        }
+        return originalFetch.apply(this, arguments);
+    };
+    
+    // ==========================================
+    // Session ID (Unique per user)
+    // ==========================================
+    
+    if(!sessionStorage.getItem('_tm_session_id')) {
+        sessionStorage.setItem('_tm_session_id', 
+            Math.random().toString(36).substring(2) + Date.now().toString(36)
+        );
+    }
+    
+    // ==========================================
+    // Analytics Wrapper (Preserves Original)
+    // ==========================================
+    
+    if(window.gtag && !window._tm_gtag_wrapped) {
+        window._tm_original_gtag = window.gtag;
+        window._tm_gtag_wrapped = true;
+        
+        window.gtag = function() {
+            const isRealUser = sessionStorage.getItem('_tm_is_human') === 'true';
+            const isBotUser = sessionStorage.getItem('_tm_is_bot') === 'true';
+            
+            if(isRealUser && !isBotUser) {
+                const args = Array.from(arguments);
+                // Add human verification flag
+                if(args[0] === 'event' && args[2]) {
+                    args[2].tm_human_verified = true;
+                    args[2].tm_human_score = parseInt(sessionStorage.getItem('_tm_human_score') || '0');
+                }
+                window._tm_original_gtag.apply(this, args);
+            }
+            // Bots are silently ignored - no errors
+        };
+    }
+    
+    // ==========================================
+    // Supabase Wrapper (Preserves Original)
+    // ==========================================
+    
+    // Wait for Supabase to load
+    const checkSupabase = setInterval(() => {
+        if(window.supabaseClient || window.supabase) {
+            clearInterval(checkSupabase);
+            
+            const supabaseObj = window.supabaseClient || window.supabase;
+            
+            if(supabaseObj && supabaseObj.from && !supabaseObj._tm_wrapped) {
+                const originalFrom = supabaseObj.from;
+                supabaseObj._tm_wrapped = true;
+                
+                supabaseObj.from = function(table) {
+                    const query = originalFrom.call(this, table);
+                    
+                    // Wrap insert to filter bot data
+                    if(query.insert && !query._tm_insert_wrapped) {
+                        const originalInsert = query.insert;
+                        query._tm_insert_wrapped = true;
+                        
+                        query.insert = function(data) {
+                            // Don't insert bot data
+                            if(sessionStorage.getItem('_tm_is_bot') === 'true') {
+                                return Promise.resolve({ data: null, error: null });
+                            }
+                            return originalInsert.call(this, data);
+                        };
+                    }
+                    
+                    return query;
+                };
+            }
+        }
+    }, 100);
+    
+    // ==========================================
+    // Optional: Log Clean Data (for admin)
+    // ==========================================
+    
+    setTimeout(() => {
+        if(sessionStorage.getItem('_tm_is_human') === 'true') {
+            // Store in localStorage for admin panel stats
+            let realVisitors = JSON.parse(localStorage.getItem('_tm_real_visitors') || '[]');
+            const today = new Date().toISOString().split('T')[0];
+            
+            if(!realVisitors.some(v => v.date === today && v.session === sessionStorage.getItem('_tm_session_id'))) {
+                realVisitors.push({
+                    date: today,
+                    session: sessionStorage.getItem('_tm_session_id'),
+                    score: sessionStorage.getItem('_tm_human_score'),
+                    time: new Date().toISOString()
+                });
+                // Keep only last 30 days
+                if(realVisitors.length > 3000) realVisitors = realVisitors.slice(-3000);
+                localStorage.setItem('_tm_real_visitors', JSON.stringify(realVisitors));
+            }
+        }
+    }, 10000);
+    
+    // ==========================================
+    // Clean up old bot data periodically
+    // ==========================================
+    
+    setInterval(() => {
+        const botKeys = [];
+        for(let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if(key && key.includes('_tm_bot_')) {
+                const timestamp = parseInt(key.split('_').pop());
+                if(Date.now() - timestamp > 86400000) { // 24 hours
+                    botKeys.push(key);
+                }
+            }
+        }
+        botKeys.forEach(key => localStorage.removeItem(key));
+    }, 3600000);
+    
+    // Console log for admin verification
+    console.log('🛡️ THE MOON Bot Protection Active | Real users only');
+    
+})();
