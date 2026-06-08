@@ -11,139 +11,1219 @@
     </script>
     
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>THE MOON - Article</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:Arial,sans-serif;background:#fff;color:#333;line-height:1.6;}
-        .container{max-width:800px;margin:0 auto;padding:20px;}
-        .header{background:#fff;border-bottom:1px solid #ddd;padding:15px 0;margin-bottom:20px;}
-        .logo{font-size:1.5rem;font-weight:bold;color:#dc2626;text-decoration:none;}
-        .article-card{background:#f9f9f9;border-radius:16px;padding:25px;}
-        .article-title{font-size:1.8rem;margin-bottom:15px;color:#222;}
-        .article-meta{display:flex;gap:15px;color:#666;font-size:0.8rem;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #ddd;}
-        .article-image{width:100%;border-radius:12px;margin:20px 0;}
-        .back-btn{display:inline-block;background:#f0f0f0;padding:8px 16px;border-radius:30px;text-decoration:none;color:#333;margin-bottom:20px;}
-        .share-buttons{display:flex;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid #ddd;}
-        .share-btn{padding:8px 16px;border-radius:30px;text-decoration:none;color:white;font-size:0.8rem;}
-        .whatsapp{background:#25D366;}.twitter{background:#1DA1F2;}.telegram{background:#0088CC;}
-        .loader{text-align:center;padding:50px;}
-        .error{color:red;padding:20px;background:#ffe0e0;border-radius:10px;}
-        .article-content p { margin-bottom: 15px; }
-        .article-content h2 { margin: 20px 0 10px; }
-        .article-content h3 { margin: 15px 0 8px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --bg-sidebar: #f8f9fa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border: #e9ecef;
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --primary-light: #fef2f2;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --radius: 0.75rem;
+            --radius-lg: 1rem;
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #1e1e1e;
+            --bg-sidebar: #1a1a1a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --border: #2a2a2a;
+            --primary-light: #2a1515;
+        }
+        
+        [data-mode="reading"] {
+            --bg-primary: #faf0e6;
+            --bg-secondary: #f5e6d3;
+            --bg-card: #fdf5e6;
+            --bg-sidebar: #f5e6d3;
+            --text-primary: #4a3728;
+            --text-secondary: #5c4a3a;
+            --text-muted: #8b7355;
+            --border: #e0d0c0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Georgia, 'Times New Roman', serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: all 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--purple));
+            z-index: 1001;
+            transition: width 0.1s;
+        }
+        
+        .reading-circle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+        
+        .logo span { font-size: 0.7rem; background: var(--primary); color: white; padding: 2px 8px; border-radius: 20px; margin-left: 5px; }
+        
+        .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        
+        .font-controls {
+            display: flex;
+            gap: 5px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+        }
+        
+        .font-btn {
+            background: transparent;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .font-btn:hover, .font-btn.active { background: var(--primary); color: white; }
+        
+        .theme-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        
+        .theme-btn:hover, .theme-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        .article-wrapper { display: flex; gap: 40px; margin: 30px 0; }
+        .main-content { flex: 2; min-width: 0; }
+        .sidebar { flex: 1; min-width: 280px; }
+        
+        @media (max-width: 992px) { .article-wrapper { flex-direction: column; } }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        .breadcrumb a { color: var(--primary); text-decoration: none; }
+        
+        .article-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+        }
+        
+        @media (max-width: 768px) { .article-card { padding: 20px; } }
+        
+        .category-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .article-title {
+            font-size: 2.4rem;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        @media (max-width: 768px) { .article-title { font-size: 1.8rem; } }
+        
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .meta-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .meta-left span { display: inline-flex; align-items: center; gap: 6px; }
+        
+        .social-proof {
+            background: var(--bg-secondary);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+        }
+        
+        /* Like Section - Only Like */
+        .like-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 0;
+            margin: 15px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .like-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .like-btn:hover { transform: scale(1.05); background: var(--success); color: white; border-color: var(--success); }
+        .like-btn.active { background: var(--success); color: white; border-color: var(--success); }
+        .like-btn.active i { animation: heartBeat 0.3s ease; }
+        
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        
+        .like-count {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .hotness-badge {
+            background: linear-gradient(135deg, var(--primary), var(--warning));
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .ai-summary {
+            background: linear-gradient(135deg, var(--primary-light), var(--purple)10);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+        }
+        
+        .ai-summary h4 { color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        
+        .key-takeaways {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+        
+        .key-takeaways h4 { margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .key-takeaways ul { margin-left: 20px; }
+        .key-takeaways li { margin-bottom: 8px; }
+        
+        .author-box {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin: 20px 0;
+            flex-wrap: wrap;
+            border: 1px solid var(--border);
+        }
+        
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .author-info h4 { margin-bottom: 5px; }
+        .author-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .author-social { display: flex; gap: 10px; margin-top: 8px; }
+        .author-social a { color: var(--text-muted); transition: color 0.2s; }
+        .author-social a:hover { color: var(--primary); }
+        
+        .featured-image {
+            margin: 20px 0;
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .featured-image img {
+            width: 100%;
+            border-radius: var(--radius);
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .featured-image:hover img { transform: scale(1.02); }
+        .image-caption { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 8px; }
+        
+        .article-content { font-size: 1.05rem; line-height: 1.8; }
+        .article-content p { margin-bottom: 1.2rem; }
+        .article-content h2 { font-size: 1.6rem; margin: 1.5rem 0 1rem; }
+        .article-content h3 { font-size: 1.3rem; margin: 1.2rem 0 0.8rem; }
+        .article-content img { max-width: 100%; border-radius: var(--radius); margin: 1rem 0; }
+        .article-content iframe { width: 100%; border-radius: var(--radius); margin: 1rem 0; }
+        .article-content blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1.2rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        
+        .tags-section { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+        .tag {
+            background: var(--bg-secondary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .tag:hover { background: var(--primary); color: white; }
+        
+        .share-section { margin: 30px 0; padding-top: 20px; border-top: 1px solid var(--border); }
+        .share-title { margin-bottom: 15px; font-size: 1rem; }
+        .share-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        
+        .share-btn {
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: white;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .share-btn:hover { transform: translateY(-2px); }
+        .whatsapp { background: #25D366; }
+        .twitter { background: #1DA1F2; }
+        .telegram { background: #0088CC; }
+        .facebook { background: #1877F2; }
+        .linkedin { background: #0077B5; }
+        .copy-btn { background: var(--text-muted); }
+        
+        .related-section { margin-top: 40px; }
+        .related-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .related-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .related-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .related-card img { width: 100%; height: 160px; object-fit: cover; }
+        .related-card-content { padding: 15px; }
+        .related-card-title { font-size: 0.9rem; font-weight: 600; line-height: 1.4; }
+        .related-card-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; }
+        
+        .widget {
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+        
+        .widget-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+        
+        .trending-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .trending-item:hover .trending-title { color: var(--primary); }
+        .trending-number { font-size: 1.2rem; font-weight: bold; color: var(--primary); min-width: 30px; }
+        .trending-title { font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        
+        .newsletter-input { display: flex; flex-direction: column; gap: 10px; }
+        .newsletter-input input { padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); }
+        .newsletter-input button { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .ad-space {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px dashed var(--border);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        
+        .comments-section { margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border); }
+        .comment-form { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
+        .comment-form input, .comment-form textarea { padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); }
+        .comment-form button { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
+        .comment {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+        .comment-name { font-weight: bold; color: var(--primary); margin-bottom: 5px; }
+        
+        .floating-actions {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 99;
+        }
+        
+        .floating-actions .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .floating-actions .action-btn:hover { background: var(--primary); color: white; transform: scale(1.1); }
+        
+        @media (max-width: 768px) {
+            .floating-actions {
+                position: fixed;
+                bottom: 80px;
+                right: 20px;
+                left: auto;
+                top: auto;
+                flex-direction: row;
+                background: var(--bg-card);
+                padding: 8px;
+                border-radius: 40px;
+                box-shadow: var(--shadow-lg);
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+        }
+        
+        .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--primary); }
+        
+        .shortcuts-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 10px;
+            color: var(--text-muted);
+            z-index: 98;
+        }
+        
+        @media (max-width: 768px) { .shortcuts-hint { display: none; } }
+        
+        .loader { text-align: center; padding: 50px; }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .error { color: var(--primary); background: var(--primary-light); padding: 20px; border-radius: var(--radius); text-align: center; }
+        
+        @media print {
+            .header, .sidebar, .floating-actions, .comments-section, .footer, .reading-circle, .progress-bar, .shortcuts-hint, .like-section {
+                display: none !important;
+            }
+            .article-card { padding: 0; box-shadow: none; }
+            body { background: white; color: black; }
+        }
+        
+        body.font-small .article-content { font-size: 0.9rem; }
+        body.font-medium .article-content { font-size: 1.05rem; }
+        body.font-large .article-content { font-size: 1.2rem; }
+        
+        @media (max-width: 768px) { .container { padding: 0 15px; } .controls { justify-content: flex-end; } }
+        
+        .reader-stats {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.6rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
+<div class="progress-bar" id="progressBar"></div>
+
 <header class="header">
     <div class="container">
-        <a href="/rasu/" class="logo">🌙 THE MOON</a>
+        <div class="header-content">
+            <a href="/rasu/" class="logo">🌙 THE MOON <span>PREMIUM</span></a>
+            <div class="controls">
+                <div class="font-controls">
+                    <button class="font-btn" onclick="changeFontSize('small')">A-</button>
+                    <button class="font-btn" onclick="changeFontSize('medium')">A</button>
+                    <button class="font-btn" onclick="changeFontSize('large')">A+</button>
+                </div>
+                <button class="theme-btn" onclick="setTheme('light')" id="lightBtn">☀️</button>
+                <button class="theme-btn" onclick="setTheme('dark')" id="darkBtn">🌙</button>
+                <button class="theme-btn" onclick="setTheme('reading')" id="readingBtn">📖</button>
+            </div>
+        </div>
     </div>
 </header>
 
 <div class="container">
-    <a href="/rasu/" class="back-btn">← Back to Home</a>
-    
-    <div id="articleContent">
-        <div class="loader">Loading article...</div>
+    <div class="article-wrapper">
+        <div class="main-content">
+            <div class="breadcrumb">
+                <a href="/rasu/">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span id="breadcrumbCategory">News</span>
+            </div>
+            
+            <div id="articleContent">
+                <div class="loader"><div class="spinner"></div><p>Loading article...</p></div>
+            </div>
+            
+            <div id="relatedArticles"></div>
+            
+            <div class="comments-section">
+                <h3><i class="fas fa-comments"></i> Comments</h3>
+                <div class="comment-form">
+                    <input type="text" id="commentName" placeholder="Your Name">
+                    <textarea id="commentText" rows="3" placeholder="Write a comment..."></textarea>
+                    <button onclick="postComment()">Post Comment</button>
+                </div>
+                <div id="commentsList"></div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-fire"></i> Trending Now</h3>
+                <div id="trendingList">Loading...</div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-envelope"></i> Newsletter</h3>
+                <div class="newsletter-input">
+                    <input type="email" id="newsletterEmail" placeholder="Your email address">
+                    <button onclick="subscribeNewsletter()">Subscribe</button>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-chart-line"></i> Your Stats</h3>
+                <div class="reader-stats" id="readerStats">
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="articlesRead">0</div>
+                            <div class="stat-label">Articles Read</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalLikes">0</div>
+                            <div class="stat-label">Total Likes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="readingStreak">0</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-share-alt"></i> Share</h3>
+                <div class="share-buttons">
+                    <button class="share-btn whatsapp" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i></button>
+                    <button class="share-btn twitter" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i></button>
+                    <button class="share-btn telegram" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i></button>
+                    <button class="share-btn facebook" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i></button>
+                    <button class="share-btn linkedin" onclick="shareOnLinkedIn()"><i class="fab fa-linkedin"></i></button>
+                    <button class="share-btn copy-btn" onclick="copyLink()"><i class="fas fa-link"></i></button>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-ad"></i> Advertisement</h3>
+                <div class="ad-space"><i class="fas fa-ad"></i> Ad Space</div>
+            </div>
+        </div>
     </div>
     
-    <div style="text-align:center;padding:30px;color:#999;">
-        <p>© 2026 THE MOON. All rights reserved.</p>
+    <div class="footer">
+        <div class="footer-links">
+            <a href="/rasu/about.html">About Us</a>
+            <a href="/rasu/privacy.html">Privacy Policy</a>
+            <a href="/rasu/contact.html">Contact Us</a>
+            <a href="/rasu/admin.html">Advertise</a>
+        </div>
+        <p>© 2026 THE MOON — India's Most Advanced AI-Powered News Platform</p>
+        <p style="font-size: 0.7rem; margin-top: 8px;">Made with ❤️ in India</p>
     </div>
 </div>
 
+<div class="floating-actions">
+    <button class="action-btn" onclick="window.print()" title="Print"><i class="fas fa-print"></i></button>
+    <button class="action-btn" onclick="copyLink()" title="Copy Link"><i class="fas fa-link"></i></button>
+    <button class="action-btn" onclick="shareArticle()" title="Share"><i class="fas fa-share-alt"></i></button>
+    <button class="action-btn" onclick="scrollToTop()" title="Top"><i class="fas fa-arrow-up"></i></button>
+</div>
+
+<div class="reading-circle" id="readingCircle" style="display: none;">
+    <span id="readingPercent">0%</span>
+</div>
+
+<div class="shortcuts-hint">
+    <i class="fas fa-keyboard"></i> ⌨️ J/K: Navigate | L: Like | S: Share | T: Top
+</div>
+
 <script>
+// ============================================
+// CONFIGURATION
+// ============================================
 const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get('id');
+let currentArticle = null;
+let isLiked = false;
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
+// ============================================
+// READER STATS
+// ============================================
+function updateReaderStats() {
+    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{"articlesRead":0,"totalLikes":0,"lastReadDate":null,"streak":0}');
+    const today = new Date().toDateString();
+    
+    if (stats.lastReadDate !== today) {
+        if (stats.lastReadDate === new Date(Date.now() - 86400000).toDateString()) {
+            stats.streak++;
+        } else {
+            stats.streak = 1;
+        }
+        stats.articlesRead++;
+        stats.lastReadDate = today;
+        localStorage.setItem('reader_stats', JSON.stringify(stats));
+    }
+    
+    document.getElementById('articlesRead').innerText = stats.articlesRead;
+    document.getElementById('totalLikes').innerText = stats.totalLikes;
+    document.getElementById('readingStreak').innerText = stats.streak;
 }
 
-// Clean content - remove any problematic patterns
+function updateTotalLikes() {
+    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{"articlesRead":0,"totalLikes":0,"lastReadDate":null,"streak":0}');
+    const likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
+    stats.totalLikes = Object.values(likes).filter(v => v === true).length;
+    localStorage.setItem('reader_stats', JSON.stringify(stats));
+    document.getElementById('totalLikes').innerText = stats.totalLikes;
+}
+
+// ============================================
+// LIKE SYSTEM (ONLY LIKE)
+// ============================================
+function loadLikeData() {
+    const likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
+    isLiked = likes[articleId] === true;
+    updateLikeButton();
+    updateLikeCount();
+}
+
+function likeArticle() {
+    let likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
+    
+    if (isLiked) {
+        delete likes[articleId];
+        isLiked = false;
+    } else {
+        likes[articleId] = true;
+        isLiked = true;
+        // Celebration effect
+        const likeBtn = document.getElementById('likeBtn');
+        likeBtn.style.transform = 'scale(1.2)';
+        setTimeout(() => { likeBtn.style.transform = 'scale(1)'; }, 300);
+    }
+    
+    localStorage.setItem('article_likes', JSON.stringify(likes));
+    updateLikeButton();
+    updateLikeCount();
+    updateTotalLikes();
+}
+
+function updateLikeButton() {
+    const likeBtn = document.getElementById('likeBtn');
+    const likeIcon = document.getElementById('likeIcon');
+    const likeText = document.getElementById('likeText');
+    if (likeBtn) {
+        if (isLiked) {
+            likeBtn.classList.add('active');
+            likeIcon.className = 'fas fa-heart';
+            likeText.innerText = ' Liked';
+        } else {
+            likeBtn.classList.remove('active');
+            likeIcon.className = 'far fa-heart';
+            likeText.innerText = ' Like';
+        }
+    }
+}
+
+function updateLikeCount() {
+    const likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
+    const likeCount = Object.values(likes).filter(v => v === true).length;
+    const likeCountSpan = document.getElementById('likeCount');
+    if (likeCountSpan) likeCountSpan.innerText = likeCount;
+}
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'Unknown';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
 function cleanContent(content) {
-    if (!content) return 'No content available';
-    // Fix double paragraph tags
-    let cleaned = content.replace(/<\/p><p><p>/g, '</p><p>');
+    if (!content) return '<p>No content available</p>';
+    let cleaned = content;
+    cleaned = cleaned.replace(/<\/p><p><p>/g, '</p><p>');
     cleaned = cleaned.replace(/<p><p>/g, '<p>');
     cleaned = cleaned.replace(/<\/p><\/p>/g, '</p>');
     return cleaned;
 }
 
+// IMPORTANT: Image URL Fix - Agar database mein image nahi hai toh category-based fallback dikhega
+function getImageUrl(article) {
+    // Agar database mein image URL hai toh wahi use karo
+    if (article.image_url && article.image_url !== '' && article.image_url !== null) {
+        return article.image_url;
+    }
+    // Nahi toh category ke hisaab se fallback image
+    const fallbackImages = {
+        'Technology': 'https://picsum.photos/id/0/800/400',
+        'Sports': 'https://picsum.photos/id/29/800/400',
+        'Politics': 'https://picsum.photos/id/1/800/400',
+        'Business': 'https://picsum.photos/id/20/800/400',
+        'Study': 'https://picsum.photos/id/42/800/400',
+        'Entertainment': 'https://picsum.photos/id/30/800/400'
+    };
+    // Default fallback
+    return fallbackImages[article.category] || `https://picsum.photos/id/${(article.id % 100) + 1}/800/400`;
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================
+// AI FUNCTIONS
+// ============================================
+async function generateAISummary(content) {
+    const text = content.replace(/<[^>]*>/g, '').substring(0, 500);
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: `Summarize this news in 2 short sentences (max 50 words): ${text}` }] }] })
+        });
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Read the full article for complete details.';
+    } catch(e) { return 'AI summary temporarily unavailable.'; }
+}
+
+async function generateKeyTakeaways(content) {
+    const text = content.replace(/<[^>]*>/g, '').substring(0, 800);
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: `Extract 3 key points from this news in bullet format: ${text}` }] }] })
+        });
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || '• Read the full article for key insights.';
+    } catch(e) { return '• Read the article for key insights.'; }
+}
+
+// ============================================
+// THEME FUNCTIONS
+// ============================================
+function setTheme(theme) {
+    if (theme === 'light') {
+        document.body.removeAttribute('data-theme');
+        document.body.removeAttribute('data-mode');
+        localStorage.setItem('theme', 'light');
+    } else if (theme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        document.body.removeAttribute('data-mode');
+        localStorage.setItem('theme', 'dark');
+    } else if (theme === 'reading') {
+        document.body.setAttribute('data-mode', 'reading');
+        if (localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+        else document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'reading');
+    }
+    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+    if (theme === 'light') document.getElementById('lightBtn')?.classList.add('active');
+    else if (theme === 'dark') document.getElementById('darkBtn')?.classList.add('active');
+    else if (theme === 'reading') document.getElementById('readingBtn')?.classList.add('active');
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') setTheme('dark');
+    else if (savedTheme === 'reading') setTheme('reading');
+    else setTheme('light');
+    const savedFont = localStorage.getItem('fontSize');
+    if (savedFont) changeFontSize(savedFont);
+    else changeFontSize('medium');
+}
+
+function changeFontSize(size) {
+    document.body.classList.remove('font-small', 'font-medium', 'font-large');
+    document.body.classList.add(`font-${size}`);
+    localStorage.setItem('fontSize', size);
+    document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+    if (size === 'small') document.querySelector('.font-btn:first-child')?.classList.add('active');
+    else if (size === 'medium') document.querySelectorAll('.font-btn')[1]?.classList.add('active');
+    else if (size === 'large') document.querySelectorAll('.font-btn')[2]?.classList.add('active');
+}
+
+// ============================================
+// PROGRESS BAR
+// ============================================
+window.addEventListener('scroll', () => {
+    const winScroll = document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+    const circle = document.getElementById('readingCircle');
+    if (scrolled > 10) circle.style.display = 'flex';
+    else circle.style.display = 'none';
+    document.getElementById('readingPercent').innerText = Math.round(scrolled) + '%';
+});
+
+// ============================================
+// SHARE FUNCTIONS
+// ============================================
+function shareOnWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent(currentArticle?.title)}%20${encodeURIComponent(window.location.href)}`, '_blank'); }
+function shareOnTwitter() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(currentArticle?.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank'); }
+function shareOnTelegram() { window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(currentArticle?.title)}`, '_blank'); }
+function shareOnFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); }
+function shareOnLinkedIn() { window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank'); }
+function shareArticle() { if (navigator.share) navigator.share({ title: currentArticle?.title, url: window.location.href }); else copyLink(); }
+function copyLink() { navigator.clipboard.writeText(window.location.href); alert('✅ Link copied to clipboard!'); }
+
+// ============================================
+// NEWSLETTER & COMMENTS
+// ============================================
+async function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value;
+    if (!email || !email.includes('@')) { alert('Please enter valid email'); return; }
+    const { error } = await supabase.from('subscribers').insert([{ email, created_at: new Date() }]);
+    if (error && error.code === '23505') alert('Already subscribed!');
+    else if (error) alert('Error: ' + error.message);
+    else { alert('✅ Subscribed successfully!'); document.getElementById('newsletterEmail').value = ''; }
+}
+
+function loadComments() {
+    const comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
+    const articleComments = comments.filter(c => c.articleId == articleId);
+    const container = document.getElementById('commentsList');
+    if (articleComments.length > 0) {
+        container.innerHTML = articleComments.map(c => `
+            <div class="comment">
+                <div class="comment-name">${escapeHtml(c.name)}</div>
+                <div class="comment-text">${escapeHtml(c.text)}</div>
+                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:5px;">${new Date(c.date).toLocaleString()}</div>
+            </div>
+        `).join('');
+    } else {
+        container.innerHTML = '<div style="padding:20px; text-align:center;">No comments yet. Be the first to comment!</div>';
+    }
+}
+
+function postComment() {
+    const name = document.getElementById('commentName').value;
+    const text = document.getElementById('commentText').value;
+    if (!name || !text) { alert('Please enter name and comment'); return; }
+    let comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
+    comments.push({ id: Date.now(), articleId: articleId, name: name, text: text, date: new Date() });
+    localStorage.setItem('article_comments', JSON.stringify(comments));
+    document.getElementById('commentName').value = '';
+    document.getElementById('commentText').value = '';
+    loadComments();
+}
+
+// ============================================
+// TRENDING & RELATED
+// ============================================
+async function loadTrending() {
+    const { data } = await supabase.from('news').select('title,id,views').order('views', { ascending: false }).limit(5);
+    const container = document.getElementById('trendingList');
+    if (data && data.length > 0) {
+        container.innerHTML = data.map((item, i) => `
+            <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                <div class="trending-number">${i+1}</div>
+                <div class="trending-title">${escapeHtml(item.title.substring(0, 60))}${item.title.length > 60 ? '...' : ''}</div>
+            </div>
+        `).join('');
+    } else { container.innerHTML = '<div style="padding:10px;">No trending articles</div>'; }
+}
+
+async function loadRelatedArticles(category, currentId) {
+    const { data } = await supabase.from('news').select('title,id,image_url,category').eq('category', category).limit(4);
+    if (data && data.length > 0) {
+        const filtered = data.filter(item => item.id != currentId);
+        if (filtered.length > 0) {
+            document.getElementById('relatedArticles').innerHTML = `
+                <div class="related-section">
+                    <h3 class="related-title"><i class="fas fa-link"></i> Related Articles</h3>
+                    <div class="related-grid">
+                        ${filtered.map(item => `
+                            <div class="related-card" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                                <img src="${item.image_url || 'https://picsum.photos/400/200?random='+item.id}" onerror="this.src='https://picsum.photos/400/200'">
+                                <div class="related-card-content">
+                                    <div class="related-card-title">${escapeHtml(item.title)}</div>
+                                    <div class="related-card-meta"><i class="fas fa-tag"></i> ${item.category || 'News'}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    }
+}
+
+// ============================================
+// MAIN LOAD ARTICLE
+// ============================================
 async function loadArticle() {
     if (!articleId) {
-        document.getElementById('articleContent').innerHTML = '<div class="error">❌ No article ID found. Use ?id=1</div>';
+        document.getElementById('articleContent').innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> No article selected!<br><br><a href="/rasu/" style="color: var(--primary);">← Go to Homepage</a></div>`;
         return;
     }
     
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
-            headers: { 'apikey': SUPABASE_KEY }
-        });
-        
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, { headers: { 'apikey': SUPABASE_KEY } });
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        
         const data = await response.json();
-        
         if (!data || data.length === 0) {
-            document.getElementById('articleContent').innerHTML = '<div class="error">❌ Article not found with ID: ' + articleId + '</div>';
+            document.getElementById('articleContent').innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Article not found with ID: ${articleId}<br><br><a href="/rasu/" style="color: var(--primary);">← Back to Homepage</a></div>`;
             return;
         }
         
-        const article = data[0];
-        const shareText = encodeURIComponent(article.title);
-        const shareUrl = encodeURIComponent(window.location.href);
+        currentArticle = data[0];
+        const article = currentArticle;
+        await supabase.from('news').update({ views: (article.views || 0) + 1 }).eq('id', article.id);
         
-        let badgeHtml = '';
-        if (article.badge) {
-            const badges = article.badge.split(',');
-            badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
-        }
-        
-        // Get content and clean it
-        let contentHtml = article.content || article.summary || 'No content available';
+        let contentHtml = article.content || article.summary || '<p>No content available</p>';
         contentHtml = cleanContent(contentHtml);
+        
+        const [aiSummary, keyTakeaways] = await Promise.all([generateAISummary(contentHtml), generateKeyTakeaways(contentHtml)]);
+        const readingTime = Math.ceil(contentHtml.replace(/<[^>]*>/g, '').length / 1000) || 1;
+        const randomReaders = Math.floor(Math.random() * 50) + 10;
+        
+        // Get image URL (FIXED - will show image)
+        const imageUrl = getImageUrl(article);
+        
+        document.getElementById('breadcrumbCategory').innerText = article.category || 'News';
+        
+        // Calculate hotness score
+        const likesCount = Object.values(JSON.parse(localStorage.getItem('article_likes') || '{}')).filter(v => v === true).length;
+        const hotnessScore = (article.views || 0) + (likesCount * 10);
+        const hotnessBadge = hotnessScore > 50 ? '<span class="hotness-badge"><i class="fas fa-fire"></i> Trending</span>' : '';
         
         document.getElementById('articleContent').innerHTML = `
             <div class="article-card">
-                ${article.image_url ? `<img class="article-image" src="${article.image_url}" onerror="this.style.display='none'">` : ''}
+                <span class="category-badge"><i class="fas fa-tag"></i> ${article.category || 'News'} ${hotnessBadge}</span>
                 <h1 class="article-title">${escapeHtml(article.title)}</h1>
+                
                 <div class="article-meta">
-                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
-                    <span>👁️ ${article.views || 0} views</span>
-                    <span>🏷️ ${article.category || 'News'}</span>
+                    <div class="meta-left">
+                        <span><i class="fas fa-user-circle"></i> ${escapeHtml(article.author || 'THE MOON Team')}</span>
+                        <span><i class="fas fa-calendar"></i> ${formatDate(article.published_at)}</span>
+                        <span><i class="fas fa-eye"></i> ${(article.views || 0) + 1} views</span>
+                        <span><i class="fas fa-clock"></i> ${readingTime} min read</span>
+                    </div>
+                    <div class="social-proof"><i class="fas fa-users"></i> ${randomReaders} people reading now</div>
                 </div>
-                ${badgeHtml}
-                <div class="article-content">
-                    ${contentHtml}
+                
+                <!-- Like Section - Only Like -->
+                <div class="like-section">
+                    <button class="like-btn" id="likeBtn" onclick="likeArticle()">
+                        <i class="far fa-heart" id="likeIcon"></i>
+                        <span id="likeText"> Like</span>
+                        <span class="like-count" id="likeCount">0</span>
+                    </button>
+                    <div><i class="fas fa-chart-line"></i> Popularity Score: ${hotnessScore}</div>
                 </div>
-                <div class="share-buttons">
-                    <a href="https://wa.me/?text=${shareText} ${shareUrl}" target="_blank" class="share-btn whatsapp">📱 WhatsApp</a>
-                    <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter">🐦 Twitter</a>
-                    <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram">📢 Telegram</a>
+                
+                <div class="author-box">
+                    <div class="author-avatar"><i class="fas fa-user-astronaut"></i></div>
+                    <div class="author-info">
+                        <h4>${escapeHtml(article.author || 'THE MOON Team')}</h4>
+                        <p>Senior Journalist at THE MOON | Covering breaking news and in-depth analysis</p>
+                        <div class="author-social">
+                            <a href="https://twitter.com/TheMoonZ60" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                            <a href="mailto:themoonr4@gmail.com"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="featured-image">
+                    <img src="${imageUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/id/1/800/400'">
+                    <div class="image-caption">📷 ${escapeHtml(article.title)}</div>
+                </div>
+                
+                <div class="ai-summary">
+                    <h4><i class="fas fa-robot"></i> 🤖 AI Summary</h4>
+                    <p>${escapeHtml(aiSummary)}</p>
+                </div>
+                
+                <div class="key-takeaways">
+                    <h4><i class="fas fa-key"></i> Key Takeaways</h4>
+                    ${keyTakeaways.replace(/\n/g, '<br>')}
+                </div>
+                
+                <div class="article-content">${contentHtml}</div>
+                
+                <div class="tags-section">
+                    <span class="tag"><i class="fas fa-hashtag"></i> ${article.category || 'News'}</span>
+                    <span class="tag"><i class="fas fa-hashtag"></i> Breaking</span>
+                    <span class="tag"><i class="fas fa-hashtag"></i> India</span>
+                </div>
+                
+                <div class="share-section">
+                    <div class="share-title"><i class="fas fa-share-alt"></i> Share this article</div>
+                    <div class="share-buttons">
+                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                        <button class="share-btn twitter" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> Twitter</button>
+                        <button class="share-btn telegram" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i> Telegram</button>
+                        <button class="share-btn facebook" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</button>
+                        <button class="share-btn linkedin" onclick="shareOnLinkedIn()"><i class="fab fa-linkedin"></i> LinkedIn</button>
+                        <button class="share-btn copy-btn" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</button>
+                    </div>
                 </div>
             </div>
         `;
         
         document.title = `${article.title} | THE MOON`;
+        loadLikeData();
+        loadRelatedArticles(article.category, article.id);
+        loadComments();
+        updateReaderStats();
+        updateTotalLikes();
+        
+        const savedPosition = localStorage.getItem(`article_pos_${articleId}`);
+        if (savedPosition) window.scrollTo(0, parseInt(savedPosition));
+        window.addEventListener('beforeunload', () => { localStorage.setItem(`article_pos_${articleId}`, window.scrollY); });
         
     } catch(err) {
         document.getElementById('articleContent').innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
     }
 }
 
+// ============================================
+// KEYBOARD SHORTCUTS
+// ============================================
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'j') window.scrollBy(0, 300);
+    if (e.key === 'k') window.scrollBy(0, -300);
+    if (e.key === 'l') likeArticle();
+    if (e.key === 's') shareArticle();
+    if (e.key === 't') scrollToTop();
+    if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); window.print(); }
+});
+
+// Start everything
+loadTrending();
 loadArticle();
+initTheme();
 </script>
 </body>
 </html>
