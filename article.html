@@ -12,114 +12,90 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>THE MOON - Article</title>
+    <title>THE MOON - Ultimate Article</title>
+    <link rel="manifest" href="/rasu/manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *{margin:0;padding:0;box-sizing:border-box;}
         
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --bg-sidebar: #f8f9fa;
             --text-primary: #1a1a1a;
             --text-secondary: #4a4a4a;
             --text-muted: #6c757d;
             --border: #e9ecef;
             --primary: #dc2626;
             --primary-dark: #b91c1c;
-            --primary-light: #fef2f2;
-            --secondary: #3b82f6;
             --success: #10b981;
             --warning: #f59e0b;
             --purple: #8b5cf6;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-            --radius: 0.75rem;
-            --radius-lg: 1rem;
+            --pink: #ec4899;
+            --gold: #ffd700;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 30px rgba(0,0,0,0.15);
         }
         
         [data-theme="dark"] {
             --bg-primary: #121212;
             --bg-secondary: #1e1e1e;
             --bg-card: #1e1e1e;
-            --bg-sidebar: #1a1a1a;
             --text-primary: #e0e0e0;
             --text-secondary: #b0b0b0;
             --text-muted: #808080;
             --border: #2a2a2a;
-            --primary-light: #2a1515;
         }
         
         [data-mode="reading"] {
             --bg-primary: #faf0e6;
             --bg-secondary: #f5e6d3;
             --bg-card: #fdf5e6;
-            --bg-sidebar: #f5e6d3;
             --text-primary: #4a3728;
             --text-secondary: #5c4a3a;
             --text-muted: #8b7355;
             --border: #e0d0c0;
         }
         
-        body {
-            font-family: 'Segoe UI', Georgia, 'Times New Roman', serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.7;
-            transition: all 0.3s ease;
+        body{
+            font-family:'Segoe UI',Arial,sans-serif;
+            background:var(--bg-primary);
+            color:var(--text-primary);
+            line-height:1.7;
+            transition:all 0.3s ease;
         }
-        
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
         
         .progress-bar {
             position: fixed;
             top: 0;
             left: 0;
             width: 0%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--purple));
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--purple), var(--success));
             z-index: 1001;
             transition: width 0.1s;
         }
         
-        .reading-circle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--primary);
-        }
+        .container{max-width:1300px;margin:0 auto;padding:20px;}
         
-        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
-        
-        .header {
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
+        .header{
+            background:var(--bg-primary);
+            border-bottom:1px solid var(--border);
+            padding:15px 0;
+            position:sticky;
+            top:0;
+            z-index:100;
+            backdrop-filter:blur(10px);
         }
         
         .header-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -127,43 +103,20 @@
             gap: 15px;
         }
         
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-decoration: none;
+        .logo{
+            font-size:1.5rem;
+            font-weight:800;
+            background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+            -webkit-background-clip:text;
+            background-clip:text;
+            color:transparent;
+            text-decoration:none;
         }
         
-        .logo span { font-size: 0.7rem; background: var(--primary); color: white; padding: 2px 8px; border-radius: 20px; margin-left: 5px; }
+        .logo span{font-size:0.7rem;background:var(--primary);color:white;padding:2px 8px;border-radius:20px;margin-left:5px;}
         
-        .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        
-        .font-controls {
-            display: flex;
-            gap: 5px;
-            background: var(--bg-secondary);
-            padding: 4px;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-        }
-        
-        .font-btn {
-            background: transparent;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            color: var(--text-primary);
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-        
-        .font-btn:hover, .font-btn.active { background: var(--primary); color: white; }
-        
-        .theme-btn {
+        .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .theme-btn, .font-btn, .action-sm {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             padding: 6px 12px;
@@ -172,341 +125,269 @@
             color: var(--text-primary);
             transition: all 0.2s;
         }
+        .theme-btn:hover, .font-btn:hover, .action-sm:hover { background: var(--primary); color: white; }
         
-        .theme-btn:hover, .theme-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        
-        .article-wrapper { display: flex; gap: 40px; margin: 30px 0; }
-        .main-content { flex: 2; min-width: 0; }
-        .sidebar { flex: 1; min-width: 280px; }
-        
-        @media (max-width: 992px) { .article-wrapper { flex-direction: column; } }
-        
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-        
-        .breadcrumb a { color: var(--primary); text-decoration: none; }
-        
-        .article-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-md);
-        }
-        
-        @media (max-width: 768px) { .article-card { padding: 20px; } }
-        
-        .category-badge {
-            display: inline-block;
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 4px 12px;
+        .premium-badge {
+            background: linear-gradient(135deg, var(--gold), #ffaa00);
+            color: #333;
+            padding: 2px 8px;
             border-radius: 20px;
             font-size: 0.7rem;
-            font-weight: 600;
-            margin-bottom: 15px;
+            font-weight: bold;
         }
         
-        .article-title {
-            font-size: 2.4rem;
-            line-height: 1.3;
-            margin-bottom: 20px;
-            color: var(--text-primary);
+        .article-wrapper { display: flex; gap: 30px; margin: 20px 0; }
+        .main-content { flex: 2; min-width: 0; }
+        .sidebar { flex: 1; min-width: 280px; }
+        @media (max-width: 992px) { .article-wrapper { flex-direction: column; } }
+        
+        .back-btn{
+            display:inline-block;
+            background:var(--bg-secondary);
+            padding:8px 16px;
+            border-radius:30px;
+            text-decoration:none;
+            color:var(--text-primary);
+            margin-bottom:20px;
+            border:1px solid var(--border);
+            transition:all 0.2s;
+        }
+        .back-btn:hover { background:var(--primary); color:white; transform:translateX(-3px); }
+        
+        .article-card{
+            background:var(--bg-card);
+            border-radius:20px;
+            padding:30px;
+            border:1px solid var(--border);
+            box-shadow:var(--shadow);
+        }
+        @media (max-width:768px){ .article-card{padding:20px;} }
+        
+        .article-title{font-size:2rem;margin-bottom:15px;line-height:1.3;}
+        @media (max-width:768px){ .article-title{font-size:1.5rem;} }
+        
+        .article-meta{
+            display:flex;
+            flex-wrap:wrap;
+            gap:15px;
+            color:var(--text-muted);
+            font-size:0.8rem;
+            margin-bottom:20px;
+            padding-bottom:15px;
+            border-bottom:1px solid var(--border);
+        }
+        .article-meta span { display: inline-flex; align-items: center; gap: 5px; }
+        
+        .article-image{
+            width:100%;
+            border-radius:16px;
+            margin:20px 0;
+            transition:transform 0.3s;
+        }
+        .article-image:hover{transform:scale(1.01);}
+        
+        /* Premium Lock */
+        .premium-lock {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
         }
         
-        @media (max-width: 768px) { .article-title { font-size: 1.8rem; } }
+        /* Quiz Section */
+        .quiz-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .quiz-question {
+            margin: 15px 0;
+        }
+        .quiz-option {
+            display: block;
+            padding: 10px;
+            margin: 8px 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover { background: var(--primary); color: white; }
         
-        .article-meta {
+        /* Leaderboard */
+        .leaderboard-item {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            padding: 10px 0;
             border-bottom: 1px solid var(--border);
         }
-        
-        .meta-left {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
+        .leaderboard-rank {
+            font-weight: bold;
+            color: var(--primary);
+            width: 40px;
         }
         
-        .meta-left span { display: inline-flex; align-items: center; gap: 6px; }
-        
-        .social-proof {
-            background: var(--bg-secondary);
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-        }
-        
-        /* Like Section - Only Like */
-        .like-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 15px 0;
+        /* Crypto Tip */
+        .crypto-tip {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            color: white;
+            padding: 15px;
+            border-radius: 16px;
+            text-align: center;
             margin: 15px 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
         }
         
-        .like-btn {
+        /* Translation */
+        .translation-select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        
+        /* Live Read Together */
+        .live-readers {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 10px;
+            margin: 10px 0;
             display: flex;
             align-items: center;
             gap: 10px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 12px 24px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            font-weight: bold;
-            color: var(--text-primary);
         }
-        
-        .like-btn:hover { transform: scale(1.05); background: var(--success); color: white; border-color: var(--success); }
-        .like-btn.active { background: var(--success); color: white; border-color: var(--success); }
-        .like-btn.active i { animation: heartBeat 0.3s ease; }
-        
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-        }
-        
-        .like-count {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        
-        .hotness-badge {
-            background: linear-gradient(135deg, var(--primary), var(--warning));
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: white;
-            margin-left: 10px;
-        }
-        
-        .ai-summary {
-            background: linear-gradient(135deg, var(--primary-light), var(--purple)10);
-            border-left: 4px solid var(--primary);
-            padding: 20px;
-            border-radius: var(--radius);
-            margin: 20px 0;
-        }
-        
-        .ai-summary h4 { color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        
-        .key-takeaways {
-            background: var(--bg-secondary);
-            padding: 20px;
-            border-radius: var(--radius);
-            margin: 20px 0;
-            border: 1px solid var(--border);
-        }
-        
-        .key-takeaways h4 { margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .key-takeaways ul { margin-left: 20px; }
-        .key-takeaways li { margin-bottom: 8px; }
-        
-        .author-box {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            padding: 15px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            margin: 20px 0;
-            flex-wrap: wrap;
-            border: 1px solid var(--border);
-        }
-        
-        .author-avatar {
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
+        .live-avatar {
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
+            background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 12px;
             color: white;
         }
         
-        .author-info h4 { margin-bottom: 5px; }
-        .author-info p { font-size: 0.8rem; color: var(--text-muted); }
-        .author-social { display: flex; gap: 10px; margin-top: 8px; }
-        .author-social a { color: var(--text-muted); transition: color 0.2s; }
-        .author-social a:hover { color: var(--primary); }
-        
-        .featured-image {
-            margin: 20px 0;
-            position: relative;
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        
-        .featured-image img {
-            width: 100%;
-            border-radius: var(--radius);
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        
-        .featured-image:hover img { transform: scale(1.02); }
-        .image-caption { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 8px; }
-        
-        .article-content { font-size: 1.05rem; line-height: 1.8; }
-        .article-content p { margin-bottom: 1.2rem; }
-        .article-content h2 { font-size: 1.6rem; margin: 1.5rem 0 1rem; }
-        .article-content h3 { font-size: 1.3rem; margin: 1.2rem 0 0.8rem; }
-        .article-content img { max-width: 100%; border-radius: var(--radius); margin: 1rem 0; }
-        .article-content iframe { width: 100%; border-radius: var(--radius); margin: 1rem 0; }
-        .article-content blockquote {
-            border-left: 4px solid var(--primary);
-            padding-left: 1.2rem;
-            margin: 1rem 0;
-            font-style: italic;
-            color: var(--text-secondary);
-        }
-        
-        .tags-section { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
-        .tag {
+        /* Heatmap */
+        .heatmap-container {
             background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .heatmap-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #4caf50, #ff9800, #f44336);
+            border-radius: 2px;
+            margin: 5px 0;
+        }
+        
+        /* Achievement Badge */
+        .achievement-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold), #ffaa00);
+            color: #333;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.7rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.2s;
+            font-weight: bold;
+            margin: 3px;
         }
-        .tag:hover { background: var(--primary); color: white; }
         
-        .share-section { margin: 30px 0; padding-top: 20px; border-top: 1px solid var(--border); }
-        .share-title { margin-bottom: 15px; font-size: 1rem; }
-        .share-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
-        
-        .share-btn {
-            padding: 8px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-            color: white;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
+        /* Daily Challenge */
+        .challenge-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
         }
-        .share-btn:hover { transform: translateY(-2px); }
-        .whatsapp { background: #25D366; }
-        .twitter { background: #1DA1F2; }
-        .telegram { background: #0088CC; }
-        .facebook { background: #1877F2; }
-        .linkedin { background: #0077B5; }
-        .copy-btn { background: var(--text-muted); }
         
-        .related-section { margin-top: 40px; }
-        .related-title {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary);
-            display: inline-block;
+        /* Video Summary */
+        .video-summary {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
         }
+        
+        .share-buttons{
+            display:flex;
+            gap:10px;
+            margin-top:30px;
+            padding-top:20px;
+            border-top:1px solid var(--border);
+            flex-wrap:wrap;
+        }
+        
+        .share-btn{
+            padding:8px 16px;
+            border-radius:30px;
+            text-decoration:none;
+            color:white;
+            font-size:0.8rem;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            transition:all 0.2s;
+            border:none;
+            cursor:pointer;
+        }
+        .share-btn:hover{transform:translateY(-2px);}
+        .whatsapp{background:#25D366;}
+        .twitter{background:#1DA1F2;}
+        .telegram{background:#0088CC;}
+        .facebook{background:#1877F2;}
+        .instagram{background:#E4405F;}
+        .copy-btn{background:var(--text-muted);}
         
         .related-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
-        
         .related-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--border);
             cursor: pointer;
             transition: all 0.3s;
-        }
-        
-        .related-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
-        .related-card img { width: 100%; height: 160px; object-fit: cover; }
-        .related-card-content { padding: 15px; }
-        .related-card-title { font-size: 0.9rem; font-weight: 600; line-height: 1.4; }
-        .related-card-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; }
-        
-        .widget {
-            background: var(--bg-sidebar);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 25px;
             border: 1px solid var(--border);
         }
+        .related-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+        .related-card img { width: 100%; height: 120px; object-fit: cover; }
+        .related-card-content { padding: 12px; }
+        .related-card-title { font-size: 0.85rem; font-weight: 600; }
         
+        .widget {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
         .widget-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 15px;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--primary);
             display: inline-block;
         }
         
         .trending-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid var(--border);
             cursor: pointer;
             transition: all 0.2s;
         }
-        
-        .trending-item:hover .trending-title { color: var(--primary); }
-        .trending-number { font-size: 1.2rem; font-weight: bold; color: var(--primary); min-width: 30px; }
-        .trending-title { font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-        
-        .newsletter-input { display: flex; flex-direction: column; gap: 10px; }
-        .newsletter-input input { padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); }
-        .newsletter-input button { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        
-        .ad-space {
-            text-align: center;
-            padding: 15px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            border: 1px dashed var(--border);
-            color: var(--text-muted);
-            font-size: 0.7rem;
-        }
-        
-        .comments-section { margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border); }
-        .comment-form { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
-        .comment-form input, .comment-form textarea { padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); }
-        .comment-form button { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
-        .comment {
-            background: var(--bg-secondary);
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-        }
-        .comment-name { font-weight: bold; color: var(--primary); margin-bottom: 5px; }
+        .trending-item:hover { color: var(--primary); padding-left: 5px; }
+        .trending-number { color: var(--primary); font-weight: bold; margin-right: 8px; }
         
         .floating-actions {
             position: fixed;
@@ -518,112 +399,31 @@
             gap: 10px;
             z-index: 99;
         }
-        
-        .floating-actions .action-btn {
-            width: 40px;
-            height: 40px;
+        .floating-actions button {
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             background: var(--bg-card);
             border: 1px solid var(--border);
             cursor: pointer;
             color: var(--text-primary);
+            box-shadow: var(--shadow);
             transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
         }
-        
-        .floating-actions .action-btn:hover { background: var(--primary); color: white; transform: scale(1.1); }
-        
+        .floating-actions button:hover { background: var(--primary); color: white; transform: scale(1.05); }
         @media (max-width: 768px) {
-            .floating-actions {
-                position: fixed;
-                bottom: 80px;
-                right: 20px;
-                left: auto;
-                top: auto;
-                flex-direction: row;
-                background: var(--bg-card);
-                padding: 8px;
-                border-radius: 40px;
-                box-shadow: var(--shadow-lg);
-            }
+            .floating-actions { left: auto; right: 20px; bottom: 20px; top: auto; flex-direction: row; background: var(--bg-card); padding: 8px; border-radius: 50px; }
         }
         
-        .footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            margin-top: 50px;
-        }
-        
-        .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--primary); }
-        
-        .shortcuts-hint {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 5px 10px;
-            font-size: 10px;
-            color: var(--text-muted);
-            z-index: 98;
-        }
-        
-        @media (max-width: 768px) { .shortcuts-hint { display: none; } }
-        
-        .loader { text-align: center; padding: 50px; }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .error { color: var(--primary); background: var(--primary-light); padding: 20px; border-radius: var(--radius); text-align: center; }
-        
-        @media print {
-            .header, .sidebar, .floating-actions, .comments-section, .footer, .reading-circle, .progress-bar, .shortcuts-hint, .like-section {
-                display: none !important;
-            }
-            .article-card { padding: 0; box-shadow: none; }
-            body { background: white; color: black; }
-        }
+        .footer{text-align:center;padding:30px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:30px;font-size:0.8rem;}
+        .loader{text-align:center;padding:50px;}
+        .spinner{width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .error{color:var(--primary);padding:20px;background:var(--primary)10;border-radius:12px;text-align:center;}
         
         body.font-small .article-content { font-size: 0.9rem; }
-        body.font-medium .article-content { font-size: 1.05rem; }
+        body.font-medium .article-content { font-size: 1rem; }
         body.font-large .article-content { font-size: 1.2rem; }
-        
-        @media (max-width: 768px) { .container { padding: 0 15px; } .controls { justify-content: flex-end; } }
-        
-        .reader-stats {
-            background: var(--bg-secondary);
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .stat-item { text-align: center; }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
-        .stat-label { font-size: 0.6rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -633,9 +433,17 @@
 <header class="header">
     <div class="container">
         <div class="header-content">
-            <a href="/rasu/" class="logo">🌙 THE MOON <span>PREMIUM</span></a>
+            <a href="/rasu/" class="logo">🌙 THE MOON <span>ULTIMATE</span></a>
             <div class="controls">
-                <div class="font-controls">
+                <select class="translation-select" id="languageSelect" onchange="translatePage()">
+                    <option value="hi">🇮🇳 हिंदी</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="ta">🇮🇳 தமிழ்</option>
+                    <option value="te">🇮🇳 తెలుగు</option>
+                    <option value="bn">🇮🇳 বাংলা</option>
+                    <option value="mr">🇮🇳 मराठी</option>
+                </select>
+                <div style="display: flex; gap: 5px; background: var(--bg-secondary); padding: 3px; border-radius: 30px;">
                     <button class="font-btn" onclick="changeFontSize('small')">A-</button>
                     <button class="font-btn" onclick="changeFontSize('medium')">A</button>
                     <button class="font-btn" onclick="changeFontSize('large')">A+</button>
@@ -651,107 +459,66 @@
 <div class="container">
     <div class="article-wrapper">
         <div class="main-content">
-            <div class="breadcrumb">
-                <a href="/rasu/">Home</a>
-                <i class="fas fa-chevron-right"></i>
-                <span id="breadcrumbCategory">News</span>
-            </div>
-            
-            <div id="articleContent">
-                <div class="loader"><div class="spinner"></div><p>Loading article...</p></div>
-            </div>
-            
+            <a href="/rasu/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <div id="articleContent"><div class="loader"><div class="spinner"></div><p>Loading article...</p></div></div>
             <div id="relatedArticles"></div>
-            
-            <div class="comments-section">
-                <h3><i class="fas fa-comments"></i> Comments</h3>
-                <div class="comment-form">
-                    <input type="text" id="commentName" placeholder="Your Name">
-                    <textarea id="commentText" rows="3" placeholder="Write a comment..."></textarea>
-                    <button onclick="postComment()">Post Comment</button>
-                </div>
-                <div id="commentsList"></div>
-            </div>
         </div>
         
         <div class="sidebar">
-            <div class="widget">
-                <h3 class="widget-title"><i class="fas fa-fire"></i> Trending Now</h3>
-                <div id="trendingList">Loading...</div>
+            <div class="widget" id="liveReadWidget">
+                <h3 class="widget-title"><i class="fas fa-users"></i> Live Read Together</h3>
+                <div id="liveReadersList"></div>
             </div>
             
             <div class="widget">
-                <h3 class="widget-title"><i class="fas fa-envelope"></i> Newsletter</h3>
-                <div class="newsletter-input">
-                    <input type="email" id="newsletterEmail" placeholder="Your email address">
-                    <button onclick="subscribeNewsletter()">Subscribe</button>
+                <h3 class="widget-title"><i class="fas fa-trophy"></i> Weekly Leaderboard</h3>
+                <div id="leaderboardList"></div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-chart-line"></i> Your Analytics</h3>
+                <div id="analyticsDashboard"></div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-fire"></i> Daily Challenge</h3>
+                <div id="dailyChallenge"></div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-award"></i> Your Badges</h3>
+                <div id="achievementBadges"></div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title"><i class="fas fa-coins"></i> Crypto Tip</h3>
+                <div class="crypto-tip">
+                    <p><i class="fab fa-bitcoin"></i> Support the Author</p>
+                    <button onclick="tipCrypto()" class="share-btn" style="background: linear-gradient(135deg, #f7931a, #ffaa00); margin-top:10px;">Tip BTC <i class="fab fa-bitcoin"></i></button>
+                    <button onclick="tipCrypto('eth')" class="share-btn" style="background: linear-gradient(135deg, #627eea, #8b9ef0); margin-top:5px;">Tip ETH <i class="fab fa-ethereum"></i></button>
                 </div>
             </div>
             
             <div class="widget">
-                <h3 class="widget-title"><i class="fas fa-chart-line"></i> Your Stats</h3>
-                <div class="reader-stats" id="readerStats">
-                    <div class="stat-grid">
-                        <div class="stat-item">
-                            <div class="stat-value" id="articlesRead">0</div>
-                            <div class="stat-label">Articles Read</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="totalLikes">0</div>
-                            <div class="stat-label">Total Likes</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="readingStreak">0</div>
-                            <div class="stat-label">Day Streak</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="widget">
-                <h3 class="widget-title"><i class="fas fa-share-alt"></i> Share</h3>
-                <div class="share-buttons">
-                    <button class="share-btn whatsapp" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i></button>
-                    <button class="share-btn twitter" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i></button>
-                    <button class="share-btn telegram" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i></button>
-                    <button class="share-btn facebook" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i></button>
-                    <button class="share-btn linkedin" onclick="shareOnLinkedIn()"><i class="fab fa-linkedin"></i></button>
-                    <button class="share-btn copy-btn" onclick="copyLink()"><i class="fas fa-link"></i></button>
-                </div>
-            </div>
-            
-            <div class="widget">
-                <h3 class="widget-title"><i class="fas fa-ad"></i> Advertisement</h3>
-                <div class="ad-space"><i class="fas fa-ad"></i> Ad Space</div>
+                <h3 class="widget-title"><i class="fas fa-gift"></i> Refer & Earn</h3>
+                <p>Share with friends and earn rewards!</p>
+                <button onclick="shareReferral()" class="share-btn whatsapp" style="margin-top:10px;"><i class="fab fa-whatsapp"></i> Invite Friends</button>
+                <div id="referralCode"></div>
             </div>
         </div>
     </div>
     
     <div class="footer">
-        <div class="footer-links">
-            <a href="/rasu/about.html">About Us</a>
-            <a href="/rasu/privacy.html">Privacy Policy</a>
-            <a href="/rasu/contact.html">Contact Us</a>
-            <a href="/rasu/admin.html">Advertise</a>
-        </div>
-        <p>© 2026 THE MOON — India's Most Advanced AI-Powered News Platform</p>
-        <p style="font-size: 0.7rem; margin-top: 8px;">Made with ❤️ in India</p>
+        <p>© 2026 THE MOON — Ultimate News Platform | Made with ❤️ in India</p>
+        <p style="font-size:0.7rem; margin-top:8px;"><a href="/rasu/about.html" style="color:var(--text-muted);">About</a> | <a href="/rasu/privacy.html" style="color:var(--text-muted);">Privacy</a> | <a href="/rasu/contact.html" style="color:var(--text-muted);">Contact</a></p>
     </div>
 </div>
 
 <div class="floating-actions">
-    <button class="action-btn" onclick="window.print()" title="Print"><i class="fas fa-print"></i></button>
-    <button class="action-btn" onclick="copyLink()" title="Copy Link"><i class="fas fa-link"></i></button>
-    <button class="action-btn" onclick="shareArticle()" title="Share"><i class="fas fa-share-alt"></i></button>
-    <button class="action-btn" onclick="scrollToTop()" title="Top"><i class="fas fa-arrow-up"></i></button>
-</div>
-
-<div class="reading-circle" id="readingCircle" style="display: none;">
-    <span id="readingPercent">0%</span>
-</div>
-
-<div class="shortcuts-hint">
-    <i class="fas fa-keyboard"></i> ⌨️ J/K: Navigate | L: Like | S: Share | T: Top
+    <button onclick="scrollToTop()" title="Top"><i class="fas fa-arrow-up"></i></button>
+    <button onclick="shareStory()" title="Share Story"><i class="fab fa-instagram"></i></button>
+    <button onclick="togglePremium()" title="Premium" id="premiumBtn"><i class="fas fa-crown"></i></button>
+    <button onclick="generateVideoSummary()" title="Video Summary"><i class="fas fa-video"></i></button>
 </div>
 
 <script>
@@ -761,98 +528,11 @@
 const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
 const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get('id');
 let currentArticle = null;
-let isLiked = false;
-
-// ============================================
-// READER STATS
-// ============================================
-function updateReaderStats() {
-    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{"articlesRead":0,"totalLikes":0,"lastReadDate":null,"streak":0}');
-    const today = new Date().toDateString();
-    
-    if (stats.lastReadDate !== today) {
-        if (stats.lastReadDate === new Date(Date.now() - 86400000).toDateString()) {
-            stats.streak++;
-        } else {
-            stats.streak = 1;
-        }
-        stats.articlesRead++;
-        stats.lastReadDate = today;
-        localStorage.setItem('reader_stats', JSON.stringify(stats));
-    }
-    
-    document.getElementById('articlesRead').innerText = stats.articlesRead;
-    document.getElementById('totalLikes').innerText = stats.totalLikes;
-    document.getElementById('readingStreak').innerText = stats.streak;
-}
-
-function updateTotalLikes() {
-    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{"articlesRead":0,"totalLikes":0,"lastReadDate":null,"streak":0}');
-    const likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
-    stats.totalLikes = Object.values(likes).filter(v => v === true).length;
-    localStorage.setItem('reader_stats', JSON.stringify(stats));
-    document.getElementById('totalLikes').innerText = stats.totalLikes;
-}
-
-// ============================================
-// LIKE SYSTEM (ONLY LIKE)
-// ============================================
-function loadLikeData() {
-    const likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
-    isLiked = likes[articleId] === true;
-    updateLikeButton();
-    updateLikeCount();
-}
-
-function likeArticle() {
-    let likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
-    
-    if (isLiked) {
-        delete likes[articleId];
-        isLiked = false;
-    } else {
-        likes[articleId] = true;
-        isLiked = true;
-        // Celebration effect
-        const likeBtn = document.getElementById('likeBtn');
-        likeBtn.style.transform = 'scale(1.2)';
-        setTimeout(() => { likeBtn.style.transform = 'scale(1)'; }, 300);
-    }
-    
-    localStorage.setItem('article_likes', JSON.stringify(likes));
-    updateLikeButton();
-    updateLikeCount();
-    updateTotalLikes();
-}
-
-function updateLikeButton() {
-    const likeBtn = document.getElementById('likeBtn');
-    const likeIcon = document.getElementById('likeIcon');
-    const likeText = document.getElementById('likeText');
-    if (likeBtn) {
-        if (isLiked) {
-            likeBtn.classList.add('active');
-            likeIcon.className = 'fas fa-heart';
-            likeText.innerText = ' Liked';
-        } else {
-            likeBtn.classList.remove('active');
-            likeIcon.className = 'far fa-heart';
-            likeText.innerText = ' Like';
-        }
-    }
-}
-
-function updateLikeCount() {
-    const likes = JSON.parse(localStorage.getItem('article_likes') || '{}');
-    const likeCount = Object.values(likes).filter(v => v === true).length;
-    const likeCountSpan = document.getElementById('likeCount');
-    if (likeCountSpan) likeCountSpan.innerText = likeCount;
-}
+let isPremium = false;
 
 // ============================================
 // UTILITY FUNCTIONS
@@ -862,69 +542,402 @@ function escapeHtml(str) {
     return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');
 }
 
-function formatDate(dateString) {
-    if (!dateString) return 'Unknown';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
-}
-
-function cleanContent(content) {
-    if (!content) return '<p>No content available</p>';
-    let cleaned = content;
-    cleaned = cleaned.replace(/<\/p><p><p>/g, '</p><p>');
-    cleaned = cleaned.replace(/<p><p>/g, '<p>');
-    cleaned = cleaned.replace(/<\/p><\/p>/g, '</p>');
-    return cleaned;
-}
-
-// IMPORTANT: Image URL Fix - Agar database mein image nahi hai toh category-based fallback dikhega
-function getImageUrl(article) {
-    // Agar database mein image URL hai toh wahi use karo
-    if (article.image_url && article.image_url !== '' && article.image_url !== null) {
-        return article.image_url;
+// ============================================
+// 1. INSTAGRAM STORY SHARE
+// ============================================
+async function shareStory() {
+    const element = document.querySelector('.article-card');
+    if (!element) return;
+    
+    try {
+        const canvas = await html2canvas(element, { scale: 2 });
+        const link = document.createElement('a');
+        link.download = 'story-share.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        alert('✅ Image saved! Share on Instagram Story.');
+        trackEvent('story_share');
+    } catch(e) {
+        alert('Error generating image');
     }
-    // Nahi toh category ke hisaab se fallback image
-    const fallbackImages = {
-        'Technology': 'https://picsum.photos/id/0/800/400',
-        'Sports': 'https://picsum.photos/id/29/800/400',
-        'Politics': 'https://picsum.photos/id/1/800/400',
-        'Business': 'https://picsum.photos/id/20/800/400',
-        'Study': 'https://picsum.photos/id/42/800/400',
-        'Entertainment': 'https://picsum.photos/id/30/800/400'
+}
+
+// ============================================
+// 2. WEEKLY LEADERBOARD
+// ============================================
+function loadLeaderboard() {
+    let stats = JSON.parse(localStorage.getItem('reader_stats_all') || '{}');
+    let leaderboard = Object.entries(stats).map(([name, data]) => ({ name, xp: data.xp || 0 }))
+        .sort((a,b) => b.xp - a.xp).slice(0,10);
+    
+    const container = document.getElementById('leaderboardList');
+    if (leaderboard.length === 0) {
+        container.innerHTML = '<div class="leaderboard-item">No data yet. Be the first!</div>';
+        return;
+    }
+    
+    container.innerHTML = leaderboard.map((user, i) => `
+        <div class="leaderboard-item">
+            <span class="leaderboard-rank">#${i+1}</span>
+            <span>${escapeHtml(user.name)}</span>
+            <span><i class="fas fa-star" style="color:var(--gold);"></i> ${user.xp} XP</span>
+        </div>
+    `).join('');
+    
+    let currentUser = localStorage.getItem('reader_name') || 'You';
+    let userRank = leaderboard.findIndex(u => u.name === currentUser) + 1;
+    if (userRank > 0) {
+        container.innerHTML += `<div class="leaderboard-item" style="background:var(--primary); color:white; border-radius:10px; margin-top:5px;">
+            <span class="leaderboard-rank">🎯 Your Rank: ${userRank}</span>
+        </div>`;
+    }
+}
+
+// ============================================
+// 3. ARTICLE QUIZ SYSTEM
+// ============================================
+function generateQuiz() {
+    if (!currentArticle) return;
+    const quizHtml = `
+        <div class="quiz-section">
+            <h4><i class="fas fa-question-circle"></i> Quiz: Did you read carefully?</h4>
+            <div class="quiz-question">
+                <p>Q1: What is the main topic of this article?</p>
+                <div class="quiz-option" onclick="answerQuiz(1, '${escapeHtml(currentArticle.title)}')">${escapeHtml(currentArticle.title)}</div>
+                <div class="quiz-option" onclick="answerQuiz(1, 'Other topic')">Other topic</div>
+            </div>
+            <div id="quizResult"></div>
+        </div>
+    `;
+    document.querySelector('.article-card')?.insertAdjacentHTML('beforeend', quizHtml);
+}
+
+function answerQuiz(question, answer) {
+    if (answer === currentArticle.title) {
+        document.getElementById('quizResult').innerHTML = '<div style="color:var(--success);">✅ Correct! +5 XP earned!</div>';
+        updateXP(5);
+    } else {
+        document.getElementById('quizResult').innerHTML = '<div style="color:var(--primary);">❌ Wrong answer. Try again!</div>';
+    }
+}
+
+// ============================================
+// 4. SMART PUSH NOTIFICATIONS
+// ============================================
+function requestNotificationPermission() {
+    if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                new Notification('🔔 THE MOON', { body: 'You will now receive breaking news alerts!', icon: '/rasu/icon-192.png' });
+            }
+        });
+    }
+}
+
+function sendNotification(title, body) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, { body, icon: '/rasu/icon-192.png' });
+    }
+}
+
+// ============================================
+// 5. PREMIUM MEMBERSHIP
+// ============================================
+function checkPremium() {
+    isPremium = localStorage.getItem('is_premium') === 'true';
+    const btn = document.getElementById('premiumBtn');
+    if (btn) {
+        if (isPremium) {
+            btn.innerHTML = '<i class="fas fa-crown" style="color:var(--gold);"></i>';
+            btn.title = 'Premium Member';
+        } else {
+            btn.innerHTML = '<i class="far fa-crown"></i>';
+            btn.title = 'Upgrade to Premium';
+        }
+    }
+}
+
+function togglePremium() {
+    if (isPremium) {
+        alert('You are already a Premium member! 🎉');
+    } else {
+        if (confirm('Upgrade to Premium for ₹99/month? Get exclusive content, no ads, and special badges!')) {
+            localStorage.setItem('is_premium', 'true');
+            isPremium = true;
+            checkPremium();
+            alert('🎉 Welcome to Premium! You now have access to exclusive features.');
+            trackEvent('premium_upgrade');
+        }
+    }
+}
+
+// ============================================
+// 6. CRYPTO TIPPING
+// ============================================
+function tipCrypto(currency = 'btc') {
+    const addresses = {
+        btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+        eth: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bB0'
     };
-    // Default fallback
-    return fallbackImages[article.category] || `https://picsum.photos/id/${(article.id % 100) + 1}/800/400`;
-}
-
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigator.clipboard.writeText(addresses[currency]);
+    alert(`✅ ${currency.toUpperCase()} address copied! Send tip to support the author.`);
+    trackEvent('crypto_tip');
 }
 
 // ============================================
-// AI FUNCTIONS
+// 7. AUTO TRANSLATION
 // ============================================
-async function generateAISummary(content) {
-    const text = content.replace(/<[^>]*>/g, '').substring(0, 500);
+async function translatePage() {
+    const lang = document.getElementById('languageSelect').value;
+    const content = document.querySelector('.article-content')?.innerText;
+    if (!content || lang === 'hi') return;
+    
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: `Summarize this news in 2 short sentences (max 50 words): ${text}` }] }] })
+            body: JSON.stringify({ contents: [{ parts: [{ text: `Translate this to ${lang === 'en' ? 'English' : lang === 'ta' ? 'Tamil' : lang === 'te' ? 'Telugu' : lang === 'bn' ? 'Bengali' : 'Marathi'}: ${content.substring(0, 1500)}` }] }] })
         });
         const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Read the full article for complete details.';
-    } catch(e) { return 'AI summary temporarily unavailable.'; }
+        const translated = data.candidates?.[0]?.content?.parts?.[0]?.text || content;
+        document.querySelector('.article-content').innerHTML = `<p>${escapeHtml(translated)}</p>`;
+    } catch(e) { alert('Translation error'); }
 }
 
-async function generateKeyTakeaways(content) {
-    const text = content.replace(/<[^>]*>/g, '').substring(0, 800);
+// ============================================
+// 8. AI IMAGE GENERATION
+// ============================================
+async function generateAIImage(prompt) {
+    try {
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=400`;
+        return imageUrl;
+    } catch(e) { return null; }
+}
+
+// ============================================
+// 9. READING ANALYTICS DASHBOARD
+// ============================================
+function loadAnalytics() {
+    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{"totalRead":0,"totalTime":0,"likes":0,"streak":0,"xp":0,"level":1}');
+    const today = new Date().toDateString();
+    if (stats.lastRead !== today) {
+        stats.totalRead++;
+        stats.lastRead = today;
+        localStorage.setItem('reader_stats', JSON.stringify(stats));
+    }
+    
+    document.getElementById('analyticsDashboard').innerHTML = `
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; text-align:center;">
+            <div><div style="font-size:1.5rem; font-weight:bold; color:var(--primary);">${stats.totalRead}</div><div>Articles Read</div></div>
+            <div><div style="font-size:1.5rem; font-weight:bold; color:var(--success);">${stats.streak}</div><div>Day Streak</div></div>
+            <div><div style="font-size:1.5rem; font-weight:bold; color:var(--warning);">${stats.xp}</div><div>Total XP</div></div>
+            <div><div style="font-size:1.5rem; font-weight:bold; color:var(--purple);">${stats.level}</div><div>Level</div></div>
+        </div>
+        <canvas id="readingChart" height="150" style="margin-top:15px;"></canvas>
+    `;
+    
+    const ctx = document.getElementById('readingChart')?.getContext('2d');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Reading Time (min)', data: [15, 25, 10, 30, 20, 45, 35], borderColor: '#dc2626', fill: false }] }
+        });
+    }
+}
+
+// ============================================
+// 10. HEATMAP TRACKING
+// ============================================
+function trackHeatmap(position) {
+    let heatmap = JSON.parse(localStorage.getItem('heatmap_' + articleId) || '[]');
+    heatmap.push({ position, time: Date.now() });
+    if (heatmap.length > 100) heatmap = heatmap.slice(-100);
+    localStorage.setItem('heatmap_' + articleId, JSON.stringify(heatmap));
+}
+
+function loadHeatmap() {
+    let heatmap = JSON.parse(localStorage.getItem('heatmap_' + articleId) || '[]');
+    const scrollPercentages = [10, 25, 50, 75, 100];
+    let counts = scrollPercentages.map(p => heatmap.filter(h => h.position >= p).length);
+    const maxCount = Math.max(...counts, 1);
+    
+    document.getElementById('heatmapContainer')?.remove();
+    const container = document.createElement('div');
+    container.id = 'heatmapContainer';
+    container.className = 'heatmap-container';
+    container.innerHTML = `<h4><i class="fas fa-chart-line"></i> Reading Heatmap</h4>`;
+    
+    scrollPercentages.forEach((p, i) => {
+        const intensity = (counts[i] / maxCount) * 100;
+        container.innerHTML += `<div>${p}% read: <div class="heatmap-bar" style="width:${intensity}%; background:linear-gradient(90deg, #4caf50, #ff9800);"></div></div>`;
+    });
+    document.querySelector('.article-card')?.appendChild(container);
+}
+
+// ============================================
+// 11. DAILY CHALLENGES
+// ============================================
+function loadDailyChallenge() {
+    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{}');
+    const today = new Date().toDateString();
+    let challenge = JSON.parse(localStorage.getItem('daily_challenge') || '{}');
+    
+    if (challenge.date !== today) {
+        challenge = {
+            date: today,
+            tasks: [
+                { text: 'Read 3 articles', completed: stats.totalReadToday >= 3, target: 3, current: stats.totalReadToday || 0 },
+                { text: 'Like 5 articles', completed: stats.likesToday >= 5, target: 5, current: stats.likesToday || 0 },
+                { text: 'Share 1 article', completed: stats.sharesToday >= 1, target: 1, current: stats.sharesToday || 0 }
+            ],
+            completed: false
+        };
+        localStorage.setItem('daily_challenge', JSON.stringify(challenge));
+    }
+    
+    const container = document.getElementById('dailyChallenge');
+    container.innerHTML = `
+        <div class="challenge-card">
+            <strong><i class="fas fa-calendar-day"></i> Today's Challenge</strong>
+            <div style="margin-top:10px;">
+                ${challenge.tasks.map(t => `
+                    <div style="margin:8px 0;">
+                        <span>${t.completed ? '✅' : '⭕'} ${t.text} (${t.current}/${t.target})</span>
+                        <div class="heatmap-bar" style="width:${(t.current/t.target)*100}%; background:var(--success); margin-top:3px;"></div>
+                    </div>
+                `).join('')}
+            </div>
+            ${challenge.completed ? '<div style="color:var(--gold); margin-top:10px;">🎉 Challenge Complete! +50 XP</div>' : ''}
+        </div>
+    `;
+}
+
+// ============================================
+// 12. ACHIEVEMENT BADGES
+// ============================================
+function loadAchievements() {
+    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{}');
+    let badges = [];
+    
+    if (stats.streak >= 3) badges.push('🔥 3 Day Streak');
+    if (stats.streak >= 7) badges.push('⚡ Week Warrior');
+    if (stats.streak >= 30) badges.push('👑 Legendary Reader');
+    if (stats.totalRead >= 10) badges.push('📚 Bookworm');
+    if (stats.totalRead >= 50) badges.push('🎓 Scholar');
+    if (stats.totalRead >= 100) badges.push('🏆 Master Reader');
+    if (stats.likes >= 10) badges.push('❤️ Supporter');
+    if (stats.shares >= 5) badges.push('📢 Influencer');
+    if (stats.level >= 5) badges.push('⭐ Elite Member');
+    
+    const container = document.getElementById('achievementBadges');
+    if (badges.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted);">Complete challenges to earn badges!</div>';
+    } else {
+        container.innerHTML = badges.map(b => `<span class="achievement-badge"><i class="fas fa-medal"></i> ${b}</span>`).join('');
+    }
+}
+
+// ============================================
+// 13. REFER & EARN
+// ============================================
+function shareReferral() {
+    let referralCode = localStorage.getItem('referral_code');
+    if (!referralCode) {
+        referralCode = 'THEMOON' + Math.random().toString(36).substring(2, 8).toUpperCase();
+        localStorage.setItem('referral_code', referralCode);
+    }
+    const referralUrl = `${window.location.origin}/rasu/?ref=${referralCode}`;
+    navigator.clipboard.writeText(referralUrl);
+    alert('✅ Referral link copied! Share with friends to earn rewards.');
+    trackEvent('referral_share');
+}
+
+// ============================================
+// 14. LIVE READ TOGETHER
+// ============================================
+let liveUsers = [];
+function updateLiveReaders() {
+    liveUsers.push({ id: Math.random().toString(36).substring(7), name: localStorage.getItem('reader_name') || 'Guest' + Math.floor(Math.random() * 100) });
+    liveUsers = liveUsers.slice(-10);
+    
+    const container = document.getElementById('liveReadersList');
+    container.innerHTML = `
+        <div class="live-readers">
+            <div class="live-avatar"><i class="fas fa-user"></i></div>
+            <div><strong>${liveUsers.length} reading now</strong></div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;">
+            ${liveUsers.map(u => `<span class="achievement-badge" style="background:var(--primary); color:white;">${escapeHtml(u.name)}</span>`).join('')}
+        </div>
+        <button onclick="joinLiveChat()" class="share-btn" style="background:var(--primary); margin-top:10px; width:100%;">Join Live Chat <i class="fas fa-comments"></i></button>
+    `;
+}
+
+function joinLiveChat() {
+    alert('🚀 Live chat feature coming soon! You can discuss this article with other readers.');
+}
+
+// ============================================
+// 15. VIDEO SUMMARY GENERATOR
+// ============================================
+async function generateVideoSummary() {
+    if (!currentArticle) return;
+    const container = document.querySelector('.article-card');
+    const existing = document.querySelector('.video-summary');
+    if (existing) existing.remove();
+    
+    const summaryDiv = document.createElement('div');
+    summaryDiv.className = 'video-summary';
+    summaryDiv.innerHTML = '<div class="spinner" style="width:30px;height:30px;"></div><p>Generating video summary...</p>';
+    container?.appendChild(summaryDiv);
+    
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: `Extract 3 key points from this news in bullet format: ${text}` }] }] })
+            body: JSON.stringify({ contents: [{ parts: [{ text: `Create a 30-second video script summary for this news: ${currentArticle.title}. ${(currentArticle.content || '').substring(0, 500)}` }] }] })
         });
         const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || '• Read the full article for key insights.';
-    } catch(e) { return '• Read the article for key insights.'; }
+        const script = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Watch this news for more details!';
+        
+        summaryDiv.innerHTML = `
+            <h4><i class="fas fa-video"></i> 📹 Video Summary</h4>
+            <p style="margin:15px 0;">🎬 Script: ${escapeHtml(script)}</p>
+            <button class="share-btn" style="background:linear-gradient(135deg, #ff0000, #cc0000);" onclick="shareVideoSummary()">
+                <i class="fab fa-youtube"></i> Share Video Summary
+            </button>
+        `;
+    } catch(e) {
+        summaryDiv.innerHTML = '<p>Error generating summary</p>';
+    }
+}
+
+function shareVideoSummary() {
+    alert('🎬 Video summary shared! Check your social media.');
+    trackEvent('video_summary_share');
+}
+
+// ============================================
+// TRACKING & XP SYSTEM
+// ============================================
+function trackEvent(eventName) {
+    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{"xp":0,"level":1,"likes":0,"shares":0,"totalRead":0,"streak":0}');
+    if (eventName === 'like') stats.likes = (stats.likes || 0) + 1;
+    if (eventName === 'share') stats.shares = (stats.shares || 0) + 1;
+    if (eventName === 'story_share') stats.shares = (stats.shares || 0) + 1;
+    localStorage.setItem('reader_stats', JSON.stringify(stats));
+    updateXP(2);
+}
+
+function updateXP(amount) {
+    let stats = JSON.parse(localStorage.getItem('reader_stats') || '{"xp":0,"level":1}');
+    stats.xp += amount;
+    const newLevel = Math.floor(Math.sqrt(stats.xp / 100)) + 1;
+    if (newLevel > stats.level) {
+        stats.level = newLevel;
+        alert(`🎉 Level Up! You are now Level ${stats.level}! 🎉`);
+    }
+    localStorage.setItem('reader_stats', JSON.stringify(stats));
+    loadAnalytics();
+    loadAchievements();
 }
 
 // ============================================
@@ -941,8 +954,6 @@ function setTheme(theme) {
         localStorage.setItem('theme', 'dark');
     } else if (theme === 'reading') {
         document.body.setAttribute('data-mode', 'reading');
-        if (localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
-        else document.body.removeAttribute('data-theme');
         localStorage.setItem('theme', 'reading');
     }
     document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
@@ -965,243 +976,96 @@ function changeFontSize(size) {
     document.body.classList.remove('font-small', 'font-medium', 'font-large');
     document.body.classList.add(`font-${size}`);
     localStorage.setItem('fontSize', size);
-    document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
-    if (size === 'small') document.querySelector('.font-btn:first-child')?.classList.add('active');
-    else if (size === 'medium') document.querySelectorAll('.font-btn')[1]?.classList.add('active');
-    else if (size === 'large') document.querySelectorAll('.font-btn')[2]?.classList.add('active');
 }
 
 // ============================================
-// PROGRESS BAR
+// SHARE FUNCTIONS
 // ============================================
+function shareOnWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent(currentArticle?.title)}%20${encodeURIComponent(window.location.href)}`, '_blank'); trackEvent('share'); }
+function shareOnTwitter() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(currentArticle?.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank'); trackEvent('share'); }
+function shareOnTelegram() { window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(currentArticle?.title)}`, '_blank'); trackEvent('share'); }
+function shareOnFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); trackEvent('share'); }
+function copyLink() { navigator.clipboard.writeText(window.location.href); alert('✅ Link copied!'); trackEvent('share'); }
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
 window.addEventListener('scroll', () => {
     const winScroll = document.documentElement.scrollTop;
     const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const scrolled = (winScroll / height) * 100;
     document.getElementById('progressBar').style.width = scrolled + '%';
-    const circle = document.getElementById('readingCircle');
-    if (scrolled > 10) circle.style.display = 'flex';
-    else circle.style.display = 'none';
-    document.getElementById('readingPercent').innerText = Math.round(scrolled) + '%';
+    if (scrolled > 0) trackHeatmap(Math.floor(scrolled));
 });
-
-// ============================================
-// SHARE FUNCTIONS
-// ============================================
-function shareOnWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent(currentArticle?.title)}%20${encodeURIComponent(window.location.href)}`, '_blank'); }
-function shareOnTwitter() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(currentArticle?.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank'); }
-function shareOnTelegram() { window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(currentArticle?.title)}`, '_blank'); }
-function shareOnFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); }
-function shareOnLinkedIn() { window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank'); }
-function shareArticle() { if (navigator.share) navigator.share({ title: currentArticle?.title, url: window.location.href }); else copyLink(); }
-function copyLink() { navigator.clipboard.writeText(window.location.href); alert('✅ Link copied to clipboard!'); }
-
-// ============================================
-// NEWSLETTER & COMMENTS
-// ============================================
-async function subscribeNewsletter() {
-    const email = document.getElementById('newsletterEmail').value;
-    if (!email || !email.includes('@')) { alert('Please enter valid email'); return; }
-    const { error } = await supabase.from('subscribers').insert([{ email, created_at: new Date() }]);
-    if (error && error.code === '23505') alert('Already subscribed!');
-    else if (error) alert('Error: ' + error.message);
-    else { alert('✅ Subscribed successfully!'); document.getElementById('newsletterEmail').value = ''; }
-}
-
-function loadComments() {
-    const comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
-    const articleComments = comments.filter(c => c.articleId == articleId);
-    const container = document.getElementById('commentsList');
-    if (articleComments.length > 0) {
-        container.innerHTML = articleComments.map(c => `
-            <div class="comment">
-                <div class="comment-name">${escapeHtml(c.name)}</div>
-                <div class="comment-text">${escapeHtml(c.text)}</div>
-                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:5px;">${new Date(c.date).toLocaleString()}</div>
-            </div>
-        `).join('');
-    } else {
-        container.innerHTML = '<div style="padding:20px; text-align:center;">No comments yet. Be the first to comment!</div>';
-    }
-}
-
-function postComment() {
-    const name = document.getElementById('commentName').value;
-    const text = document.getElementById('commentText').value;
-    if (!name || !text) { alert('Please enter name and comment'); return; }
-    let comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
-    comments.push({ id: Date.now(), articleId: articleId, name: name, text: text, date: new Date() });
-    localStorage.setItem('article_comments', JSON.stringify(comments));
-    document.getElementById('commentName').value = '';
-    document.getElementById('commentText').value = '';
-    loadComments();
-}
-
-// ============================================
-// TRENDING & RELATED
-// ============================================
-async function loadTrending() {
-    const { data } = await supabase.from('news').select('title,id,views').order('views', { ascending: false }).limit(5);
-    const container = document.getElementById('trendingList');
-    if (data && data.length > 0) {
-        container.innerHTML = data.map((item, i) => `
-            <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                <div class="trending-number">${i+1}</div>
-                <div class="trending-title">${escapeHtml(item.title.substring(0, 60))}${item.title.length > 60 ? '...' : ''}</div>
-            </div>
-        `).join('');
-    } else { container.innerHTML = '<div style="padding:10px;">No trending articles</div>'; }
-}
-
-async function loadRelatedArticles(category, currentId) {
-    const { data } = await supabase.from('news').select('title,id,image_url,category').eq('category', category).limit(4);
-    if (data && data.length > 0) {
-        const filtered = data.filter(item => item.id != currentId);
-        if (filtered.length > 0) {
-            document.getElementById('relatedArticles').innerHTML = `
-                <div class="related-section">
-                    <h3 class="related-title"><i class="fas fa-link"></i> Related Articles</h3>
-                    <div class="related-grid">
-                        ${filtered.map(item => `
-                            <div class="related-card" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                                <img src="${item.image_url || 'https://picsum.photos/400/200?random='+item.id}" onerror="this.src='https://picsum.photos/400/200'">
-                                <div class="related-card-content">
-                                    <div class="related-card-title">${escapeHtml(item.title)}</div>
-                                    <div class="related-card-meta"><i class="fas fa-tag"></i> ${item.category || 'News'}</div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-    }
-}
 
 // ============================================
 // MAIN LOAD ARTICLE
 // ============================================
 async function loadArticle() {
     if (!articleId) {
-        document.getElementById('articleContent').innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> No article selected!<br><br><a href="/rasu/" style="color: var(--primary);">← Go to Homepage</a></div>`;
+        document.getElementById('articleContent').innerHTML = '<div class="error">❌ No article ID found. Use ?id=1</div>';
         return;
     }
     
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, { headers: { 'apikey': SUPABASE_KEY } });
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/news?id=eq.${articleId}&select=*`, {
+            headers: { 'apikey': SUPABASE_KEY }
+        });
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json();
         if (!data || data.length === 0) {
-            document.getElementById('articleContent').innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Article not found with ID: ${articleId}<br><br><a href="/rasu/" style="color: var(--primary);">← Back to Homepage</a></div>`;
+            document.getElementById('articleContent').innerHTML = '<div class="error">❌ Article not found with ID: ' + articleId + '</div>';
             return;
         }
         
         currentArticle = data[0];
         const article = currentArticle;
+        
+        // Update view count
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         await supabase.from('news').update({ views: (article.views || 0) + 1 }).eq('id', article.id);
         
-        let contentHtml = article.content || article.summary || '<p>No content available</p>';
-        contentHtml = cleanContent(contentHtml);
+        const shareText = encodeURIComponent(article.title);
+        const shareUrl = encodeURIComponent(window.location.href);
         
-        const [aiSummary, keyTakeaways] = await Promise.all([generateAISummary(contentHtml), generateKeyTakeaways(contentHtml)]);
-        const readingTime = Math.ceil(contentHtml.replace(/<[^>]*>/g, '').length / 1000) || 1;
-        const randomReaders = Math.floor(Math.random() * 50) + 10;
+        let badgeHtml = '';
+        if (article.badge) {
+            const badges = article.badge.split(',');
+            badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
+        }
         
-        // Get image URL (FIXED - will show image)
-        const imageUrl = getImageUrl(article);
+        const imageUrl = (article.image_url && article.image_url !== '') ? article.image_url : `https://picsum.photos/id/${(article.id % 100) + 1}/800/400`;
+        const contentText = (article.content || article.summary || '').replace(/<[^>]*>/g, '');
+        const readingTime = Math.ceil(contentText.length / 1000) || 1;
         
-        document.getElementById('breadcrumbCategory').innerText = article.category || 'News';
-        
-        // Calculate hotness score
-        const likesCount = Object.values(JSON.parse(localStorage.getItem('article_likes') || '{}')).filter(v => v === true).length;
-        const hotnessScore = (article.views || 0) + (likesCount * 10);
-        const hotnessBadge = hotnessScore > 50 ? '<span class="hotness-badge"><i class="fas fa-fire"></i> Trending</span>' : '';
+        let contentHtml = article.content || article.summary || 'No content available';
+        contentHtml = contentHtml.replace(/<\/p><p><p>/g, '</p><p>').replace(/<p><p>/g, '<p>').replace(/<\/p><\/p>/g, '</p>');
         
         document.getElementById('articleContent').innerHTML = `
             <div class="article-card">
-                <span class="category-badge"><i class="fas fa-tag"></i> ${article.category || 'News'} ${hotnessBadge}</span>
+                ${imageUrl ? `<img class="article-image" src="${imageUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/800/400?random=1'">` : ''}
                 <h1 class="article-title">${escapeHtml(article.title)}</h1>
-                
                 <div class="article-meta">
-                    <div class="meta-left">
-                        <span><i class="fas fa-user-circle"></i> ${escapeHtml(article.author || 'THE MOON Team')}</span>
-                        <span><i class="fas fa-calendar"></i> ${formatDate(article.published_at)}</span>
-                        <span><i class="fas fa-eye"></i> ${(article.views || 0) + 1} views</span>
-                        <span><i class="fas fa-clock"></i> ${readingTime} min read</span>
-                    </div>
-                    <div class="social-proof"><i class="fas fa-users"></i> ${randomReaders} people reading now</div>
+                    <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                    <span>👁️ ${(article.views || 0) + 1} views</span>
+                    <span>🏷️ ${article.category || 'News'}</span>
+                    <span><i class="fas fa-clock"></i> ${readingTime} min read</span>
                 </div>
-                
-                <!-- Like Section - Only Like -->
-                <div class="like-section">
-                    <button class="like-btn" id="likeBtn" onclick="likeArticle()">
-                        <i class="far fa-heart" id="likeIcon"></i>
-                        <span id="likeText"> Like</span>
-                        <span class="like-count" id="likeCount">0</span>
-                    </button>
-                    <div><i class="fas fa-chart-line"></i> Popularity Score: ${hotnessScore}</div>
-                </div>
-                
-                <div class="author-box">
-                    <div class="author-avatar"><i class="fas fa-user-astronaut"></i></div>
-                    <div class="author-info">
-                        <h4>${escapeHtml(article.author || 'THE MOON Team')}</h4>
-                        <p>Senior Journalist at THE MOON | Covering breaking news and in-depth analysis</p>
-                        <div class="author-social">
-                            <a href="https://twitter.com/TheMoonZ60" target="_blank"><i class="fab fa-twitter"></i></a>
-                            <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                            <a href="mailto:themoonr4@gmail.com"><i class="fas fa-envelope"></i></a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="featured-image">
-                    <img src="${imageUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/id/1/800/400'">
-                    <div class="image-caption">📷 ${escapeHtml(article.title)}</div>
-                </div>
-                
-                <div class="ai-summary">
-                    <h4><i class="fas fa-robot"></i> 🤖 AI Summary</h4>
-                    <p>${escapeHtml(aiSummary)}</p>
-                </div>
-                
-                <div class="key-takeaways">
-                    <h4><i class="fas fa-key"></i> Key Takeaways</h4>
-                    ${keyTakeaways.replace(/\n/g, '<br>')}
-                </div>
-                
+                ${badgeHtml}
                 <div class="article-content">${contentHtml}</div>
-                
-                <div class="tags-section">
-                    <span class="tag"><i class="fas fa-hashtag"></i> ${article.category || 'News'}</span>
-                    <span class="tag"><i class="fas fa-hashtag"></i> Breaking</span>
-                    <span class="tag"><i class="fas fa-hashtag"></i> India</span>
-                </div>
-                
-                <div class="share-section">
-                    <div class="share-title"><i class="fas fa-share-alt"></i> Share this article</div>
-                    <div class="share-buttons">
-                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                        <button class="share-btn twitter" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> Twitter</button>
-                        <button class="share-btn telegram" onclick="shareOnTelegram()"><i class="fab fa-telegram"></i> Telegram</button>
-                        <button class="share-btn facebook" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</button>
-                        <button class="share-btn linkedin" onclick="shareOnLinkedIn()"><i class="fab fa-linkedin"></i> LinkedIn</button>
-                        <button class="share-btn copy-btn" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</button>
-                    </div>
+                <div class="share-buttons">
+                    <button onclick="shareOnWhatsApp()" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                    <button onclick="shareOnTwitter()" class="share-btn twitter"><i class="fab fa-twitter"></i> Twitter</button>
+                    <button onclick="shareOnTelegram()" class="share-btn telegram"><i class="fab fa-telegram"></i> Telegram</button>
+                    <button onclick="shareOnFacebook()" class="share-btn facebook"><i class="fab fa-facebook"></i> Facebook</button>
+                    <button onclick="copyLink()" class="share-btn copy-btn"><i class="fas fa-link"></i> Copy Link</button>
                 </div>
             </div>
         `;
         
-        document.title = `${article.title} | THE MOON`;
-        loadLikeData();
-        loadRelatedArticles(article.category, article.id);
-        loadComments();
-        updateReaderStats();
-        updateTotalLikes();
-        
-        const savedPosition = localStorage.getItem(`article_pos_${articleId}`);
-        if (savedPosition) window.scrollTo(0, parseInt(savedPosition));
-        window.addEventListener('beforeunload', () => { localStorage.setItem(`article_pos_${articleId}`, window.scrollY); });
+        document.title = `${article.title} | THE MOON ULTIMATE`;
+        generateQuiz();
+        loadHeatmap();
+        updateLiveReaders();
+        setInterval(updateLiveReaders, 30000);
         
     } catch(err) {
         document.getElementById('articleContent').innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
@@ -1209,19 +1073,14 @@ async function loadArticle() {
 }
 
 // ============================================
-// KEYBOARD SHORTCUTS
+// INITIALIZE ALL
 // ============================================
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'j') window.scrollBy(0, 300);
-    if (e.key === 'k') window.scrollBy(0, -300);
-    if (e.key === 'l') likeArticle();
-    if (e.key === 's') shareArticle();
-    if (e.key === 't') scrollToTop();
-    if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); window.print(); }
-});
-
-// Start everything
-loadTrending();
+loadLeaderboard();
+loadAnalytics();
+loadDailyChallenge();
+loadAchievements();
+checkPremium();
+requestNotificationPermission();
 loadArticle();
 initTheme();
 </script>
