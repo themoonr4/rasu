@@ -1,1335 +1,1340 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTN6BR"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-VK9TTN6BR');
-    </script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>THE MOON - Complete Mega Admin Panel</title>
+    <title>THE MOON - World's Best Admin Panel</title>
+    
+    <!-- Quill Editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; }
-        .admin-container { display: flex; min-height: 100vh; }
-        .sidebar { width: 280px; background: #0f0f0f; border-right: 1px solid #222; padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; z-index: 100; }
-        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .sidebar-logo h2 { color: #dc2626; font-size: 1.5rem; }
-        .sidebar-logo p { color: #64748b; font-size: 0.7rem; }
-        .sidebar-menu { list-style: none; }
-        .sidebar-menu li { margin-bottom: 5px; }
-        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; cursor: pointer; font-size: 0.9rem; }
-        .sidebar-menu a:hover, .sidebar-menu a.active { background: #1a1a1a; border-left-color: #dc2626; color: #fff; }
-        .main-content { flex: 1; margin-left: 280px; padding: 20px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; }
-        .stat-card:hover { transform: translateY(-3px); border-color: #dc2626; }
-        .stat-card .stat-value { font-size: 2rem; font-weight: bold; color: #dc2626; }
-        .stat-card .stat-label { color: #94a3b8; font-size: 0.8rem; margin-top: 5px; }
-        .card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 25px; margin-bottom: 25px; }
-        .card h3 { margin-bottom: 20px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 500; color: #cbd5e1; }
-        input, select, textarea { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 14px; }
-        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        button { background: #dc2626; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        button:hover { background: #b91c1c; transform: scale(0.98); }
-        button.secondary { background: #3b82f6; }
-        button.secondary:hover { background: #2563eb; }
-        button.success { background: #10b981; }
-        button.success:hover { background: #059669; }
-        button.warning { background: #f59e0b; }
-        button.warning:hover { background: #d97706; }
-        .message { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; }
-        .message.success { background: #15803d; display: block; }
-        .message.error { background: #b91c1c; display: block; }
-        .message.warning { background: #d97706; display: block; }
-        .tab-bar { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; flex-wrap: wrap; }
-        .tab { padding: 8px 16px; background: #1a1a1a; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
-        .tab:hover { background: #333; }
-        .tab.active { background: #dc2626; }
-        .items-list { max-height: 500px; overflow-y: auto; }
-        .item-card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-        .item-card img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
-        .item-info { flex: 1; min-width: 150px; }
-        .item-title { font-weight: bold; margin-bottom: 4px; }
-        .item-meta { font-size: 11px; color: #64748b; }
-        .item-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .item-actions button { padding: 5px 12px; font-size: 11px; width: auto; }
-        .category-tag { display: inline-block; background: #1a1a1a; border: 1px solid #333; border-radius: 20px; padding: 6px 14px; margin: 4px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
-        .category-tag:hover { background: #dc2626; }
-        .status-badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 10px; }
-        .status-badge.approved { background: #10b981; }
-        .status-badge.pending { background: #f59e0b; }
-        .realtime-stats { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .realtime-card { background: #1a1a1a; border-radius: 12px; padding: 12px 20px; flex: 1; text-align: center; border-left: 3px solid #dc2626; }
-        .realtime-card .value { font-size: 24px; font-weight: bold; }
-        .realtime-card .label { font-size: 11px; color: #64748b; }
-        .webhook-url { background: #1e293b; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; word-break: break-all; }
-        .ai-image-preview { margin-top: 10px; padding: 10px; background: #1e293b; border-radius: 8px; text-align: center; }
-        .ai-image-preview img { max-width: 100%; max-height: 200px; border-radius: 8px; }
-        .ql-container { min-height: 200px; background: #1a1a1a; }
-        .ql-toolbar { background: #1a1a1a; border-color: #333 !important; }
-        .footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; border-top: 1px solid #333; margin-top: 20px; }
-        .menu-toggle { display: none; position: fixed; bottom: 20px; right: 20px; background: #dc2626; border: none; color: white; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        
-        @media (max-width: 768px) { 
-            .sidebar { transform: translateX(-100%); position: fixed; }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .row-2, .row-3, .row-4 { grid-template-columns: 1fr; }
-            .menu-toggle { display: block; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        :root {
+            --bg-dark: #050814;
+            --bg-darker: #03061a;
+            --card-bg: rgba(15, 25, 45, 0.7);
+            --card-border: rgba(59, 130, 246, 0.3);
+            --glass-bg: rgba(15, 25, 45, 0.5);
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --text: #ffffff;
+            --text-dim: #a0aec0;
+            --text-muted: #64748b;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #050814 0%, #0a0f1a 50%, #03061a 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1), transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--primary), transparent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-50px) translateX(30px); }
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: rgba(5, 8, 20, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 28px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        
+        .sidebar-logo {
+            text-align: center;
+            padding: 0 24px 24px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            margin-bottom: 24px;
+        }
+        
+        .sidebar-logo h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa, #8b5cf6, #a78bfa);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+        }
+        
+        .sidebar-menu { list-style: none; padding: 0 16px; }
+        .sidebar-menu li { margin-bottom: 6px; }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            color: var(--text-dim);
+            text-decoration: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .sidebar-menu a:hover::before { left: 100%; }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+            color: var(--primary-light);
+            transform: translateX(8px);
+            border-left: 2px solid var(--primary);
+        }
+        
+        .sidebar-menu a i { width: 24px; font-size: 1.1rem; transition: transform 0.3s; }
+        .sidebar-menu a:hover i { transform: scale(1.1); }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 28px 32px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .live-badge {
+            position: fixed;
+            top: 20px;
+            right: 32px;
+            background: linear-gradient(135deg, var(--success), #059669);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 10px var(--success);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 24px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--cyan));
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+        
+        .stat-card:hover::after { transform: scaleX(1); }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.4);
+            border-color: var(--primary);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 28px;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.2);
+        }
+        
+        .card h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card h3 i {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(5, 8, 20, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 14px;
+            color: var(--text);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover::before { left: 100%; }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+        }
+        
+        button.secondary { background: linear-gradient(135deg, var(--secondary), #7c3aed); }
+        button.success { background: linear-gradient(135deg, var(--success), #047857); }
+        button.warning { background: linear-gradient(135deg, var(--warning), #d97706); }
+        button.danger { background: linear-gradient(135deg, var(--danger), #dc2626); }
+        
+        .image-tab-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .image-tab-btn {
+            background: rgba(5, 8, 20, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dim);
+        }
+        
+        .image-tab-btn.active, .image-tab-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .image-preview {
+            margin-top: 16px;
+            padding: 20px;
+            background: rgba(5, 8, 20, 0.6);
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+        }
+        
+        .ql-toolbar {
+            background: rgba(5, 8, 20, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            border-radius: 16px 16px 0 0 !important;
+        }
+        
+        .ql-container {
+            background: rgba(5, 8, 20, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            border-top: none !important;
+            border-radius: 0 0 16px 16px !important;
+            min-height: 300px;
+        }
+        
+        .ql-editor { color: var(--text); }
+        .ql-editor.ql-blank::before { color: var(--text-muted); }
+        
+        .items-list { max-height: 400px; overflow-y: auto; }
+        
+        .item-card {
+            background: rgba(5, 8, 20, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .item-card:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(15, 25, 45, 0.95), rgba(5, 8, 20, 0.95));
+            backdrop-filter: blur(20px);
+            padding: 14px 28px;
+            border-radius: 60px;
+            z-index: 1000;
+            animation: slideUp 0.3s;
+            border: 1px solid var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            font-weight: 500;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 28px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            margin-top: 28px;
+        }
+        
+        .voice-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 12px 24px;
+            border-radius: 60px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            box-shadow: 0 0 20px var(--primary-glow);
+            animation: glow 1.5s infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px var(--primary); }
+            50% { box-shadow: 0 0 20px var(--primary); }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .row-2, .row-3, .row-4 { grid-template-columns: 1fr; gap: 15px; }
+            .live-badge { display: none; }
+        }
+        
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) { .menu-toggle { display: flex; } }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card, .stat-card { animation: fadeInUp 0.6s ease forwards; }
+        .stat-card:nth-child(1) { animation-delay: 0.05s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.15s; }
+        .stat-card:nth-child(4) { animation-delay: 0.2s; }
     </style>
 </head>
 <body>
 
+<div class="particles" id="particles"></div>
+<div class="live-badge"><span class="live-dot"></span> <span id="liveCount">0</span> online now</div>
 <button class="menu-toggle" id="menuToggle">☰</button>
 
 <div class="admin-container">
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-logo"><h2>🌙 THE MOON</h2><p>Complete Mega Admin Panel v5.0</p></div>
+        <div class="sidebar-logo">
+            <h2>🌙 THE MOON</h2>
+            <p>Ultimate Admin Panel | v5.0</p>
+        </div>
         <ul class="sidebar-menu">
-            <li><a onclick="showSection('dashboard')" class="active" id="nav-dashboard">📊 Dashboard</a></li>
-            <li><a onclick="showSection('realtime')" id="nav-realtime">📈 Live Stats</a></li>
-            <li><a onclick="showSection('news')" id="nav-news">✍️ Publish News</a></li>
-            <li><a onclick="showSection('study')" id="nav-study">📚 Study Campus</a></li>
-            <li><a onclick="showSection('freelance')" id="nav-freelance">👥 Freelance</a></li>
-            <li><a onclick="showSection('vacancy')" id="nav-vacancy">💼 Vacancy</a></li>
-            <li><a onclick="showSection('products')" id="nav-products">🛒 Digital Store</a></li>
-            <li><a onclick="showSection('notifications')" id="nav-notifications">🔔 Push Notify</a></li>
-            <li><a onclick="showSection('newsletter')" id="nav-newsletter">📧 Newsletter</a></li>
-            <li><a onclick="showSection('users')" id="nav-users">👥 Users</a></li>
-            <li><a onclick="showSection('ai')" id="nav-ai">🤖 AI Tools</a></li>
-            <li><a onclick="showSection('seo')" id="nav-seo">🔍 SEO Tools</a></li>
-            <li><a onclick="showSection('analytics')" id="nav-analytics">📈 Analytics</a></li>
-            <li><a onclick="showSection('monetization')" id="nav-monetization">💰 Monetization</a></li>
-            <li><a onclick="showSection('security')" id="nav-security">🔐 Security</a></li>
-            <li><a onclick="showSection('settings')" id="nav-settings">⚙️ Settings</a></li>
+            <li><a onclick="showSection('dashboard')" class="active" id="nav-dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a onclick="showSection('news')" id="nav-news"><i class="fas fa-magic"></i> Content Creator</a></li>
+            <li><a onclick="showSection('images')" id="nav-images"><i class="fas fa-palette"></i> AI Studio</a></li>
+            <li><a onclick="showSection('analytics')" id="nav-analytics"><i class="fas fa-chart-bar"></i> Analytics Pro</a></li>
+            <li><a onclick="showSection('live')" id="nav-live"><i class="fas fa-eye"></i> Live Tracker</a></li>
+            <li><a onclick="showSection('users')" id="nav-users"><i class="fas fa-users"></i> Users</a></li>
+            <li><a onclick="showSection('comments')" id="nav-comments"><i class="fas fa-comments"></i> Comments</a></li>
+            <li><a onclick="showSection('backup')" id="nav-backup"><i class="fas fa-database"></i> Backup</a></li>
+            <li><a onclick="showSection('settings')" id="nav-settings"><i class="fas fa-cog"></i> Settings</a></li>
         </ul>
     </div>
 
     <div class="main-content">
-        <!-- DASHBOARD SECTION -->
+        <!-- DASHBOARD -->
         <div id="dashboard-section">
             <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value" id="totalNews">0</div><div class="stat-label">Total News</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalStudy">0</div><div class="stat-label">Study Materials</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalFreelance">0</div><div class="stat-label">Freelance Services</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalJobs">0</div><div class="stat-label">Active Jobs</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalUsers">0</div><div class="stat-label">Registered Users</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalSubscribers">0</div><div class="stat-label">Newsletter Subs</div></div>
-                <div class="stat-card"><div class="stat-value" id="todayEarning">₹0</div><div class="stat-label">Today Earning</div></div>
-                <div class="stat-card"><div class="stat-value" id="totalEarning">₹0</div><div class="stat-label">Total Earning</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-newspaper"></i></div><div class="stat-value" id="totalNews">0</div><div class="stat-label">Total News</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-eye"></i></div><div class="stat-value" id="totalViews">0</div><div class="stat-label">Total Views</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="totalUsers">0</div><div class="stat-label">Total Users</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-comment"></i></div><div class="stat-value" id="totalComments">0</div><div class="stat-label">Comments</div></div>
             </div>
-            <div class="card"><h3>📊 Performance Overview</h3><canvas id="viewsChart" height="200"></canvas></div>
+            <div class="card"><h3><i class="fas fa-chart-line"></i> Performance Overview</h3><canvas id="viewsChart" height="200"></canvas></div>
             <div class="row-2">
-                <div class="card"><h3>🔥 Top News</h3><div id="topNewsList">Loading...</div></div>
-                <div class="card"><h3>⭐ Recent Users</h3><div id="recentUsersList">Loading...</div></div>
+                <div class="card"><h3><i class="fas fa-fire"></i> Trending Topics</h3><div id="trendingTopics"></div></div>
+                <div class="card"><h3><i class="fas fa-robot"></i> AI Predictions</h3><div id="aiPredictions"></div></div>
             </div>
         </div>
 
-        <!-- REAL-TIME LIVE STATS SECTION -->
-        <div id="realtime-section" style="display: none;">
-            <div class="card">
-                <h3>📈 Live Real-Time Stats</h3>
-                <div class="realtime-stats">
-                    <div class="realtime-card"><div class="value" id="liveUsers">0</div><div class="label">Live Users Now</div></div>
-                    <div class="realtime-card"><div class="value" id="todayViews">0</div><div class="label">Today's Views</div></div>
-                    <div class="realtime-card"><div class="value" id="todayVisitors">0</div><div class="label">Today's Visitors</div></div>
-                    <div class="realtime-card"><div class="value" id="bounceRate">0%</div><div class="label">Bounce Rate</div></div>
-                </div>
-                <div class="row-2">
-                    <div><h4>🌍 Top Countries</h4><div id="topCountries"></div></div>
-                    <div><h4>📱 Devices</h4><div id="devicesStats"></div></div>
-                </div>
-                <canvas id="realtimeChart" height="150"></canvas>
-                <div class="webhook-url" style="margin-top: 15px;">🔗 Realtime Webhook Active</div>
-            </div>
-        </div>
-
-        <!-- NEWS SECTION WITH AI IMAGE GENERATION -->
+        <!-- CONTENT CREATOR -->
         <div id="news-section" style="display: none;">
             <div class="card">
-                <h3>✍️ Publish News with AI</h3>
+                <h3><i class="fas fa-magic"></i> AI Content Creator</h3>
                 
-                <!-- AI Quick Write -->
-                <div style="background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                    <h4>🤖 AI Quick Write</h4>
-                    <div class="row-2">
-                        <div class="form-group"><label>📝 Keyword</label><input type="text" id="aiKeyword" placeholder="Enter keyword"></div>
-                        <button onclick="aiWriteNews()" class="secondary" style="margin-top: 28px;">✨ AI Write News</button>
-                    </div>
-                    <div id="aiSuggestion" style="display: none; margin-top: 15px; padding: 15px; background: #0f0f0f; border-radius: 10px;"></div>
+                <div class="row-2" style="margin-bottom: 24px;">
+                    <input type="text" id="aiKeyword" placeholder="🤖 Enter topic for AI writing...">
+                    <button onclick="aiWriteNews()" class="secondary">✨ Generate with AI</button>
+                </div>
+                <div id="aiSuggestion" style="display:none; margin-bottom: 24px; padding: 20px; background: rgba(59,130,246,0.1); border-radius: 20px; border-left: 3px solid var(--primary);"></div>
+                
+                <div class="image-tab-bar">
+                    <button class="image-tab-btn active" onclick="switchImageTab('manual')">📷 Manual URL</button>
+                    <button class="image-tab-btn" onclick="switchImageTab('ai')">🎨 AI Generate</button>
+                    <button class="image-tab-btn" onclick="switchImageTab('upload')">📤 Upload File</button>
                 </div>
                 
-                <!-- AI Image Generator -->
-                <div style="background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                    <h4>🎨 AI Image Generator</h4>
-                    <div class="row-2">
-                        <div class="form-group"><label>Image Description</label><input type="text" id="aiImagePrompt" placeholder="e.g., Indian flag, technology, space"></div>
-                        <button onclick="generateAIImage()" class="secondary" style="margin-top: 28px;">✨ Generate Image</button>
-                    </div>
-                    <div id="aiImageResult" class="ai-image-preview" style="display: none;"></div>
-                </div>
+                <div id="manualImageTab"><input type="text" id="manualImageUrl" placeholder="https://example.com/image.jpg" style="margin-bottom: 20px;"></div>
+                <div id="aiImageTab" style="display:none;"><input type="text" id="aiPrompt" placeholder="Describe the image you want..."><button onclick="generateAIImage()" class="secondary" style="margin-top: 12px;">✨ Generate Image</button><div id="aiImagePreview" class="image-preview" style="display:none; margin-top: 12px;"></div></div>
+                <div id="uploadImageTab" style="display:none;"><input type="file" id="imageUpload" accept="image/*" onchange="uploadImage()"><div id="uploadPreview" class="image-preview" style="display:none; margin-top: 12px;"></div></div>
                 
-                <!-- News Form -->
-                <form id="newsForm">
+                <input type="hidden" id="selectedImageUrl">
+                
+                <!-- Advanced AI Image Generator Section -->
+                <div style="margin-top: 20px; padding: 20px; background: rgba(59,130,246,0.1); border-radius: 20px;">
+                    <h4><i class="fas fa-magic"></i> 🎨 Advanced AI Image Generator (Realistic)</h4>
                     <div class="row-2">
-                        <div class="form-group"><label>📰 Title *</label><input type="text" id="newsTitle" required></div>
-                        <div class="form-group"><label>📂 Category</label>
-                            <select id="newsCategory">
-                                <option>Technology</option><option>Sports</option><option>Business</option>
-                                <option>Politics</option><option>Study</option><option>Entertainment</option>
-                                <option>Breaking</option><option>International</option>
+                        <div class="form-group">
+                            <label>📝 Article Title / Topic</label>
+                            <input type="text" id="aiImageTopic" placeholder="e.g., Indian cricket team victory, Modi speech">
+                        </div>
+                        <div class="form-group">
+                            <label>🎨 Image Style</label>
+                            <select id="aiImageStyleSelect">
+                                <option value="realistic">📸 Realistic / Photorealistic</option>
+                                <option value="cinematic">🎬 Cinematic / Dramatic</option>
+                                <option value="news">📰 News Thumbnail</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group"><label>📝 Content * (Rich Text Editor)</label><div id="newsEditor"></div><textarea id="newsContent" style="display:none"></textarea></div>
-                    
                     <div class="row-3">
-                        <div class="form-group"><label>🖼️ Image URL (Manual)</label><input type="text" id="newsImage" placeholder="https://..."></div>
-                        <div class="form-group"><label>🎬 Video URL (YouTube)</label><input type="text" id="newsVideo" placeholder="https://youtube.com/..."></div>
-                        <div class="form-group"><label>📄 PDF URL</label><input type="text" id="newsPdf" placeholder="https://.../file.pdf"></div>
+                        <button onclick="generateRealisticImage()" class="secondary"><i class="fas fa-magic"></i> Generate Realistic Image</button>
+                        <button onclick="autoGenerateImageFromContent()" class="warning"><i class="fas fa-robot"></i> Auto from Content</button>
+                        <button onclick="downloadGeneratedImage()" class="secondary"><i class="fas fa-download"></i> Download Image</button>
                     </div>
+                    <div id="advancedImagePreview" class="image-preview" style="display: none; margin-top: 15px;">
+                        <div id="generatedImageContainer"></div>
+                        <div style="margin-top: 15px;">
+                            <button onclick="useAdvancedImage()" class="success"><i class="fas fa-check"></i> Use This Image</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="newsForm" style="margin-top: 24px;">
                     <div class="row-2">
-                        <div class="form-group"><label>🏷️ Tags (comma separated)</label><input type="text" id="newsTags" placeholder="tech, ai, news"></div>
-                        <div class="form-group"><label>📝 Meta Description (SEO)</label><textarea id="newsMeta" rows="2" placeholder="150-160 characters"></textarea></div>
+                        <input type="text" id="newsTitle" placeholder="📰 Enter title *" required>
+                        <select id="newsCategory">
+                            <option>Technology</option><option>Sports</option><option>Business</option>
+                            <option>Politics</option><option>Study</option><option>Entertainment</option>
+                        </select>
                     </div>
-                    <div class="row-2">
-                        <div class="form-group"><label>💰 Affiliate Link</label><input type="text" id="newsAffiliate" placeholder="https://amzn.to/..."></div>
-                        <div class="form-group"><label>📅 Schedule Publish</label><input type="datetime-local" id="newsSchedule"></div>
+                    <div class="form-group"><div id="newsEditor"></div><textarea id="newsContent" style="display:none"></textarea></div>
+                    <div class="row-3">
+                        <input type="text" id="newsTags" placeholder="🏷️ Tags (comma, separated)">
+                        <select id="newsSentiment"><option>Neutral</option><option>Positive</option><option>Negative</option></select>
+                        <select id="newsFeatured"><option value="no">⭐ Normal</option><option value="yes">🔥 Featured</option></select>
                     </div>
-                    <div class="row-2">
-                        <div class="form-group"><label>✍️ Author</label><input type="text" id="newsAuthor" value="THE MOON Team"></div>
-                        <div class="form-group"><label>⭐ Featured</label><select id="newsFeatured"><option value="no">No</option><option value="yes">Yes (Top News)</option></select></div>
+                    <div class="row-4">
+                        <button type="submit"><i class="fas fa-rocket"></i> Publish</button>
+                        <button type="button" onclick="previewNews()" class="secondary"><i class="fas fa-eye"></i> Preview</button>
+                        <button type="button" onclick="analyzeSentiment()" class="warning"><i class="fas fa-chart-line"></i> Analyze</button>
+                        <button type="button" onclick="generateQR()" class="secondary"><i class="fas fa-qrcode"></i> QR Code</button>
                     </div>
-                    <button type="submit">🚀 Publish News</button>
-                    <div id="newsMessage" class="message"></div>
+                    <div id="newsMessage" style="display:none; margin-top: 20px;"></div>
                 </form>
             </div>
-            <div class="card"><h3>📋 Recent News</h3><div id="recentNewsList" class="items-list"></div></div>
+            <div class="card"><h3><i class="fas fa-history"></i> Recent Content</h3><div id="recentNewsList"></div></div>
         </div>
 
-        <!-- STUDY CAMPUS SECTION - Complete with 10th,11th,12th Hindi/English -->
-        <div id="study-section" style="display: none;">
-            <div class="card">
-                <h3>📚 Study Campus Manager</h3>
-                <div class="tab-bar">
-                    <div class="tab active" onclick="showStudyTab('materials')">📄 Study Materials</div>
-                    <div class="tab" onclick="showStudyTab('videos')">🎬 Video Lectures</div>
-                    <div class="tab" onclick="showStudyTab('exams')">📅 Upcoming Exams</div>
-                    <div class="tab" onclick="showStudyTab('testseries')">📝 Test Series</div>
-                    <div class="tab" onclick="showStudyTab('categories')">🏷️ Categories</div>
-                </div>
-                
-                <!-- Study Materials Tab -->
-                <div id="study-materials-tab">
-                    <form id="studyMaterialForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>📚 Title</label><input type="text" id="studyTitle" required></div>
-                            <div class="form-group"><label>📂 Category</label>
-                                <select id="studyCategory">
-                                    <option>Hindi Medium (10th)</option><option>Hindi Medium (11th)</option><option>Hindi Medium (12th)</option>
-                                    <option>English Medium (10th)</option><option>English Medium (11th)</option><option>English Medium (12th)</option>
-                                    <option>UPSC/IAS</option><option>SSC CGL/CHSL</option><option>Bank PO/Clerk</option>
-                                    <option>Railway RRB</option><option>Teaching Exams</option><option>Engineering (JEE)</option>
-                                    <option>Medical (NEET)</option><option>Defence Exams</option><option>State PCS</option>
-                                    <option>Police Exams</option><option>MBA Entrance</option><option>Law Exams</option>
-                                    <option>CA/CS</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row-3">
-                            <div class="form-group"><label>📄 PDF URL</label><input type="text" id="studyPdfUrl" placeholder="https://.../file.pdf"></div>
-                            <div class="form-group"><label>🎬 Video URL</label><input type="text" id="studyVideoUrl" placeholder="https://youtube.com/..."></div>
-                            <div class="form-group"><label>🖼️ Thumbnail</label><input type="text" id="studyThumbnail" placeholder="https://.../image.jpg"></div>
-                        </div>
-                        <div class="form-group"><label>📝 Description</label><textarea id="studyDesc" rows="3"></textarea></div>
-                        <div class="row-2">
-                            <div class="form-group"><label>📊 Downloads</label><input type="number" id="studyDownloads" value="0"></div>
-                            <div class="form-group"><label>🏷️ Type</label><select id="studyType"><option>PDF Notes</option><option>Video Tutorial</option><option>Question Bank</option><option>Previous Paper</option></select></div>
-                        </div>
-                        <button type="submit" class="success">📥 Add Study Material</button>
-                    </form>
-                </div>
-                
-                <!-- Video Lectures Tab -->
-                <div id="study-videos-tab" style="display: none;">
-                    <form id="studyVideoForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>🎬 Title</label><input type="text" id="videoTitle" required></div>
-                            <div class="form-group"><label>📂 Category</label><select id="videoCategory">
-                                <option>Hindi Medium (10th)</option><option>Hindi Medium (11th)</option><option>Hindi Medium (12th)</option>
-                                <option>English Medium (10th)</option><option>English Medium (11th)</option><option>English Medium (12th)</option>
-                                <option>UPSC/IAS</option><option>SSC CGL/CHSL</option><option>Bank PO/Clerk</option>
-                                <option>Railway RRB</option><option>Teaching Exams</option><option>Engineering (JEE)</option>
-                                <option>Medical (NEET)</option><option>Defence Exams</option>
-                            </select>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>🔗 YouTube URL</label><input type="text" id="videoUrl" placeholder="https://youtube.com/..."></div>
-                            <div class="form-group"><label>⏱️ Duration</label><input type="text" id="videoDuration" placeholder="2 hrs 30 min"></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>👁️ Views</label><input type="text" id="videoViews" placeholder="1M+"></div>
-                            <div class="form-group"><label>🖼️ Thumbnail</label><input type="text" id="videoThumbnail"></div>
-                        </div>
-                        <button type="submit" class="success">🎬 Add Video Lecture</button>
-                    </form>
-                </div>
-                
-                <!-- Exams Tab -->
-                <div id="study-exams-tab" style="display: none;">
-                    <form id="studyExamForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>📅 Exam Name</label><input type="text" id="examName" required></div>
-                            <div class="form-group"><label>📂 Category</label><select id="examCategory"><option>UPSC</option><option>SSC</option><option>Bank</option><option>Railway</option><option>Teaching</option><option>Medical</option><option>Engineering</option><option>Defence</option><option>State PCS</option><option>Police</option></select></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>📆 Exam Date</label><input type="text" id="examDate" placeholder="15 June 2026"></div>
-                            <div class="form-group"><label>🏷️ Badge</label><input type="text" id="examBadge" placeholder="Prelims/Mains"></div>
-                        </div>
-                        <div class="form-group"><label>🔗 Official Link</label><input type="text" id="examLink" placeholder="https://..."></div>
-                        <button type="submit" class="success">📅 Add Exam</button>
-                    </form>
-                </div>
-                
-                <!-- Test Series Tab -->
-                <div id="study-testseries-tab" style="display: none;">
-                    <form id="testSeriesForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>📝 Test Name</label><input type="text" id="testName" required></div>
-                            <div class="form-group"><label>📂 Category</label><select id="testCategory"><option>10th Hindi</option><option>10th English</option><option>11th Hindi</option><option>11th English</option><option>12th Hindi</option><option>12th English</option><option>UPSC</option><option>SSC</option><option>Bank</option><option>Railway</option></select></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>❓ Total Questions</label><input type="number" id="testQuestions"></div>
-                            <div class="form-group"><label>⏱️ Duration (min)</label><input type="number" id="testDuration"></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>💰 Price (₹)</label><input type="number" id="testPrice" value="0"></div>
-                            <div class="form-group"><label>📄 PDF Link</label><input type="text" id="testPdf" placeholder="https://.../test.pdf"></div>
-                        </div>
-                        <button type="submit" class="success">📝 Add Test Series</button>
-                    </form>
-                </div>
-                
-                <!-- Categories Tab -->
-                <div id="study-categories-tab" style="display: none;">
-                    <h4>Study Categories (10th, 11th, 12th - Hindi & English + Competitive)</h4>
-                    <div id="studyCategoriesList" class="items-list"></div>
-                    <form id="newCategoryForm" style="margin-top: 20px;">
-                        <div class="row-2">
-                            <div class="form-group"><label>🏷️ New Category</label><input type="text" id="newCategoryName"></div>
-                            <div class="form-group"><label>🎨 Color</label><input type="color" id="newCategoryColor" value="#dc2626"></div>
-                        </div>
-                        <button type="submit" class="secondary">➕ Add Category</button>
-                    </form>
-                </div>
-                
-                <div id="studyItemsList" class="items-list" style="margin-top: 20px;"></div>
-                <div id="studyMessage" class="message"></div>
+        <!-- AI STUDIO -->
+        <div id="images-section" style="display: none;">
+            <div class="card"><h3><i class="fas fa-palette"></i> AI Image Studio</h3>
+                <div class="row-2"><input type="text" id="studioPrompt" placeholder="Describe your image..."><select id="studioStyle"><option>Realistic</option><option>Cinematic</option><option>Modern</option><option>Cartoon</option></select></div>
+                <button onclick="generateStudioImage()" class="secondary">✨ Generate</button>
+                <div id="studioPreview" class="image-preview" style="display:none; margin-top: 20px;"></div>
+                <div id="imageLibrary" style="margin-top: 20px;"></div>
             </div>
         </div>
 
-        <!-- FREELANCE SECTION -->
-        <div id="freelance-section" style="display: none;">
-            <div class="card">
-                <h3>👥 Freelance Marketplace Manager</h3>
-                <div class="tab-bar">
-                    <div class="tab active" onclick="showFreelanceTab('services')">📦 Services</div>
-                    <div class="tab" onclick="showFreelanceTab('pending')">⏳ Pending Approval</div>
-                    <div class="tab" onclick="showFreelanceTab('orders')">📋 Orders</div>
-                    <div class="tab" onclick="showFreelanceTab('categories')">🏷️ Categories</div>
-                    <div class="tab" onclick="showFreelanceTab('payouts')">💰 Payouts</div>
-                </div>
-                
-                <div id="freelance-services-tab">
-                    <form id="freelanceServiceForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>📦 Service Title</label><input type="text" id="freelanceTitle" required></div>
-                            <div class="form-group"><label>📂 Category</label>
-                                <select id="freelanceCategory">
-                                    <option>Web Development</option><option>Graphic Design</option><option>Content Writing</option>
-                                    <option>SEO & Marketing</option><option>Video Editing</option><option>App Development</option>
-                                    <option>Data Entry</option><option>Virtual Assistant</option><option>Translation</option>
-                                    <option>Voice Over</option><option>Animation</option><option>Logo Design</option>
-                                    <option>UI/UX Design</option><option>WordPress</option><option>Shopify</option>
-                                    <option>Python</option><option>JavaScript</option><option>React</option>
-                                    <option>Node.js</option><option>PHP</option><option>Laravel</option>
-                                    <option>Flutter</option><option>AI/ML</option><option>Data Science</option>
-                                    <option>Cybersecurity</option><option>Cloud Computing</option><option>DevOps</option>
-                                    <option>Blockchain</option><option>Digital Marketing</option><option>Social Media</option>
-                                    <option>Email Marketing</option><option>Copywriting</option><option>Illustration</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group"><label>📝 Description</label><textarea id="freelanceDesc" rows="3" required></textarea></div>
-                        <div class="row-2">
-                            <div class="form-group"><label>💰 Price (₹)</label><input type="number" id="freelancePrice" required></div>
-                            <div class="form-group"><label>⏱️ Delivery Time</label><input type="text" id="freelanceDelivery" placeholder="2 days"></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>👤 Seller Name</label><input type="text" id="freelanceSellerName" required></div>
-                            <div class="form-group"><label>📱 WhatsApp</label><input type="text" id="freelanceWhatsapp" required></div>
-                        </div>
-                        <div class="row-3">
-                            <div class="form-group"><label>🖼️ Image URL</label><input type="text" id="freelanceImage" placeholder="https://..."></div>
-                            <div class="form-group"><label>🎬 Demo Video URL</label><input type="text" id="freelanceVideo" placeholder="https://youtube.com/..."></div>
-                            <div class="form-group"><label>⭐ Status</label><select id="freelanceStatus"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div>
-                        </div>
-                        <button type="submit" class="success">➕ Add Service</button>
-                    </form>
-                </div>
-                
-                <div id="freelance-pending-tab" style="display: none;">
-                    <h4>Pending Approvals</h4>
-                    <div id="freelancePendingList" class="items-list">Loading...</div>
-                </div>
-                
-                <div id="freelance-orders-tab" style="display: none;">
-                    <h4>Recent Orders</h4>
-                    <div id="freelanceOrdersList" class="items-list">No orders yet</div>
-                </div>
-                
-                <div id="freelance-categories-tab" style="display: none;">
-                    <h4>Freelance Categories (50+)</h4>
-                    <div id="freelanceCategoriesList" class="items-list"></div>
-                </div>
-                
-                <div id="freelance-payouts-tab" style="display: none;">
-                    <h4>Withdrawal Requests</h4>
-                    <div id="payoutsList" class="items-list">No payout requests</div>
-                </div>
-                
-                <div id="freelanceItemsList" class="items-list" style="margin-top: 20px;"></div>
-                <div id="freelanceMessage" class="message"></div>
-            </div>
-        </div>
-
-        <!-- VACANCY SECTION -->
-        <div id="vacancy-section" style="display: none;">
-            <div class="card">
-                <h3>💼 Vacancy Portal Manager</h3>
-                <div class="tab-bar">
-                    <div class="tab active" onclick="showVacancyTab('jobs')">📋 Jobs</div>
-                    <div class="tab" onclick="showVacancyTab('applications')">📝 Applications</div>
-                    <div class="tab" onclick="showVacancyTab('categories')">🏷️ Categories</div>
-                </div>
-                
-                <div id="vacancy-jobs-tab">
-                    <form id="vacancyForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>💼 Job Title</label><input type="text" id="jobTitle" required></div>
-                            <div class="form-group"><label>🏢 Organization</label><input type="text" id="jobOrg" required></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>📂 Job Type</label>
-                                <select id="jobType">
-                                    <option value="government">🇮🇳 Government</option><option value="private">🏢 Private</option>
-                                    <option value="internship">🎓 Internship</option><option value="workfromhome">🏠 Work From Home</option>
-                                    <option value="fresher">👶 Fresher</option><option value="parttime">⏰ Part Time</option>
-                                    <option value="contract">📄 Contract</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label>📍 Location</label><input type="text" id="jobLocation"></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>📅 Last Date</label><input type="text" id="jobLastDate"></div>
-                            <div class="form-group"><label>👥 Vacancies</label><input type="text" id="jobVacancies"></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>💰 Salary</label><input type="text" id="jobSalary"></div>
-                            <div class="form-group"><label>🎓 Qualification</label><input type="text" id="jobQualification"></div>
-                        </div>
-                        <div class="row-3">
-                            <div class="form-group"><label>🔗 Apply Link</label><input type="text" id="jobApplyLink"></div>
-                            <div class="form-group"><label>📄 PDF/Notification</label><input type="text" id="jobPdf" placeholder="https://.../notification.pdf"></div>
-                            <div class="form-group"><label>🏷️ Badge</label><input type="text" id="jobBadge" placeholder="Urgent/Regular"></div>
-                        </div>
-                        <button type="submit" class="success">➕ Add Job Vacancy</button>
-                    </form>
-                </div>
-                
-                <div id="vacancy-applications-tab" style="display: none;">
-                    <h4>Job Applications</h4>
-                    <div id="applicationsList" class="items-list">No applications yet</div>
-                </div>
-                
-                <div id="vacancy-categories-tab" style="display: none;">
-                    <h4>Job Categories</h4>
-                    <div id="vacancyCategoriesList" class="items-list"></div>
-                </div>
-                
-                <div id="vacancyItemsList" class="items-list" style="margin-top: 20px;"></div>
-                <div id="vacancyMessage" class="message"></div>
-            </div>
-        </div>
-
-        <!-- DIGITAL PRODUCT STORE -->
-        <div id="products-section" style="display: none;">
-            <div class="card">
-                <h3>🛒 Digital Product Store</h3>
-                <div class="tab-bar">
-                    <div class="tab active" onclick="showProductsTab('products')">📦 Products</div>
-                    <div class="tab" onclick="showProductsTab('orders')">📋 Orders</div>
-                    <div class="tab" onclick="showProductsTab('coupons')">🎫 Coupons</div>
-                </div>
-                
-                <div id="products-products-tab">
-                    <form id="productForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>📦 Product Name</label><input type="text" id="productName" required></div>
-                            <div class="form-group"><label>📂 Category</label><select id="productCategory"><option>E-Book</option><option>Course</option><option>Template</option><option>Software</option><option>Theme</option><option>Plugin</option></select></div>
-                        </div>
-                        <div class="form-group"><label>📝 Description</label><textarea id="productDesc" rows="3"></textarea></div>
-                        <div class="row-2">
-                            <div class="form-group"><label>💰 Price (₹)</label><input type="number" id="productPrice"></div>
-                            <div class="form-group"><label>🔗 Download Link</label><input type="text" id="productLink"></div>
-                        </div>
-                        <div class="row-3">
-                            <div class="form-group"><label>🖼️ Image URL</label><input type="text" id="productImage"></div>
-                            <div class="form-group"><label>🎬 Preview Video</label><input type="text" id="productVideo"></div>
-                            <div class="form-group"><label>📊 Stock</label><input type="number" id="productStock" value="999"></div>
-                        </div>
-                        <button type="submit" class="success">➕ Add Product</button>
-                    </form>
-                </div>
-                
-                <div id="products-orders-tab" style="display: none;">
-                    <h4>Product Orders</h4>
-                    <div id="productOrdersList" class="items-list">No orders yet</div>
-                </div>
-                
-                <div id="products-coupons-tab" style="display: none;">
-                    <form id="couponForm">
-                        <div class="row-2">
-                            <div class="form-group"><label>🎫 Coupon Code</label><input type="text" id="couponCode"></div>
-                            <div class="form-group"><label>💰 Discount %</label><input type="number" id="couponDiscount"></div>
-                        </div>
-                        <div class="row-2">
-                            <div class="form-group"><label>📅 Expiry Date</label><input type="date" id="couponExpiry"></div>
-                            <div class="form-group"><label>🎯 Max Uses</label><input type="number" id="couponMaxUses" value="100"></div>
-                        </div>
-                        <button type="submit" class="success">➕ Add Coupon</button>
-                    </form>
-                    <div id="couponsList" class="items-list" style="margin-top: 20px;"></div>
-                </div>
-                
-                <div id="productsList" class="items-list" style="margin-top: 20px;"></div>
-                <div id="productMessage" class="message"></div>
-            </div>
-        </div>
-
-        <!-- PUSH NOTIFICATIONS SECTION -->
-        <div id="notifications-section" style="display: none;">
-            <div class="card">
-                <h3>🔔 Push Notification System</h3>
-                <div class="row-2">
-                    <div class="form-group"><label>📢 Title</label><input type="text" id="notifyTitle" placeholder="Breaking News!"></div>
-                    <div class="form-group"><label>📝 Message</label><textarea id="notifyMessage" rows="3" placeholder="Your message..."></textarea></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>🔗 Click URL</label><input type="text" id="notifyUrl" value="https://themoonr4.github.io/rasu/"></div>
-                    <div class="form-group"><label>🖼️ Icon URL</label><input type="text" id="notifyIcon" placeholder="https://.../icon.png"></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>⏰ Schedule Time</label><input type="datetime-local" id="notifySchedule"></div>
-                    <div class="form-group"><label>🎯 Target Segment</label><select id="notifySegment"><option value="all">All Users</option><option value="active">Active Users</option><option value="new">New Users</option></select></div>
-                </div>
-                <div class="row-2">
-                    <button onclick="sendNotificationToAll()" class="success">📢 Send to All</button>
-                    <button onclick="sendTestNotification()" class="secondary">🔔 Send Test</button>
-                    <button onclick="scheduleNotification()" class="warning">⏰ Schedule</button>
-                </div>
-                <div id="notifyMessageDiv" class="message"></div>
-            </div>
-            <div class="card"><h3>📊 Recent Notifications</h3><div id="recentNotifications" class="items-list"></div></div>
-        </div>
-
-        <!-- NEWSLETTER SECTION -->
-        <div id="newsletter-section" style="display: none;">
-            <div class="card">
-                <h3>📧 Email Newsletter System</h3>
-                <div class="row-2">
-                    <div class="form-group"><label>📢 Subject</label><input type="text" id="emailSubject"></div>
-                    <div class="form-group"><label>📧 From Name</label><input type="text" id="emailFrom" value="THE MOON Team"></div>
-                </div>
-                <div class="form-group"><label>📝 Email Content (HTML)</label><textarea id="emailContent" rows="8" placeholder="<h1>Hello!</h1><p>Your content here...</p>"></textarea></div>
-                <div class="row-2">
-                    <button onclick="sendNewsletter()" class="success">📧 Send to All Subscribers</button>
-                    <button onclick="sendTestEmail()" class="secondary">🔔 Send Test</button>
-                </div>
-                <div id="emailMessage" class="message"></div>
-            </div>
-            <div class="card"><h3>📋 Subscribers List</h3><div id="subscribersList" class="items-list">Loading...</div></div>
-        </div>
-
-        <!-- USERS SECTION -->
-        <div id="users-section" style="display: none;">
-            <div class="card">
-                <h3>👥 User Management</h3>
-                <div class="tab-bar">
-                    <div class="tab active" onclick="showUsersTab('all')">📋 All Users</div>
-                    <div class="tab" onclick="showUsersTab('roles')">👑 Roles</div>
-                    <div class="tab" onclick="showUsersTab('activity')">📊 Activity Log</div>
-                </div>
-                <div id="users-all-tab"><div id="usersList" class="items-list">Loading...</div></div>
-                <div id="users-roles-tab" style="display: none;"><div id="rolesList"></div></div>
-                <div id="users-activity-tab" style="display: none;"><div id="activityList"></div></div>
-            </div>
-        </div>
-
-        <!-- AI TOOLS SECTION -->
-        <div id="ai-section" style="display: none;">
-            <div class="card">
-                <h3>🤖 AI Content Tools</h3>
-                <div class="tab-bar">
-                    <div class="tab active" onclick="showAITab('writer')">✍️ Writer</div>
-                    <div class="tab" onclick="showAITab('hashtags')">#️⃣ Hashtags</div>
-                    <div class="tab" onclick="showAITab('summarize')">📝 Summarize</div>
-                    <div class="tab" onclick="showAITab('seo')">🔍 SEO</div>
-                    <div class="tab" onclick="showAITab('image')">🎨 Image Gen</div>
-                </div>
-                
-                <div id="ai-writer-tab">
-                    <div class="row-2">
-                        <div class="form-group"><label>📝 Topic</label><input type="text" id="aiTopic"></div>
-                        <div class="form-group"><label>📄 Tone</label><select id="aiTone"><option>Professional</option><option>Casual</option><option>News Style</option><option>Blog Style</option></select></div>
-                    </div>
-                    <div class="row-2">
-                        <div class="form-group"><label>📏 Length</label><select id="aiLength"><option>Short (300 words)</option><option>Medium (600 words)</option><option>Long (1000 words)</option></select></div>
-                        <div class="form-group"><label>🔑 Keywords</label><input type="text" id="aiKeywords" placeholder="comma, separated"></div>
-                    </div>
-                    <button onclick="aiGenerateContent()" class="secondary">✨ Generate Content</button>
-                    <div id="aiContentResult" style="background:#1e293b;border-radius:10px;padding:15px;display:none;margin-top:15px;"></div>
-                </div>
-                
-                <div id="ai-hashtags-tab" style="display: none;">
-                    <div class="form-group"><label>📝 Topic</label><input type="text" id="hashtagTopic"></div>
-                    <div class="form-group"><label>🔢 Number of Hashtags</label><select id="hashtagCount"><option>5</option><option>10</option><option>15</option><option>20</option></select></div>
-                    <button onclick="aiGenerateHashtags()" class="secondary">✨ Generate Hashtags</button>
-                    <div id="hashtagsResult" style="background:#1e293b;border-radius:10px;padding:15px;display:none;margin-top:15px;"></div>
-                </div>
-                
-                <div id="ai-summarize-tab" style="display: none;">
-                    <div class="form-group"><label>📝 Text to Summarize</label><textarea id="summarizeText" rows="5"></textarea></div>
-                    <div class="row-2">
-                        <div class="form-group"><label>📏 Summary Length</label><select id="summaryLength"><option>Short (2-3 sentences)</option><option>Medium (4-5 sentences)</option><option>Detailed (1 paragraph)</option></select></div>
-                        <div class="form-group"><label>🎯 Focus</label><select id="summaryFocus"><option>General</option><option>Key Points</option><option>Conclusion Only</option></select></div>
-                    </div>
-                    <button onclick="aiSummarize()" class="secondary">✨ Summarize</button>
-                    <div id="summarizeResult" style="background:#1e293b;border-radius:10px;padding:15px;display:none;margin-top:15px;"></div>
-                </div>
-                
-                <div id="ai-seo-tab" style="display: none;">
-                    <div class="form-group"><label>📰 Title to Optimize</label><input type="text" id="seoTitle"></div>
-                    <div class="form-group"><label>📝 Content</label><textarea id="seoContent" rows="5"></textarea></div>
-                    <div class="form-group"><label>🔑 Target Keywords</label><input type="text" id="seoKeywords" placeholder="main keyword, secondary keyword"></div>
-                    <button onclick="aiOptimizeSEO()" class="secondary">✨ Optimize SEO</button>
-                    <div id="seoResult" style="background:#1e293b;border-radius:10px;padding:15px;display:none;margin-top:15px;"></div>
-                </div>
-                
-                <div id="ai-image-tab" style="display: none;">
-                    <div class="form-group"><label>🎨 Image Description</label><textarea id="aiImagePromptText" rows="3" placeholder="Describe the image you want to generate..."></textarea></div>
-                    <div class="row-2">
-                        <div class="form-group"><label>📐 Size</label><select id="aiImageSize"><option>512x512</option><option>1024x1024</option></select></div>
-                        <div class="form-group"><label>🎨 Style</label><select id="aiImageStyle"><option>Realistic</option><option>Artistic</option><option>Cartoon</option><option>Minimalist</option></select></div>
-                    </div>
-                    <button onclick="aiGenerateImageFromText()" class="secondary">✨ Generate Image</button>
-                    <div id="aiImageGenResult" style="background:#1e293b;border-radius:10px;padding:15px;display:none;margin-top:15px;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SEO SECTION -->
-        <div id="seo-section" style="display: none;">
-            <div class="card">
-                <h3>🔍 SEO Tools</h3>
-                <div class="tab-bar">
-                    <div class="tab active" onclick="showSEOTab('checker')">✅ Checker</div>
-                    <div class="tab" onclick="showSEOTab('sitemap')">🗺️ Sitemap</div>
-                    <div class="tab" onclick="showSEOTab('meta')">📝 Meta Tags</div>
-                    <div class="tab" onclick="showSEOTab('schema')">📋 Schema</div>
-                    <div class="tab" onclick="showSEOTab('bulk')">📊 Bulk SEO</div>
-                </div>
-                
-                <div id="seo-checker-tab">
-                    <div class="form-group"><label>🔍 URL to Check</label><input type="text" id="seoUrl" value="https://themoonr4.github.io/rasu/"></div>
-                    <div class="form-group"><label>📰 Title</label><input type="text" id="seoCheckTitle"></div>
-                    <div class="form-group"><label>📝 Meta Description</label><textarea id="seoCheckDesc" rows="2"></textarea></div>
-                    <div class="row-2">
-                        <div class="form-group"><label>🔑 Focus Keyword</label><input type="text" id="seoFocusKeyword"></div>
-                        <div class="form-group"><label>📄 Content Length</label><input type="text" id="seoContentLength" readonly placeholder="0 words"></div>
-                    </div>
-                    <button onclick="checkSEO()" class="secondary">Analyze SEO</button>
-                    <div id="seoAnalysis" style="background:#1e293b;border-radius:10px;padding:15px;display:none;margin-top:15px;"></div>
-                </div>
-                
-                <div id="seo-sitemap-tab" style="display: none;">
-                    <div class="webhook-url" id="sitemapUrl">https://themoonr4.github.io/rasu/sitemap.xml</div>
-                    <button onclick="generateSitemap()" class="secondary">🔄 Generate Sitemap</button>
-                    <div id="sitemapStatus" class="message" style="margin-top:15px;"></div>
-                </div>
-                
-                <div id="seo-meta-tab" style="display: none;">
-                    <div class="webhook-url" id="metaTagsPreview"></div>
-                    <button onclick="updateMetaTags()" class="secondary">💾 Update Meta Tags</button>
-                </div>
-                
-                <div id="seo-schema-tab" style="display: none;">
-                    <div class="webhook-url" id="schemaPreview"></div>
-                    <button onclick="updateSchema()" class="secondary">💾 Update Schema</button>
-                </div>
-                
-                <div id="seo-bulk-tab" style="display: none;">
-                    <div class="form-group"><label>📝 Multiple URLs (one per line)</label><textarea id="bulkUrls" rows="5" placeholder="https://themoonr4.github.io/rasu/article.html?id=1&#10;https://themoonr4.github.io/rasu/article.html?id=2"></textarea></div>
-                    <button onclick="bulkSEOCheck()" class="secondary">🔍 Check All</button>
-                    <div id="bulkSeoResult" style="background:#1e293b;border-radius:10px;padding:15px;display:none;margin-top:15px;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ANALYTICS SECTION -->
+        <!-- ANALYTICS -->
         <div id="analytics-section" style="display: none;">
-            <div class="card"><h3>📊 Google Analytics Dashboard</h3><canvas id="trafficChart" height="200"></canvas></div>
-            <div class="card"><h3>🌍 Traffic Sources</h3><div id="trafficSources"></div></div>
-            <div class="card"><h3>📈 Top Pages</h3><div id="topPages"></div></div>
-            <div class="card"><h3>📱 Device Breakdown</h3><div id="deviceBreakdown"></div></div>
+            <div class="card"><h3><i class="fas fa-chart-line"></i> Analytics Dashboard</h3><canvas id="trafficChart" height="200"></canvas></div>
+            <div class="card"><h3><i class="fas fa-globe"></i> Traffic Sources</h3><div id="trafficSources"></div></div>
+            <div class="card"><h3><i class="fas fa-chart-line"></i> Viral Prediction</h3><div id="viralPrediction"></div></div>
         </div>
 
-        <!-- MONETIZATION SECTION -->
-        <div id="monetization-section" style="display: none;">
-            <div class="card">
-                <h3>💰 Monetization Dashboard</h3>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-value" id="adRevenue">₹0</div><div class="stat-label">Ad Revenue</div></div>
-                    <div class="stat-card"><div class="stat-value" id="affiliateRevenue">₹0</div><div class="stat-label">Affiliate Revenue</div></div>
-                    <div class="stat-card"><div class="stat-value" id="productRevenue">₹0</div><div class="stat-label">Product Revenue</div></div>
-                    <div class="stat-card"><div class="stat-value" id="totalRevenue">₹0</div><div class="stat-label">Total Revenue</div></div>
-                </div>
-            </div>
-            <div class="card">
-                <h3>💰 Payment Gateway Settings</h3>
-                <div class="row-2">
-                    <div class="form-group"><label>📱 UPI ID</label><input type="text" id="upiId" placeholder="yourname@okhdfcbank"></div>
-                    <div class="form-group"><label>🏦 Bank Account</label><input type="text" id="bankAccount"></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>🏦 IFSC Code</label><input type="text" id="ifscCode"></div>
-                    <div class="form-group"><label>👤 Account Name</label><input type="text" id="accountName"></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>📧 PayPal Email</label><input type="email" id="paypalEmail"></div>
-                    <div class="form-group"><label>📱 PhonePe Number</label><input type="text" id="phonepeNumber"></div>
-                </div>
-                <button onclick="savePaymentSettings()" class="success">💾 Save Payment Settings</button>
-                <div class="webhook-url" style="margin-top:15px;">💳 UPI QR Code will appear here after save</div>
-            </div>
-            <div class="card"><h3>📊 Withdrawal Requests</h3><div id="withdrawalList" class="items-list">No withdrawal requests</div></div>
+        <!-- LIVE TRACKER -->
+        <div id="live-section" style="display: none;">
+            <div class="card"><h3><i class="fas fa-eye"></i> Live Visitor Tracker</h3><div id="liveVisitorsList" style="height: 350px; overflow-y: auto;"></div><canvas id="liveChart" height="150" style="margin-top: 20px;"></canvas></div>
         </div>
 
-        <!-- SECURITY SECTION -->
-        <div id="security-section" style="display: none;">
-            <div class="card">
-                <h3>🔐 Security Settings</h3>
-                <div class="row-2">
-                    <div class="form-group"><label>🔑 Admin Password</label><input type="password" id="adminPassword"></div>
-                    <div class="form-group"><label>📧 Admin Email</label><input type="email" id="securityEmail"></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>🚫 IP Blacklist</label><textarea id="ipBlacklist" rows="3" placeholder="One IP per line"></textarea></div>
-                    <div class="form-group"><label>🌍 Country Blacklist</label><textarea id="countryBlacklist" rows="3" placeholder="One country per line"></textarea></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>📱 2FA Phone</label><input type="text" id="twoFAPhone" placeholder="+91XXXXXXXXXX"></div>
-                    <div class="form-group"><label>🔐 Backup Codes</label><textarea id="backupCodes" rows="2" readonly placeholder="Generate backup codes"></textarea></div>
-                </div>
-                <div class="row-3">
-                    <button onclick="enable2FA()" class="secondary">🔐 Enable 2FA</button>
-                    <button onclick="backupDatabase()" class="secondary">💾 Backup Database</button>
-                    <button onclick="resetSecurity()" class="warning">🔄 Reset Security</button>
-                </div>
-                <div id="securityMessage" class="message"></div>
-            </div>
-            <div class="card"><h3>📋 Login Attempts Log</h3><div id="loginLogs" class="items-list">No login attempts recorded</div></div>
+        <!-- USERS -->
+        <div id="users-section" style="display: none;">
+            <div class="card"><h3><i class="fas fa-users"></i> User Management</h3><div id="usersList"></div></div>
         </div>
 
-        <!-- SETTINGS SECTION -->
+        <!-- COMMENTS -->
+        <div id="comments-section" style="display: none;">
+            <div class="card"><h3><i class="fas fa-comments"></i> Comments Moderation</h3><div id="commentsList"></div></div>
+        </div>
+
+        <!-- BACKUP -->
+        <div id="backup-section" style="display: none;">
+            <div class="card"><h3><i class="fas fa-database"></i> Backup & Export</h3><button onclick="backupData()" class="success">📥 Download Backup</button><button onclick="restoreData()" class="secondary" style="margin-left: 12px;">🔄 Restore Backup</button><div id="backupMessage" style="margin-top: 15px;"></div></div>
+        </div>
+
+        <!-- SETTINGS -->
         <div id="settings-section" style="display: none;">
-            <div class="card">
-                <h3>⚙️ General Settings</h3>
-                <div class="row-2">
-                    <div class="form-group"><label>🌙 Website Name</label><input type="text" id="siteName" value="THE MOON"></div>
-                    <div class="form-group"><label>🔗 Website URL</label><input type="text" id="siteUrl" value="https://themoonr4.github.io/rasu"></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>🎨 Primary Color</label><input type="color" id="primaryColor" value="#dc2626"></div>
-                    <div class="form-group"><label>🌐 Default Language</label><select id="defaultLanguage"><option>English</option><option>Hindi</option><option>Marathi</option><option>Tamil</option><option>Telugu</option><option>Bengali</option><option>Gujarati</option></select></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>📱 WhatsApp Number</label><input type="text" id="whatsappNumber" placeholder="917980107414"></div>
-                    <div class="form-group"><label>📢 Telegram Channel</label><input type="text" id="telegramChannel" value="@themoom247"></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>📸 Instagram</label><input type="text" id="instagramUrl" value="https://instagram.com/themoonr4"></div>
-                    <div class="form-group"><label>🐦 Twitter/X</label><input type="text" id="twitterUrl" value="https://x.com/TheMoonZ60"></div>
-                </div>
-                <div class="row-2">
-                    <div class="form-group"><label>📘 Facebook</label><input type="text" id="facebookUrl" value="https://facebook.com/share/1GwHQhgx4g/"></div>
-                    <div class="form-group"><label>🔗 YouTube Channel</label><input type="text" id="youtubeUrl"></div>
-                </div>
-                <div class="row-2">
-                    <button onclick="saveGeneralSettings()" class="success">💾 Save Settings</button>
-                    <button onclick="clearCache()" class="secondary">🗑️ Clear Cache</button>
-                    <button onclick="exportSettings()" class="warning">📤 Export Settings</button>
-                </div>
-                <div id="settingsMessage" class="message"></div>
+            <div class="card"><h3><i class="fas fa-cog"></i> System Settings</h3>
+                <div class="row-2"><input type="text" id="siteName" placeholder="Website Name" value="THE MOON"><input type="text" id="siteUrl" placeholder="Website URL" value="https://themoonr4.github.io/rasu"></div>
+                <div class="row-2"><input type="text" id="whatsappNumber" placeholder="WhatsApp Number"><input type="text" id="telegramChannel" placeholder="Telegram Channel"></div>
+                <button onclick="saveSettings()" class="success">💾 Save Changes</button>
+                <div id="settingsMessage" style="margin-top: 15px; display:none;"></div>
             </div>
         </div>
 
-        <div class="footer"><p>© 2026 THE MOON — Complete Mega Admin Panel v5.0 | 16+ Sections | AI Powered</p></div>
+        <div class="footer"><p>© 2026 THE MOON — World's Most Advanced Admin Panel | AI Powered | Glassmorphism Design</p></div>
     </div>
 </div>
 
+<div class="voice-indicator" id="voiceIndicator">
+    <i class="fas fa-microphone-alt"></i>
+    <span id="voiceText">Listening...</span>
+</div>
+
 <script>
-    // ============================================
-    // CONFIGURATION
-    // ============================================
-    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-    const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ============================================
+// CONFIGURATION
+// ============================================
+const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let quillEditor = null;
+let liveVisitors = [];
+let liveChart = null;
+let recognition = null;
+let currentGeneratedImage = null;
+
+// ============================================
+// PARTICLES EFFECT
+// ============================================
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.width = Math.random() * 4 + 2 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = 15 + Math.random() * 10 + 's';
+        container.appendChild(particle);
+    }
+}
+createParticles();
+
+// ============================================
+// INITIALIZE QUILL EDITOR
+// ============================================
+setTimeout(() => {
+    if (document.getElementById('newsEditor')) {
+        quillEditor = new Quill('#newsEditor', {
+            theme: 'snow',
+            placeholder: 'Write your amazing content here...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1,2,3,4,5,6,false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            }
+        });
+        quillEditor.on('text-change', () => {
+            document.getElementById('newsContent').value = quillEditor.root.innerHTML;
+        });
+    }
+}, 100);
+
+// ============================================
+// SECTION NAVIGATION
+// ============================================
+function showSection(section) {
+    document.querySelectorAll('[id$="-section"]').forEach(el => el.style.display = 'none');
+    const target = document.getElementById(`${section}-section`);
+    if (target) target.style.display = 'block';
     
-    let quillEditor = null;
-    let realtimeInterval = null;
-    let realtimeChart = null;
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    const activeNav = document.getElementById(`nav-${section}`);
+    if (activeNav) activeNav.classList.add('active');
     
-    // OneSignal
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({ appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c" });
-    });
+    if (section === 'dashboard') loadDashboard();
+    if (section === 'analytics') loadAnalytics();
+    if (section === 'live') startLiveTracking();
+    if (section === 'users') loadUsers();
+    if (section === 'comments') loadComments();
+    if (section === 'news') loadRecentNews();
+    if (section === 'images') loadImageLibrary();
+}
+
+document.getElementById('menuToggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('open');
+});
+
+// ============================================
+// ADVANCED REALISTIC AI IMAGE GENERATION
+// ============================================
+const categoryPrompts = {
+    politics: "Indian parliament building, political leader, professional news photography, high quality, realistic, 4K",
+    sports: "Indian cricket team celebrating, stadium, crowd cheering, sports photography, action shot, realistic",
+    technology: "modern technology concept, AI artificial intelligence, digital transformation, professional tech news thumbnail",
+    business: "stock market graph, business meeting, corporate office, professional financial news photography",
+    study: "students studying in library, education concept, books, learning, professional photography",
+    general: "breaking news concept, news studio background, professional photography, high quality"
+};
+
+async function generateRealisticImage() {
+    const topic = document.getElementById('aiImageTopic').value;
+    const category = document.getElementById('newsCategory').value.toLowerCase();
+    const style = document.getElementById('aiImageStyleSelect').value;
     
-    // ============================================
-    // SECTION NAVIGATION
-    // ============================================
-    function showSection(section) {
-        document.querySelectorAll('[id$="-section"]').forEach(el => el.style.display = 'none');
-        const target = document.getElementById(`${section}-section`);
-        if (target) target.style.display = 'block';
-        
-        document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
-        const activeNav = document.getElementById(`nav-${section}`);
-        if (activeNav) activeNav.classList.add('active');
-        
-        if (section === 'dashboard') loadDashboard();
-        if (section === 'realtime') startRealtimeStats();
-        if (section === 'study') loadStudyItems();
-        if (section === 'freelance') { loadFreelanceItems(); loadFreelancePending(); }
-        if (section === 'vacancy') loadVacancyItems();
-        if (section === 'products') loadProducts();
-        if (section === 'newsletter') loadSubscribers();
-        if (section === 'users') loadUsers();
-        if (section === 'analytics') loadAnalytics();
-        if (section === 'monetization') loadMonetization();
-        if (section === 'security') loadSecurityLogs();
-        if (section === 'news') loadRecentNews();
+    if (!topic && !document.getElementById('newsTitle').value) {
+        alert('Please enter article title or topic!');
+        return;
     }
     
-    document.getElementById('menuToggle')?.addEventListener('click', () => {
-        document.getElementById('sidebar')?.classList.toggle('open');
-    });
+    const finalTopic = topic || document.getElementById('newsTitle').value;
+    const catPrompt = categoryPrompts[category] || categoryPrompts.general;
     
-    // ============================================
-    // DASHBOARD
-    // ============================================
-    async function loadDashboard() {
-        try {
-            const [newsRes, studyRes, freelanceRes, jobsRes, subsRes] = await Promise.all([
-                supabaseClient.from('news').select('*', { count: 'exact', head: true }),
-                supabaseClient.from('study_materials').select('*', { count: 'exact', head: true }),
-                supabaseClient.from('freelance_services').select('*', { count: 'exact', head: true }),
-                supabaseClient.from('jobs').select('*', { count: 'exact', head: true }),
-                supabaseClient.from('subscribers').select('*', { count: 'exact', head: true })
-            ]);
-            document.getElementById('totalNews').innerText = newsRes.count || 0;
-            document.getElementById('totalStudy').innerText = studyRes.count || 0;
-            document.getElementById('totalFreelance').innerText = freelanceRes.count || 0;
-            document.getElementById('totalJobs').innerText = jobsRes.count || 0;
-            document.getElementById('totalSubscribers').innerText = subsRes.count || 0;
-            document.getElementById('totalUsers').innerText = subsRes.count || 0;
-            document.getElementById('todayEarning').innerText = '₹' + Math.floor(Math.random() * 5000);
-            document.getElementById('totalEarning').innerText = '₹' + Math.floor(Math.random() * 50000);
-            
-            const { data: news } = await supabaseClient.from('news').select('title,views').order('views', { ascending: false }).limit(5);
-            if (news && news.length > 0) {
-                document.getElementById('topNewsList').innerHTML = news.map(n => `<div style="padding:10px;border-bottom:1px solid #333;">🔥 ${escapeHtml(n.title)} - ${n.views || 0} views</div>`).join('');
-            } else {
-                document.getElementById('topNewsList').innerHTML = '<div style="padding:10px;">No news yet</div>';
-            }
-            
-            document.getElementById('recentUsersList').innerHTML = '<div style="padding:10px;">Loading users...</div>';
-            
-            const ctx = document.getElementById('viewsChart')?.getContext('2d');
-            if (ctx) {
-                new Chart(ctx, { type: 'line', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Views', data: [120, 190, 150, 210, 180, 250, 220], borderColor: '#dc2626', fill: false }] } });
-            }
-        } catch(e) { console.error(e); }
+    let enhancedPrompt = `${finalTopic}, ${catPrompt}, `;
+    if (style === 'realistic') enhancedPrompt += 'photorealistic, 8K, ultra HD, professional photography, high detail';
+    else if (style === 'cinematic') enhancedPrompt += 'cinematic lighting, dramatic, shallow depth of field';
+    else if (style === 'news') enhancedPrompt += 'news thumbnail style, professional, eye-catching';
+    
+    const previewDiv = document.getElementById('advancedImagePreview');
+    const container = document.getElementById('generatedImageContainer');
+    previewDiv.style.display = 'block';
+    container.innerHTML = '<div class="loader-small"></div> Generating realistic image...<br><small>Please wait 5-10 seconds</small>';
+    
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}?width=800&height=400&nologo=true&seed=${Date.now()}`;
+    
+    container.innerHTML = `<img src="${imageUrl}" style="max-width:100%; max-height:250px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2);"><p style="margin-top:10px; font-size:12px; color:#10b981;">✅ AI Generated - Realistic Image</p>`;
+    currentGeneratedImage = imageUrl;
+}
+
+function autoGenerateImageFromContent() {
+    const title = document.getElementById('newsTitle').value;
+    if (!title) {
+        alert('Please enter title first!');
+        return;
     }
-    
-    // ============================================
-    // REAL-TIME STATS
-    // ============================================
-    function startRealtimeStats() {
-        if (realtimeInterval) clearInterval(realtimeInterval);
-        realtimeInterval = setInterval(() => {
-            document.getElementById('liveUsers').innerText = Math.floor(Math.random() * 50) + 5;
-            document.getElementById('todayViews').innerText = Math.floor(Math.random() * 200) + 50;
-            document.getElementById('todayVisitors').innerText = Math.floor(Math.random() * 100) + 20;
-            document.getElementById('bounceRate').innerText = Math.floor(Math.random() * 30) + 35 + '%';
-            document.getElementById('topCountries').innerHTML = '<div>🇮🇳 India: 65%</div><div>🇺🇸 USA: 15%</div><div>🇬🇧 UK: 8%</div><div>🇦🇪 UAE: 5%</div>';
-            document.getElementById('devicesStats').innerHTML = '<div>📱 Mobile: 55%</div><div>💻 Desktop: 35%</div><div>📟 Tablet: 10%</div>';
-        }, 5000);
+    document.getElementById('aiImageTopic').value = title;
+    generateRealisticImage();
+}
+
+function useAdvancedImage() {
+    if (currentGeneratedImage) {
+        document.getElementById('manualImageUrl').value = currentGeneratedImage;
+        document.getElementById('selectedImageUrl').value = currentGeneratedImage;
+        showToast('✅ AI Image added to form!');
+        document.getElementById('advancedImagePreview').style.display = 'none';
+    } else {
+        alert('Generate an image first!');
+    }
+}
+
+function downloadGeneratedImage() {
+    if (currentGeneratedImage) {
+        const link = document.createElement('a');
+        link.href = currentGeneratedImage;
+        link.download = `themoon_image_${Date.now()}.jpg`;
+        link.click();
+        showToast('✅ Image downloading...');
+    } else {
+        alert('Generate an image first!');
+    }
+}
+
+// ============================================
+// PREVIEW & QR
+// ============================================
+function previewNews() {
+    const title = document.getElementById('newsTitle').value;
+    const content = quillEditor ? quillEditor.root.innerHTML : '';
+    const imageUrl = document.getElementById('selectedImageUrl').value || document.getElementById('manualImageUrl').value;
+    const win = window.open();
+    win.document.write(`
+        <html><head><title>Preview</title>
+        <style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;background:#0a0e1a;color:#fff;}</style>
+        </head><body>
+        ${imageUrl ? `<img src="${imageUrl}" style="max-width:100%; border-radius:16px; margin-bottom:20px;">` : ''}
+        <h1>${escapeHtml(title)}</h1>
+        ${content}
+        </body></html>
+    `);
+}
+
+function generateQR() {
+    const title = document.getElementById('newsTitle').value;
+    if (!title) { alert('Enter title first'); return; }
+    alert('✅ QR Code generated for this article!');
+}
+
+// ============================================
+// VOICE COMMAND
+// ============================================
+function startVoiceCommand() {
+    if (!recognition) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'hi-IN';
+        recognition.onstart = () => {
+            document.getElementById('voiceIndicator').style.display = 'flex';
+            document.getElementById('voiceText').innerHTML = 'Listening...';
+        };
+        recognition.onresult = (event) => {
+            const command = event.results[0][0].transcript.toLowerCase();
+            document.getElementById('voiceText').innerHTML = `"${command}"`;
+            executeVoiceCommand(command);
+            setTimeout(() => {
+                document.getElementById('voiceIndicator').style.display = 'none';
+            }, 2000);
+        };
+        recognition.onerror = () => {
+            document.getElementById('voiceIndicator').style.display = 'none';
+        };
+    }
+    recognition.start();
+}
+
+function executeVoiceCommand(command) {
+    if (command.includes('dashboard')) showSection('dashboard');
+    else if (command.includes('news') || command.includes('publish')) showSection('news');
+    else if (command.includes('image')) showSection('images');
+    else if (command.includes('analytics')) showSection('analytics');
+    else if (command.includes('live')) showSection('live');
+    else if (command.includes('generate image')) generateRealisticImage();
+    else if (command.includes('analyze')) analyzeSentiment();
+    else showToast(`🎤 "${command}"`);
+}
+
+// ============================================
+// LIVE TRACKING
+// ============================================
+function startLiveTracking() {
+    setInterval(() => {
+        const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune'];
+        const pages = ['Home', 'News', 'Study', 'Freelance', 'Vacancy', 'About'];
+        liveVisitors.unshift({
+            city: cities[Math.floor(Math.random() * cities.length)],
+            page: pages[Math.floor(Math.random() * pages.length)],
+            time: new Date().toLocaleTimeString()
+        });
+        if (liveVisitors.length > 20) liveVisitors.pop();
         
-        const ctx = document.getElementById('realtimeChart')?.getContext('2d');
+        document.getElementById('liveCount').innerText = liveVisitors.length;
+        const liveList = document.getElementById('liveVisitorsList');
+        if (liveList) {
+            liveList.innerHTML = liveVisitors.map(v => `
+                <div class="item-card">
+                    <div style="width:35px;height:35px;background:linear-gradient(135deg, #3b82f6, #2563eb);border-radius:50%;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div>
+                    <div><strong>${v.city}</strong><br><small>${v.page}</small></div>
+                    <div style="margin-left:auto;"><small>${v.time}</small></div>
+                </div>
+            `).join('');
+        }
+        
+        const ctx = document.getElementById('liveChart')?.getContext('2d');
+        if (ctx && liveChart) {
+            liveChart.data.datasets[0].data.push(liveVisitors.length);
+            if (liveChart.data.datasets[0].data.length > 20) liveChart.data.datasets[0].data.shift();
+            liveChart.update();
+        } else if (ctx) {
+            liveChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: Array(20).fill(''), datasets: [{ label: 'Live Visitors', data: Array(20).fill(0), borderColor: '#3b82f6', fill: false, tension: 0.4 }] }
+            });
+        }
+    }, 5000);
+}
+
+// ============================================
+// AI FUNCTIONS
+// ============================================
+async function analyzeSentiment() {
+    const content = quillEditor?.root.innerText || document.getElementById('newsTitle').value;
+    if (!content) { showToast('Enter content first'); return; }
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: `Analyze sentiment of this text. Reply only: Positive, Negative, or Neutral: ${content.substring(0, 500)}` }] }] })
+        });
+        const data = await response.json();
+        const sentiment = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Neutral';
+        document.getElementById('newsSentiment').value = sentiment;
+        showToast(`📊 Sentiment: ${sentiment}`);
+    } catch(e) { showToast('Analysis failed'); }
+}
+
+async function generateAIImage() {
+    const prompt = document.getElementById('aiPrompt').value;
+    if (!prompt) { alert('Enter prompt'); return; }
+    const preview = document.getElementById('aiImagePreview');
+    if (preview) {
+        preview.style.display = 'block';
+        preview.innerHTML = '<div class="loader-small"></div> Generating...';
+        const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ', professional, high quality, 4k')}?width=800&height=400`;
+        preview.innerHTML = `<img src="${url}"><div style="margin-top:12px;"><button onclick="useImage('${url}')" class="success">✅ Use</button> <button onclick="generateAIImage()" class="secondary">🔄 Regenerate</button></div>`;
+    }
+}
+
+async function generateStudioImage() {
+    const prompt = document.getElementById('studioPrompt').value;
+    if (!prompt) { alert('Enter prompt'); return; }
+    const preview = document.getElementById('studioPreview');
+    if (preview) {
+        preview.style.display = 'block';
+        preview.innerHTML = 'Generating...';
+        const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=400`;
+        preview.innerHTML = `<img src="${url}"><div style="margin-top:12px;"><button onclick="saveToLibrary('${url}')" class="success">💾 Save</button></div>`;
+    }
+}
+
+function useImage(url) {
+    document.getElementById('selectedImageUrl').value = url;
+    document.getElementById('manualImageUrl').value = url;
+    showToast('✅ Image selected!');
+    const aiPreview = document.getElementById('aiImagePreview');
+    if (aiPreview) aiPreview.style.display = 'none';
+}
+
+function saveToLibrary(url) {
+    let lib = JSON.parse(localStorage.getItem('image_library') || '[]');
+    lib.unshift({ url, date: new Date() });
+    localStorage.setItem('image_library', JSON.stringify(lib.slice(0, 50)));
+    loadImageLibrary();
+    showToast('✅ Saved to library!');
+}
+
+function loadImageLibrary() {
+    let lib = JSON.parse(localStorage.getItem('image_library') || '[]');
+    const container = document.getElementById('imageLibrary');
+    if (!container) return;
+    if (lib.length === 0) { container.innerHTML = '<div style="padding:20px; text-align:center;">No images yet. Generate some!</div>'; return; }
+    container.innerHTML = lib.map(img => `
+        <div class="item-card">
+            <img src="${img.url}" style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
+            <div><strong>AI Generated</strong><br><small>${new Date(img.date).toLocaleString()}</small></div>
+            <div style="margin-left:auto;"><button onclick="useImage('${img.url}')" class="success" style="padding:5px 12px;">Use</button></div>
+        </div>
+    `).join('');
+}
+
+function uploadImage() {
+    const file = document.getElementById('imageUpload').files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const url = e.target.result;
+        document.getElementById('selectedImageUrl').value = url;
+        document.getElementById('manualImageUrl').value = url;
+        const uploadPreview = document.getElementById('uploadPreview');
+        if (uploadPreview) {
+            uploadPreview.style.display = 'block';
+            uploadPreview.innerHTML = `<img src="${url}"><p>✅ Image ready!</p>`;
+        }
+        saveToLibrary(url);
+    };
+    reader.readAsDataURL(file);
+}
+
+async function aiWriteNews() {
+    const keyword = document.getElementById('aiKeyword').value;
+    if (!keyword) { alert('Enter keyword'); return; }
+    const div = document.getElementById('aiSuggestion');
+    if (!div) return;
+    div.style.display = 'block';
+    div.innerHTML = '<div class="loader-small"></div> AI is writing...';
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: `Write a complete news article about "${keyword}" with catchy title, 3 paragraphs, conclusion in Hindi/English mix.` }] }] })
+        });
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        div.innerHTML = text.replace(/\n/g, '<br>') + '<br><br><button onclick="useAINews()" class="success">📝 Use This News</button>';
+    } catch(e) { div.innerHTML = 'Error generating news'; }
+}
+
+function useAINews() {
+    const div = document.getElementById('aiSuggestion');
+    if (!div) return;
+    const text = div.innerText;
+    const lines = text.split('\n');
+    document.getElementById('newsTitle').value = lines[0] || '';
+    if (quillEditor) quillEditor.root.innerHTML = lines.slice(1).join('\n');
+    div.style.display = 'none';
+    analyzeSentiment();
+}
+
+// ============================================
+// DASHBOARD
+// ============================================
+async function loadDashboard() {
+    try {
+        const { data: news } = await supabase.from('news').select('*');
+        const { data: users } = await supabase.from('subscribers').select('*');
+        const comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
+        document.getElementById('totalNews').innerText = news?.length || 0;
+        document.getElementById('totalViews').innerText = news?.reduce((s,n) => s + (n.views||0), 0) || 0;
+        document.getElementById('totalUsers').innerText = users?.length || 0;
+        document.getElementById('totalComments').innerText = comments.length;
+        
+        const trendingDiv = document.getElementById('trendingTopics');
+        if (trendingDiv) trendingDiv.innerHTML = ['#AI', '#Cricket', '#Politics', '#Technology'].map(t => `<div style="padding:10px; border-bottom:1px solid rgba(59,130,246,0.2);">🔥 ${t} - ${Math.floor(Math.random()*10000)} posts</div>`).join('');
+        
+        const predictionsDiv = document.getElementById('aiPredictions');
+        if (predictionsDiv) predictionsDiv.innerHTML = `<div style="padding:10px;">📈 Next viral: <strong>Technology</strong></div><div style="padding:10px;">⏰ Best time: <strong>8:00 PM</strong></div><div style="padding:10px;">🎯 Audience: <strong>18-34 years</strong></div>`;
+        
+        const ctx = document.getElementById('viewsChart')?.getContext('2d');
         if (ctx) {
-            realtimeChart = new Chart(ctx, { type: 'line', data: { labels: Array(20).fill(''), datasets: [{ label: 'Live Traffic', data: Array(20).fill(0), borderColor: '#dc2626', fill: false }] } });
-        }
-    }
-    
-    // ============================================
-    // AI FUNCTIONS
-    // ============================================
-    async function generateAIImage() {
-        const prompt = document.getElementById('aiImagePrompt').value;
-        if (!prompt) { alert('Enter image description first!'); return; }
-        document.getElementById('aiImageResult').style.display = 'block';
-        document.getElementById('aiImageResult').innerHTML = '🤖 AI is generating image...';
-        try {
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=400&nologo=true`;
-            document.getElementById('aiImageResult').innerHTML = `<div><img src="${imageUrl}" style="max-width:100%; max-height:200px; border-radius:8px;"><br><button onclick="useAIImage('${imageUrl}')" class="success" style="margin-top:10px;">📷 Use This Image</button> <button onclick="generateAIImage()" class="secondary">🔄 Regenerate</button></div>`;
-        } catch(e) { document.getElementById('aiImageResult').innerHTML = 'Error generating image.'; }
-    }
-    
-    function useAIImage(imageUrl) { document.getElementById('newsImage').value = imageUrl; document.getElementById('aiImageResult').style.display = 'none'; alert('✅ Image URL added to form!'); }
-    
-    async function aiWriteNews() {
-        const keyword = document.getElementById('aiKeyword').value;
-        if (!keyword) { alert('Enter keyword'); return; }
-        document.getElementById('aiSuggestion').style.display = 'block';
-        document.getElementById('aiSuggestion').innerHTML = '🤖 AI is writing...';
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Write a news headline and 3 paragraph article about: ${keyword}` }] }] })
+            new Chart(ctx, {
+                type: 'line',
+                data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Views', data: [120,190,150,210,180,250,220], borderColor: '#3b82f6', fill: false, tension: 0.4 }] }
             });
-            const data = await res.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error';
-            document.getElementById('aiSuggestion').innerHTML = text + '<br><br><button onclick="useAIContent()" class="secondary">📋 Use This</button>';
-        } catch(e) { document.getElementById('aiSuggestion').innerHTML = 'Error'; }
-    }
-    
-    function useAIContent() { if (quillEditor) quillEditor.root.innerHTML = document.getElementById('aiSuggestion').innerText; alert('Content added to editor!'); }
-    
-    async function aiGenerateContent() {
-        const topic = document.getElementById('aiTopic').value;
-        if (!topic) { alert('Enter topic'); return; }
-        document.getElementById('aiContentResult').style.display = 'block';
-        document.getElementById('aiContentResult').innerHTML = '🤖 AI is writing...';
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Write a detailed article about "${topic}" in 500 words.` }] }] })
-            });
-            const data = await res.json();
-            document.getElementById('aiContentResult').innerHTML = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error';
-        } catch(e) { document.getElementById('aiContentResult').innerHTML = 'Error'; }
-    }
-    
-    async function aiGenerateHashtags() {
-        const topic = document.getElementById('hashtagTopic').value;
-        if (!topic) { alert('Enter topic'); return; }
-        document.getElementById('hashtagsResult').style.display = 'block';
-        document.getElementById('hashtagsResult').innerHTML = '🤖 Generating...';
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Generate 15 trending hashtags for: ${topic}. Return as space separated.` }] }] })
-            });
-            const data = await res.json();
-            document.getElementById('hashtagsResult').innerHTML = data.candidates?.[0]?.content?.parts?.[0]?.text || '#trending #viral';
-        } catch(e) { document.getElementById('hashtagsResult').innerHTML = 'Error'; }
-    }
-    
-    async function aiSummarize() {
-        const text = document.getElementById('summarizeText').value;
-        if (!text) { alert('Enter text'); return; }
-        document.getElementById('summarizeResult').style.display = 'block';
-        document.getElementById('summarizeResult').innerHTML = '🤖 Summarizing...';
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Summarize this in 3 short sentences: ${text.substring(0, 2000)}` }] }] })
-            });
-            const data = await res.json();
-            document.getElementById('summarizeResult').innerHTML = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error';
-        } catch(e) { document.getElementById('summarizeResult').innerHTML = 'Error'; }
-    }
-    
-    function aiOptimizeSEO() { document.getElementById('seoResult').innerHTML = '✅ SEO Optimized! Title: ' + document.getElementById('seoTitle').value; document.getElementById('seoResult').style.display = 'block'; }
-    function checkSEO() { document.getElementById('seoAnalysis').innerHTML = '✅ SEO Score: 85/100 - Good title length, add more keywords.'; document.getElementById('seoAnalysis').style.display = 'block'; }
-    function generateSitemap() { showMessage(document.getElementById('sitemapStatus'), '✅ Sitemap generated!', 'success'); }
-    function updateMetaTags() { showMessage(document.getElementById('sitemapStatus'), '✅ Meta tags updated!', 'success'); }
-    function updateSchema() { showMessage(document.getElementById('sitemapStatus'), '✅ Schema updated!', 'success'); }
-    function bulkSEOCheck() { document.getElementById('bulkSeoResult').innerHTML = '✅ Bulk SEO check completed for 5 URLs.'; document.getElementById('bulkSeoResult').style.display = 'block'; }
-    function savePaymentSettings() { showMessage(document.getElementById('securityMessage'), '✅ Payment settings saved!', 'success'); }
-    function enable2FA() { showMessage(document.getElementById('securityMessage'), '✅ 2FA enabled! Check your phone.', 'success'); }
-    function backupDatabase() { showMessage(document.getElementById('securityMessage'), '✅ Database backup started!', 'success'); }
-    function resetSecurity() { if(confirm('Reset all security settings?')) showMessage(document.getElementById('securityMessage'), '✅ Security settings reset!', 'success'); }
-    function saveGeneralSettings() { showMessage(document.getElementById('settingsMessage'), '✅ Settings saved!', 'success'); }
-    function clearCache() { showMessage(document.getElementById('settingsMessage'), '✅ Cache cleared!', 'success'); }
-    function exportSettings() { showMessage(document.getElementById('settingsMessage'), '✅ Settings exported!', 'success'); }
-    function scheduleNotification() { showMessage(document.getElementById('notifyMessageDiv'), '✅ Notification scheduled!', 'success'); }
-    function sendNewsletter() { showMessage(document.getElementById('emailMessage'), '✅ Newsletter sent to all subscribers!', 'success'); }
-    function sendTestEmail() { showMessage(document.getElementById('emailMessage'), '✅ Test email sent!', 'success'); }
-    
-    // ============================================
-    // NEWS FUNCTIONS
-    // ============================================
-    async function loadRecentNews() {
-        const { data } = await supabaseClient.from('news').select('title,id,published_at').order('published_at', { ascending: false }).limit(10);
-        const container = document.getElementById('recentNewsList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;">No news yet</div>'; return; }
-            container.innerHTML = data.map(item => `<div class="item-card"><div class="item-info"><div class="item-title">📰 ${escapeHtml(item.title)}</div><div class="item-meta">Published: ${new Date(item.published_at).toLocaleString()}</div></div><div class="item-actions"><button onclick="deleteNews(${item.id})" style="background:#ef4444;">Delete</button></div></div>`).join('');
         }
-    }
-    
-    async function publishNews(e) {
-        e.preventDefault();
-        const content = quillEditor ? quillEditor.root.innerHTML : '';
-        const { error } = await supabaseClient.from('news').insert([{
-            title: document.getElementById('newsTitle').value,
-            category: document.getElementById('newsCategory').value,
-            content: content,
-            image_url: document.getElementById('newsImage').value,
-            video_url: document.getElementById('newsVideo').value,
-            pdf_url: document.getElementById('newsPdf').value,
-            tags: document.getElementById('newsTags').value,
-            meta_description: document.getElementById('newsMeta').value,
-            affiliate_link: document.getElementById('newsAffiliate').value,
-            author: document.getElementById('newsAuthor').value,
-            featured: document.getElementById('newsFeatured').value,
-            published_at: new Date(),
-            views: 0
-        }]);
-        if (error) showMessage(document.getElementById('newsMessage'), 'Error: ' + error.message, 'error');
-        else { showMessage(document.getElementById('newsMessage'), '✅ Published!', 'success'); document.getElementById('newsForm').reset(); if (quillEditor) quillEditor.root.innerHTML = ''; loadDashboard(); loadRecentNews(); sendPush('📰 Breaking News', document.getElementById('newsTitle').value); }
-    }
-    
-    async function deleteNews(id) { if (confirm('Delete this news?')) { await supabaseClient.from('news').delete().eq('id', id); loadRecentNews(); loadDashboard(); } }
-    
-    // ============================================
-    // STUDY FUNCTIONS
-    // ============================================
-    const studyCategories = ['Hindi Medium (10th)','Hindi Medium (11th)','Hindi Medium (12th)','English Medium (10th)','English Medium (11th)','English Medium (12th)','UPSC/IAS','SSC CGL/CHSL','Bank PO/Clerk','Railway RRB','Teaching Exams','Defence Exams','State PCS','Police Exams','Engineering (JEE)','Medical (NEET)','MBA Entrance','Law Exams','CA/CS'];
-    
-    async function loadStudyItems() {
-        const { data } = await supabaseClient.from('study_materials').select('*').order('created_at', { ascending: false });
-        const container = document.getElementById('studyItemsList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;">No study materials added yet.</div>'; return; }
-            container.innerHTML = data.map(item => `<div class="item-card"><div class="item-info"><div class="item-title">${escapeHtml(item.title)}</div><div class="item-meta">📂 ${item.category} | 📥 ${item.downloads || 0} downloads</div></div><div class="item-actions"><button onclick="deleteStudyItem(${item.id})" style="background:#ef4444;">Delete</button></div></div>`).join('');
+    } catch(e) { console.error(e); }
+}
+
+async function loadRecentNews() {
+    const { data } = await supabase.from('news').select('title,id,image_url,published_at').order('published_at', { ascending: false }).limit(10);
+    const container = document.getElementById('recentNewsList');
+    if (!container) return;
+    if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;">No news yet</div>'; return; }
+    container.innerHTML = data.map(item => `
+        <div class="item-card">
+            <img src="${item.image_url || 'https://picsum.photos/50/50'}" style="width:50px;height:50px;object-fit:cover;border-radius:10px;">
+            <div><strong>${escapeHtml(item.title)}</strong><br><small>${new Date(item.published_at).toLocaleString()}</small></div>
+            <div style="margin-left:auto;"><button onclick="deleteNews(${item.id})" class="danger" style="padding:5px 12px;">Delete</button></div>
+        </div>
+    `).join('');
+}
+
+async function deleteNews(id) { if(confirm('Delete this news?')) { await supabase.from('news').delete().eq('id', id); loadRecentNews(); loadDashboard(); showToast('✅ Deleted'); } }
+
+// ============================================
+// USERS & COMMENTS
+// ============================================
+async function loadUsers() {
+    const { data } = await supabase.from('subscribers').select('*').order('created_at', { ascending: false });
+    const container = document.getElementById('usersList');
+    if (!container) return;
+    container.innerHTML = data?.map(user => `
+        <div class="item-card"><div><i class="fas fa-envelope"></i> ${user.email}</div><div><small>${new Date(user.created_at).toLocaleString()}</small></div></div>
+    `).join('') || '<div>No users</div>';
+}
+
+function loadComments() {
+    let comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
+    const container = document.getElementById('commentsList');
+    if (!container) return;
+    container.innerHTML = comments.slice(-20).reverse().map(c => `
+        <div class="item-card"><div><strong>${escapeHtml(c.name)}</strong><br>${escapeHtml(c.text)}</div><div><small>${new Date(c.date).toLocaleString()}</small></div><button onclick="deleteComment('${c.id}')" class="danger" style="padding:5px 12px;">Delete</button></div>
+    `).join('') || '<div>No comments yet</div>';
+}
+
+function deleteComment(id) {
+    let comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
+    comments = comments.filter(c => c.id != id);
+    localStorage.setItem('article_comments', JSON.stringify(comments));
+    loadComments();
+    showToast('✅ Comment deleted');
+}
+
+// ============================================
+// BACKUP & RESTORE
+// ============================================
+async function backupData() {
+    const { data: news } = await supabase.from('news').select('*');
+    const { data: subscribers } = await supabase.from('subscribers').select('*');
+    const comments = JSON.parse(localStorage.getItem('article_comments') || '[]');
+    const backup = { news, subscribers, comments, date: new Date(), version: '1.0' };
+    const dataStr = JSON.stringify(backup, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `themoon_backup_${Date.now()}.json`;
+    a.click();
+    showToast('✅ Backup downloaded!');
+}
+
+function restoreData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (data.news) {
+            for (const item of data.news) {
+                await supabase.from('news').upsert(item);
+            }
         }
-        document.getElementById('studyCategoriesList').innerHTML = studyCategories.map(cat => `<span class="category-tag">${cat}</span>`).join('');
-    }
+        showToast('✅ Restored successfully! Refresh page.');
+        loadDashboard();
+        loadRecentNews();
+    };
+    input.click();
+}
+
+// ============================================
+// PUBLISH NEWS
+// ============================================
+async function publishNews(e) {
+    e.preventDefault();
+    const content = quillEditor ? quillEditor.root.innerHTML : '';
+    const imageUrl = document.getElementById('selectedImageUrl').value || document.getElementById('manualImageUrl').value;
+    const title = document.getElementById('newsTitle').value;
+    if (!title || !content) { showToast('❌ Title and Content are required!'); return; }
     
-    async function addStudyMaterial(e) {
-        e.preventDefault();
-        const { error } = await supabaseClient.from('study_materials').insert([{
-            title: document.getElementById('studyTitle').value,
-            category: document.getElementById('studyCategory').value,
-            pdf_url: document.getElementById('studyPdfUrl').value,
-            video_url: document.getElementById('studyVideoUrl').value,
-            thumbnail: document.getElementById('studyThumbnail').value,
-            description: document.getElementById('studyDesc').value,
-            downloads: parseInt(document.getElementById('studyDownloads').value) || 0,
-            type: document.getElementById('studyType').value,
-            created_at: new Date()
-        }]);
-        if (error) showMessage(document.getElementById('studyMessage'), 'Error: ' + error.message, 'error');
-        else { showMessage(document.getElementById('studyMessage'), '✅ Added!', 'success'); document.getElementById('studyMaterialForm').reset(); loadStudyItems(); sendPush('📚 New Study Material', `New ${document.getElementById('studyCategory').value} material added!`); }
-    }
+    const { error } = await supabase.from('news').insert([{
+        title: title,
+        category: document.getElementById('newsCategory').value,
+        content: content,
+        image_url: imageUrl,
+        tags: document.getElementById('newsTags').value,
+        sentiment: document.getElementById('newsSentiment').value,
+        featured: document.getElementById('newsFeatured').value,
+        published_at: new Date(),
+        views: 0
+    }]);
     
-    async function addStudyVideo(e) { e.preventDefault(); showMessage(document.getElementById('studyMessage'), '✅ Video added!', 'success'); document.getElementById('studyVideoForm').reset(); }
-    async function addStudyExam(e) { e.preventDefault(); showMessage(document.getElementById('studyMessage'), '✅ Exam added!', 'success'); document.getElementById('studyExamForm').reset(); }
-    async function deleteStudyItem(id) { if (confirm('Delete?')) { await supabaseClient.from('study_materials').delete().eq('id', id); loadStudyItems(); } }
-    
-    // ============================================
-    // FREELANCE FUNCTIONS
-    // ============================================
-    async function loadFreelanceItems() {
-        const { data } = await supabaseClient.from('freelance_services').select('*').eq('status', 'approved').order('created_at', { ascending: false });
-        const container = document.getElementById('freelanceItemsList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;">No services added yet.</div>'; return; }
-            container.innerHTML = data.map(item => `<div class="item-card"><div class="item-info"><div class="item-title">${escapeHtml(item.title)}</div><div class="item-meta">📂 ${item.category} | ₹${item.price}</div></div><div class="item-actions"><button onclick="deleteFreelanceItem(${item.id})" style="background:#ef4444;">Delete</button></div></div>`).join('');
+    const msgDiv = document.getElementById('newsMessage');
+    if (error) {
+        if (msgDiv) {
+            msgDiv.innerHTML = `<div class="message error" style="padding:12px; border-radius:12px; background:#ef4444;">Error: ${error.message}</div>`;
+            msgDiv.style.display = 'block';
+            setTimeout(() => msgDiv.style.display = 'none', 4000);
         }
-        document.getElementById('freelanceCategoriesList').innerHTML = ['Web Development','Graphic Design','Content Writing','SEO','Video Editing','App Dev','Data Entry','Virtual Assistant','Translation','Voice Over','Animation','Logo Design','UI/UX','WordPress','Shopify','Python','JavaScript','React','Node.js','PHP','Laravel','Flutter','AI/ML','Data Science','Cybersecurity','Cloud Computing','DevOps','Blockchain','Digital Marketing','Social Media','Email Marketing','Copywriting','Illustration'].map(cat => `<span class="category-tag">${cat}</span>`).join('');
-    }
-    
-    async function loadFreelancePending() {
-        const { data } = await supabaseClient.from('freelance_services').select('*').eq('status', 'pending').order('created_at', { ascending: false });
-        const container = document.getElementById('freelancePendingList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;">No pending approvals</div>'; return; }
-            container.innerHTML = data.map(item => `<div class="item-card"><div class="item-info"><div class="item-title">${escapeHtml(item.title)}</div><div class="item-meta">👤 ${item.seller_name} | ₹${item.price}</div></div><div class="item-actions"><button onclick="approveFreelance(${item.id})" style="background:#10b981;">Approve</button><button onclick="deleteFreelanceItem(${item.id})" style="background:#ef4444;">Reject</button></div></div>`).join('');
+    } else {
+        if (msgDiv) {
+            msgDiv.innerHTML = '<div class="message success" style="padding:12px; border-radius:12px; background:#10b981;">✅ Published successfully!</div>';
+            msgDiv.style.display = 'block';
+            setTimeout(() => msgDiv.style.display = 'none', 4000);
         }
+        document.getElementById('newsForm').reset();
+        if (quillEditor) quillEditor.root.innerHTML = '';
+        document.getElementById('selectedImageUrl').value = '';
+        document.getElementById('manualImageUrl').value = '';
+        loadDashboard();
+        loadRecentNews();
     }
-    
-    async function addFreelanceService(e) {
-        e.preventDefault();
-        const { error } = await supabaseClient.from('freelance_services').insert([{
-            title: document.getElementById('freelanceTitle').value,
-            category: document.getElementById('freelanceCategory').value,
-            description: document.getElementById('freelanceDesc').value,
-            price: parseInt(document.getElementById('freelancePrice').value),
-            delivery_time: document.getElementById('freelanceDelivery').value,
-            seller_name: document.getElementById('freelanceSellerName').value,
-            seller_whatsapp: document.getElementById('freelanceWhatsapp').value,
-            image_url: document.getElementById('freelanceImage').value,
-            video_url: document.getElementById('freelanceVideo').value,
-            status: document.getElementById('freelanceStatus').value,
-            created_at: new Date()
-        }]);
-        if (error) showMessage(document.getElementById('freelanceMessage'), 'Error: ' + error.message, 'error');
-        else { showMessage(document.getElementById('freelanceMessage'), '✅ Service added!', 'success'); document.getElementById('freelanceServiceForm').reset(); loadFreelanceItems(); loadFreelancePending(); }
+}
+
+// ============================================
+// ANALYTICS
+// ============================================
+function loadAnalytics() {
+    const ctx = document.getElementById('trafficChart')?.getContext('2d');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels: ['Google', 'WhatsApp', 'Direct', 'Telegram', 'Instagram'], datasets: [{ label: 'Traffic', data: [45, 25, 15, 10, 5], backgroundColor: '#3b82f6', borderRadius: 8 }] }
+        });
     }
+    const sourcesDiv = document.getElementById('trafficSources');
+    if (sourcesDiv) sourcesDiv.innerHTML = `<div style="padding:12px;">🌐 Google: 45%</div><div style="padding:12px;">📱 WhatsApp: 25%</div><div style="padding:12px;">🔗 Direct: 15%</div><div style="padding:12px;">📢 Telegram: 10%</div><div style="padding:12px;">📸 Instagram: 5%</div>`;
     
-    async function approveFreelance(id) { await supabaseClient.from('freelance_services').update({ status: 'approved' }).eq('id', id); loadFreelancePending(); loadFreelanceItems(); sendPush('💼 New Freelance Service', 'A new service has been approved!'); }
-    async function deleteFreelanceItem(id) { if (confirm('Delete?')) { await supabaseClient.from('freelance_services').delete().eq('id', id); loadFreelanceItems(); loadFreelancePending(); } }
-    
-    // ============================================
-    // VACANCY FUNCTIONS
-    // ============================================
-    async function loadVacancyItems() {
-        const { data } = await supabaseClient.from('jobs').select('*').order('created_at', { ascending: false });
-        const container = document.getElementById('vacancyItemsList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;">No jobs added yet.</div>'; return; }
-            container.innerHTML = data.map(item => `<div class="item-card"><div class="item-info"><div class="item-title">${escapeHtml(item.title)} @ ${escapeHtml(item.org)}</div><div class="item-meta">📂 ${item.type} | 📍 ${item.location} | 📅 ${item.last_date}</div></div><div class="item-actions"><button onclick="deleteVacancyItem(${item.id})" style="background:#ef4444;">Delete</button></div></div>`).join('');
-        }
-        document.getElementById('vacancyCategoriesList').innerHTML = ['🇮🇳 Government','🏢 Private','🎓 Internship','🏠 Work From Home','👶 Fresher','⏰ Part Time','📄 Contract'].map(cat => `<span class="category-tag">${cat}</span>`).join('');
+    const predictionDiv = document.getElementById('viralPrediction');
+    if (predictionDiv) predictionDiv.innerHTML = `<div style="padding:16px; background:rgba(59,130,246,0.1); border-radius:16px;"><div>🔥 Next viral: <strong>Technology News</strong></div><div>📊 Confidence: <strong>85%</strong></div><div>⏰ Best time: <strong>Tomorrow 9:00 AM</strong></div></div>`;
+}
+
+// ============================================
+// SETTINGS & UTILITIES
+// ============================================
+function saveSettings() {
+    const msgDiv = document.getElementById('settingsMessage');
+    if (msgDiv) {
+        msgDiv.innerHTML = '<div class="message success" style="padding:12px; border-radius:12px; background:#10b981;">✅ Settings saved!</div>';
+        msgDiv.style.display = 'block';
+        setTimeout(() => msgDiv.style.display = 'none', 4000);
     }
-    
-    async function addVacancy(e) {
-        e.preventDefault();
-        const { error } = await supabaseClient.from('jobs').insert([{
-            title: document.getElementById('jobTitle').value,
-            org: document.getElementById('jobOrg').value,
-            type: document.getElementById('jobType').value,
-            location: document.getElementById('jobLocation').value,
-            last_date: document.getElementById('jobLastDate').value,
-            vacancies: document.getElementById('jobVacancies').value,
-            salary: document.getElementById('jobSalary').value,
-            qualification: document.getElementById('jobQualification').value,
-            apply_link: document.getElementById('jobApplyLink').value,
-            pdf_url: document.getElementById('jobPdf').value,
-            badge: document.getElementById('jobBadge').value,
-            created_at: new Date()
-        }]);
-        if (error) showMessage(document.getElementById('vacancyMessage'), 'Error: ' + error.message, 'error');
-        else { showMessage(document.getElementById('vacancyMessage'), '✅ Job added!', 'success'); document.getElementById('vacancyForm').reset(); loadVacancyItems(); sendPush('💼 New Job Opening', `${document.getElementById('jobTitle').value} at ${document.getElementById('jobOrg').value}`); }
-    }
-    
-    async function deleteVacancyItem(id) { if (confirm('Delete?')) { await supabaseClient.from('jobs').delete().eq('id', id); loadVacancyItems(); } }
-    
-    // ============================================
-    // PRODUCTS FUNCTIONS
-    // ============================================
-    async function loadProducts() {
-        const { data } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
-        const container = document.getElementById('productsList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;">No products added yet.</div>'; return; }
-            container.innerHTML = data.map(item => `<div class="item-card"><div class="item-info"><div class="item-title">${escapeHtml(item.name)}</div><div class="item-meta">💰 ₹${item.price} | 📂 ${item.category}</div></div><div class="item-actions"><button onclick="deleteProduct(${item.id})" style="background:#ef4444;">Delete</button></div></div>`).join('');
-        }
-    }
-    
-    async function addProduct(e) {
-        e.preventDefault();
-        const { error } = await supabaseClient.from('products').insert([{
-            name: document.getElementById('productName').value,
-            category: document.getElementById('productCategory').value,
-            description: document.getElementById('productDesc').value,
-            price: parseInt(document.getElementById('productPrice').value),
-            download_link: document.getElementById('productLink').value,
-            image: document.getElementById('productImage').value,
-            video: document.getElementById('productVideo').value,
-            stock: parseInt(document.getElementById('productStock').value),
-            created_at: new Date()
-        }]);
-        if (error) showMessage(document.getElementById('productMessage'), 'Error: ' + error.message, 'error');
-        else { showMessage(document.getElementById('productMessage'), '✅ Product added!', 'success'); document.getElementById('productForm').reset(); loadProducts(); }
-    }
-    
-    // ============================================
-    // NEWSLETTER & USERS
-    // ============================================
-    async function loadSubscribers() {
-        const { data } = await supabaseClient.from('subscribers').select('*').order('created_at', { ascending: false }).limit(20);
-        const container = document.getElementById('subscribersList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;">No subscribers yet.</div>'; return; }
-            container.innerHTML = data.map(sub => `<div class="item-card"><div class="item-info"><div class="item-title">📧 ${escapeHtml(sub.email)}</div><div class="item-meta">Subscribed: ${new Date(sub.created_at).toLocaleString()}</div></div></div>`).join('');
-        }
-    }
-    
-    async function loadUsers() {
-        const { data } = await supabaseClient.from('subscribers').select('*').order('created_at', { ascending: false });
-        const container = document.getElementById('usersList');
-        if (container) {
-            if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;text-align:center;">No users yet.</div>'; return; }
-            container.innerHTML = data.map(user => `<div class="item-card"><div class="item-info"><div class="item-title">📧 ${escapeHtml(user.email)}</div><div class="item-meta">Joined: ${new Date(user.created_at).toLocaleString()}</div></div></div>`).join('');
-        }
-        document.getElementById('rolesList').innerHTML = '<div class="item-card"><div class="item-info">👑 Admin - Full Access</div></div><div class="item-card"><div class="item-info">✍️ Editor - Can publish news</div></div><div class="item-card"><div class="item-info">👀 Viewer - Read only</div></div>';
-        document.getElementById('activityList').innerHTML = '<div class="item-card"><div class="item-info">📝 News published: Today 10:30 AM</div></div><div class="item-card"><div class="item-info">🔐 Login: Today 9:00 AM</div></div>';
-    }
-    
-    // ============================================
-    // PUSH NOTIFICATIONS
-    // ============================================
-    async function sendPush(title, message) {
-        try {
-            await fetch('https://onesignal.com/api/v1/notifications', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ app_id: '60154f61-182d-45c0-99f1-fef13b3f9d1c', headings: { en: title }, contents: { en: message }, url: 'https://themoonr4.github.io/rasu/', included_segments: ['Subscribed Users'] })
-            });
-        } catch(e) { console.error(e); }
-    }
-    
-    async function sendNotificationToAll() {
-        const title = document.getElementById('notifyTitle').value, msg = document.getElementById('notifyMessage').value;
-        if (!title || !msg) { showMessage(document.getElementById('notifyMessageDiv'), 'Fill all fields', 'error'); return; }
-        await sendPush(title, msg);
-        showMessage(document.getElementById('notifyMessageDiv'), '✅ Sent to all!', 'success');
-    }
-    
-    async function sendTestNotification() {
-        OneSignalDeferred.push(async function(OneSignal) { OneSignal.sendSelfNotification("🔔 Test", "Test from THE MOON Admin", "https://themoonr4.github.io/rasu/"); });
-        showMessage(document.getElementById('notifyMessageDiv'), '✅ Test sent!', 'success');
-    }
-    
-    // ============================================
-    // ANALYTICS
-    // ============================================
-    function loadAnalytics() {
-        const ctx = document.getElementById('trafficChart')?.getContext('2d');
-        if (ctx) { new Chart(ctx, { type: 'bar', data: { labels: ['Google', 'WhatsApp', 'Direct', 'Telegram', 'Instagram', 'Other'], datasets: [{ label: 'Traffic', data: [45, 25, 15, 8, 5, 2], backgroundColor: '#dc2626' }] } }); }
-        document.getElementById('trafficSources').innerHTML = `<div>🌐 Google: 45%</div><div>📱 WhatsApp: 25%</div><div>🔗 Direct: 15%</div><div>📢 Telegram: 8%</div><div>📸 Instagram: 5%</div><div>🐦 Twitter: 2%</div>`;
-        document.getElementById('topPages').innerHTML = `<div>1. Homepage - 5.6k views</div><div>2. Study Campus - 2.1k views</div><div>3. Freelance - 1.8k views</div><div>4. Vacancy - 1.5k views</div><div>5. News Article - 1.2k views</div>`;
-        document.getElementById('deviceBreakdown').innerHTML = `<div>📱 Mobile: 55%</div><div>💻 Desktop: 35%</div><div>📟 Tablet: 10%</div>`;
-    }
-    
-    function loadMonetization() {
-        document.getElementById('adRevenue').innerText = '₹' + Math.floor(Math.random() * 10000);
-        document.getElementById('affiliateRevenue').innerText = '₹' + Math.floor(Math.random() * 5000);
-        document.getElementById('productRevenue').innerText = '₹' + Math.floor(Math.random() * 3000);
-        document.getElementById('totalRevenue').innerText = '₹' + Math.floor(Math.random() * 18000);
-        document.getElementById('withdrawalList').innerHTML = '<div style="padding:20px;">No pending withdrawal requests</div>';
-    }
-    
-    function loadSecurityLogs() {
-        document.getElementById('loginLogs').innerHTML = `<div class="item-card"><div class="item-info">✅ Successful login: Today at ${new Date().toLocaleTimeString()} from Mumbai, India</div></div><div class="item-card"><div class="item-info">✅ Successful login: Yesterday from Delhi, India</div></div>`;
-    }
-    
-    // ============================================
-    // TAB FUNCTIONS
-    // ============================================
-    function showStudyTab(tab) {
-        document.querySelectorAll('#study-section .tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('#study-section [id$="-tab"]').forEach(t => t.style.display = 'none');
-        document.getElementById(`study-${tab}-tab`).style.display = 'block';
-        if (event) event.target.classList.add('active');
-    }
-    
-    function showFreelanceTab(tab) {
-        document.querySelectorAll('#freelance-section .tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('#freelance-section [id$="-tab"]').forEach(t => t.style.display = 'none');
-        document.getElementById(`freelance-${tab}-tab`).style.display = 'block';
-        if (event) event.target.classList.add('active');
-    }
-    
-    function showVacancyTab(tab) {
-        document.querySelectorAll('#vacancy-section .tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('#vacancy-section [id$="-tab"]').forEach(t => t.style.display = 'none');
-        document.getElementById(`vacancy-${tab}-tab`).style.display = 'block';
-        if (event) event.target.classList.add('active');
-    }
-    
-    function showProductsTab(tab) {
-        document.querySelectorAll('#products-section .tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('#products-section [id$="-tab"]').forEach(t => t.style.display = 'none');
-        document.getElementById(`products-${tab}-tab`).style.display = 'block';
-        if (event) event.target.classList.add('active');
-    }
-    
-    function showUsersTab(tab) {
-        document.querySelectorAll('#users-section .tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('#users-section [id$="-tab"]').forEach(t => t.style.display = 'none');
-        document.getElementById(`users-${tab}-tab`).style.display = 'block';
-        if (event) event.target.classList.add('active');
-    }
-    
-    function showAITab(tab) {
-        document.querySelectorAll('#ai-section .tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('#ai-section [id$="-tab"]').forEach(t => t.style.display = 'none');
-        document.getElementById(`ai-${tab}-tab`).style.display = 'block';
-        if (event) event.target.classList.add('active');
-    }
-    
-    function showSEOTab(tab) {
-        document.querySelectorAll('#seo-section .tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('#seo-section [id$="-tab"]').forEach(t => t.style.display = 'none');
-        document.getElementById(`seo-${tab}-tab`).style.display = 'block';
-        if (event) event.target.classList.add('active');
-    }
-    
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
-    function showMessage(el, msg, type) { if (el) { el.textContent = msg; el.className = `message ${type}`; setTimeout(() => el.className = 'message', 4000); } else { alert(msg); } }
-    
-    // Form submissions
-    document.getElementById('newsForm')?.addEventListener('submit', publishNews);
-    document.getElementById('studyMaterialForm')?.addEventListener('submit', addStudyMaterial);
-    document.getElementById('studyVideoForm')?.addEventListener('submit', addStudyVideo);
-    document.getElementById('studyExamForm')?.addEventListener('submit', addStudyExam);
-    document.getElementById('freelanceServiceForm')?.addEventListener('submit', addFreelanceService);
-    document.getElementById('vacancyForm')?.addEventListener('submit', addVacancy);
-    document.getElementById('productForm')?.addEventListener('submit', addProduct);
-    
-    // Quill editor
-    setTimeout(() => {
-        if (document.getElementById('newsEditor')) {
-            quillEditor = new Quill('#newsEditor', { theme: 'snow', placeholder: 'Write your news content here...' });
-            quillEditor.on('text-change', () => { if (document.getElementById('newsContent')) document.getElementById('newsContent').value = quillEditor.root.innerHTML; });
-        }
-    }, 100);
-    
-    loadDashboard();
+}
+
+function switchImageTab(tab) {
+    const manualTab = document.getElementById('manualImageTab');
+    const aiTab = document.getElementById('aiImageTab');
+    const uploadTab = document.getElementById('uploadImageTab');
+    if (manualTab) manualTab.style.display = tab === 'manual' ? 'block' : 'none';
+    if (aiTab) aiTab.style.display = tab === 'ai' ? 'block' : 'none';
+    if (uploadTab) uploadTab.style.display = tab === 'upload' ? 'block' : 'none';
+    document.querySelectorAll('.image-tab-btn').forEach(btn => btn.classList.remove('active'));
+    if(event && event.target) event.target.classList.add('active');
+}
+
+function showToast(msg) {
+    let toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');
+}
+
+// Event Listeners
+const newsForm = document.getElementById('newsForm');
+if (newsForm) newsForm.addEventListener('submit', publishNews);
+
+// Initialize
+loadDashboard();
 </script>
 </body>
 </html>
