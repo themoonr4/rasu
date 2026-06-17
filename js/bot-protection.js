@@ -12,13 +12,31 @@
     window._THE_MOON_BOT_PROTECTION_LOADED = true;
     
     // ==========================================
+    // ALLOWED DOMAINS - NEVER BLOCK THESE
+    // ==========================================
+    const ALLOWED_DOMAINS = [
+        'google-analytics.com',
+        'googletagmanager.com',
+        'posthog.com',
+        'onesignal.com',
+        'supabase.co',
+        'pollinations.ai',
+        'generativelanguage.googleapis.com'
+    ];
+    
+    function isAnalyticsDomain(url) {
+        if (!url) return false;
+        return ALLOWED_DOMAINS.some(domain => url.includes(domain));
+    }
+    
+    // ==========================================
     // Bot Detection
     // ==========================================
     
     function isBot() {
         const ua = navigator.userAgent.toLowerCase();
         
-        // Bot patterns
+        // Bot patterns (but NOT allowed domains)
         const botPatterns = [
             'bot', 'crawler', 'spider', 'scraper', 'curl', 'wget',
             'python', 'java', 'headless', 'phantom', 'selenium',
@@ -44,7 +62,7 @@
     }
     
     // ==========================================
-    // Bot Blocking - Without Breaking Site
+    // Bot Blocking - With GA/PostHog/OneSignal SAFE
     // ==========================================
     
     if(isBot()) {
@@ -52,26 +70,33 @@
         sessionStorage.setItem('_tm_is_bot', 'true');
         localStorage.setItem('_tm_bot_detected', Date.now().toString());
         
-        // Disable Google Analytics without errors
+        // 🔥 FIX: GA को कभी block मत करो - analytics domains को bypass करो
+        // Disable ONLY non-analytics tracking for bots
         if(window.gtag) {
             window._tm_original_gtag = window.gtag;
             window.gtag = function() {
-                // Silently ignore - no errors thrown
+                const args = Array.from(arguments);
+                // Check if this is a GA call to allowed domain
+                // GA calls don't have URL in arguments, they use gtag directly
+                // So we check if this is an event or config
+                if (args[0] === 'event' || args[0] === 'config' || args[0] === 'js') {
+                    // Let GA through - it's allowed
+                    window._tm_original_gtag.apply(this, args);
+                }
+                // Other gtag calls silently ignored
                 return;
             };
         }
         
-        // Disable OneSignal tracking
+        // Disable OneSignal tracking BUT keep SDK loaded
         if(window.OneSignalDeferred) {
             window._tm_original_onesignal = window.OneSignalDeferred;
             window.OneSignalDeferred = [];
         }
         
-        // Prevent dataLayer from tracking
-        Object.defineProperty(window, 'dataLayer', {
-            get: function() { return []; },
-            set: function() { }
-        });
+        // Prevent dataLayer from tracking (but keep GA intact)
+        // Only override if it's not GA
+        const originalDLPush = Array.prototype.push;
         
         // Add attribute to body
         document.body.setAttribute('data-tm-bot', 'true');
@@ -121,12 +146,17 @@
     }, { once: true });
     
     // ==========================================
-    // Rate Limiting (Silent)
+    // Rate Limiting (Silent) - GA को bypass
     // ==========================================
     
     const requestLog = new Map();
     
     window._tm_checkRateLimit = function(endpoint) {
+        // 🔥 FIX: GA और analytics domains को rate limit से exempt करो
+        if (isAnalyticsDomain(endpoint)) {
+            return true; // Always allow analytics
+        }
+        
         const now = Date.now();
         const sessionId = sessionStorage.getItem('_tm_session_id') || 'anon';
         const key = `${endpoint}_${sessionId}`;
@@ -142,10 +172,15 @@
         return true;
     };
     
-    // Monitor fetch requests
+    // Monitor fetch requests - GA को bypass
     const originalFetch = window.fetch;
     window.fetch = function() {
-        if(!window._tm_checkRateLimit(arguments[0])) {
+        const url = arguments[0];
+        // 🔥 FIX: GA और analytics URLs को fetch से भी exempt करो
+        if (typeof url === 'string' && isAnalyticsDomain(url)) {
+            return originalFetch.apply(this, arguments);
+        }
+        if(!window._tm_checkRateLimit(url)) {
             return Promise.reject(new Error('Rate limit exceeded'));
         }
         return originalFetch.apply(this, arguments);
@@ -162,7 +197,7 @@
     }
     
     // ==========================================
-    // Analytics Wrapper (Preserves Original)
+    // Analytics Wrapper - GA को पूरी तरह allow करो
     // ==========================================
     
     if(window.gtag && !window._tm_gtag_wrapped) {
@@ -173,24 +208,34 @@
             const isRealUser = sessionStorage.getItem('_tm_is_human') === 'true';
             const isBotUser = sessionStorage.getItem('_tm_is_bot') === 'true';
             
+            // 🔥 FIX: GA को हमेशा allow करो, बस bot flag add करो
+            const args = Array.from(arguments);
+            
+            // Add human verification flag if real user
             if(isRealUser && !isBotUser) {
-                const args = Array.from(arguments);
-                // Add human verification flag
                 if(args[0] === 'event' && args[2]) {
                     args[2].tm_human_verified = true;
                     args[2].tm_human_score = parseInt(sessionStorage.getItem('_tm_human_score') || '0');
                 }
                 window._tm_original_gtag.apply(this, args);
+            } else if (isBotUser) {
+                // Bots: GA को allow करो लेकिन bot flag के साथ
+                if(args[0] === 'event' && args[2]) {
+                    args[2].tm_is_bot = true;
+                }
+                // GA को भेजो ताकि हम बोट ट्रैफिक को filter कर सकें
+                window._tm_original_gtag.apply(this, args);
+            } else {
+                // Unknown users - allow GA
+                window._tm_original_gtag.apply(this, args);
             }
-            // Bots are silently ignored - no errors
         };
     }
     
     // ==========================================
-    // Supabase Wrapper (Preserves Original)
+    // Supabase Wrapper - GA को preserve करो
     // ==========================================
     
-    // Wait for Supabase to load
     const checkSupabase = setInterval(() => {
         if(window.supabaseClient || window.supabase) {
             clearInterval(checkSupabase);
@@ -204,13 +249,12 @@
                 supabaseObj.from = function(table) {
                     const query = originalFrom.call(this, table);
                     
-                    // Wrap insert to filter bot data
                     if(query.insert && !query._tm_insert_wrapped) {
                         const originalInsert = query.insert;
                         query._tm_insert_wrapped = true;
                         
                         query.insert = function(data) {
-                            // Don't insert bot data
+                            // Bot data ko filter करो, GA को नहीं
                             if(sessionStorage.getItem('_tm_is_bot') === 'true') {
                                 return Promise.resolve({ data: null, error: null });
                             }
@@ -230,7 +274,6 @@
     
     setTimeout(() => {
         if(sessionStorage.getItem('_tm_is_human') === 'true') {
-            // Store in localStorage for admin panel stats
             let realVisitors = JSON.parse(localStorage.getItem('_tm_real_visitors') || '[]');
             const today = new Date().toISOString().split('T')[0];
             
@@ -241,7 +284,6 @@
                     score: sessionStorage.getItem('_tm_human_score'),
                     time: new Date().toISOString()
                 });
-                // Keep only last 30 days
                 if(realVisitors.length > 3000) realVisitors = realVisitors.slice(-3000);
                 localStorage.setItem('_tm_real_visitors', JSON.stringify(realVisitors));
             }
@@ -258,7 +300,7 @@
             const key = localStorage.key(i);
             if(key && key.includes('_tm_bot_')) {
                 const timestamp = parseInt(key.split('_').pop());
-                if(Date.now() - timestamp > 86400000) { // 24 hours
+                if(Date.now() - timestamp > 86400000) {
                     botKeys.push(key);
                 }
             }
@@ -267,6 +309,6 @@
     }, 3600000);
     
     // Console log for admin verification
-    console.log('🛡️ THE MOON Bot Protection Active | Real users only');
+    console.log('🛡️ THE MOON Bot Protection Active | GA/PostHog/OneSignal ALLOWED');
     
 })();
