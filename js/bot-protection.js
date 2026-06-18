@@ -30,21 +30,33 @@
     }
     
     // ==========================================
-    // Bot Detection
+    // Bot Detection - IMPROVED
     // ==========================================
     
     function isBot() {
         const ua = navigator.userAgent.toLowerCase();
         
-        // Bot patterns (but NOT allowed domains)
+        // 🔥 FIX: REAL DEVICES (Phone/Tablet/Desktop) ko kabhi bot mat mano
+        // Common real device patterns
+        const realDevicePatterns = [
+            'android', 'iphone', 'ipad', 'ipod', 'windows', 'macintosh',
+            'linux', 'chrome', 'firefox', 'safari', 'edge', 'opera',
+            'mobile', 'tablet', 'phone', 'galaxy', 'pixel', 'miui'
+        ];
+        
+        // Agar real device pattern match kare toh bot nahi hai
+        if (realDevicePatterns.some(p => ua.includes(p))) {
+            return false;
+        }
+        
+        // Bot patterns - sirf pure bots ko catch karo
         const botPatterns = [
-            'bot', 'crawler', 'spider', 'scraper', 'curl', 'wget',
-            'python', 'java', 'headless', 'phantom', 'selenium',
-            'puppeteer', 'playwright', 'http', 'axios', 'postman',
-            'go-http', 'okhttp', 'scrapy', 'semrush', 'ahrefs',
-            'bingbot', 'googlebot', 'slurp', 'duckduckbot',
-            'baiduspider', 'yandexbot', 'facebot', 'facebookexternalhit',
-            'twitterbot', 'rogerbot', 'dotbot', 'mj12bot'
+            'headless', 'phantom', 'selenium', 'puppeteer', 'playwright',
+            'curl', 'wget', 'python-requests', 'java', 'okhttp',
+            'scrapy', 'semrush', 'ahrefs', 'majestic', 'rogerbot',
+            'dotbot', 'mj12bot', 'bingbot', 'googlebot', 'slurp',
+            'duckduckbot', 'baiduspider', 'yandexbot', 'facebot',
+            'facebookexternalhit', 'twitterbot', 'axios', 'postman'
         ];
         
         if(botPatterns.some(p => ua.includes(p))) return true;
@@ -52,7 +64,7 @@
         // Headless browser detection
         if(navigator.webdriver === true) return true;
         
-        // Missing plugins (common in bots)
+        // Missing plugins (common in pure bots)
         if(navigator.plugins.length === 0) return true;
         
         // Tiny viewport
@@ -62,49 +74,35 @@
     }
     
     // ==========================================
-    // Bot Blocking - With GA/PostHog/OneSignal SAFE
+    // Bot Blocking - GA/PostHog/OneSignal SAFE
     // ==========================================
     
+    // 🔥 CRITICAL FIX: GA script ko pehle load hone do, bot detection ke baad bhi
+    // isBot() true hone par bhi GA ko block mat karo
+    
     if(isBot()) {
-        // Mark as bot
+        // Mark as bot (for server-side tracking)
         sessionStorage.setItem('_tm_is_bot', 'true');
         localStorage.setItem('_tm_bot_detected', Date.now().toString());
         
-        // 🔥 FIX: GA को कभी block मत करो - analytics domains को bypass करो
-        // Disable ONLY non-analytics tracking for bots
-        if(window.gtag) {
-            window._tm_original_gtag = window.gtag;
-            window.gtag = function() {
-                const args = Array.from(arguments);
-                // Check if this is a GA call to allowed domain
-                // GA calls don't have URL in arguments, they use gtag directly
-                // So we check if this is an event or config
-                if (args[0] === 'event' || args[0] === 'config' || args[0] === 'js') {
-                    // Let GA through - it's allowed
-                    window._tm_original_gtag.apply(this, args);
-                }
-                // Other gtag calls silently ignored
-                return;
-            };
-        }
+        // 🔥 FIX: GA को कभी block मत करो - पूरी तरह bypass करो
+        // GA already loaded hai, isliye usko block mat karo
         
         // Disable OneSignal tracking BUT keep SDK loaded
         if(window.OneSignalDeferred) {
             window._tm_original_onesignal = window.OneSignalDeferred;
-            window.OneSignalDeferred = [];
+            // Keep it alive, don't override
         }
         
         // Prevent dataLayer from tracking (but keep GA intact)
-        // Only override if it's not GA
-        const originalDLPush = Array.prototype.push;
-        
         // Add attribute to body
         document.body.setAttribute('data-tm-bot', 'true');
         
-        // Optional: Show nothing to bots (site still works but no tracking)
+        // Console log suppress (optional)
         console.log = function() {};
         
-        return; // Stop here - bot handled
+        // 🔥 CRITICAL: GA को पूरी तरह bypass करो - return mat karo
+        // return; // ← YEH LINE HATAAO! GA ko block karta hai
     }
     
     // ==========================================
@@ -223,7 +221,6 @@
                 if(args[0] === 'event' && args[2]) {
                     args[2].tm_is_bot = true;
                 }
-                // GA को भेजो ताकि हम बोट ट्रैफिक को filter कर सकें
                 window._tm_original_gtag.apply(this, args);
             } else {
                 // Unknown users - allow GA
