@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <!-- Google tag (gtag.js) -->
+    <!-- ============================================ -->
+    <!-- GOOGLE ANALYTICS 4 (GA4) -->
+    <!-- ============================================ -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTN6BR"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,22 +11,82 @@
       gtag('js', new Date());
       gtag('config', 'G-VK9TTN6BR');
     </script>
+    
+    <!-- ============================================ -->
+    <!-- POSTHOG - SESSION RECORDING & ANALYTICS -->
+    <!-- ============================================ -->
     <script>
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="rn sn init kn Qr wn Cn yn capture calculateEventProperties Rn register register_once register_for_session unregister unregister_for_session An getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Fn identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty On En createPersonProfile setInternalOrTestUser Ln gn $n opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing In debug Kr Pn getPageViewId captureTraceFeedback captureTraceMetric vn".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
     posthog.init('phc_kAnmLqSV2F6EzcvaVoVZs5q3sPhPDVJWNSuyoqH2m4ft', {
         api_host: 'https://us.i.posthog.com',
         defaults: '2026-05-30',
-        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+        person_profiles: 'identified_only',
     })
-</script>
+    </script>
+    
+    <!-- ============================================ -->
+    <!-- META TAGS - COMPLETE SEO -->
+    <!-- ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>THE MOON - Complete Mega Admin Panel</title>
+    <title>THE MOON — Complete Mega Admin Panel</title>
+    <meta name="description" content="Complete Mega Admin Panel for THE MOON — Manage news, study materials, freelance services, jobs, products, push notifications, and more with AI-powered tools.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#dc2626">
+    <link rel="canonical" href="https://themoonr4.github.io/rasu/admin.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://themoonr4.github.io/rasu/admin.html">
+    <meta property="og:title" content="THE MOON — Complete Mega Admin Panel">
+    <meta property="og:description" content="Manage THE MOON — News, Study, Freelance, Jobs, Products, AI Tools, SEO, Analytics, Monetization, Security, and Settings.">
+    <meta property="og:image" content="https://themoonr4.github.io/rasu/og-image.jpg">
+    <meta property="og:site_name" content="THE MOON">
+    <meta property="og:locale" content="en_IN">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/rasu/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="THE MOON Admin">
+    <link rel="apple-touch-icon" href="/rasu/icon-192.png">
+    
+    <!-- ============================================ -->
+    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
+    <!-- ============================================ -->
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
+    
+    <!-- ============================================ -->
+    <!-- FONTS & STYLES -->
+    <!-- ============================================ -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    
+    <!-- ============================================ -->
+    <!-- JSON-LD SCHEMA -->
+    <!-- ============================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "THE MOON Admin Panel",
+      "description": "Complete Mega Admin Panel for THE MOON — Manage news, study materials, freelance services, jobs, products, push notifications, and more.",
+      "url": "https://themoonr4.github.io/rasu/admin.html",
+      "inLanguage": "hi",
+      "about": {
+        "@type": "Thing",
+        "name": "News Management"
+      }
+    }
+    </script>
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #ffffff; }
