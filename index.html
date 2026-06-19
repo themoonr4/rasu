@@ -1,54 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTN6BR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-VK9TTN6BR');
-</script>
+    <!-- ============================================ -->
+    <!-- GOOGLE ANALYTICS 4 (GA4) -->
+    <!-- ============================================ -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTN6BR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-VK9TTN6BR');
+    </script>
+    
+    <!-- ============================================ -->
+    <!-- POSTHOG - SESSION RECORDING & ANALYTICS -->
+    <!-- ============================================ -->
     <script>
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="rn sn init kn Qr wn Cn yn capture calculateEventProperties Rn register register_once register_for_session unregister unregister_for_session An getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Fn identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty On En createPersonProfile setInternalOrTestUser Ln gn $n opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing In debug Kr Pn getPageViewId captureTraceFeedback captureTraceMetric vn".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
     posthog.init('phc_kAnmLqSV2F6EzcvaVoVZs5q3sPhPDVJWNSuyoqH2m4ft', {
         api_host: 'https://us.i.posthog.com',
         defaults: '2026-05-30',
-        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+        person_profiles: 'identified_only',
     })
-</script>
+    </script>
     
-    <!-- OneSignal Push Notifications -->
+    <!-- ============================================ -->
+    <!-- ONESIGNAL PUSH NOTIFICATIONS -->
+    <!-- ============================================ -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
-            await OneSignal.init({
-                appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c",
-            });
+            await OneSignal.init({ appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c" });
         });
     </script>
     
+    <!-- ============================================ -->
+    <!-- META TAGS - COMPLETE SEO -->
+    <!-- ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="THE MOON - India's Most Advanced AI-Powered News Platform">
-    <meta name="theme-color" content="#dc2626">
-    <meta name="keywords" content="news, technology news, sports news, business news, politics news, study news, AI news, India news">
-    <meta name="author" content="THE MOON Team">
     
-    <!-- PWA Manifest & Meta Tags -->
-    <link rel="manifest" href="/rasu/manifest.json">
+    <!-- Primary Meta Tags -->
+    <title>THE MOON — World's Most Advanced AI-Powered News Platform</title>
+    <meta name="title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
+    <meta name="description" content="India's #1 AI-powered news platform delivering real-time, unbiased news, study materials, freelance jobs, and vacancies — powered by Gemini AI.">
+    <meta name="keywords" content="news, AI news, India news, technology news, sports news, business news, politics news, study material, freelance jobs, government jobs, vacancy, AI news platform, THE MOON">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <link rel="canonical" href="https://themoonr4.github.io/rasu/">
+    <meta name="author" content="THE MOON Team">
+    <meta name="theme-color" content="#dc2626">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="THE MOON">
+    <meta name="application-name" content="THE MOON">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#dc2626">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://themoonr4.github.io/rasu/">
+    <meta property="og:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
+    <meta property="og:description" content="India's #1 AI-powered news platform delivering real-time, unbiased news, study materials, freelance jobs, and vacancies — powered by Gemini AI.">
+    <meta property="og:image" content="https://themoonr4.github.io/rasu/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="THE MOON">
+    <meta property="og:locale" content="en_IN">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://themoonr4.github.io/rasu/">
+    <meta name="twitter:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
+    <meta name="twitter:description" content="India's #1 AI-powered news platform delivering real-time, unbiased news.">
+    <meta name="twitter:image" content="https://themoonr4.github.io/rasu/og-image.jpg">
+    <meta name="twitter:site" content="@TheMoonZ60">
+    <meta name="twitter:creator" content="@TheMoonZ60">
+    
+    <!-- ============================================ -->
+    <!-- PWA MANIFEST & ICONS -->
+    <!-- ============================================ -->
+    <link rel="manifest" href="/rasu/manifest.json">
     <link rel="apple-touch-icon" href="/rasu/icon-192.png">
-    
-    <title>THE MOON — Premium AI News Platform</title>
-    
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z'/%3E%3Cpath d='M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z' fill='white'/%3E%3C/svg%3E">
+    
+    <!-- ============================================ -->
+    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
+    <!-- ============================================ -->
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://us.i.posthog.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
+    
+    <!-- ============================================ -->
+    <!-- FONTS & STYLES -->
+    <!-- ============================================ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- ============================================ -->
+    <!-- JSON-LD SCHEMA - COMPLETE STRUCTURED DATA -->
+    <!-- ============================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "NewsMediaOrganization",
+          "@id": "https://themoonr4.github.io/rasu/#organization",
+          "name": "THE MOON",
+          "url": "https://themoonr4.github.io/rasu/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://themoonr4.github.io/rasu/icon-192.png",
+            "width": 192,
+            "height": 192
+          },
+          "description": "India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence.",
+          "sameAs": [
+            "https://t.me/themoom247",
+            "https://instagram.com/themoonr4",
+            "https://facebook.com/share/1GwHQhgx4g/",
+            "https://x.com/TheMoonZ60",
+            "https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32"
+          ],
+          "foundingDate": "2026"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://themoonr4.github.io/rasu/#website",
+          "url": "https://themoonr4.github.io/rasu/",
+          "name": "THE MOON",
+          "description": "India's Most Advanced AI-Powered News Platform",
+          "publisher": {
+            "@id": "https://themoonr4.github.io/rasu/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://themoonr4.github.io/rasu/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://themoonr4.github.io/rasu/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://themoonr4.github.io/rasu/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "News",
+              "item": "https://themoonr4.github.io/rasu/"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is THE MOON?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "THE MOON is India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does THE MOON use AI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "THE MOON uses Google's Gemini AI to generate smart summaries, enhance headlines, and curate the most important news of the day."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is THE MOON free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, THE MOON is completely free to use. We believe in making quality news accessible to everyone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How often is news updated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "News is updated in real-time. Breaking news is delivered instantly through push notifications."
+          }
+        }
+      ]
+    }
+    </script>
+    
+    <!-- ============================================ -->
+    <!-- ALL STYLES (KEEP EXISTING - JUST ENHANCED) -->
+    <!-- ============================================ -->
     <style>
         /* ============================================ */
         /* ROOT VARIABLES - LIGHT MODE DEFAULT */
@@ -131,17 +295,14 @@
             width: 6px;
             height: 6px;
         }
-        
         ::-webkit-scrollbar-track {
             background: var(--bg-secondary);
             border-radius: 10px;
         }
-        
         ::-webkit-scrollbar-thumb {
             background: var(--primary);
             border-radius: 10px;
         }
-        
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-dark);
         }
@@ -155,17 +316,11 @@
             margin: 0 auto;
             padding: 0 1rem;
         }
-        
         @media (min-width: 768px) {
-            .container {
-                padding: 0 1.5rem;
-            }
+            .container { padding: 0 1.5rem; }
         }
-        
         @media (min-width: 1024px) {
-            .container {
-                padding: 0 2rem;
-            }
+            .container { padding: 0 2rem; }
         }
         
         /* ============================================ */
@@ -179,7 +334,6 @@
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
         }
-        
         .header-content {
             display: flex;
             align-items: center;
@@ -187,7 +341,6 @@
             height: 60px;
             gap: 1rem;
         }
-        
         @media (min-width: 768px) {
             .header-content {
                 height: 70px;
@@ -209,28 +362,12 @@
             color: transparent;
             white-space: nowrap;
         }
-        
         @media (min-width: 768px) {
-            .logo {
-                font-size: 1.5rem;
-                gap: 8px;
-            }
+            .logo { font-size: 1.5rem; gap: 8px; }
         }
-        
-        .logo-icon {
-            font-size: 1.4rem;
-        }
-        
-        @media (min-width: 768px) {
-            .logo-icon {
-                font-size: 1.6rem;
-            }
-        }
-        
-        .logo-text {
-            letter-spacing: -0.5px;
-        }
-        
+        .logo-icon { font-size: 1.4rem; }
+        @media (min-width: 768px) { .logo-icon { font-size: 1.6rem; } }
+        .logo-text { letter-spacing: -0.5px; }
         .logo-badge {
             background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
             font-size: 0.55rem;
@@ -240,12 +377,8 @@
             margin-left: 4px;
             font-weight: 600;
         }
-        
         @media (min-width: 768px) {
-            .logo-badge {
-                font-size: 0.6rem;
-                padding: 2px 8px;
-            }
+            .logo-badge { font-size: 0.6rem; padding: 2px 8px; }
         }
         
         /* Desktop Navigation */
@@ -255,13 +388,9 @@
             justify-content: center;
             gap: 1.5rem;
         }
-        
         @media (min-width: 768px) {
-            .nav-desktop {
-                display: flex;
-            }
+            .nav-desktop { display: flex; }
         }
-        
         .nav-desktop a {
             text-decoration: none;
             color: var(--text-secondary);
@@ -270,7 +399,6 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
-        
         .nav-desktop a:hover,
         .nav-desktop a.active {
             color: var(--primary);
@@ -282,7 +410,6 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
         .header-actions button {
             background: none;
             border: none;
@@ -295,7 +422,6 @@
             border-radius: var(--radius-md);
             transition: var(--transition-fast);
         }
-        
         @media (min-width: 768px) {
             .header-actions button {
                 font-size: 1.2rem;
@@ -304,7 +430,6 @@
                 min-height: 40px;
             }
         }
-        
         .header-actions button:hover {
             background: var(--bg-secondary);
         }
@@ -313,7 +438,6 @@
         .search-container {
             position: relative;
         }
-        
         .search-input {
             width: 0;
             opacity: 0;
@@ -324,18 +448,14 @@
             border-radius: var(--radius-md);
             font-size: 0.9rem;
         }
-        
         .search-input.active {
             width: 180px;
             opacity: 1;
             padding: 0.5rem 1rem;
             border: 1px solid var(--border);
         }
-        
         @media (min-width: 768px) {
-            .search-input.active {
-                width: 250px;
-            }
+            .search-input.active { width: 250px; }
         }
         
         /* ============================================ */
@@ -354,13 +474,9 @@
             z-index: 99;
             backdrop-filter: blur(10px);
         }
-        
         @media (min-width: 768px) {
-            .bottom-nav {
-                display: none;
-            }
+            .bottom-nav { display: none; }
         }
-        
         .bottom-nav-item {
             display: flex;
             flex-direction: column;
@@ -376,19 +492,14 @@
             border: none;
             transition: var(--transition-fast);
         }
-        
         .bottom-nav-item.active {
             color: var(--primary);
         }
-        
         .bottom-nav-item i {
             font-size: 1.1rem;
         }
-        
         @media (min-width: 768px) {
-            .bottom-nav-item i {
-                font-size: 1.2rem;
-            }
+            .bottom-nav-item i { font-size: 1.2rem; }
         }
         
         /* ============================================ */
@@ -406,11 +517,9 @@
             box-shadow: var(--shadow-lg);
             overflow-y: auto;
         }
-        
         .sidebar.open {
             left: 0;
         }
-        
         @media (min-width: 768px) {
             .sidebar {
                 position: sticky;
@@ -423,7 +532,6 @@
                 overflow-y: visible;
             }
         }
-        
         .sidebar-header {
             display: flex;
             justify-content: space-between;
@@ -431,20 +539,15 @@
             padding: 1rem;
             border-bottom: 1px solid var(--border);
         }
-        
         @media (min-width: 768px) {
-            .sidebar-header {
-                display: none;
-            }
+            .sidebar-header { display: none; }
         }
-        
         .sidebar-nav {
             padding: 1rem;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
-        
         @media (min-width: 768px) {
             .sidebar-nav {
                 flex-direction: row;
@@ -453,7 +556,6 @@
                 padding: 0;
             }
         }
-        
         .sidebar-nav a,
         .sidebar-nav button {
             text-decoration: none;
@@ -468,7 +570,6 @@
             border: none;
             transition: var(--transition-fast);
         }
-        
         @media (min-width: 768px) {
             .sidebar-nav a,
             .sidebar-nav button {
@@ -476,7 +577,6 @@
                 padding: 0.5rem 1rem;
             }
         }
-        
         .sidebar-nav a:hover,
         .sidebar-nav button:hover,
         .sidebar-nav a.active,
@@ -496,15 +596,11 @@
             z-index: 199;
             display: none;
         }
-        
         .overlay.active {
             display: block;
         }
-        
         @media (min-width: 768px) {
-            .overlay {
-                display: none !important;
-            }
+            .overlay { display: none !important; }
         }
         
         /* ============================================ */
@@ -516,13 +612,9 @@
             gap: 2rem;
             padding-bottom: 70px;
         }
-        
         @media (min-width: 768px) {
-            .layout-main {
-                padding-bottom: 0;
-            }
+            .layout-main { padding-bottom: 0; }
         }
-        
         @media (min-width: 1024px) {
             .layout-main {
                 display: grid;
@@ -544,14 +636,12 @@
             position: relative;
             overflow: hidden;
         }
-        
         @media (min-width: 768px) {
             .hero {
                 padding: 2rem;
                 text-align: left;
             }
         }
-        
         .hero::before {
             content: '';
             position: absolute;
@@ -563,38 +653,29 @@
             border-radius: 50%;
             pointer-events: none;
         }
-        
         @media (min-width: 768px) {
             .hero::before {
                 width: 300px;
                 height: 300px;
             }
         }
-        
         .hero h1 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
             position: relative;
             z-index: 1;
         }
-        
         @media (min-width: 768px) {
-            .hero h1 {
-                font-size: 1.8rem;
-            }
+            .hero h1 { font-size: 1.8rem; }
         }
-        
         .hero p {
             font-size: 0.8rem;
             opacity: 0.9;
             position: relative;
             z-index: 1;
         }
-        
         @media (min-width: 768px) {
-            .hero p {
-                font-size: 0.9rem;
-            }
+            .hero p { font-size: 0.9rem; }
         }
         
         /* ============================================ */
@@ -609,23 +690,16 @@
             margin-bottom: 1rem;
             border: 1px solid var(--border);
         }
-        
         .ticker-content {
             display: inline-block;
             animation: ticker-scroll 25s linear infinite;
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
-        
         @keyframes ticker-scroll {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
-        
         @media (prefers-reduced-motion: reduce) {
             .ticker-content {
                 animation: none;
@@ -642,13 +716,11 @@
             gap: 0.75rem;
             margin-bottom: 1.5rem;
         }
-        
         @media (min-width: 640px) {
             .category-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
         }
-        
         .category-card {
             background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
             border-radius: var(--radius-lg);
@@ -659,33 +731,24 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
-        
         .category-card:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-md);
         }
-        
         .category-card i {
             font-size: 1.3rem;
             margin-bottom: 0.25rem;
             display: block;
         }
-        
         @media (min-width: 768px) {
-            .category-card i {
-                font-size: 1.5rem;
-            }
+            .category-card i { font-size: 1.5rem; }
         }
-        
         .category-card span {
             font-size: 0.7rem;
             font-weight: 600;
         }
-        
         @media (min-width: 768px) {
-            .category-card span {
-                font-size: 0.75rem;
-            }
+            .category-card span { font-size: 0.75rem; }
         }
         
         /* ============================================ */
@@ -695,13 +758,11 @@
             display: grid;
             gap: 1rem;
         }
-        
         @media (min-width: 640px) {
             .news-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        
         .news-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
@@ -711,38 +772,32 @@
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
         }
-        
         .news-card:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary);
         }
-        
         @media (min-width: 768px) {
             .news-card {
                 display: flex;
                 flex-direction: row;
             }
         }
-        
         .news-image {
             width: 100%;
             height: 150px;
             object-fit: cover;
         }
-        
         @media (min-width: 768px) {
             .news-image {
                 width: 130px;
                 height: 130px;
             }
         }
-        
         .news-content {
             padding: 0.75rem;
             flex: 1;
         }
-        
         .news-category {
             display: inline-block;
             background: var(--primary);
@@ -753,20 +808,15 @@
             margin-bottom: 0.5rem;
             font-weight: 600;
         }
-        
         .news-title {
             font-size: 0.9rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
             line-height: 1.4;
         }
-        
         @media (min-width: 768px) {
-            .news-title {
-                font-size: 0.95rem;
-            }
+            .news-title { font-size: 0.95rem; }
         }
-        
         .news-excerpt {
             color: var(--text-secondary);
             font-size: 0.75rem;
@@ -776,7 +826,6 @@
             overflow: hidden;
             line-height: 1.5;
         }
-        
         .news-meta {
             display: flex;
             gap: 0.75rem;
@@ -793,7 +842,6 @@
             flex-direction: column;
             gap: 1rem;
         }
-        
         .widget {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
@@ -801,7 +849,6 @@
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
         }
-        
         .widget h3 {
             font-size: 0.95rem;
             margin-bottom: 0.75rem;
@@ -818,28 +865,23 @@
             cursor: pointer;
             transition: var(--transition-fast);
         }
-        
         .trending-item:last-child {
             border-bottom: none;
         }
-        
         .trending-item:hover {
             padding-left: 0.3rem;
             color: var(--primary);
         }
-        
         .trending-rank {
             font-size: 0.7rem;
             color: var(--primary);
             font-weight: bold;
         }
-        
         .trending-title {
             font-size: 0.85rem;
             margin: 0.25rem 0;
             font-weight: 500;
         }
-        
         .trending-views {
             font-size: 0.6rem;
             color: var(--text-tertiary);
@@ -849,18 +891,13 @@
         .weather-info {
             text-align: center;
         }
-        
         .weather-temp {
             font-size: 1.8rem;
             font-weight: bold;
         }
-        
         @media (min-width: 768px) {
-            .weather-temp {
-                font-size: 2rem;
-            }
+            .weather-temp { font-size: 2rem; }
         }
-        
         .weather-location {
             font-size: 0.8rem;
             color: var(--text-secondary);
@@ -872,7 +909,6 @@
             flex-direction: column;
             gap: 0.5rem;
         }
-        
         .newsletter-input input {
             flex: 1;
             padding: 0.6rem;
@@ -882,7 +918,6 @@
             color: var(--text-primary);
             font-size: 0.85rem;
         }
-        
         .newsletter-input button {
             background: var(--primary);
             color: white;
@@ -893,7 +928,6 @@
             font-weight: 600;
             transition: var(--transition-fast);
         }
-        
         .newsletter-input button:hover {
             background: var(--primary-dark);
         }
@@ -908,7 +942,6 @@
             text-align: center;
             border-top: 1px solid var(--border);
         }
-        
         .footer-links {
             display: flex;
             flex-wrap: wrap;
@@ -916,36 +949,30 @@
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
         .footer-links a {
             text-decoration: none;
             color: var(--text-secondary);
             font-size: 0.8rem;
             transition: var(--transition-fast);
         }
-        
         .footer-links a:hover {
             color: var(--primary);
         }
-        
         .footer-social {
             display: flex;
             justify-content: center;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
         .footer-social a {
             color: var(--text-secondary);
             font-size: 1.1rem;
             transition: var(--transition-fast);
         }
-        
         .footer-social a:hover {
             color: var(--primary);
             transform: translateY(-2px);
         }
-        
         .copyright {
             font-size: 0.7rem;
             color: var(--text-tertiary);
@@ -958,7 +985,6 @@
             text-align: center;
             padding: 2rem;
         }
-        
         .spinner {
             width: 40px;
             height: 40px;
@@ -968,33 +994,41 @@
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
-        
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
         
         /* ============================================ */
         /* UTILITY CLASSES */
         /* ============================================ */
-        .text-center {
-            text-align: center;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
+        .text-center { text-align: center; }
+        .hidden { display: none; }
         .mt-1 { margin-top: 0.5rem; }
         .mt-2 { margin-top: 1rem; }
         .mt-3 { margin-top: 1.5rem; }
         .mb-1 { margin-bottom: 0.5rem; }
         .mb-2 { margin-bottom: 1rem; }
         .mb-3 { margin-bottom: 1.5rem; }
+        
+        /* Reading Progress Bar */
+        #progressBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            z-index: 999;
+            transition: width 0.2s ease;
+        }
     </style>
 </head>
 <body>
+
+<!-- ============================================ -->
+<!-- READING PROGRESS BAR -->
+<!-- ============================================ -->
+<div id="progressBar"></div>
 
 <!-- ============================================ -->
 <!-- HEADER -->
@@ -1160,6 +1194,14 @@
     // ============================================
     let currentCategory = 'all';
     let allNews = [];
+    
+    // ============================================
+    // READING PROGRESS BAR
+    // ============================================
+    window.addEventListener('scroll', () => {
+        const scroll = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+        document.getElementById('progressBar').style.width = scroll + '%';
+    });
     
     // ============================================
     // THEME FUNCTIONS
