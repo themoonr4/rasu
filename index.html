@@ -1194,6 +1194,7 @@
     // ============================================
     let currentCategory = 'all';
     let allNews = [];
+    let isDataLoaded = false;
     
     // ============================================
     // READING PROGRESS BAR
@@ -1227,14 +1228,19 @@
     }
     
     // ============================================
-    // AI FUNCTIONS
+    // AI FUNCTIONS WITH TIMEOUT
     // ============================================
-    async function generateAISummary(text) {
+    async function generateAISummaryWithTimeout(text, timeout = 8000) {
         if (!text || text.length < 50) return text.substring(0, 100);
+        
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
@@ -1243,6 +1249,8 @@
                     }]
                 })
             });
+            
+            clearTimeout(timeoutId);
             const data = await response.json();
             return data.candidates?.[0]?.content?.parts?.[0]?.text || text.substring(0, 100);
         } catch(error) {
@@ -1250,12 +1258,17 @@
         }
     }
     
-    async function enhanceHeadline(title) {
+    async function enhanceHeadlineWithTimeout(title, timeout = 6000) {
         if (!title) return title;
+        
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
@@ -1264,6 +1277,8 @@
                     }]
                 })
             });
+            
+            clearTimeout(timeoutId);
             const data = await response.json();
             const enhanced = data.candidates?.[0]?.content?.parts?.[0]?.text || title;
             return enhanced.length > 80 ? title : enhanced;
@@ -1272,13 +1287,19 @@
         }
     }
     
-    async function getAIPickWithReason(news) {
+    async function getAIPickWithTimeout(news, timeout = 8000) {
         if (!news || news.length === 0) return null;
+        
         try {
             const headlines = news.slice(0, 10).map((n, i) => `${i+1}. ${n.title}`).join('\n');
+            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
@@ -1287,6 +1308,8 @@
                     }]
                 })
             });
+            
+            clearTimeout(timeoutId);
             const data = await response.json();
             const result = data.candidates?.[0]?.content?.parts?.[0]?.text || `${news[0].title}|Most important news of the day`;
             const [title, reason] = result.split('|');
@@ -1310,9 +1333,40 @@
     }
     
     // ============================================
-    // DISPLAY NEWS
+    // DISPLAY NEWS (FALLBACK - WITHOUT AI)
     // ============================================
-    function displayNews(newsToShow) {
+    function displayNewsFallback(news) {
+        const grid = document.getElementById('newsGrid');
+        if (!grid) return;
+        
+        if (!news || news.length === 0) {
+            grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
+            return;
+        }
+        
+        grid.innerHTML = news.map(article => {
+            const imgUrl = article.image_url || `https://picsum.photos/400/200?random=${article.id}`;
+            return `
+                <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                    <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/400/200?random=1'">
+                    <div class="news-content">
+                        <span class="news-category">${article.category || 'News'}</span>
+                        <h3 class="news-title">${escapeHtml(article.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(article.summary || (article.content ? article.content.substring(0, 100) : ''))}...</p>
+                        <div class="news-meta">
+                            <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
+                            <span>👁️ ${article.views || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // ============================================
+    // DISPLAY NEWS (WITH AI)
+    // ============================================
+    function displayNewsWithAI(newsToShow) {
         const grid = document.getElementById('newsGrid');
         if (!grid) return;
         
@@ -1348,11 +1402,12 @@
     }
     
     // ============================================
-    // FETCH NEWS FROM SUPABASE
+    // FETCH NEWS FROM SUPABASE WITH TIMEOUT
     // ============================================
     async function fetchNews() {
         const grid = document.getElementById('newsGrid');
         if (!grid) return;
+        
         grid.innerHTML = '<div class="loader"><div class="spinner"></div><p style="margin-top:10px;">🤖 AI is analyzing news...</p></div>';
         
         try {
@@ -1370,47 +1425,76 @@
                 return;
             }
             
-            const newsToEnhance = news.slice(0, 6);
-            const enhancedNews = await Promise.all(newsToEnhance.map(async (article) => {
-                const [summary, enhancedTitle] = await Promise.all([
-                    generateAISummary(article.content || article.summary || ''),
-                    enhanceHeadline(article.title)
-                ]);
-                return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
-            }));
-            
-            allNews = [...enhancedNews, ...news.slice(6).map(a => ({ ...a, ai_enhanced: false }))];
-            
-            const aiPick = await getAIPickWithReason(allNews);
-            const aiDiv = document.getElementById('aiPicks');
-            if (aiDiv && aiPick) {
-                aiDiv.innerHTML = `<div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.75rem 0;">
-                    <div style="font-size:0.7rem;color:var(--brand-red);margin-bottom:0.25rem;">🤖 AI PICK OF THE DAY</div>
-                    <div class="trending-title" style="font-weight:bold;">${escapeHtml(aiPick.title)}</div>
-                    <div style="font-size:0.6rem;color:var(--text-tertiary);margin-top:0.25rem;">💡 ${escapeHtml(aiPick.reason)}</div>
-                </div>`;
+            // 🔥 Try AI enhancement with timeout - agar fail ho to fallback
+            try {
+                // Sirf 3 articles enhance karo (baaki direct display)
+                const newsToEnhance = news.slice(0, 3);
+                const enhancedNews = await Promise.all(newsToEnhance.map(async (article) => {
+                    const [summary, enhancedTitle] = await Promise.all([
+                        generateAISummaryWithTimeout(article.content || article.summary || '', 8000),
+                        enhanceHeadlineWithTimeout(article.title, 6000)
+                    ]);
+                    return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
+                }));
+                
+                // Baaki news ko bina AI ke display karo
+                const remainingNews = news.slice(3).map(a => ({ ...a, ai_enhanced: false }));
+                allNews = [...enhancedNews, ...remainingNews];
+                
+                // AI Pick try karo - agar fail ho to ignore
+                try {
+                    const aiPick = await getAIPickWithTimeout(allNews, 5000);
+                    const aiDiv = document.getElementById('aiPicks');
+                    if (aiDiv && aiPick) {
+                        aiDiv.innerHTML = `<div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.75rem 0;">
+                            <div style="font-size:0.7rem;color:var(--brand-red);margin-bottom:0.25rem;">🤖 AI PICK OF THE DAY</div>
+                            <div class="trending-title" style="font-weight:bold;">${escapeHtml(aiPick.title)}</div>
+                            <div style="font-size:0.6rem;color:var(--text-tertiary);margin-top:0.25rem;">💡 ${escapeHtml(aiPick.reason)}</div>
+                        </div>`;
+                    }
+                } catch(aiPickError) {
+                    // AI Pick fail ho to kuch mat dikhao
+                }
+                
+            } catch(aiError) {
+                // 🔥 AI enhancement fail ho to direct fallback display
+                console.log('AI enhancement failed, using fallback:', aiError.message);
+                allNews = news.map(a => ({ ...a, ai_enhanced: false }));
+                displayNewsFallback(news);
+                // Trending aur ticker update karo
+                updateTrendingAndTicker(news);
+                return;
             }
             
-            const trendingDiv = document.getElementById('trendingList');
-            if (trendingDiv && allNews.length > 0) {
-                const trending = [...allNews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
-                trendingDiv.innerHTML = trending.map((item, index) => `<div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                    <div class="trending-rank">#${index + 1}</div>
-                    <div class="trending-title">${escapeHtml(item.title)}</div>
-                    <div class="trending-views">👁️ ${item.views || 0} views</div>
-                </div>`).join('');
-            }
+            // Trending aur ticker update karo
+            updateTrendingAndTicker(allNews);
             
-            const tickerContent = document.getElementById('tickerContent');
-            if (tickerContent && allNews.length > 0) {
-                tickerContent.innerHTML = '🔴 LIVE | ' + allNews.slice(0, 5).map(n => n.title).join(' | ') + ' | ';
-            }
-            
-            displayNews(allNews);
+            // Display news with AI
+            displayNewsWithAI(allNews);
             
         } catch (error) {
             console.error('Fetch error:', error);
-            grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">Error loading news. Please refresh.</div>';
+            grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">⚠️ Error loading news. Please refresh.</div>';
+        }
+    }
+    
+    // ============================================
+    // UPDATE TRENDING AND TICKER
+    // ============================================
+    function updateTrendingAndTicker(news) {
+        const trendingDiv = document.getElementById('trendingList');
+        if (trendingDiv && news.length > 0) {
+            const trending = [...news].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
+            trendingDiv.innerHTML = trending.map((item, index) => `<div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                <div class="trending-rank">#${index + 1}</div>
+                <div class="trending-title">${escapeHtml(item.title)}</div>
+                <div class="trending-views">👁️ ${item.views || 0} views</div>
+            </div>`).join('');
+        }
+        
+        const tickerContent = document.getElementById('tickerContent');
+        if (tickerContent && news.length > 0) {
+            tickerContent.innerHTML = '🔴 LIVE | ' + news.slice(0, 5).map(n => n.title).join(' | ') + ' | ';
         }
     }
     
@@ -1464,7 +1548,11 @@
                 if (e.key === 'Enter') {
                     const term = searchInput.value.toLowerCase();
                     const filtered = allNews.filter(n => n.title?.toLowerCase().includes(term));
-                    displayNews(filtered);
+                    if (filtered.length > 0) {
+                        displayNewsWithAI(filtered);
+                    } else {
+                        document.getElementById('newsGrid').innerHTML = '<div class="text-center" style="padding:2rem;">No news found for "' + escapeHtml(term) + '"</div>';
+                    }
                 }
             });
         }
@@ -1507,7 +1595,7 @@
                 const category = link.getAttribute('data-category');
                 if (category) {
                     currentCategory = category;
-                    displayNews(allNews);
+                    displayNewsWithAI(allNews);
                     document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
                     link.classList.add('active');
                     if (sidebar) sidebar.classList.remove('open');
@@ -1573,7 +1661,7 @@
         link.addEventListener('click', (e) => {
             e.preventDefault();
             currentCategory = link.getAttribute('data-category');
-            displayNews(allNews);
+            displayNewsWithAI(allNews);
             document.querySelectorAll('.nav-desktop a').forEach(a => a.classList.remove('active'));
             link.classList.add('active');
         });
@@ -1602,7 +1690,7 @@
     document.querySelectorAll('.bottom-nav-item[data-nav="home"]').forEach(item => {
         item.addEventListener('click', () => {
             currentCategory = 'all';
-            displayNews(allNews);
+            displayNewsWithAI(allNews);
             document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
             item.classList.add('active');
             document.querySelectorAll('.nav-desktop a').forEach(a => a.classList.remove('active'));
