@@ -5,7 +5,7 @@
   
   <url>
     <loc>https://themoonr4.github.io/rasu/</loc>
-    <lastmod>2026-05-23</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <news:news>
@@ -13,30 +13,65 @@
         <news:name>THE MOON</news:name>
         <news:language>en</news:language>
       </news:publication>
-      <news:publication_date>2026-05-23</news:publication_date>
-      <news:title>THE MOON - World Class News Platform</news:title>
+      <news:publication_date>2026-06-20</news:publication_date>
+      <news:title>THE MOON - World's Most Advanced AI-Powered News Platform</news:title>
     </news:news>
   </url>
   
   <url>
-    <loc>https://themoonr4.github.io/rasu/index.html</loc>
-    <lastmod>2026-05-23</lastmod>
+    <loc>https://themoonr4.github.io/rasu/article.html</loc>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://themoonr4.github.io/rasu/article.html</loc>
-    <lastmod>2026-05-23</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://themoonr4.github.io/rasu/study.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://themoonr4.github.io/rasu/admin.html</loc>
-    <lastmod>2026-05-23</lastmod>
+    <loc>https://themoonr4.github.io/rasu/freelance.html</loc>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/vacancy.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/about.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/contact.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/privacy.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://themoonr4.github.io/rasu/admin.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
   
 </urlset>
