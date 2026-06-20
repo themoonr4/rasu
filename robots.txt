@@ -1,8 +1,41 @@
+# ============================================
+# THE MOON - Robots.txt
+# ============================================
 # Allow all crawlers for THE MOON News
 User-agent: *
 Allow: /
+Allow: /article.html
+Allow: /study.html
+Allow: /freelance.html
+Allow: /vacancy.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Disallow: /admin.html
 Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 
-# Block admin page from search engines
-User-agent: *
-Disallow: /rasu/admin.html
+# ============================================
+# Googlebot - Special Instructions
+# ============================================
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# ============================================
+# Bingbot - Special Instructions
+# ============================================
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# ============================================
+# AI Scrapers - Block (Optional)
+# ============================================
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
