@@ -13,8 +13,11 @@
         h1{margin-bottom:1rem;color:#dc2626;}
         .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
         textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;font-family:monospace;min-height:150px;}
-        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
-        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;transition:background 0.2s;}
+        button:hover{background:#b91c1c;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;color:#fff;}
+        .back-btn:hover{background:#333;}
+        [data-theme="light"] .back-btn{color:#1a1a1a;}
     </style>
 </head>
 <body>
@@ -24,15 +27,18 @@
         
         <div class="card">
             <h3>Select Options</h3>
-            <div>
-                <label><input type="checkbox" id="blockAdmin"> Block Admin Pages</label>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0;">
+                <label><input type="checkbox" id="blockAdmin" checked> Block Admin Pages</label>
                 <label><input type="checkbox" id="blockApi"> Block API Pages</label>
                 <label><input type="checkbox" id="allowAll"> Allow All Crawlers</label>
+                <label><input type="checkbox" id="blockAI"> Block AI Scrapers</label>
             </div>
             <button onclick="generateRobots()">Generate robots.txt</button>
             <textarea id="robotsOutput" readonly></textarea>
-            <button onclick="copyRobots()">Copy Code</button>
-            <button onclick="downloadRobots()">Download robots.txt</button>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <button onclick="copyRobots()">📋 Copy Code</button>
+                <button onclick="downloadRobots()">📥 Download robots.txt</button>
+            </div>
         </div>
         
         <div class="card">
@@ -45,14 +51,20 @@
             const blockAdmin = document.getElementById('blockAdmin').checked;
             const blockApi = document.getElementById('blockApi').checked;
             const allowAll = document.getElementById('allowAll').checked;
+            const blockAI = document.getElementById('blockAI').checked;
             
             let content = '';
             if(allowAll) {
-                content = 'User-agent: *\nAllow: /\n\nSitemap: https://themoon.news/sitemap.xml';
+                content = 'User-agent: *\nAllow: /\n\nSitemap: https://themoonr4.github.io/rasu/sitemap.xml';
             } else {
-                content = 'User-agent: *\nDisallow: /admin/\nDisallow: /dashboard/\n';
+                content = 'User-agent: *\nAllow: /article.html\nAllow: /study.html\nAllow: /freelance.html\nAllow: /vacancy.html\nAllow: /about.html\nAllow: /contact.html\nAllow: /privacy.html\n';
+                if(blockAdmin) content += 'Disallow: /admin.html\n';
                 if(blockApi) content += 'Disallow: /api/\n';
-                content += '\nSitemap: https://themoon.news/sitemap.xml';
+                content += '\nSitemap: https://themoonr4.github.io/rasu/sitemap.xml';
+            }
+            
+            if(blockAI) {
+                content += '\n\n# Block AI Scrapers\nUser-agent: GPTBot\nDisallow: /\nUser-agent: ChatGPT-User\nDisallow: /\nUser-agent: Google-Extended\nDisallow: /';
             }
             
             document.getElementById('robotsOutput').value = content;
@@ -60,12 +72,14 @@
         
         function copyRobots() {
             const content = document.getElementById('robotsOutput').value;
+            if(!content) { alert('Generate robots.txt first!'); return; }
             navigator.clipboard.writeText(content);
-            alert('Copied to clipboard!');
+            alert('✅ Copied to clipboard!');
         }
         
         function downloadRobots() {
             const content = document.getElementById('robotsOutput').value;
+            if(!content) { alert('Generate robots.txt first!'); return; }
             const blob = new Blob([content], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = 'robots.txt'; a.click();
