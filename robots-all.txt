@@ -1,45 +1,64 @@
+# ============================================
+# THE MOON - Robots.txt (All Crawlers)
+# ============================================
+# Allow all crawlers for THE MOON News
 User-agent: *
 Allow: /
-Allow: /search
-Allow: /article
-Allow: /categories
-Allow: /bookmarks
-Allow: /profile
-Allow: /settings
+Allow: /article.html
+Allow: /study.html
+Allow: /freelance.html
+Allow: /vacancy.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Disallow: /admin.html
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 
-Sitemap: https://${DOMAIN}/sitemap.xml
-
-# Google specific
+# ============================================
+# Googlebot - Special Instructions
+# ============================================
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
 
-# Bing specific
+# ============================================
+# Bingbot - Special Instructions
+# ============================================
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-# Yahoo specific
+# ============================================
+# Yahoo! Slurp
+# ============================================
 User-agent: Yahoo! Slurp
 Allow: /
 Crawl-delay: 1
 
-# DuckDuckGo
+# ============================================
+# DuckDuckBot
+# ============================================
 User-agent: DuckDuckBot
 Allow: /
 Crawl-delay: 1
 
-# Baidu
+# ============================================
+# Baiduspider
+# ============================================
 User-agent: Baiduspider
 Allow: /
 Crawl-delay: 2
 
-# Yandex
+# ============================================
+# YandexBot
+# ============================================
 User-agent: YandexBot
 Allow: /
 Crawl-delay: 2
 
-# Disable AI scrapers (optional)
+# ============================================
+# AI Scrapers - Block (Optional)
+# ============================================
 User-agent: GPTBot
 Disallow: /
 
