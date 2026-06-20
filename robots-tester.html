@@ -12,13 +12,16 @@
         .container{max-width:800px;margin:0 auto;}
         h1{margin-bottom:1rem;color:#dc2626;}
         .card{background:#111;border:1px solid #222;border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
-        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;font-family:monospace;}
+        textarea{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;font-family:monospace;min-height:150px;}
         input{width:100%;padding:0.75rem;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;margin-bottom:0.5rem;}
-        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;}
-        .result{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;font-family:monospace;}
-        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;}
-        .allowed{color:#28a745;}
-        .blocked{color:#dc3545;}
+        button{background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;transition:background 0.2s;}
+        button:hover{background:#b91c1c;}
+        .result{background:#1a1a1a;padding:1rem;border-radius:8px;margin-top:1rem;font-family:monospace;border:1px solid #333;}
+        .back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid #333;padding:0.5rem 1rem;border-radius:8px;margin-bottom:1rem;cursor:pointer;color:#fff;}
+        .back-btn:hover{background:#333;}
+        [data-theme="light"] .back-btn{color:#1a1a1a;}
+        .allowed{color:#28a745;font-weight:bold;}
+        .blocked{color:#dc3545;font-weight:bold;}
     </style>
 </head>
 <body>
@@ -30,7 +33,7 @@
             <h3>Robots.txt Content</h3>
             <textarea id="robotsContent" rows="8" placeholder="User-agent: *&#10;Allow: /&#10;Disallow: /admin/"></textarea>
             <h3>Test URL</h3>
-            <input type="text" id="testUrl" placeholder="/article.html">
+            <input type="text" id="testUrl" value="/article.html" placeholder="/article.html">
             <button onclick="testRobots()">Test URL</button>
             <div id="testResult" class="result" style="display:none;"></div>
         </div>
@@ -38,6 +41,7 @@
         <div class="card">
             <h3>Sample Robots.txt</h3>
             <button onclick="loadSample()">Load Sample</button>
+            <button onclick="loadFullSample()" style="margin-left:0.5rem;">Load Full Sample</button>
         </div>
     </div>
     <script>
@@ -49,37 +53,81 @@
             if(!testUrl) { alert('Enter URL to test'); return; }
             
             let allowed = true;
+            let matchedRule = 'No rule matched';
             const lines = robots.split('\n');
-            let currentUserAgent = '*';
             
             for(let line of lines) {
                 if(line.startsWith('User-agent:')) {
-                    currentUserAgent = line.split(':')[1].trim();
+                    continue;
                 }
-                if(currentUserAgent === '*' && line.startsWith('Disallow:')) {
+                if(line.startsWith('Disallow:')) {
                     const disallow = line.split(':')[1].trim();
                     if(disallow && testUrl.startsWith(disallow)) {
                         allowed = false;
+                        matchedRule = `Disallow: ${disallow}`;
                         break;
+                    }
+                }
+                if(line.startsWith('Allow:')) {
+                    const allow = line.split(':')[1].trim();
+                    if(allow && testUrl.startsWith(allow)) {
+                        allowed = true;
+                        matchedRule = `Allow: ${allow}`;
                     }
                 }
             }
             
-            resultDiv.innerHTML = `<strong>URL: ${testUrl}</strong><br>Status: ${allowed ? '<span class="allowed">✅ ALLOWED</span>' : '<span class="blocked">❌ BLOCKED</span>'}`;
+            resultDiv.innerHTML = `
+                <strong>URL: ${testUrl}</strong><br>
+                Status: ${allowed ? '<span class="allowed">✅ ALLOWED</span>' : '<span class="blocked">❌ BLOCKED</span>'}<br>
+                <small>Matched rule: ${matchedRule}</small>
+            `;
             resultDiv.style.display = 'block';
         }
         
         function loadSample() {
             const sample = `User-agent: *
 Allow: /
-Disallow: /admin/
+Disallow: /admin.html
 Disallow: /dashboard/
 Disallow: /api/
 
-Sitemap: https://themoonr4.github.io/the-moon-supreme/sitemap.xml`;
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml`;
             document.getElementById('robotsContent').value = sample;
         }
         
+        function loadFullSample() {
+            const sample = `# ============================================
+# THE MOON - Robots.txt
+# ============================================
+User-agent: *
+Allow: /
+Allow: /article.html
+Allow: /study.html
+Allow: /freelance.html
+Allow: /vacancy.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Disallow: /admin.html
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# AI Scrapers - Block
+User-agent: GPTBot
+Disallow: /
+User-agent: ChatGPT-User
+Disallow: /
+User-agent: Google-Extended
+Disallow: /`;
+            document.getElementById('robotsContent').value = sample;
+        }
+        
+        loadSample();
         if (localStorage.getItem('theme') === 'light') document.body.setAttribute('data-theme', 'light');
     </script>
 </body>
