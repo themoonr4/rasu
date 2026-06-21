@@ -61,18 +61,20 @@
     <link rel="apple-touch-icon" href="/rasu/icon-192.png">
     
     <!-- ============================================ -->
-    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
+    <!-- PERFORMANCE - PRECONNECT & PRELOAD (SIRF 4) -->
     <!-- ============================================ -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://us.i.posthog.com">
     <link rel="dns-prefetch" href="//www.google-analytics.com">
     <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
     
     <!-- ============================================ -->
-    <!-- FONTS & STYLES -->
+    <!-- FONTS & STYLES - DEFER FONT AWESOME -->
     <!-- ============================================ -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
     
     <!-- ============================================ -->
     <!-- JSON-LD SCHEMA - COMPLETE STRUCTURED DATA -->
@@ -101,10 +103,10 @@
       "logo": "https://themoonr4.github.io/rasu/icon-192.png",
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+91-9876543210",
+        "telephone": "+91-8050398357",
         "contactType": "customer service",
         "availableLanguage": ["English", "Hindi"],
-        "email": "support@themoon.news"
+        "email": "themoonr4@gmail.com"
       },
       "sameAs": [
         "https://t.me/themoom247",
@@ -298,10 +300,10 @@
             <p>THE MOON News, New Delhi, India</p>
             
             <h3 style="margin-top:1rem;"><i class="fas fa-phone"></i> Phone</h3>
-            <p>+91 98765 43210</p>
+            <p><a href="tel:+918050398357" style="color:#dc2626;text-decoration:none;">+91 80503 98357</a></p>
             
             <h3 style="margin-top:1rem;"><i class="fas fa-envelope"></i> Email</h3>
-            <p>support@themoon.news</p>
+            <p><a href="mailto:themoonr4@gmail.com" style="color:#dc2626;text-decoration:none;">themoonr4@gmail.com</a></p>
             
             <h3 style="margin-top:1rem;"><i class="fas fa-clock"></i> Working Hours</h3>
             <p>Mon-Sat: 9:00 AM - 9:00 PM (IST)</p>
@@ -366,6 +368,15 @@
         // Theme detection for light/dark mode
         if (localStorage.getItem('theme') === 'light') {
             document.body.setAttribute('data-theme', 'light');
+        }
+        
+        // ============================================
+        // SERVICE WORKER - FIXED
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/rasu/sw.js')
+                .then(reg => console.log('✅ Service Worker registered'))
+                .catch(err => console.log('⚠️ Service Worker registration failed:', err.message));
         }
     </script>
 </body>
