@@ -326,6 +326,13 @@
                             <div class="form-group"><label>📄 PDF URL</label><input type="text" id="studyPdfUrl" placeholder="https://.../file.pdf"></div>
                             <div class="form-group"><label>🎬 Video URL</label><input type="text" id="studyVideoUrl" placeholder="https://youtube.com/..."></div>
                             <div class="form-group"><label>🖼️ Thumbnail</label><input type="text" id="studyThumbnail" placeholder="https://.../image.jpg"></div>
+                            
+                            <!-- 🔥 NEW: Direct PDF Upload Option -->
+                            <div class="form-group">
+                                <label>📤 Upload PDF File</label>
+                                <input type="file" id="studyPdfFile" accept=".pdf" onchange="handlePdfUpload(this, 'studyPdfUrl')">
+                                <small style="color: #64748b; display: block; margin-top: 5px;">Select PDF file to upload directly</small>
+                            </div>
                         </div>
                         <div class="form-group"><label>📝 Description</label><textarea id="studyDesc" rows="3"></textarea></div>
                         <div class="row-2">
@@ -356,6 +363,13 @@
                         <div class="row-2">
                             <div class="form-group"><label>👁️ Views</label><input type="text" id="videoViews" placeholder="1M+"></div>
                             <div class="form-group"><label>🖼️ Thumbnail</label><input type="text" id="videoThumbnail"></div>
+                            
+                            <!-- 🔥 NEW: Direct Video Upload Option -->
+                            <div class="form-group">
+                                <label>📤 Upload Video</label>
+                                <input type="file" id="videoFile" accept="video/*" onchange="handlePdfUpload(this, 'videoUrl')">
+                                <small style="color: #64748b; display: block; margin-top: 5px;">Select video file to upload directly</small>
+                            </div>
                         </div>
                         <button type="submit" class="success">🎬 Add Video Lecture</button>
                     </form>
@@ -391,6 +405,13 @@
                         <div class="row-2">
                             <div class="form-group"><label>💰 Price (₹)</label><input type="number" id="testPrice" value="0"></div>
                             <div class="form-group"><label>📄 PDF Link</label><input type="text" id="testPdf" placeholder="https://.../test.pdf"></div>
+                            
+                            <!-- 🔥 NEW: Direct Test PDF Upload -->
+                            <div class="form-group">
+                                <label>📤 Upload Test PDF</label>
+                                <input type="file" id="testPdfFile" accept=".pdf" onchange="handlePdfUpload(this, 'testPdf')">
+                                <small style="color: #64748b; display: block; margin-top: 5px;">Select test PDF file to upload directly</small>
+                            </div>
                         </div>
                         <button type="submit" class="success">📝 Add Test Series</button>
                     </form>
@@ -459,6 +480,13 @@
                             <div class="form-group"><label>🖼️ Image URL</label><input type="text" id="freelanceImage" placeholder="https://..."></div>
                             <div class="form-group"><label>🎬 Demo Video URL</label><input type="text" id="freelanceVideo" placeholder="https://youtube.com/..."></div>
                             <div class="form-group"><label>⭐ Status</label><select id="freelanceStatus"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div>
+                            
+                            <!-- 🔥 NEW: Direct Freelance Image Upload -->
+                            <div class="form-group">
+                                <label>📤 Upload Image</label>
+                                <input type="file" id="freelanceImageFile" accept="image/*" onchange="handlePdfUpload(this, 'freelanceImage')">
+                                <small style="color: #64748b; display: block; margin-top: 5px;">Select image to upload directly</small>
+                            </div>
                         </div>
                         <button type="submit" class="success">➕ Add Service</button>
                     </form>
@@ -528,6 +556,13 @@
                             <div class="form-group"><label>🔗 Apply Link</label><input type="text" id="jobApplyLink"></div>
                             <div class="form-group"><label>📄 PDF/Notification</label><input type="text" id="jobPdf" placeholder="https://.../notification.pdf"></div>
                             <div class="form-group"><label>🏷️ Badge</label><input type="text" id="jobBadge" placeholder="Urgent/Regular"></div>
+                            
+                            <!-- 🔥 NEW: Direct PDF Upload -->
+                            <div class="form-group">
+                                <label>📤 Upload PDF</label>
+                                <input type="file" id="jobPdfFile" accept=".pdf" onchange="handlePdfUpload(this, 'jobPdf')">
+                                <small style="color: #64748b; display: block; margin-top: 5px;">Select PDF to upload directly</small>
+                            </div>
                         </div>
                         <button type="submit" class="success">➕ Add Job Vacancy</button>
                     </form>
@@ -568,11 +603,25 @@
                         <div class="row-2">
                             <div class="form-group"><label>💰 Price (₹)</label><input type="number" id="productPrice"></div>
                             <div class="form-group"><label>🔗 Download Link</label><input type="text" id="productLink"></div>
+                            
+                            <!-- 🔥 NEW: Direct Product Upload -->
+                            <div class="form-group">
+                                <label>📤 Upload Product File</label>
+                                <input type="file" id="productFile" onchange="handlePdfUpload(this, 'productLink')">
+                                <small style="color: #64748b; display: block; margin-top: 5px;">Select file to upload directly</small>
+                            </div>
                         </div>
                         <div class="row-3">
                             <div class="form-group"><label>🖼️ Image URL</label><input type="text" id="productImage"></div>
                             <div class="form-group"><label>🎬 Preview Video</label><input type="text" id="productVideo"></div>
                             <div class="form-group"><label>📊 Stock</label><input type="number" id="productStock" value="999"></div>
+                            
+                            <!-- 🔥 NEW: Direct Product Image Upload -->
+                            <div class="form-group">
+                                <label>📤 Upload Image</label>
+                                <input type="file" id="productImageFile" accept="image/*" onchange="handlePdfUpload(this, 'productImage')">
+                                <small style="color: #64748b; display: block; margin-top: 5px;">Select image to upload directly</small>
+                            </div>
                         </div>
                         <button type="submit" class="success">➕ Add Product</button>
                     </form>
@@ -892,6 +941,42 @@
     OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({ appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c" });
     });
+    
+    // ============================================
+    // FILE UPLOAD HANDLER - Convert to Base64/URL
+    // ============================================
+    function handlePdfUpload(input, targetId) {
+        const file = input.files[0];
+        if (!file) return;
+        
+        // Show loading message
+        const target = document.getElementById(targetId);
+        if (target) {
+            target.value = '📤 Uploading...';
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // For PDF, we can create a data URL or blob URL
+            const blob = new Blob([e.target.result], { type: file.type });
+            const url = URL.createObjectURL(blob);
+            
+            if (target) {
+                target.value = url;
+                console.log('✅ File uploaded:', file.name, 'Size:', file.size);
+            }
+            
+            // Store file info for later use
+            const fileInfo = {
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                url: url
+            };
+            localStorage.setItem('uploaded_file_' + targetId, JSON.stringify(fileInfo));
+        };
+        reader.readAsArrayBuffer(file);
+    }
     
     // ============================================
     // SECTION NAVIGATION
@@ -1325,29 +1410,6 @@
             showMessage(document.getElementById('notifyMessageDiv'), '⚠️ Test failed: ' + e.message, 'error');
         }
     }
-    
-    // ============================================
-    // 🔥 FIX: CURRENT PRICES BLOCK CLICK HANDLER
-    // ============================================
-    // Add click handler for "Current Prices" blocks
-    document.addEventListener('DOMContentLoaded', function() {
-        // Find all elements that might contain "Current Prices" text
-        const allElements = document.querySelectorAll('*');
-        allElements.forEach(el => {
-            if (el.textContent && el.textContent.includes('Current Prices')) {
-                el.style.cursor = 'pointer';
-                el.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    alert('📊 Current Prices (as of June 15, 2026):\n\n' +
-                          '💰 Gold: ₹72,500/10g\n' +
-                          '💰 Silver: ₹85,000/kg\n' +
-                          '🛢️ Crude Oil: $82/barrel\n' +
-                          '💵 USD/INR: ₹83.50\n\n' +
-                          '📈 Data updated every 15 minutes.');
-                });
-            }
-        });
-    });
     
     // ============================================
     // ANALYTICS
