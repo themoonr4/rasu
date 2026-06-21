@@ -61,18 +61,20 @@
     <link rel="apple-touch-icon" href="/rasu/icon-192.png">
     
     <!-- ============================================ -->
-    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
+    <!-- PERFORMANCE - PRECONNECT & PRELOAD (SIRF 4) -->
     <!-- ============================================ -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://us.i.posthog.com">
     <link rel="dns-prefetch" href="//www.google-analytics.com">
     <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
     
     <!-- ============================================ -->
-    <!-- FONTS & STYLES -->
+    <!-- FONTS & STYLES - DEFER FONT AWESOME -->
     <!-- ============================================ -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
     
     <!-- ============================================ -->
     <!-- JSON-LD SCHEMA - COMPLETE STRUCTURED DATA -->
@@ -361,6 +363,39 @@
     ];
     
     let currentFilter = 'all';
+    
+    // ============================================
+    // PUSH NOTIFICATION - FIXED WITH ERROR HANDLING
+    // ============================================
+    async function sendPush(title, message) {
+        try {
+            const response = await fetch('https://onesignal.com/api/v1/notifications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    app_id: '60154f61-182d-45c0-99f1-fef13b3f9d1c',
+                    headings: { en: title },
+                    contents: { en: message },
+                    url: 'https://themoonr4.github.io/rasu/',
+                    included_segments: ['Subscribed Users']
+                })
+            });
+            if (!response.ok) {
+                console.log('Push notification failed:', response.status);
+            }
+        } catch(e) {
+            console.log('Push notification error:', e.message);
+        }
+    }
+    
+    // ============================================
+    // SERVICE WORKER - FIXED
+    // ============================================
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/rasu/sw.js')
+            .then(reg => console.log('✅ Service Worker registered'))
+            .catch(err => console.log('⚠️ Service Worker registration failed:', err.message));
+    }
     
     function loadJobs() {
         const container = document.getElementById('jobsGrid');
