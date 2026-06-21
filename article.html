@@ -60,21 +60,23 @@
     <link rel="apple-touch-icon" href="/rasu/icon-192.png">
     
     <!-- ============================================ -->
-    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
+    <!-- PERFORMANCE - PRECONNECT & PRELOAD (SIRF 4) -->
     <!-- ============================================ -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://us.i.posthog.com">
     <link rel="dns-prefetch" href="//www.google-analytics.com">
     <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
     
     <!-- ============================================ -->
-    <!-- FONTS & STYLES -->
+    <!-- FONTS & STYLES - DEFER FONT AWESOME + SUPABASE -->
     <!-- ============================================ -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
     
     <!-- ============================================ -->
     <!-- JSON-LD SCHEMA - COMPLETE STRUCTURED DATA -->
@@ -1090,7 +1092,7 @@ async function loadRelatedArticles(category, currentId) {
                     <div class="related-grid">
                         ${filtered.map(item => `
                             <div class="related-card" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                                <img src="${item.image_url || 'https://picsum.photos/400/200?random='+item.id}" onerror="this.src='https://picsum.photos/400/200'">
+                                <img src="${item.image_url || 'https://picsum.photos/400/200?random='+item.id}" width="400" height="200" loading="lazy" onerror="this.src='https://picsum.photos/400/200'">
                                 <div class="related-card-content">
                                     <div class="related-card-title">${escapeHtml(item.title)}</div>
                                 </div>
@@ -1219,6 +1221,39 @@ function updateMetaTags(article) {
 }
 
 // ============================================
+// PUSH NOTIFICATION - FIXED WITH ERROR HANDLING
+// ============================================
+async function sendPush(title, message) {
+    try {
+        const response = await fetch('https://onesignal.com/api/v1/notifications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                app_id: '60154f61-182d-45c0-99f1-fef13b3f9d1c',
+                headings: { en: title },
+                contents: { en: message },
+                url: 'https://themoonr4.github.io/rasu/',
+                included_segments: ['Subscribed Users']
+            })
+        });
+        if (!response.ok) {
+            console.log('Push notification failed:', response.status);
+        }
+    } catch(e) {
+        console.log('Push notification error:', e.message);
+    }
+}
+
+// ============================================
+// SERVICE WORKER - FIXED
+// ============================================
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/rasu/sw.js')
+        .then(reg => console.log('✅ Service Worker registered'))
+        .catch(err => console.log('⚠️ Service Worker registration failed:', err.message));
+}
+
+// ============================================
 // MAIN LOAD ARTICLE
 // ============================================
 async function loadArticle() {
@@ -1254,9 +1289,10 @@ async function loadArticle() {
             badgeHtml = `<div style="margin-bottom:15px;">${badges.map(b => `<span style="background:#dc2626;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:5px;">${escapeHtml(b.trim())}</span>`).join('')}</div>`;
         }
         
+        // 🔥 Images with width/height for CLS improvement
         document.getElementById('articleContent').innerHTML = `
             <div class="article-card">
-                ${imageUrl ? `<img class="article-image" src="${imageUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/800/400?random=1'">` : ''}
+                ${imageUrl ? `<img class="article-image" src="${imageUrl}" width="800" height="400" alt="${escapeHtml(article.title)}" loading="lazy" onerror="this.src='https://picsum.photos/800/400?random=1'">` : ''}
                 <h1 class="article-title">${escapeHtml(article.title)}</h1>
                 <div class="article-meta">
                     <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
