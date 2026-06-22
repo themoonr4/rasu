@@ -87,7 +87,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z'/%3E%3Cpath d='M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z' fill='white'/%3E%3C/svg%3E">
     
     <!-- ============================================ -->
-    <!-- PERFORMANCE - PRECONNECT & PRELOAD (SIRF 4) -->
+    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
     <!-- ============================================ -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
@@ -97,14 +97,14 @@
     <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
     
     <!-- ============================================ -->
-    <!-- FONTS & STYLES - DEFER FONT AWESOME + SUPABASE -->
+    <!-- FONTS & STYLES -->
     <!-- ============================================ -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     
     <!-- ============================================ -->
-    <!-- JSON-LD SCHEMA - COMPLETE STRUCTURED DATA -->
+    <!-- JSON-LD SCHEMA -->
     <!-- ============================================ -->
     <script type="application/ld+json">
     {
@@ -211,12 +211,9 @@
     </script>
     
     <!-- ============================================ -->
-    <!-- ALL STYLES - ENHANCED WITH PREMIUM DESIGN -->
+    <!-- ALL STYLES - PREMIUM DESIGN -->
     <!-- ============================================ -->
     <style>
-        /* ============================================ */
-        /* ROOT VARIABLES - LIGHT MODE DEFAULT */
-        /* ============================================ */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -252,9 +249,6 @@
             --transition-slow: 350ms ease;
         }
         
-        /* ============================================ */
-        /* DARK MODE VARIABLES */
-        /* ============================================ */
         [data-theme="dark"] {
             --bg-primary: #0a0a0a;
             --bg-secondary: #111111;
@@ -271,9 +265,6 @@
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
         }
         
-        /* ============================================ */
-        /* GLOBAL STYLES */
-        /* ============================================ */
         * {
             margin: 0;
             padding: 0;
@@ -290,7 +281,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -307,9 +297,6 @@
             background: var(--primary-dark);
         }
         
-        /* ============================================ */
-        /* CONTAINER */
-        /* ============================================ */
         .container {
             width: 100%;
             max-width: 1400px;
@@ -323,9 +310,6 @@
             .container { padding: 0 2rem; }
         }
         
-        /* ============================================ */
-        /* HEADER */
-        /* ============================================ */
         .header {
             position: sticky;
             top: 0;
@@ -348,7 +332,6 @@
             }
         }
         
-        /* Logo */
         .logo {
             display: flex;
             align-items: center;
@@ -381,7 +364,6 @@
             .logo-badge { font-size: 0.6rem; padding: 2px 8px; }
         }
         
-        /* Desktop Navigation */
         .nav-desktop {
             display: none;
             flex: 1;
@@ -404,7 +386,6 @@
             color: var(--primary);
         }
         
-        /* Header Actions */
         .header-actions {
             display: flex;
             align-items: center;
@@ -434,7 +415,6 @@
             background: var(--bg-secondary);
         }
         
-        /* Search Container */
         .search-container {
             position: relative;
         }
@@ -458,9 +438,6 @@
             .search-input.active { width: 250px; }
         }
         
-        /* ============================================ */
-        /* BOTTOM NAVIGATION (MOBILE) */
-        /* ============================================ */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -502,9 +479,6 @@
             .bottom-nav-item i { font-size: 1.2rem; }
         }
         
-        /* ============================================ */
-        /* SIDEBAR */
-        /* ============================================ */
         .sidebar {
             position: fixed;
             top: 0;
@@ -585,7 +559,6 @@
             color: var(--primary);
         }
         
-        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
@@ -603,9 +576,6 @@
             .overlay { display: none !important; }
         }
         
-        /* ============================================ */
-        /* LAYOUT MAIN */
-        /* ============================================ */
         .layout-main {
             display: flex;
             flex-direction: column;
@@ -623,9 +593,6 @@
             }
         }
         
-        /* ============================================ */
-        /* HERO SECTION - UPDATED TAGLINE */
-        /* ============================================ */
         .hero {
             background: linear-gradient(135deg, var(--secondary-dark), var(--secondary));
             border-radius: var(--radius-2xl);
@@ -696,9 +663,6 @@
             .hero p { font-size: 0.95rem; padding: 0.4rem 1.5rem; }
         }
         
-        /* ============================================ */
-        /* TICKER - RED COLOR FIXED */
-        /* ============================================ */
         .ticker {
             background: var(--bg-secondary);
             border-radius: 60px;
@@ -734,9 +698,6 @@
             }
         }
         
-        /* ============================================ */
-        /* CATEGORY GRID - SIRF 3 ICONS WITH PREMIUM LOOK */
-        /* ============================================ */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -792,9 +753,6 @@
             .category-card span { font-size: 0.8rem; }
         }
         
-        /* ============================================ */
-        /* NEWS GRID - GLASSMORPHISM EFFECT */
-        /* ============================================ */
         .news-grid {
             display: grid;
             gap: 1rem;
@@ -891,9 +849,6 @@
             font-weight: 700;
         }
         
-        /* ============================================ */
-        /* SIDEBAR RIGHT (WIDGETS) - PREMIUM STYLING */
-        /* ============================================ */
         .sidebar-right {
             display: flex;
             flex-direction: column;
@@ -923,7 +878,6 @@
             color: var(--accent);
         }
         
-        /* Trending Items */
         .trending-item {
             padding: 0.5rem 0;
             border-bottom: 1px solid var(--border);
@@ -952,7 +906,6 @@
             color: var(--text-tertiary);
         }
         
-        /* Weather Widget */
         .weather-info {
             text-align: center;
         }
@@ -969,7 +922,6 @@
             color: var(--text-secondary);
         }
         
-        /* Newsletter Widget */
         .newsletter-input {
             display: flex;
             flex-direction: column;
@@ -1004,9 +956,6 @@
             box-shadow: var(--shadow-md);
         }
         
-        /* ============================================ */
-        /* FOOTER - PREMIUM DESIGN */
-        /* ============================================ */
         .footer {
             background: var(--bg-secondary);
             padding: 2rem 1rem;
@@ -1051,9 +1000,6 @@
             color: var(--text-tertiary);
         }
         
-        /* ============================================ */
-        /* LOADER - PREMIUM SPINNER */
-        /* ============================================ */
         .loader {
             text-align: center;
             padding: 2rem;
@@ -1071,9 +1017,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* ============================================ */
-        /* UTILITY CLASSES */
-        /* ============================================ */
         .text-center { text-align: center; }
         .hidden { display: none; }
         .mt-1 { margin-top: 0.5rem; }
@@ -1083,7 +1026,6 @@
         .mb-2 { margin-bottom: 1rem; }
         .mb-3 { margin-bottom: 1.5rem; }
         
-        /* Reading Progress Bar */
         #progressBar {
             position: fixed;
             top: 0;
@@ -1258,7 +1200,6 @@
     // ============================================
     const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-    const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
     
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
@@ -1298,24 +1239,6 @@
             localStorage.setItem('theme', 'dark');
             document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
         }
-    }
-    
-    // ============================================
-    // AI FUNCTIONS - KEEP BUT NOT USED (FOR FUTURE)
-    // ============================================
-    async function generateAISummaryWithTimeout(text, timeout = 8000) {
-        // Kept for future use - currently not called
-        return text.substring(0, 100);
-    }
-    
-    async function enhanceHeadlineWithTimeout(title, timeout = 6000) {
-        // Kept for future use - currently not called
-        return title;
-    }
-    
-    async function getAIPickWithTimeout(news, timeout = 8000) {
-        // Kept for future use - currently not called
-        return { title: news[0]?.title, reason: 'Top trending news' };
     }
     
     // ============================================
@@ -1366,7 +1289,7 @@
         if (!grid) return;
         
         if (!news || news.length === 0) {
-            grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
+            grid.innerHTML = '<div class="text-center" style="padding:2rem;">📭 No news found</div>';
             return;
         }
         
@@ -1390,7 +1313,7 @@
     }
     
     // ============================================
-    // FETCH NEWS FROM SUPABASE - NO AI (FIXED)
+    // FETCH NEWS FROM SUPABASE - DIRECT (NO AI)
     // ============================================
     async function fetchNews() {
         const grid = document.getElementById('newsGrid');
@@ -1404,25 +1327,29 @@
                 .select('*')
                 .order('published_at', { ascending: false });
             
-            if (error) throw error;
+            if (error) {
+                console.error('Supabase error:', error);
+                grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--primary);">⚠️ Database error. Please refresh.</div>';
+                return;
+            }
             
             let news = data || [];
             
             if (news.length === 0) {
-                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news from admin panel!</div>';
+                grid.innerHTML = '<div class="text-center" style="padding:2rem;">📭 No news yet. Add news from admin panel!</div>';
                 return;
             }
             
-            // 🔥 AI ENHANCEMENT COMPLETELY DISABLED
-            allNews = news.map(a => ({ ...a, ai_enhanced: false }));
+            // 🔥 NO AI - Direct display
+            allNews = news;
             
             // Update trending and ticker
             updateTrendingAndTicker(allNews);
             
-            // Display news directly — bina AI ke
+            // Display news directly
             displayNewsDirect(allNews);
             
-            // Auto share latest news (sirf latest article - ek baar)
+            // Auto share latest news (sirf ek baar)
             if (allNews.length > 0) {
                 const latest = allNews[0];
                 const sharedKey = `shared_${latest.id}`;
@@ -1554,8 +1481,12 @@
                 const category = link.getAttribute('data-category');
                 if (category) {
                     currentCategory = category;
-                    const filtered = allNews.filter(n => n.category === category);
-                    displayNewsDirect(filtered.length > 0 ? filtered : allNews);
+                    if (category === 'all') {
+                        displayNewsDirect(allNews);
+                    } else {
+                        const filtered = allNews.filter(n => n.category === category);
+                        displayNewsDirect(filtered.length > 0 ? filtered : allNews);
+                    }
                     document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
                     link.classList.add('active');
                     if (sidebar) sidebar.classList.remove('open');
@@ -1667,7 +1598,7 @@
     if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
     
     // ============================================
-    // PUSH NOTIFICATION - FIXED WITH ERROR HANDLING
+    // PUSH NOTIFICATION
     // ============================================
     async function sendPush(title, message) {
         try {
@@ -1691,7 +1622,7 @@
     }
     
     // ============================================
-    // SERVICE WORKER - FIXED WITH BETTER ERROR HANDLING
+    // SERVICE WORKER
     // ============================================
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/rasu/sw.js')
