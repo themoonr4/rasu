@@ -1233,46 +1233,6 @@
     }
     
     // ============================================
-    // AUTO SOCIAL SHARE FUNCTION
-    // ============================================
-    async function autoShareNews(article) {
-        if (!article) return;
-        
-        const url = `https://themoonr4.github.io/rasu/article.html?id=${article.id}`;
-        const text = `📰 ${article.title}\n\n🌙 THE MOON - Multitasking & Informational Website\n\nRead more: ${url}`;
-        
-        const shareUrls = {
-            whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,
-            telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(article.title)}`,
-            facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-            twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(url)}`
-        };
-        
-        Object.values(shareUrls).forEach(shareUrl => {
-            window.open(shareUrl, '_blank');
-        });
-        
-        try {
-            await sendPush('📰 New News Published!', article.title);
-        } catch(e) {
-            console.log('Push notification error:', e.message);
-        }
-    }
-    
-    // ============================================
-    // HELPER FUNCTIONS
-    // ============================================
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    // ============================================
     // DISPLAY NEWS - DIRECT (NO AI)
     // ============================================
     function displayNewsDirect(news) {
@@ -1340,16 +1300,6 @@
             // Display news directly
             displayNewsDirect(allNews);
             
-            // Auto share latest news (sirf ek baar)
-            if (allNews.length > 0) {
-                const latest = allNews[0];
-                const sharedKey = `shared_${latest.id}`;
-                if (!sessionStorage.getItem(sharedKey)) {
-                    await autoShareNews(latest);
-                    sessionStorage.setItem(sharedKey, 'true');
-                }
-            }
-            
         } catch (error) {
             console.error('Fetch error:', error);
             grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--primary);">⚠️ Error loading news. Please refresh.</div>';
@@ -1374,6 +1324,19 @@
         if (tickerContent && news.length > 0) {
             tickerContent.innerHTML = '<span class="live">🔴 LIVE</span> | ' + news.slice(0, 5).map(n => n.title).join(' | ') + ' | ';
         }
+    }
+    
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
     }
     
     // ============================================
