@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <!-- ============================================ -->
-    <!-- GOOGLE ANALYTICS 4 (GA4) - FULLY FIXED -->
+    <!-- GOOGLE ANALYTICS 4 (GA4) - FULLY FIXED WITH CORRECT ID -->
     <!-- ============================================ -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTN6BR"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTNJ6BR"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -18,8 +18,8 @@
             'wait_for_update': 500
         });
 
-        // ✅ Config with explicit page view parameters
-        gtag('config', 'G-VK9TTN6BR', {
+        // ✅ Config with explicit page view parameters - using correct ID
+        gtag('config', 'G-VK9TTNJ6BR', {
             send_page_view: true,
             page_title: document.title,
             page_location: window.location.href,
@@ -37,7 +37,7 @@
         }
         window.addEventListener('load', trackPageView);
         window.addEventListener('hashchange', trackPageView);
-        console.log('[GA4] Fixed and initialized.');
+        console.log('[GA4] Fixed and initialized with correct ID.');
     </script>
 
     <!-- ============================================ -->
