@@ -17,7 +17,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true   # ✅ Important for push
+          persist-credentials: true
+
+      # 🔍 Debug: Show current directory and files
+      - name: List files (debug)
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+          echo "Checking rasu folder:"
+          ls -la rasu/ || echo "⚠️ rasu folder not found!"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -28,20 +36,26 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests
+          pip list   # confirm
 
       - name: Run sitemap generator
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          cd rasu   # ✅ Go to rasu folder where script is
-          python generate_sitemap.py
+          set -e   # Stop on error
+          cd rasu
+          python generate_sitemap.py 2>&1   # Capture both stdout and stderr
 
       - name: Commit and push if changed
         run: |
-          cd rasu   # ✅ Go to rasu folder
+          cd rasu
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add sitemap.xml
-          git diff --staged --quiet || git commit -m "Auto-update sitemap"
-          git push
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-update sitemap"
+            git push
+          fi
