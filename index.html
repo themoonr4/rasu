@@ -1,1798 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ============================================ -->
-    <!-- GOOGLE ANALYTICS 4 (GA4) - FULLY FIXED WITH CORRECT ID -->
-    <!-- ============================================ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#8b5cf6">
+    
+    <!-- SEO Meta Tags -->
+    <title>THE MOON — India's #1 Multi-Purpose Platform | News, Jobs, Study, Freelance</title>
+    <meta name="description" content="THE MOON: All-in-one platform for breaking news, study materials, freelance jobs, government vacancies, and blogs. Free, AI-powered, and trusted by millions.">
+    <meta name="keywords" content="news platform, study materials, freelance jobs, government jobs, Indian news, job portal, study guides">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <link rel="canonical" href="https://themoonr4.github.io/rasu/">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="THE MOON — World's Best Multi-Purpose Platform">
+    <meta property="og:description" content="News, Jobs, Study, Blogs - All in one place">
+    <meta property="og:image" content="https://themoonr4.github.io/rasu/og-image.jpg">
+    <meta property="og:url" content="https://themoonr4.github.io/rasu/">
+    
+    <!-- Analytics & Tracking -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTNJ6BR"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
-        function gtag() { dataLayer.push(arguments); }
+        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
-        // ✅ Consent mode - allow analytics cookies
-        gtag('consent', 'default', {
-            'analytics_storage': 'granted',
-            'ad_storage': 'denied',
-            'wait_for_update': 500
-        });
-
-        // ✅ Config with explicit page view parameters - using correct ID
-        gtag('config', 'G-VK9TTNJ6BR', {
-            send_page_view: true,
-            page_title: document.title,
-            page_location: window.location.href,
-            page_path: window.location.pathname,
-            cookie_flags: 'SameSite=None;Secure'
-        });
-
-        // ✅ Manual page view trigger for SPA navigation
-        function trackPageView() {
-            gtag('event', 'page_view', {
-                page_title: document.title,
-                page_location: window.location.href,
-                page_path: window.location.pathname,
-            });
-        }
-        window.addEventListener('load', trackPageView);
-        window.addEventListener('hashchange', trackPageView);
-        console.log('[GA4] Fixed and initialized with correct ID.');
+        gtag('config', 'G-VK9TTNJ6BR', { send_page_view: true });
     </script>
-
-    <!-- ============================================ -->
-    <!-- POSTHOG - SESSION RECORDING & ANALYTICS - FIXED -->
-    <!-- ============================================ -->
-    <script>
-        ! function(t, e) {
-            var o, n, p, r;
-            e.__SV || (window.posthog = e, e._i = [], e.init = function(i, s, a) {
-                function g(t, e) {
-                    var o = e.split('.');
-                    2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function() {
-                        t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
-                    }
-                }
-                (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p
-                    .async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") +
-                    "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(
-                    p, r);
-                var u = e;
-                for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString =
-                        function(t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e +=
-                            " (stub)"), e }, u.people.toString = function() { return u.toString(1) +
-                        ".people (stub)" }, o =
-                    "rn sn init kn Qr wn Cn yn capture calculateEventProperties Rn register register_once register_for_session unregister unregister_for_session An getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Fn identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty On En createPersonProfile setInternalOrTestUser Ln gn $n opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing In debug Kr Pn getPageViewId captureTraceFeedback captureTraceMetric vn"
-                    .split(" "), n = 0; n < o.length; n++) g(u, o[n]);
-                e._i.push([i, s, a])
-            }, e.__SV = 1)
-        }(document, window.posthog || []);
-
-        // ✅ Proper initialization - removed invalid "defaults" parameter
-        if (!window.posthog.__loaded) {
-            posthog.init('phc_kAnmLqSV2F6EzcvaVoVZs5q3sPhPDVJWNSuyoqH2m4ft', {
-                api_host: 'https://us.i.posthog.com',
-                capture_pageview: true,
-                capture_pageleave: true,
-                autocapture: true,
-                session_recording: {
-                    enabled: true,
-                    maskAllInputs: true,
-                    maskInputFn: function(text) { return text.replace(/[0-9]/g, '*'); },
-                    maskTextSelector: '[data-mask]',
-                    blockSelector: '[data-block]',
-                },
-                persistence: 'localStorage',
-                person_profiles: 'identified_only',
-                loaded: function() { console.log('[PostHog] Fixed and initialized.'); }
-            });
-        }
-    </script>
-
-    <!-- ============================================ -->
-    <!-- ONESIGNAL PUSH NOTIFICATIONS - FIXED -->
-    <!-- ============================================ -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer>
-    </script>
-    <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function(OneSignal) {
-            try {
-                // ✅ Prevent duplicate initialization
-                if (window.OneSignal?.initialized) return;
-                await OneSignal.init({
-                    appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c",
-                    serviceWorkerOverrideForTypical: true,
-                    path: "https://themoonr4.github.io/rasu/",
-                    serviceWorkerParam: { scope: "/rasu/" },
-                    serviceWorkerPath: "/rasu/OneSignalSDKWorker.js",
-                });
-                console.log('[OneSignal] Fixed and initialized.');
-            } catch (e) {
-                console.warn('[OneSignal] Init error:', e.message);
-            }
-        });
-    </script>
-
-    <!-- ============================================ -->
-    <!-- META TAGS - COMPLETE SEO -->
-    <!-- ============================================ -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-    <!-- Primary Meta Tags -->
-    <title>THE MOON — World's Most Advanced AI-Powered News Platform</title>
-    <meta name="title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
-    <meta name="description" content="India's #1 AI-powered news platform delivering real-time, unbiased news, study materials, freelance jobs, and vacancies — powered by Gemini AI.">
-    <meta name="keywords" content="news, AI news, India news, technology news, sports news, business news, politics news, study material, freelance jobs, government jobs, vacancy, AI news platform, THE MOON">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
-    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
-    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
-    <link rel="canonical" href="https://themoonr4.github.io/rasu/">
-    <meta name="author" content="THE MOON Team">
-    <meta name="theme-color" content="#dc2626">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="THE MOON">
-    <meta name="application-name" content="THE MOON">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="msapplication-TileColor" content="#dc2626">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://themoonr4.github.io/rasu/">
-    <meta property="og:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
-    <meta property="og:description" content="India's #1 AI-powered news platform delivering real-time, unbiased news, study materials, freelance jobs, and vacancies — powered by Gemini AI.">
-    <meta property="og:image" content="https://themoonr4.github.io/rasu/og-image.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="THE MOON">
-    <meta property="og:locale" content="en_IN">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://themoonr4.github.io/rasu/">
-    <meta name="twitter:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
-    <meta name="twitter:description" content="India's #1 AI-powered news platform delivering real-time, unbiased news.">
-    <meta name="twitter:image" content="https://themoonr4.github.io/rasu/og-image.jpg">
-    <meta name="twitter:site" content="@TheMoonZ60">
-    <meta name="twitter:creator" content="@TheMoonZ60">
-
-    <!-- ============================================ -->
-    <!-- PWA MANIFEST & ICONS -->
-    <!-- ============================================ -->
+    
+    <!-- Performance: Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    
+    <!-- Premium Free Fonts (Google Fonts) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Smooth Animations (AOS Library) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="style-modern.css">
+    
+    <!-- PWA Manifest -->
     <link rel="manifest" href="/rasu/manifest.json">
     <link rel="apple-touch-icon" href="/rasu/icon-192.png">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z'/%3E%3Cpath d='M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z' fill='white'/%3E%3C/svg%3E">
-
-    <!-- ============================================ -->
-    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
-    <!-- ============================================ -->
-    <link rel="preconnect" href="https://www.google-analytics.com">
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://us.i.posthog.com">
-    <link rel="dns-prefetch" href="//www.google-analytics.com">
-    <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
-
-    <!-- ============================================ -->
-    <!-- FONTS & STYLES -->
-    <!-- ============================================ -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-    </script>
-
-    <!-- ============================================ -->
-    <!-- JSON-LD SCHEMA - COMPLETE STRUCTURED DATA -->
-    <!-- ============================================ -->
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@graph": [{
-                "@type": "NewsMediaOrganization",
-                "@id": "https://themoonr4.github.io/rasu/#organization",
-                "name": "THE MOON",
-                "url": "https://themoonr4.github.io/rasu/",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://themoonr4.github.io/rasu/icon-192.png",
-                    "width": 192,
-                    "height": 192
-                },
-                "description": "India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence.",
-                "sameAs": [
-                    "https://t.me/themoom247",
-                    "https://instagram.com/themoonr4",
-                    "https://facebook.com/share/1GwHQhgx4g/",
-                    "https://x.com/TheMoonZ60",
-                    "https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32"
-                ],
-                "foundingDate": "2026"
-            }, {
-                "@type": "WebSite",
-                "@id": "https://themoonr4.github.io/rasu/#website",
-                "url": "https://themoonr4.github.io/rasu/",
-                "name": "THE MOON",
-                "description": "India's Most Advanced AI-Powered News Platform",
-                "publisher": {
-                    "@id": "https://themoonr4.github.io/rasu/#organization"
-                },
-                "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": "https://themoonr4.github.io/rasu/?q={search_term_string}",
-                    "query-input": "required name=search_term_string"
-                }
-            }, {
-                "@type": "BreadcrumbList",
-                "@id": "https://themoonr4.github.io/rasu/#breadcrumb",
-                "itemListElement": [{
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": "https://themoonr4.github.io/rasu/"
-                }, {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "News",
-                    "item": "https://themoonr4.github.io/rasu/"
-                }]
-            }]
-        }
-    </script>
-
-    <!-- FAQ Schema -->
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [{
-                "@type": "Question",
-                "name": "What is THE MOON?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "THE MOON is India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence."
-                }
-            }, {
-                "@type": "Question",
-                "name": "How does THE MOON use AI?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "THE MOON uses Google's Gemini AI to generate smart summaries, enhance headlines, and curate the most important news of the day."
-                }
-            }, {
-                "@type": "Question",
-                "name": "Is THE MOON free?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, THE MOON is completely free to use. We believe in making quality news accessible to everyone."
-                }
-            }, {
-                "@type": "Question",
-                "name": "How often is news updated?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "News is updated in real-time. Breaking news is delivered instantly through push notifications."
-                }
-            }]
-        }
-    </script>
-
-    <!-- ============================================ -->
-    <!-- ALL STYLES (KEEP EXISTING - JUST ENHANCED) -->
-    <!-- ============================================ -->
-    <style>
-        /* ============================================ */
-        /* ROOT VARIABLES - LIGHT MODE DEFAULT */
-        /* ============================================ */
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-card: #ffffff;
-            --bg-tertiary: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-tertiary: #94a3b8;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --border-light: #e2e8f0;
-            --primary: #dc2626;
-            --primary-dark: #b91c1c;
-            --primary-light: #ef4444;
-            --secondary: #2563eb;
-            --secondary-dark: #1d4ed8;
-            --secondary-light: #3b82f6;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --radius-2xl: 1.5rem;
-            --transition-fast: 150ms ease;
-            --transition-normal: 250ms ease;
-            --transition-slow: 350ms ease;
-        }
-
-        /* ============================================ */
-        /* DARK MODE VARIABLES */
-        /* ============================================ */
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: #1a1a1a;
-            --bg-tertiary: #222222;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-tertiary: #64748b;
-            --text-muted: #94a3b8;
-            --border: #2a2a2a;
-            --border-light: #333333;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-        }
-
-        /* ============================================ */
-        /* GLOBAL STYLES */
-        /* ============================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
-        }
-
-        /* ============================================ */
-        /* CONTAINER */
-        /* ============================================ */
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        @media (min-width: 768px) {
-            .container { padding: 0 1.5rem; }
-        }
-        @media (min-width: 1024px) {
-            .container { padding: 0 2rem; }
-        }
-
-        /* ============================================ */
-        /* HEADER */
-        /* ============================================ */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(var(--bg-primary), 0.9);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-        }
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 60px;
-            gap: 1rem;
-        }
-        @media (min-width: 768px) {
-            .header-content {
-                height: 70px;
-                gap: 2rem;
-            }
-        }
-
-        /* Logo */
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 1.3rem;
-            font-weight: 800;
-            text-decoration: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            white-space: nowrap;
-        }
-        @media (min-width: 768px) {
-            .logo { font-size: 1.5rem; gap: 8px; }
-        }
-        .logo-icon { font-size: 1.4rem; }
-        @media (min-width: 768px) { .logo-icon { font-size: 1.6rem; } }
-        .logo-text { letter-spacing: -0.5px; }
-        .logo-badge {
-            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
-            font-size: 0.55rem;
-            padding: 2px 6px;
-            border-radius: 20px;
-            color: white;
-            margin-left: 4px;
-            font-weight: 600;
-        }
-        @media (min-width: 768px) {
-            .logo-badge { font-size: 0.6rem; padding: 2px 8px; }
-        }
-
-        /* Desktop Navigation */
-        .nav-desktop {
-            display: none;
-            flex: 1;
-            justify-content: center;
-            gap: 1.5rem;
-        }
-        @media (min-width: 768px) {
-            .nav-desktop { display: flex; }
-        }
-        .nav-desktop a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            transition: var(--transition-fast);
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .nav-desktop a:hover,
-        .nav-desktop a.active {
-            color: var(--primary);
-        }
-
-        /* Header Actions */
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .header-actions button {
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-            cursor: pointer;
-            color: var(--text-primary);
-            padding: 0.5rem;
-            min-width: 36px;
-            min-height: 36px;
-            border-radius: var(--radius-md);
-            transition: var(--transition-fast);
-        }
-        @media (min-width: 768px) {
-            .header-actions button {
-                font-size: 1.2rem;
-                padding: 0.5rem;
-                min-width: 40px;
-                min-height: 40px;
-            }
-        }
-        .header-actions button:hover {
-            background: var(--bg-secondary);
-        }
-
-        /* Search Container */
-        .search-container {
-            position: relative;
-        }
-        .search-input {
-            width: 0;
-            opacity: 0;
-            transition: all var(--transition-normal);
-            border: none;
-            background: var(--bg-secondary);
-            padding: 0.5rem;
-            border-radius: var(--radius-md);
-            font-size: 0.9rem;
-        }
-        .search-input.active {
-            width: 180px;
-            opacity: 1;
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border);
-        }
-        @media (min-width: 768px) {
-            .search-input.active { width: 250px; }
-        }
-
-        /* ============================================ */
-        /* BOTTOM NAVIGATION (MOBILE) */
-        /* ============================================ */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.5rem 1rem;
-            z-index: 99;
-            backdrop-filter: blur(10px);
-        }
-        @media (min-width: 768px) {
-            .bottom-nav { display: none; }
-        }
-        .bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.65rem;
-            min-width: 44px;
-            justify-content: center;
-            cursor: pointer;
-            background: none;
-            border: none;
-            transition: var(--transition-fast);
-        }
-        .bottom-nav-item.active {
-            color: var(--primary);
-        }
-        .bottom-nav-item i {
-            font-size: 1.1rem;
-        }
-        @media (min-width: 768px) {
-            .bottom-nav-item i { font-size: 1.2rem; }
-        }
-
-        /* ============================================ */
-        /* SIDEBAR */
-        /* ============================================ */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
-            background: var(--bg-primary);
-            z-index: 200;
-            transition: left var(--transition-normal);
-            box-shadow: var(--shadow-lg);
-            overflow-y: auto;
-        }
-        .sidebar.open {
-            left: 0;
-        }
-        @media (min-width: 768px) {
-            .sidebar {
-                position: sticky;
-                top: 70px;
-                left: auto;
-                width: auto;
-                height: auto;
-                box-shadow: none;
-                background: transparent;
-                overflow-y: visible;
-            }
-        }
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-        @media (min-width: 768px) {
-            .sidebar-header { display: none; }
-        }
-        .sidebar-nav {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        @media (min-width: 768px) {
-            .sidebar-nav {
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                padding: 0;
-            }
-        }
-        .sidebar-nav a,
-        .sidebar-nav button {
-            text-decoration: none;
-            color: var(--text-secondary);
-            padding: 0.6rem 1rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-size: 0.9rem;
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: none;
-            transition: var(--transition-fast);
-        }
-        @media (min-width: 768px) {
-            .sidebar-nav a,
-            .sidebar-nav button {
-                width: auto;
-                padding: 0.5rem 1rem;
-            }
-        }
-        .sidebar-nav a:hover,
-        .sidebar-nav button:hover,
-        .sidebar-nav a.active,
-        .sidebar-nav button.active {
-            background: var(--bg-secondary);
-            color: var(--primary);
-        }
-
-        /* Overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 199;
-            display: none;
-        }
-        .overlay.active {
-            display: block;
-        }
-        @media (min-width: 768px) {
-            .overlay { display: none !important; }
-        }
-
-        /* ============================================ */
-        /* LAYOUT MAIN */
-        /* ============================================ */
-        .layout-main {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            padding-bottom: 70px;
-        }
-        @media (min-width: 768px) {
-            .layout-main { padding-bottom: 0; }
-        }
-        @media (min-width: 1024px) {
-            .layout-main {
-                display: grid;
-                grid-template-columns: 1fr 340px;
-                gap: 2rem;
-            }
-        }
-
-        /* ============================================ */
-        /* HERO SECTION */
-        /* ============================================ */
-        .hero {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: var(--radius-2xl);
-            padding: 1.5rem;
-            color: white;
-            text-align: center;
-            margin-top: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-        @media (min-width: 768px) {
-            .hero {
-                padding: 2rem;
-                text-align: left;
-            }
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        @media (min-width: 768px) {
-            .hero::before {
-                width: 300px;
-                height: 300px;
-            }
-        }
-        .hero h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        @media (min-width: 768px) {
-            .hero h1 { font-size: 1.8rem; }
-        }
-        .hero p {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-        @media (min-width: 768px) {
-            .hero p { font-size: 0.9rem; }
-        }
-
-        /* ============================================ */
-        /* TICKER */
-        /* ============================================ */
-        .ticker {
-            background: var(--bg-secondary);
-            border-radius: 60px;
-            padding: 0.5rem 1rem;
-            overflow: hidden;
-            white-space: nowrap;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border);
-        }
-        .ticker-content {
-            display: inline-block;
-            animation: ticker-scroll 25s linear infinite;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        @keyframes ticker-scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .ticker-content {
-                animation: none;
-                white-space: normal;
-            }
-        }
-
-        /* ============================================ */
-        /* CATEGORY GRID - SIRF 3 ICONS */
-        /* ============================================ */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-        @media (min-width: 640px) {
-            .category-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        .category-card {
-            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
-            border-radius: var(--radius-lg);
-            padding: 0.75rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
-        .category-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-        .category-card i {
-            font-size: 1.3rem;
-            margin-bottom: 0.25rem;
-            display: block;
-        }
-        @media (min-width: 768px) {
-            .category-card i { font-size: 1.5rem; }
-        }
-        .category-card span {
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        @media (min-width: 768px) {
-            .category-card span { font-size: 0.75rem; }
-        }
-
-        /* ============================================ */
-        /* NEWS GRID */
-        /* ============================================ */
-        .news-grid {
-            display: grid;
-            gap: 1rem;
-        }
-        @media (min-width: 640px) {
-            .news-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        .news-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-        .news-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
-        }
-        @media (min-width: 768px) {
-            .news-card {
-                display: flex;
-                flex-direction: row;
-            }
-        }
-        .news-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-        @media (min-width: 768px) {
-            .news-image {
-                width: 130px;
-                height: 130px;
-            }
-        }
-        .news-content {
-            padding: 0.75rem;
-            flex: 1;
-        }
-        .news-category {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            font-size: 0.6rem;
-            padding: 2px 8px;
-            border-radius: 20px;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        .news-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            line-height: 1.4;
-        }
-        @media (min-width: 768px) {
-            .news-title { font-size: 0.95rem; }
-        }
-        .news-excerpt {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.5;
-        }
-        .news-meta {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 0.5rem;
-            font-size: 0.6rem;
-            color: var(--text-tertiary);
-        }
-
-        /* ============================================ */
-        /* SIDEBAR RIGHT (WIDGETS) */
-        /* ============================================ */
-        .sidebar-right {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .widget {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 1rem;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-        .widget h3 {
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
-        }
-
-        /* Trending Items */
-        .trending-item {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition-fast);
-        }
-        .trending-item:last-child {
-            border-bottom: none;
-        }
-        .trending-item:hover {
-            padding-left: 0.3rem;
-            color: var(--primary);
-        }
-        .trending-rank {
-            font-size: 0.7rem;
-            color: var(--primary);
-            font-weight: bold;
-        }
-        .trending-title {
-            font-size: 0.85rem;
-            margin: 0.25rem 0;
-            font-weight: 500;
-        }
-        .trending-views {
-            font-size: 0.6rem;
-            color: var(--text-tertiary);
-        }
-
-        /* Weather Widget */
-        .weather-info {
-            text-align: center;
-        }
-        .weather-temp {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        @media (min-width: 768px) {
-            .weather-temp { font-size: 2rem; }
-        }
-        .weather-location {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        /* Newsletter Widget */
-        .newsletter-input {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .newsletter-input input {
-            flex: 1;
-            padding: 0.6rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 0.85rem;
-        }
-        .newsletter-input button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.6rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition-fast);
-        }
-        .newsletter-input button:hover {
-            background: var(--primary-dark);
-        }
-
-        /* ============================================ */
-        /* FOOTER */
-        /* ============================================ */
-        .footer {
-            background: var(--bg-secondary);
-            padding: 2rem 1rem;
-            margin-top: 2rem;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .footer-links a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            transition: var(--transition-fast);
-        }
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-        .footer-social {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .footer-social a {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            transition: var(--transition-fast);
-        }
-        .footer-social a:hover {
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-        .copyright {
-            font-size: 0.7rem;
-            color: var(--text-tertiary);
-        }
-
-        /* ============================================ */
-        /* LOADER */
-        /* ============================================ */
-        .loader {
-            text-align: center;
-            padding: 2rem;
-        }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ============================================ */
-        /* UTILITY CLASSES */
-        /* ============================================ */
-        .text-center { text-align: center; }
-        .hidden { display: none; }
-        .mt-1 { margin-top: 0.5rem; }
-        .mt-2 { margin-top: 1rem; }
-        .mt-3 { margin-top: 1.5rem; }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-
-        /* Reading Progress Bar */
-        #progressBar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            width: 0%;
-            z-index: 999;
-            transition: width 0.2s ease;
-        }
-    </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
-
-    <!-- ============================================ -->
-    <!-- READING PROGRESS BAR -->
-    <!-- ============================================ -->
-    <div id="progressBar"></div>
-
-    <!-- ============================================ -->
+    <!-- Smooth Scroll & Modern Theme -->
+    <script>
+        // Auto detect theme preference
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+    
     <!-- HEADER -->
-    <!-- ============================================ -->
-    <header class="header">
-        <div class="container">
+    <header class="header" id="header">
+        <div class="container-fluid">
             <div class="header-content">
-                <button class="menu-toggle" id="menuToggle" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-primary); min-width:44px; min-height:44px;">
-                    <i class="fas fa-bars"></i>
-                </button>
-
-                <a href="/rasu/" class="logo">
-                    <span class="logo-icon">🌙</span>
-                    <span class="logo-text">THE MOON</span>
-                    <span class="logo-badge">PREMIUM</span>
+                <!-- Logo -->
+                <a href="/rasu/" class="logo" data-aos="fade-right" data-aos-duration="600">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 2c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"></path>
+                    </svg>
+                    <span class="logo-text">MOON</span>
                 </a>
-
-                <div class="nav-desktop">
-                    <a href="#" data-category="all" class="active">All</a>
-                    <a href="#" data-category="Technology">Tech</a>
-                    <a href="#" data-category="Sports">Sports</a>
-                    <a href="#" data-category="Business">Business</a>
-                    <a href="#" data-category="Politics">Politics</a>
-                    <a href="#" data-category="Study">Study</a>
-                </div>
-
+                
+                <!-- Desktop Navigation -->
+                <nav class="nav-desktop">
+                    <a href="#" data-cat="news" class="nav-link active"><i class="fas fa-newspaper"></i> News</a>
+                    <a href="#" data-cat="study" class="nav-link"><i class="fas fa-book"></i> Study</a>
+                    <a href="#" data-cat="jobs" class="nav-link"><i class="fas fa-briefcase"></i> Jobs</a>
+                    <a href="#" data-cat="freelance" class="nav-link"><i class="fas fa-laptop"></i> Freelance</a>
+                    <a href="#" data-cat="blogs" class="nav-link"><i class="fas fa-pen-fancy"></i> Blogs</a>
+                </nav>
+                
+                <!-- Header Actions -->
                 <div class="header-actions">
                     <div class="search-container">
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search news...">
-                        <button id="searchBtn"><i class="fas fa-search"></i></button>
+                        <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+                        <div id="searchResults" class="search-results"></div>
                     </div>
-                    <button id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button id="themeToggle" class="btn-icon" title="Toggle theme"><i class="fas fa-moon"></i></button>
+                    <button id="notifyBtn" class="btn-icon" title="Notifications"><i class="fas fa-bell"></i></button>
+                    <button id="menuBtn" class="btn-icon menu-btn"><i class="fas fa-bars"></i></button>
                 </div>
             </div>
         </div>
     </header>
-
-    <!-- ============================================ -->
-    <!-- SIDEBAR -->
-    <!-- ============================================ -->
-    <div class="sidebar" id="sidebar">
+    
+    <!-- Mobile Sidebar -->
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <span class="logo">🌙 THE MOON</span>
-            <button id="closeSidebar" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+            <h3>Menu</h3>
+            <button id="closeSidebar" class="btn-close"><i class="fas fa-times"></i></button>
         </div>
-        <div class="sidebar-nav">
-            <a href="#" data-category="all">🏠 Home</a>
-            <a href="#" data-category="Technology">💻 Technology</a>
-            <a href="#" data-category="Sports">🏏 Sports</a>
-            <a href="#" data-category="Business">📊 Business</a>
-            <a href="#" data-category="Politics">🏛️ Politics</a>
-            <a href="#" data-category="Study">📚 Study</a>
-            <button id="bookmarkBtn">🔖 Bookmarks</button>
-            <button id="settingsBtn">⚙️ Settings</button>
-        </div>
-    </div>
-
+        <nav class="sidebar-nav">
+            <a href="#" data-cat="news"><i class="fas fa-newspaper"></i> News</a>
+            <a href="#" data-cat="study"><i class="fas fa-book"></i> Study</a>
+            <a href="#" data-cat="jobs"><i class="fas fa-briefcase"></i> Jobs</a>
+            <a href="#" data-cat="freelance"><i class="fas fa-laptop"></i> Freelance</a>
+            <a href="#" data-cat="blogs"><i class="fas fa-pen-fancy"></i> Blogs</a>
+            <hr>
+            <a href="#pricing"><i class="fas fa-crown"></i> Premium</a>
+            <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+        </nav>
+    </aside>
+    
     <div class="overlay" id="overlay"></div>
-
-    <!-- ============================================ -->
-    <!-- BOTTOM NAVIGATION (MOBILE) -->
-    <!-- ============================================ -->
-    <div class="bottom-nav">
-        <button class="bottom-nav-item active" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
-        <button class="bottom-nav-item" id="affiliateNavBtn"><i class="fas fa-tags"></i><span>Affiliate</span></button>
-        <button class="bottom-nav-item" id="earningNavBtn"><i class="fas fa-coins"></i><span>Earning</span></button>
-        <button class="bottom-nav-item" id="workspaceNavBtn"><i class="fas fa-briefcase"></i><span>Workspace</span></button>
-        <button class="bottom-nav-item" id="languageNavBtn"><i class="fas fa-language"></i><span>Language</span></button>
-    </div>
-
-    <!-- ============================================ -->
+    
     <!-- MAIN CONTENT -->
-    <!-- ============================================ -->
-    <main class="container">
-        <div class="layout-main">
-            <!-- Left Column -->
-            <div>
-                <div class="hero">
-                    <h1>Welcome to THE MOON 🌙</h1>
-                    <p>India's Most Advanced AI-Powered News Platform | Real-Time | Unbiased</p>
-                </div>
-
-                <div class="ticker" id="ticker">
-                    <div class="ticker-content" id="tickerContent">
-                        🔴 LIVE | Breaking news will appear here
+    <main class="main-content">
+        <div class="container">
+            <!-- HERO SECTION -->
+            <section class="hero" data-aos="fade-up" data-aos-duration="800">
+                <div class="hero-content">
+                    <h1 class="hero-title">Your All-in-One Information Hub</h1>
+                    <p class="hero-subtitle">Breaking news, study materials, jobs, freelance opportunities — everything you need in one elegant platform</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-lg" onclick="scrollToSection('news')">Explore Now</button>
+                        <button class="btn btn-secondary btn-lg" onclick="document.getElementById('pricingModal').style.display='flex'"><i class="fas fa-crown"></i> Go Premium</button>
                     </div>
                 </div>
-
-                <div class="category-grid" id="categoryGrid"></div>
-
-                <div class="news-grid" id="newsGrid">
-                    <div class="loader"><div class="spinner"></div></div>
+                <div class="hero-visual" data-aos="fade-left" data-aos-delay="200">
+                    <div class="gradient-blob"></div>
+                </div>
+            </section>
+            
+            <!-- TICKER -->
+            <div class="ticker" data-aos="zoom-in" data-aos-duration="600">
+                <div class="ticker-badge"><i class="fas fa-circle"></i> LIVE</div>
+                <div class="ticker-content" id="tickerContent">
+                    Loading latest updates...
                 </div>
             </div>
-
-            <!-- Right Column (Sidebar) -->
-            <div class="sidebar-right">
-                <div class="widget">
-                    <h3><i class="fas fa-fire" style="color: var(--brand-red);"></i> Trending Now</h3>
-                    <div id="trendingList"></div>
+            
+            <!-- QUICK ACCESS CARDS -->
+            <section class="quick-access" data-aos="fade-up" data-aos-duration="800">
+                <div class="qa-card" onclick="filterByCategory('news')" data-aos="fade-up" data-aos-delay="0">
+                    <div class="qa-icon"><i class="fas fa-newspaper"></i></div>
+                    <h3>Breaking News</h3>
+                    <p>Real-time updates</p>
                 </div>
-
-                <div class="widget">
-                    <h3><i class="fas fa-robot"></i> AI Curated</h3>
-                    <div id="aiPicks"></div>
+                <div class="qa-card" onclick="filterByCategory('study')" data-aos="fade-up" data-aos-delay="100">
+                    <div class="qa-icon"><i class="fas fa-book"></i></div>
+                    <h3>Study Materials</h3>
+                    <p>Free resources</p>
                 </div>
-                <div class="widget">
-                    <h3><i class="fas fa-cloud-sun"></i> Weather</h3>
-                    <div class="weather-info">
-                        <div class="weather-temp" id="weatherTemp">--°C</div>
-                        <div class="weather-location" id="weatherLocation">Mumbai, IN</div>
+                <div class="qa-card" onclick="filterByCategory('jobs')" data-aos="fade-up" data-aos-delay="200">
+                    <div class="qa-icon"><i class="fas fa-briefcase"></i></div>
+                    <h3>Job Portal</h3>
+                    <p>Latest vacancies</p>
+                </div>
+                <div class="qa-card" onclick="filterByCategory('freelance')" data-aos="fade-up" data-aos-delay="300">
+                    <div class="qa-icon"><i class="fas fa-laptop"></i></div>
+                    <h3>Freelance</h3>
+                    <p>Project opportunities</p>
+                </div>
+            </section>
+            
+            <!-- MAIN LAYOUT -->
+            <div class="layout-grid">
+                <!-- NEWS FEED -->
+                <section class="news-section">
+                    <div class="section-header">
+                        <h2>Latest News</h2>
+                        <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
                     </div>
-                </div>
-
-                <div class="widget">
-                    <h3><i class="fas fa-envelope"></i> Newsletter</h3>
-                    <div class="newsletter-input">
-                        <input type="email" id="newsletterEmail" placeholder="Your email address">
-                        <button id="subscribeBtn">Subscribe</button>
+                    <div class="news-grid" id="newsGrid">
+                        <div class="loader-container">
+                            <div class="spinner"></div>
+                        </div>
                     </div>
-                </div>
+                </section>
+                
+                <!-- SIDEBAR WIDGETS -->
+                <aside class="sidebar-widgets">
+                    <!-- Trending Widget -->
+                    <div class="widget" data-aos="fade-left" data-aos-duration="800">
+                        <div class="widget-header">
+                            <h3><i class="fas fa-fire"></i> Trending</h3>
+                        </div>
+                        <div class="trending-list" id="trendingList"></div>
+                    </div>
+                    
+                    <!-- Newsletter Widget -->
+                    <div class="widget newsletter-widget" data-aos="fade-left" data-aos-delay="100">
+                        <h3><i class="fas fa-envelope"></i> Newsletter</h3>
+                        <p>Get curated news daily</p>
+                        <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+                            <input type="email" id="newsletterEmail" placeholder="Your email" required>
+                            <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+                        </form>
+                        <div id="newsletterMsg"></div>
+                    </div>
+                    
+                    <!-- Premium Widget -->
+                    <div class="widget premium-widget" data-aos="fade-left" data-aos-delay="200">
+                        <h3><i class="fas fa-crown"></i> Premium+</h3>
+                        <p>Ad-free, exclusive content</p>
+                        <button class="btn btn-gradient btn-sm" onclick="document.getElementById('pricingModal').style.display='flex'">Upgrade</button>
+                    </div>
+                </aside>
             </div>
         </div>
     </main>
-
-    <!-- ============================================ -->
+    
+    <!-- PRICING MODAL -->
+    <div id="pricingModal" class="modal">
+        <div class="modal-content" data-aos="zoom-in">
+            <button class="modal-close" onclick="document.getElementById('pricingModal').style.display='none'"><i class="fas fa-times"></i></button>
+            <h2>Premium Plans</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free Plan</h3>
+                    <div class="price">₹0<span>/month</span></div>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> All features limited</li>
+                        <li><i class="fas fa-check"></i> With ads</li>
+                        <li><i class="fas fa-times"></i> Priority support</li>
+                    </ul>
+                    <button class="btn btn-outline">Current Plan</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="badge">Popular</div>
+                    <h3>Premium</h3>
+                    <div class="price">₹99<span>/month</span></div>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> Unlimited access</li>
+                        <li><i class="fas fa-check"></i> Ad-free experience</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Exclusive content</li>
+                    </ul>
+                    <button class="btn btn-primary">Subscribe Now</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Premium+</h3>
+                    <div class="price">₹299<span>/month</span></div>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> Everything in Premium</li>
+                        <li><i class="fas fa-check"></i> Expert articles</li>
+                        <li><i class="fas fa-check"></i> Early job alerts</li>
+                        <li><i class="fas fa-check"></i> 1-on-1 support</li>
+                    </ul>
+                    <button class="btn btn-gradient">Subscribe Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- BOTTOM NAVIGATION (Mobile) -->
+    <nav class="bottom-nav">
+        <a href="#" class="bottom-nav-item active" data-cat="news"><i class="fas fa-newspaper"></i><span>News</span></a>
+        <a href="#" class="bottom-nav-item" data-cat="study"><i class="fas fa-book"></i><span>Study</span></a>
+        <a href="#" class="bottom-nav-item" data-cat="jobs"><i class="fas fa-briefcase"></i><span>Jobs</span></a>
+        <a href="#" class="bottom-nav-item" data-cat="freelance"><i class="fas fa-laptop"></i><span>Freelance</span></a>
+        <a href="#" class="bottom-nav-item" onclick="document.getElementById('pricingModal').style.display='flex'; return false"><i class="fas fa-crown"></i><span>Premium</span></a>
+    </nav>
+    
     <!-- FOOTER -->
-    <!-- ============================================ -->
     <footer class="footer">
-        <div class="footer-links">
-            <a href="/rasu/about.html">About</a>
-            <a href="/rasu/privacy.html">Privacy</a>
-            <a href="/rasu/contact.html">Contact</a>
-            <a href="/rasu/admin.html">Advertise</a>
-        </div>
-        <div class="footer-social">
-            <a href="https://t.me/themoom247" target="_blank"><i class="fab fa-telegram"></i></a>
-            <a href="https://instagram.com/themoonr4" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://facebook.com/share/1GwHQhgx4g/" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://x.com/TheMoonZ60" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        </div>
-        <div class="copyright">
-            <p>© 2026 THE MOON — Premium News Platform | Made with ❤️ in India</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>THE MOON</h4>
+                    <p>Your trusted source for news, jobs, and learning.</p>
+                    <div class="social-links">
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#">News</a></li>
+                        <li><a href="#">Study</a></li>
+                        <li><a href="#">Jobs</a></li>
+                        <li><a href="#">Freelance</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Report Bug</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 THE MOON. All rights reserved. Made with <i class="fas fa-heart"></i> in India.</p>
+            </div>
         </div>
     </footer>
-
-    <!-- ============================================ -->
-    <!-- JAVASCRIPT -->
-    <!-- ============================================ -->
-    <script>
-        // ============================================
-        // SUPABASE CONFIGURATION
-        // ============================================
-        const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-        const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
-
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // ============================================
-        // GLOBAL VARIABLES
-        // ============================================
-        let currentCategory = 'all';
-        let allNews = [];
-        let isDataLoaded = false;
-
-        // ============================================
-        // READING PROGRESS BAR
-        // ============================================
-        window.addEventListener('scroll', () => {
-            const scroll = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-            document.getElementById('progressBar').style.width = scroll + '%';
-        });
-
-        // ============================================
-        // THEME FUNCTIONS
-        // ============================================
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        }
-
-        function toggleTheme() {
-            if (document.body.hasAttribute('data-theme')) {
-                document.body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-            } else {
-                document.body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        }
-
-        // ============================================
-        // AI FUNCTIONS WITH TIMEOUT
-        // ============================================
-        async function generateAISummaryWithTimeout(text, timeout = 8000) {
-            if (!text || text.length < 50) return text.substring(0, 100);
-
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        signal: controller.signal,
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: `Summarize this news in 2 short sentences in simple Hindi/English mix (max 100 words): ${text.substring(0, 1500)}`
-                                }]
-                            }]
-                        })
-                    });
-
-                clearTimeout(timeoutId);
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || text.substring(0, 100);
-            } catch (error) {
-                return text.substring(0, 100);
-            }
-        }
-
-        async function enhanceHeadlineWithTimeout(title, timeout = 6000) {
-            if (!title) return title;
-
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        signal: controller.signal,
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: `Make this news headline more attractive, clickable, and engaging (keep under 70 characters, add emoji if needed): ${title}`
-                                }]
-                            }]
-                        })
-                    });
-
-                clearTimeout(timeoutId);
-                const data = await response.json();
-                const enhanced = data.candidates?.[0]?.content?.parts?.[0]?.text || title;
-                return enhanced.length > 80 ? title : enhanced;
-            } catch (error) {
-                return title;
-            }
-        }
-
-        async function getAIPickWithTimeout(news, timeout = 8000) {
-            if (!news || news.length === 0) return null;
-
-            try {
-                const headlines = news.slice(0, 10).map((n, i) => `${i+1}. ${n.title}`).join('\n');
-
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        signal: controller.signal,
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: `From these headlines, pick the ONE most important news for Indian readers today. Return in format: "TITLE|REASON"\n\n${headlines}`
-                                }]
-                            }]
-                        })
-                    });
-
-                clearTimeout(timeoutId);
-                const data = await response.json();
-                const result = data.candidates?.[0]?.content?.parts?.[0]?.text || `${news[0].title}|Most important news of the day`;
-                const [title, reason] = result.split('|');
-                return { title: title || news[0].title, reason: reason || 'Must read for today' };
-            } catch (error) {
-                return { title: news[0]?.title, reason: 'Top trending news' };
-            }
-        }
-
-        // ============================================
-        // HELPER FUNCTIONS
-        // ============================================
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-
-        // ============================================
-        // DISPLAY NEWS (FALLBACK - WITHOUT AI)
-        // ============================================
-        function displayNewsFallback(news) {
-            const grid = document.getElementById('newsGrid');
-            if (!grid) return;
-
-            if (!news || news.length === 0) {
-                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
-                return;
-            }
-
-            grid.innerHTML = news.map(article => {
-                const imgUrl = article.image_url || `https://picsum.photos/400/200?random=${article.id}`;
-                return `
-                    <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-                        <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/400/200?random=1'">
-                        <div class="news-content">
-                            <span class="news-category">${article.category || 'News'}</span>
-                            <h3 class="news-title">${escapeHtml(article.title)}</h3>
-                            <p class="news-excerpt">${escapeHtml(article.summary || (article.content ? article.content.substring(0, 100) : ''))}...</p>
-                            <div class="news-meta">
-                                <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
-                                <span>👁️ ${article.views || 0}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // DISPLAY NEWS (WITH AI)
-        // ============================================
-        function displayNewsWithAI(newsToShow) {
-            const grid = document.getElementById('newsGrid');
-            if (!grid) return;
-
-            let filtered = newsToShow || allNews;
-
-            if (currentCategory !== 'all') {
-                filtered = filtered.filter(n => n.category === currentCategory);
-            }
-
-            if (!filtered || filtered.length === 0) {
-                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
-                return;
-            }
-
-            grid.innerHTML = filtered.map(article => {
-                const imgUrl = article.image_url || `https://picsum.photos/400/200?random=${article.id}`;
-                return `
-                    <div class="news-card" onclick="location.href='/rasu/article.html?id=${article.id}'">
-                        <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" onerror="this.src='https://picsum.photos/400/200?random=1'">
-                        <div class="news-content">
-                            <span class="news-category">${article.category || 'News'}</span>
-                            <h3 class="news-title">${escapeHtml(article.ai_title || article.title)}</h3>
-                            <p class="news-excerpt">${escapeHtml(article.ai_summary || article.summary || (article.content ? article.content.substring(0, 100) : ''))}...</p>
-                            <div class="news-meta">
-                                <span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>
-                                <span>👁️ ${article.views || 0}</span>
-                                ${article.ai_enhanced ? '<span>🤖 AI Enhanced</span>' : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // FETCH NEWS FROM SUPABASE WITH TIMEOUT
-        // ============================================
-        async function fetchNews() {
-            const grid = document.getElementById('newsGrid');
-            if (!grid) return;
-
-            grid.innerHTML = '<div class="loader"><div class="spinner"></div><p style="margin-top:10px;">🤖 AI is analyzing news...</p></div>';
-
-            try {
-                const { data, error } = await supabaseClient
-                    .from('news')
-                    .select('*')
-                    .order('published_at', { ascending: false });
-
-                if (error) throw error;
-
-                let news = data || [];
-
-                if (news.length === 0) {
-                    grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news from admin panel!</div>';
-                    return;
-                }
-
-                // 🔥 Try AI enhancement with timeout - agar fail ho to fallback
-                try {
-                    // Sirf 3 articles enhance karo (baaki direct display)
-                    const newsToEnhance = news.slice(0, 3);
-                    const enhancedNews = await Promise.all(newsToEnhance.map(async (article) => {
-                        const [summary, enhancedTitle] = await Promise.all([
-                            generateAISummaryWithTimeout(article.content || article.summary || '', 8000),
-                            enhanceHeadlineWithTimeout(article.title, 6000)
-                        ]);
-                        return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
-                    }));
-
-                    // Baaki news ko bina AI ke display karo
-                    const remainingNews = news.slice(3).map(a => ({ ...a, ai_enhanced: false }));
-                    allNews = [...enhancedNews, ...remainingNews];
-
-                    // AI Pick try karo - agar fail ho to ignore
-                    try {
-                        const aiPick = await getAIPickWithTimeout(allNews, 5000);
-                        const aiDiv = document.getElementById('aiPicks');
-                        if (aiDiv && aiPick) {
-                            aiDiv.innerHTML =
-                                `<div class="trending-item" style="border-bottom:1px solid var(--border);padding:0.75rem 0;">
-                            <div style="font-size:0.7rem;color:var(--brand-red);margin-bottom:0.25rem;">🤖 AI PICK OF THE DAY</div>
-                            <div class="trending-title" style="font-weight:bold;">${escapeHtml(aiPick.title)}</div>
-                            <div style="font-size:0.6rem;color:var(--text-tertiary);margin-top:0.25rem;">💡 ${escapeHtml(aiPick.reason)}</div>
-                        </div>`;
-                        }
-                    } catch (aiPickError) {
-                        // AI Pick fail ho to kuch mat dikhao
-                    }
-
-                } catch (aiError) {
-                    // 🔥 AI enhancement fail ho to direct fallback display
-                    console.log('AI enhancement failed, using fallback:', aiError.message);
-                    allNews = news.map(a => ({ ...a, ai_enhanced: false }));
-                    displayNewsFallback(news);
-                    // Trending aur ticker update karo
-                    updateTrendingAndTicker(news);
-                    return;
-                }
-
-                // Trending aur ticker update karo
-                updateTrendingAndTicker(allNews);
-
-                // Display news with AI
-                displayNewsWithAI(allNews);
-
-            } catch (error) {
-                console.error('Fetch error:', error);
-                grid.innerHTML = '<div class="text-center" style="padding:2rem;color:var(--brand-red);">⚠️ Error loading news. Please refresh.</div>';
-            }
-        }
-
-        // ============================================
-        // UPDATE TRENDING AND TICKER
-        // ============================================
-        function updateTrendingAndTicker(news) {
-            const trendingDiv = document.getElementById('trendingList');
-            if (trendingDiv && news.length > 0) {
-                const trending = [...news].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
-                trendingDiv.innerHTML = trending.map((item, index) => `<div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                <div class="trending-rank">#${index + 1}</div>
-                <div class="trending-title">${escapeHtml(item.title)}</div>
-                <div class="trending-views">👁️ ${item.views || 0} views</div>
-            </div>`).join('');
-            }
-
-            const tickerContent = document.getElementById('tickerContent');
-            if (tickerContent && news.length > 0) {
-                tickerContent.innerHTML = '🔴 LIVE | ' + news.slice(0, 5).map(n => n.title).join(' | ') + ' | ';
-            }
-        }
-
-        // ============================================
-        // LOAD CATEGORIES - SIRF 3 ICONS (Study, Freelancing, Vacancy)
-        // ============================================
-        function loadCategories() {
-            const categoryGrid = document.getElementById('categoryGrid');
-            if (!categoryGrid) return;
-
-            const newCategories = [
-                { name: 'Study', icon: 'fa-graduation-cap', color: '#10b981', link: '/rasu/study.html' },
-                { name: 'Freelancing', icon: 'fa-briefcase', color: '#dc2626', link: '/rasu/freelance.html' },
-                { name: 'Vacancy', icon: 'fa-bullhorn', color: '#f59e0b', link: '/rasu/vacancy.html' }
-            ];
-
-            categoryGrid.innerHTML = newCategories.map(cat => `
-                <div class="category-card" data-category="${cat.name}" onclick="window.location.href='${cat.link}'" style="background: linear-gradient(135deg, ${cat.color}, ${cat.color}dd); cursor: pointer;">
-                    <i class="fas ${cat.icon}" style="font-size: 1.5rem; margin-bottom: 0.25rem; display: block;"></i>
-                    <span style="font-size: 0.75rem; font-weight: 600;">${cat.name}</span>
-                </div>
-            `).join('');
-        }
-
-        // ============================================
-        // WEATHER
-        // ============================================
-        function getWeather() {
-            const tempDiv = document.getElementById('weatherTemp');
-            const locDiv = document.getElementById('weatherLocation');
-            if (tempDiv) tempDiv.textContent = '28°C';
-            if (locDiv) locDiv.textContent = 'Mumbai, IN';
-        }
-
-        // ============================================
-        // SEARCH FUNCTION
-        // ============================================
-        function initSearch() {
-            const searchBtn = document.getElementById('searchBtn');
-            const searchInput = document.getElementById('searchInput');
-
-            if (searchBtn) {
-                searchBtn.addEventListener('click', () => {
-                    searchInput.classList.toggle('active');
-                    if (searchInput.classList.contains('active')) searchInput.focus();
-                });
-            }
-
-            if (searchInput) {
-                searchInput.addEventListener('keyup', (e) => {
-                    if (e.key === 'Enter') {
-                        const term = searchInput.value.toLowerCase();
-                        const filtered = allNews.filter(n => n.title?.toLowerCase().includes(term));
-                        if (filtered.length > 0) {
-                            displayNewsWithAI(filtered);
-                        } else {
-                            document.getElementById('newsGrid').innerHTML =
-                                '<div class="text-center" style="padding:2rem;">No news found for "' + escapeHtml(
-                                    term) + '"</div>';
-                        }
-                    }
-                });
-            }
-        }
-
-        // ============================================
-        // SIDEBAR FUNCTIONS
-        // ============================================
-        function initSidebar() {
-            const menuToggle = document.getElementById('menuToggle');
-            const closeSidebar = document.getElementById('closeSidebar');
-            const overlay = document.getElementById('overlay');
-            const sidebar = document.getElementById('sidebar');
-
-            if (menuToggle) {
-                menuToggle.addEventListener('click', () => {
-                    if (sidebar) sidebar.classList.add('open');
-                    if (overlay) overlay.classList.add('active');
-                });
-            }
-
-            if (closeSidebar) {
-                closeSidebar.addEventListener('click', () => {
-                    if (sidebar) sidebar.classList.remove('open');
-                    if (overlay) overlay.classList.remove('active');
-                });
-            }
-
-            if (overlay) {
-                overlay.addEventListener('click', () => {
-                    if (sidebar) sidebar.classList.remove('open');
-                    if (overlay) overlay.classList.remove('active');
-                });
-            }
-
-            // Sidebar navigation links
-            document.querySelectorAll('.sidebar-nav a').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const category = link.getAttribute('data-category');
-                    if (category) {
-                        currentCategory = category;
-                        displayNewsWithAI(allNews);
-                        document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-                        link.classList.add('active');
-                        if (sidebar) sidebar.classList.remove('open');
-                        if (overlay) overlay.classList.remove('active');
-                    }
-                });
-            });
-
-            // Bookmark button
-            const bookmarkBtn = document.getElementById('bookmarkBtn');
-            if (bookmarkBtn) {
-                bookmarkBtn.addEventListener('click', () => {
-                    alert('🔖 Bookmarks feature coming soon!');
-                    if (sidebar) sidebar.classList.remove('open');
-                    if (overlay) overlay.classList.remove('active');
-                });
-            }
-
-            // Settings button
-            const settingsBtn = document.getElementById('settingsBtn');
-            if (settingsBtn) {
-                settingsBtn.addEventListener('click', () => {
-                    alert('⚙️ Settings panel coming soon!');
-                    if (sidebar) sidebar.classList.remove('open');
-                    if (overlay) overlay.classList.remove('active');
-                });
-            }
-        }
-
-        // ============================================
-        // NEWSLETTER SUBSCRIPTION
-        // ============================================
-        async function initNewsletter() {
-            const subscribeBtn = document.getElementById('subscribeBtn');
-            if (subscribeBtn) {
-                subscribeBtn.addEventListener('click', async () => {
-                    const email = document.getElementById('newsletterEmail')?.value;
-                    if (email && email.includes('@')) {
-                        try {
-                            const { error } = await supabaseClient.from('subscribers').insert([{ email }]);
-                            if (error && error.code === '23505') {
-                                alert('📧 Email already subscribed!');
-                            } else if (!error) {
-                                alert(`✅ Subscribed with ${email}!`);
-                                document.getElementById('newsletterEmail').value = '';
-                            } else {
-                                alert('❌ Subscription failed');
-                            }
-                        } catch (e) {
-                            alert('❌ Subscription failed');
-                        }
-                    } else {
-                        alert('⚠️ Please enter valid email');
-                    }
-                });
-            }
-        }
-
-        // ============================================
-        // DESKTOP NAVIGATION
-        // ============================================
-        document.querySelectorAll('.nav-desktop a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentCategory = link.getAttribute('data-category');
-                displayNewsWithAI(allNews);
-                document.querySelectorAll('.nav-desktop a').forEach(a => a.classList.remove('active'));
-                link.classList.add('active');
-            });
-        });
-
-        // ============================================
-        // BOTTOM NAVIGATION BUTTONS
-        // ============================================
-        document.getElementById('affiliateNavBtn')?.addEventListener('click', () => {
-            alert(
-                '💰 Affiliate Programs:\n\n• Amazon Affiliate - Earn up to 10%\n• Flipkart Affiliate\n• Share your affiliate links in news articles\n\nVisit admin panel to add affiliate links!');
-        });
-
-        document.getElementById('earningNavBtn')?.addEventListener('click', () => {
-            alert(
-                '💵 Earning Options:\n\n• Google AdSense (Coming Soon)\n• Affiliate Marketing\n• Sponsored Posts\n• Donations via UPI\n\nStart earning by publishing quality news!');
-        });
-
-        document.getElementById('workspaceNavBtn')?.addEventListener('click', () => {
-            window.open('/rasu/admin.html', '_blank');
-        });
-
-        document.getElementById('languageNavBtn')?.addEventListener('click', () => {
-            alert(
-                '🌐 Language Options:\n\n• English (Default)\n• Hindi (Coming Soon)\n• Marathi (Coming Soon)\n• Tamil (Coming Soon)\n• Bengali (Coming Soon)');
-        });
-
-        // Bottom navigation home button
-        document.querySelectorAll('.bottom-nav-item[data-nav="home"]').forEach(item => {
-            item.addEventListener('click', () => {
-                currentCategory = 'all';
-                displayNewsWithAI(allNews);
-                document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
-                item.classList.add('active');
-                document.querySelectorAll('.nav-desktop a').forEach(a => a.classList.remove('active'));
-                document.querySelector('.nav-desktop a[data-category="all"]')?.classList.add('active');
-            });
-        });
-
-        // ============================================
-        // THEME TOGGLE
-        // ============================================
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-
-        // ============================================
-        // INITIALIZE
-        // ============================================
-        initTheme();
-        loadCategories();
-        getWeather();
-        initSearch();
-        initSidebar();
-        initNewsletter();
-        fetchNews();
-
-        console.log('[THE MOON] Fully fixed and initialized.');
-    </script>
+    
+    <!-- AOS Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <!-- Main Script -->
+    <script src="script-modern.js" defer></script>
 </body>
 </html>
