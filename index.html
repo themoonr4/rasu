@@ -2,18 +2,23 @@
 <html lang="en">
 <head>
     <!-- ============================================ -->
-    <!-- GOOGLE ANALYTICS 4 (GA4) - FIXED -->
+    <!-- GOOGLE ANALYTICS 4 (GA4) - FULLY FIXED WITH CORRECT ID -->
     <!-- ============================================ -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK9TTNJ6BR"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
+
+        // ✅ Consent mode - allow analytics cookies
         gtag('consent', 'default', {
             'analytics_storage': 'granted',
             'ad_storage': 'denied',
             'wait_for_update': 500
         });
+
+        // ✅ Config with explicit page view parameters - using correct ID
         gtag('config', 'G-VK9TTNJ6BR', {
             send_page_view: true,
             page_title: document.title,
@@ -21,6 +26,8 @@
             page_path: window.location.pathname,
             cookie_flags: 'SameSite=None;Secure'
         });
+
+        // ✅ Manual page view trigger for SPA navigation
         function trackPageView() {
             gtag('event', 'page_view', {
                 page_title: document.title,
@@ -30,14 +37,38 @@
         }
         window.addEventListener('load', trackPageView);
         window.addEventListener('hashchange', trackPageView);
-        console.log('[GA4] Fixed and initialized.');
+        console.log('[GA4] Fixed and initialized with correct ID.');
     </script>
 
     <!-- ============================================ -->
-    <!-- POSTHOG - FIXED -->
+    <!-- POSTHOG - SESSION RECORDING & ANALYTICS - FIXED -->
     <!-- ============================================ -->
     <script>
-        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split('.');2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement('script')).type='text/javascript',p.crossOrigin='anonymous',p.async=!0,p.src=s.api_host.replace('.i.posthog.com','-assets.i.posthog.com')+'/static/array.js',(r=t.getElementsByTagName('script')[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a='posthog',u.people=u.people||[],u.toString=function(t){var e='posthog';return'posthog'!==a&&(e+='.'+a),t||(e+=' (stub)'),e},u.people.toString=function(){return u.toString(1)+'.people (stub)'},o='rn sn init kn Qr wn Cn yn capture calculateEventProperties Rn register register_once register_for_session unregister unregister_for_session An getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Fn identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty On En createPersonProfile setInternalOrTestUser Ln gn $n opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing In debug Kr Pn getPageViewId captureTraceFeedback captureTraceMetric vn'.split(' '),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        ! function(t, e) {
+            var o, n, p, r;
+            e.__SV || (window.posthog = e, e._i = [], e.init = function(i, s, a) {
+                function g(t, e) {
+                    var o = e.split('.');
+                    2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function() {
+                        t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+                    }
+                }
+                (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p
+                    .async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") +
+                    "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(
+                    p, r);
+                var u = e;
+                for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString =
+                        function(t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e +=
+                            " (stub)"), e }, u.people.toString = function() { return u.toString(1) +
+                        ".people (stub)" }, o =
+                    "rn sn init kn Qr wn Cn yn capture calculateEventProperties Rn register register_once register_for_session unregister unregister_for_session An getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Fn identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty On En createPersonProfile setInternalOrTestUser Ln gn $n opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing In debug Kr Pn getPageViewId captureTraceFeedback captureTraceMetric vn"
+                    .split(" "), n = 0; n < o.length; n++) g(u, o[n]);
+                e._i.push([i, s, a])
+            }, e.__SV = 1)
+        }(document, window.posthog || []);
+
+        // ✅ Proper initialization - removed invalid "defaults" parameter
         if (!window.posthog.__loaded) {
             posthog.init('phc_kAnmLqSV2F6EzcvaVoVZs5q3sPhPDVJWNSuyoqH2m4ft', {
                 api_host: 'https://us.i.posthog.com',
@@ -53,19 +84,21 @@
                 },
                 persistence: 'localStorage',
                 person_profiles: 'identified_only',
-                loaded: function() { console.log('[PostHog] Fixed.'); }
+                loaded: function() { console.log('[PostHog] Fixed and initialized.'); }
             });
         }
     </script>
 
     <!-- ============================================ -->
-    <!-- ONESIGNAL - FIXED -->
+    <!-- ONESIGNAL PUSH NOTIFICATIONS - FIXED -->
     <!-- ============================================ -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer>
+    </script>
     <script>
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
             try {
+                // ✅ Prevent duplicate initialization
                 if (window.OneSignal?.initialized) return;
                 await OneSignal.init({
                     appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c",
@@ -74,7 +107,7 @@
                     serviceWorkerParam: { scope: "/rasu/" },
                     serviceWorkerPath: "/rasu/OneSignalSDKWorker.js",
                 });
-                console.log('[OneSignal] Fixed.');
+                console.log('[OneSignal] Fixed and initialized.');
             } catch (e) {
                 console.warn('[OneSignal] Init error:', e.message);
             }
@@ -86,22 +119,26 @@
     <!-- ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <!-- Primary Meta Tags -->
     <title>THE MOON — World's Most Advanced AI-Powered News Platform</title>
+    <meta name="title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
     <meta name="description" content="India's #1 AI-powered news platform delivering real-time, unbiased news, study materials, freelance jobs, and vacancies — powered by Gemini AI.">
     <meta name="keywords" content="news, AI news, India news, technology news, sports news, business news, politics news, study material, freelance jobs, government jobs, vacancy, AI news platform, THE MOON">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
     <link rel="canonical" href="https://themoonr4.github.io/rasu/">
     <meta name="author" content="THE MOON Team">
     <meta name="theme-color" content="#dc2626">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="THE MOON">
-    <link rel="manifest" href="/rasu/manifest.json">
-    <link rel="apple-touch-icon" href="/rasu/icon-192.png">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z'/%3E%3Cpath d='M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z' fill='white'/%3E%3C/svg%3E">
+    <meta name="application-name" content="THE MOON">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#dc2626">
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://themoonr4.github.io/rasu/">
     <meta property="og:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
@@ -112,411 +149,1364 @@
     <meta property="og:site_name" content="THE MOON">
     <meta property="og:locale" content="en_IN">
 
-    <!-- Twitter -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://themoonr4.github.io/rasu/">
     <meta name="twitter:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
     <meta name="twitter:description" content="India's #1 AI-powered news platform delivering real-time, unbiased news.">
     <meta name="twitter:image" content="https://themoonr4.github.io/rasu/og-image.jpg">
     <meta name="twitter:site" content="@TheMoonZ60">
+    <meta name="twitter:creator" content="@TheMoonZ60">
 
-    <!-- Preconnect -->
+    <!-- ============================================ -->
+    <!-- PWA MANIFEST & ICONS -->
+    <!-- ============================================ -->
+    <link rel="manifest" href="/rasu/manifest.json">
+    <link rel="apple-touch-icon" href="/rasu/icon-192.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z'/%3E%3Cpath d='M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z' fill='white'/%3E%3C/svg%3E">
+
+    <!-- ============================================ -->
+    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
+    <!-- ============================================ -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://us.i.posthog.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
 
-    <!-- Fonts & Styles -->
+    <!-- ============================================ -->
+    <!-- FONTS & STYLES -->
+    <!-- ============================================ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
 
     <!-- ============================================ -->
-    <!-- JSON-LD SCHEMA - ENHANCED -->
+    <!-- JSON-LD SCHEMA - COMPLETE STRUCTURED DATA -->
     <!-- ============================================ -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
         {
-          "@type": "NewsMediaOrganization",
-          "@id": "https://themoonr4.github.io/rasu/#organization",
-          "name": "THE MOON",
-          "url": "https://themoonr4.github.io/rasu/",
-          "logo": { "@type": "ImageObject", "url": "https://themoonr4.github.io/rasu/icon-192.png", "width": 192, "height": 192 },
-          "description": "India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence.",
-          "sameAs": ["https://t.me/themoom247","https://instagram.com/themoonr4","https://facebook.com/share/1GwHQhgx4g/","https://x.com/TheMoonZ60","https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32"],
-          "foundingDate": "2026"
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://themoonr4.github.io/rasu/#website",
-          "url": "https://themoonr4.github.io/rasu/",
-          "name": "THE MOON",
-          "description": "India's Most Advanced AI-Powered News Platform",
-          "publisher": { "@id": "https://themoonr4.github.io/rasu/#organization" },
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://themoonr4.github.io/rasu/?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-          }
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": "https://themoonr4.github.io/rasu/#breadcrumb",
-          "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://themoonr4.github.io/rasu/" },
-            { "@type": "ListItem", "position": 2, "name": "News", "item": "https://themoonr4.github.io/rasu/" }
-          ]
+            "@context": "https://schema.org",
+            "@graph": [{
+                "@type": "NewsMediaOrganization",
+                "@id": "https://themoonr4.github.io/rasu/#organization",
+                "name": "THE MOON",
+                "url": "https://themoonr4.github.io/rasu/",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://themoonr4.github.io/rasu/icon-192.png",
+                    "width": 192,
+                    "height": 192
+                },
+                "description": "India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence.",
+                "sameAs": [
+                    "https://t.me/themoom247",
+                    "https://instagram.com/themoonr4",
+                    "https://facebook.com/share/1GwHQhgx4g/",
+                    "https://x.com/TheMoonZ60",
+                    "https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32"
+                ],
+                "foundingDate": "2026"
+            }, {
+                "@type": "WebSite",
+                "@id": "https://themoonr4.github.io/rasu/#website",
+                "url": "https://themoonr4.github.io/rasu/",
+                "name": "THE MOON",
+                "description": "India's Most Advanced AI-Powered News Platform",
+                "publisher": {
+                    "@id": "https://themoonr4.github.io/rasu/#organization"
+                },
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://themoonr4.github.io/rasu/?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            }, {
+                "@type": "BreadcrumbList",
+                "@id": "https://themoonr4.github.io/rasu/#breadcrumb",
+                "itemListElement": [{
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://themoonr4.github.io/rasu/"
+                }, {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "News",
+                    "item": "https://themoonr4.github.io/rasu/"
+                }]
+            }]
         }
-      ]
-    }
     </script>
+
+    <!-- FAQ Schema -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {"@type":"Question","name":"What is THE MOON?","acceptedAnswer":{"@type":"Answer","text":"THE MOON is India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence."}},
-        {"@type":"Question","name":"How does THE MOON use AI?","acceptedAnswer":{"@type":"Answer","text":"THE MOON uses Google's Gemini AI to generate smart summaries, enhance headlines, and curate the most important news of the day."}},
-        {"@type":"Question","name":"Is THE MOON free?","acceptedAnswer":{"@type":"Answer","text":"Yes, THE MOON is completely free to use. We believe in making quality news accessible to everyone."}},
-        {"@type":"Question","name":"How often is news updated?","acceptedAnswer":{"@type":"Answer","text":"News is updated in real-time. Breaking news is delivered instantly through push notifications."}}
-      ]
-    }
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "What is THE MOON?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "THE MOON is India's Most Advanced AI-Powered News Platform delivering real-time, unbiased news with AI and human intelligence."
+                }
+            }, {
+                "@type": "Question",
+                "name": "How does THE MOON use AI?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "THE MOON uses Google's Gemini AI to generate smart summaries, enhance headlines, and curate the most important news of the day."
+                }
+            }, {
+                "@type": "Question",
+                "name": "Is THE MOON free?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, THE MOON is completely free to use. We believe in making quality news accessible to everyone."
+                }
+            }, {
+                "@type": "Question",
+                "name": "How often is news updated?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "News is updated in real-time. Breaking news is delivered instantly through push notifications."
+                }
+            }]
+        }
     </script>
 
     <!-- ============================================ -->
-    <!-- ALL STYLES - FINAL ENHANCED VERSION -->
+    <!-- ALL STYLES (FINAL ENHANCED VERSION) -->
     <!-- ============================================ -->
     <style>
-        /* --- CSS Variables --- */
+        /* ============================================ */
+        /* ROOT VARIABLES - LIGHT MODE DEFAULT */
+        /* ============================================ */
         :root {
             --bg-primary: #fafaf9;
             --bg-secondary: #f5f5f4;
             --bg-card: #ffffff;
+            --bg-tertiary: #f1f5f9;
             --text-primary: #1c1917;
             --text-secondary: #57534e;
-            --text-muted: #a8a29e;
+            --text-tertiary: #a8a29e;
+            --text-muted: #78716c;
             --border: #d6d3d1;
-            --shadow: 0 8px 30px rgba(0,0,0,0.05);
-            --shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+            --border-light: #e2e8f0;
             --primary: #dc2626;
             --primary-dark: #b91c1c;
             --primary-light: #ef4444;
+            --secondary: #2563eb;
+            --secondary-dark: #1d4ed8;
+            --secondary-light: #3b82f6;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.12);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.15);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
             --radius-xl: 1rem;
             --radius-2xl: 1.5rem;
-            --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
-            --font-body: 'Outfit', sans-serif;
-            --font-heading: 'Playfair Display', serif;
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 500ms ease;
+            --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-heading: 'Playfair Display', 'Outfit', serif;
         }
+
+        /* ============================================ */
+        /* DARK MODE VARIABLES */
+        /* ============================================ */
         [data-theme="dark"] {
             --bg-primary: #0c0a09;
             --bg-secondary: #1c1917;
             --bg-card: #1a1a1a;
+            --bg-tertiary: #292524;
             --text-primary: #fafaf9;
             --text-secondary: #d6d3d1;
-            --text-muted: #a89f96;
+            --text-tertiary: #a89f96;
+            --text-muted: #78716c;
             --border: #44403c;
-            --shadow: 0 8px 30px rgba(0,0,0,0.4);
-            --shadow-hover: 0 12px 40px rgba(0,0,0,0.6);
+            --border-light: #333333;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5);
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:var(--font-body); background:var(--bg-primary); color:var(--text-primary); transition:background var(--transition), color var(--transition); line-height:1.6; }
-        ::-webkit-scrollbar { width:8px; }
-        ::-webkit-scrollbar-track { background:var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:4px; }
 
-        .container { max-width:1400px; margin:0 auto; padding:0 1rem; }
-        @media (min-width:768px) { .container { padding:0 1.5rem; } }
+        /* ============================================ */
+        /* GLOBAL STYLES */
+        /* ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* Header */
-        .header { position:sticky; top:0; z-index:1000; background:rgba(250,250,249,0.85); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); transition:all var(--transition); }
-        [data-theme="dark"] .header { background:rgba(12,10,9,0.85); }
-        .header-content { display:flex; align-items:center; justify-content:space-between; height:70px; gap:1.5rem; }
-        .logo { display:flex; align-items:center; gap:0.5rem; font-weight:900; font-size:1.5rem; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-decoration:none; }
-        .logo-icon { font-size:1.8rem; -webkit-text-fill-color:initial; color:var(--primary); }
-        .logo-badge { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; font-size:0.55rem; padding:0.15rem 0.5rem; border-radius:9999px; font-weight:700; text-transform:uppercase; -webkit-text-fill-color:#fff; }
-        .nav-desktop { display:none; gap:1rem; }
-        @media (min-width:768px) { .nav-desktop { display:flex; } }
-        .nav-desktop a { color:var(--text-secondary); text-decoration:none; font-weight:500; padding:0.5rem 1rem; border-radius:9999px; transition:all var(--transition); }
-        .nav-desktop a:hover, .nav-desktop a.active { color:var(--text-primary); background:rgba(220,38,38,0.08); }
-        .nav-desktop a.active { color:var(--primary); }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background var(--transition-normal), color var(--transition-normal);
+        }
 
-        .header-actions { display:flex; align-items:center; gap:0.5rem; }
-        .header-actions button { width:40px; height:40px; border:none; background:transparent; color:var(--text-secondary); font-size:1.2rem; border-radius:9999px; cursor:pointer; transition:all var(--transition); }
-        .header-actions button:hover { background:var(--bg-secondary); color:var(--text-primary); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
 
-        .search-input { width:0; opacity:0; padding:0; border:none; background:var(--bg-secondary); border-radius:9999px; color:var(--text-primary); transition:all var(--transition); overflow:hidden; }
-        .search-input.active { width:200px; padding:0.5rem 1rem; opacity:1; }
-        @media (min-width:768px) { .search-input.active { width:250px; } }
+        /* ============================================ */
+        /* CONTAINER */
+        /* ============================================ */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        @media (min-width: 768px) {
+            .container { padding: 0 1.5rem; }
+        }
+        @media (min-width: 1024px) {
+            .container { padding: 0 2rem; }
+        }
 
-        .menu-toggle { display:flex; }
-        @media (min-width:768px) { .menu-toggle { display:none; } }
-        .menu-toggle button { background:none; border:none; font-size:1.5rem; color:var(--text-primary); cursor:pointer; }
+        /* ============================================ */
+        /* HEADER */
+        /* ============================================ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(var(--bg-primary), 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            transition: all var(--transition-normal);
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .header-content {
+                height: 70px;
+                gap: 2rem;
+            }
+        }
 
-        /* Sidebar */
-        .sidebar { position:fixed; top:0; left:-280px; width:280px; height:100%; background:var(--bg-primary); z-index:2000; transition:left var(--transition); box-shadow:var(--shadow); padding:1.5rem; overflow-y:auto; }
-        .sidebar.open { left:0; }
-        .sidebar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border); }
-        .sidebar-nav a { display:flex; align-items:center; gap:1rem; padding:0.75rem 1rem; color:var(--text-secondary); text-decoration:none; border-radius:0.75rem; transition:all var(--transition); }
-        .sidebar-nav a:hover { background:var(--bg-secondary); color:var(--primary); }
-        .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1999; display:none; }
-        .overlay.active { display:block; }
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            white-space: nowrap;
+            transition: transform var(--transition-fast);
+        }
+        .logo:hover {
+            transform: scale(1.02);
+        }
+        @media (min-width: 768px) {
+            .logo { font-size: 1.5rem; gap: 8px; }
+        }
+        .logo-icon { font-size: 1.4rem; -webkit-text-fill-color: initial; color: var(--primary); }
+        @media (min-width: 768px) { .logo-icon { font-size: 1.6rem; } }
+        .logo-text { letter-spacing: -0.5px; }
+        .logo-badge {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            font-size: 0.55rem;
+            padding: 2px 6px;
+            border-radius: 20px;
+            color: white;
+            margin-left: 4px;
+            font-weight: 600;
+            -webkit-text-fill-color: #fff;
+        }
+        @media (min-width: 768px) {
+            .logo-badge { font-size: 0.6rem; padding: 2px 8px; }
+        }
 
-        /* Bottom Nav */
-        .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(250,250,249,0.9); backdrop-filter:blur(12px); border-top:1px solid var(--border); display:none; justify-content:space-around; padding:0.5rem 1rem; padding-bottom:max(0.5rem,env(safe-area-inset-bottom)); z-index:999; }
-        @media (max-width:768px) { .bottom-nav { display:flex; } }
-        .bottom-nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; color:var(--text-secondary); text-decoration:none; font-size:0.65rem; transition:all var(--transition); padding:0.25rem 0; min-width:44px; }
-        .bottom-nav-item i { font-size:1.2rem; }
-        .bottom-nav-item.active, .bottom-nav-item:hover { color:var(--primary); }
+        /* Desktop Navigation */
+        .nav-desktop {
+            display: none;
+            flex: 1;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .nav-desktop { display: flex; }
+        }
+        .nav-desktop a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition-fast);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 9999px;
+        }
+        .nav-desktop a:hover,
+        .nav-desktop a.active {
+            color: var(--primary);
+            background: rgba(220, 38, 38, 0.08);
+        }
+        .nav-desktop a.active {
+            color: var(--primary);
+        }
 
-        /* Hero */
-        .hero { background:linear-gradient(135deg,var(--primary),var(--primary-dark)); border-radius:1.5rem; padding:2rem; margin:1.5rem 0; color:#fff; text-align:center; position:relative; overflow:hidden; box-shadow:0 20px 40px -10px rgba(220,38,38,0.3); }
-        @media (min-width:768px) { .hero { padding:3rem; text-align:left; } }
-        .hero::before { content:''; position:absolute; top:-50%; right:-20%; width:300px; height:300px; background:radial-gradient(circle,rgba(255,255,255,0.15) 0%,transparent 70%); border-radius:50%; pointer-events:none; }
-        .hero h1 { font-size:2rem; font-weight:800; position:relative; z-index:1; }
-        @media (min-width:768px) { .hero h1 { font-size:2.5rem; } }
-        .hero p { font-size:1rem; opacity:0.9; position:relative; z-index:1; }
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-actions button {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 0.5rem;
+            min-width: 36px;
+            min-height: 36px;
+            border-radius: 9999px;
+            transition: all var(--transition-fast);
+        }
+        .header-actions button:hover {
+            background: var(--bg-secondary);
+            color: var(--primary);
+        }
+        @media (min-width: 768px) {
+            .header-actions button {
+                font-size: 1.2rem;
+                padding: 0.5rem;
+                min-width: 40px;
+                min-height: 40px;
+            }
+        }
 
-        /* Ticker */
-        .ticker { background:var(--bg-secondary); border:1px solid var(--border); border-radius:9999px; padding:0.5rem 1.5rem; overflow:hidden; white-space:nowrap; margin-bottom:1.5rem; }
-        .ticker-content { display:inline-block; animation:ticker-scroll 30s linear infinite; font-size:0.85rem; color:var(--text-secondary); }
-        @keyframes ticker-scroll { 0% { transform:translateX(100%); } 100% { transform:translateX(-100%); } }
-        .ticker-badge { background:var(--primary); color:#fff; padding:0.15rem 0.6rem; border-radius:9999px; font-size:0.7rem; font-weight:700; animation:pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+        /* Search Container */
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            width: 0;
+            opacity: 0;
+            transition: all var(--transition-normal);
+            border: none;
+            background: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+        .search-input.active {
+            width: 180px;
+            opacity: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+        }
+        @media (min-width: 768px) {
+            .search-input.active { width: 250px; }
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
 
-        /* Category Grid */
-        .category-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2rem; }
-        .category-card { background:var(--bg-card); border:1px solid var(--border); border-radius:1.5rem; padding:1.5rem; text-align:center; cursor:pointer; transition:all var(--transition); box-shadow:var(--shadow); }
-        .category-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-hover); border-color:var(--primary); }
-        .category-card i { font-size:2.2rem; margin-bottom:0.5rem; color:var(--primary); }
-        .category-card span { font-size:0.85rem; font-weight:600; }
+        /* Menu Toggle (Mobile) */
+        .menu-toggle {
+            display: flex;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: 9999px;
+            transition: all var(--transition-fast);
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-toggle:hover {
+            background: var(--bg-secondary);
+        }
+        @media (min-width: 768px) {
+            .menu-toggle { display: none; }
+        }
 
-        /* Layout */
-        .layout-main { display:grid; gap:2rem; padding-bottom:80px; }
-        @media (min-width:1024px) { .layout-main { grid-template-columns:1fr 340px; } }
+        /* ============================================ */
+        /* BOTTOM NAVIGATION (MOBILE) */
+        /* ============================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(var(--bg-primary), 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 1rem;
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+            z-index: 99;
+        }
+        @media (min-width: 768px) {
+            .bottom-nav { display: none; }
+        }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            min-width: 44px;
+            justify-content: center;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: var(--transition-fast);
+            padding: 0.25rem 0;
+        }
+        .bottom-nav-item.active {
+            color: var(--primary);
+        }
+        .bottom-nav-item i {
+            font-size: 1.1rem;
+        }
+        @media (min-width: 768px) {
+            .bottom-nav-item i { font-size: 1.2rem; }
+        }
 
-        /* News Grid with Skeleton */
-        .news-grid { display:grid; gap:1.5rem; }
-        .news-card { display:flex; flex-direction:column; background:var(--bg-card); border:1px solid var(--border); border-radius:1.5rem; overflow:hidden; cursor:pointer; transition:all var(--transition); box-shadow:var(--shadow); transform-style:preserve-3d; perspective:1000px; }
-        @media (min-width:768px) { .news-card { flex-direction:row; } }
-        .news-card:hover { transform:translateY(-4px) rotateX(1deg) rotateY(2deg); box-shadow:var(--shadow-hover); border-color:var(--primary); }
-        .news-image { width:100%; height:160px; object-fit:cover; background:var(--bg-secondary); }
-        @media (min-width:768px) { .news-image { width:200px; height:160px; flex-shrink:0; } }
-        .news-content { padding:1rem; flex:1; display:flex; flex-direction:column; }
-        .news-category { display:inline-block; background:var(--primary); color:#fff; font-size:0.65rem; font-weight:700; padding:0.2rem 0.8rem; border-radius:9999px; width:fit-content; margin-bottom:0.5rem; text-transform:uppercase; }
-        .news-title { font-size:1.05rem; font-weight:700; line-height:1.4; margin-bottom:0.25rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-        .news-excerpt { color:var(--text-secondary); font-size:0.9rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:0.5rem; }
-        .news-meta { display:flex; gap:1rem; font-size:0.75rem; color:var(--text-muted); margin-top:auto; }
-        .news-meta span { display:flex; align-items:center; gap:0.25rem; }
+        /* ============================================ */
+        /* SIDEBAR */
+        /* ============================================ */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 200;
+            transition: left var(--transition-normal);
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+                position: sticky;
+                top: 70px;
+                left: auto;
+                width: auto;
+                height: auto;
+                box-shadow: none;
+                background: transparent;
+                overflow-y: visible;
+                padding: 0;
+            }
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+        @media (min-width: 768px) {
+            .sidebar-header { display: none; }
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding: 0;
+            }
+        }
+        .sidebar-nav a,
+        .sidebar-nav button {
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            transition: var(--transition-fast);
+        }
+        @media (min-width: 768px) {
+            .sidebar-nav a,
+            .sidebar-nav button {
+                width: auto;
+                padding: 0.5rem 1rem;
+            }
+        }
+        .sidebar-nav a:hover,
+        .sidebar-nav button:hover,
+        .sidebar-nav a.active,
+        .sidebar-nav button.active {
+            background: var(--bg-secondary);
+            color: var(--primary);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 199;
+            display: none;
+        }
+        .overlay.active {
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .overlay { display: none !important; }
+        }
+
+        /* ============================================ */
+        /* LAYOUT MAIN */
+        /* ============================================ */
+        .layout-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-bottom: 80px;
+        }
+        @media (min-width: 768px) {
+            .layout-main { padding-bottom: 0; }
+        }
+        @media (min-width: 1024px) {
+            .layout-main {
+                display: grid;
+                grid-template-columns: 1fr 340px;
+                gap: 2rem;
+            }
+        }
+
+        /* ============================================ */
+        /* HERO SECTION */
+        /* ============================================ */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-2xl);
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(220, 38, 38, 0.3);
+        }
+        @media (min-width: 768px) {
+            .hero {
+                padding: 2rem 2.5rem;
+                text-align: left;
+            }
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .hero::before {
+                width: 300px;
+                height: 300px;
+            }
+        }
+        .hero h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        @media (min-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+        }
+        .hero p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        @media (min-width: 768px) {
+            .hero p { font-size: 0.95rem; }
+        }
+
+        /* ============================================ */
+        /* TICKER */
+        /* ============================================ */
+        .ticker {
+            background: var(--bg-secondary);
+            border-radius: 9999px;
+            padding: 0.5rem 1.5rem;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        .ticker-content {
+            display: inline-block;
+            animation: ticker-scroll 30s linear infinite;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ticker-content {
+                animation: none;
+                white-space: normal;
+            }
+        }
+        .ticker-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 0.1rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+            animation: pulse-badge 2s infinite;
+        }
+        @keyframes pulse-badge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ============================================ */
+        /* CATEGORY GRID - SIRF 3 ICONS */
+        /* ============================================ */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .category-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .category-card {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            border-radius: var(--radius-lg);
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .category-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+        .category-card i {
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .category-card i { font-size: 1.5rem; }
+        }
+        .category-card span {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        @media (min-width: 768px) {
+            .category-card span { font-size: 0.75rem; }
+        }
+
+        /* ============================================ */
+        /* NEWS GRID */
+        /* ============================================ */
+        .news-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
         /* Skeleton Loader */
-        .skeleton { background:var(--bg-secondary); border-radius:0.5rem; animation:shimmer 1.5s infinite; background:linear-gradient(90deg, var(--bg-secondary) 25%, var(--border) 50%, var(--bg-secondary) 75%); background-size:200% 100%; }
-        @keyframes shimmer { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
-        .skeleton-card { display:flex; flex-direction:column; background:var(--bg-card); border-radius:1.5rem; overflow:hidden; border:1px solid var(--border); }
-        .skeleton-card .skeleton-img { height:160px; width:100%; }
-        @media (min-width:768px) { .skeleton-card { flex-direction:row; } .skeleton-card .skeleton-img { width:200px; height:160px; } }
-        .skeleton-card .skeleton-text { padding:1rem; flex:1; }
-        .skeleton-card .skeleton-text .skeleton-line { height:12px; margin-bottom:0.5rem; border-radius:4px; }
-        .skeleton-card .skeleton-text .skeleton-line.short { width:60%; }
-        .skeleton-card .skeleton-text .skeleton-line.medium { width:80%; }
-
-        /* Sidebar Widgets */
-        .sidebar-right { display:flex; flex-direction:column; gap:1.5rem; }
-        .widget { background:var(--bg-card); border:1px solid var(--border); border-radius:1.5rem; padding:1.5rem; box-shadow:var(--shadow); transition:all var(--transition); }
-        .widget:hover { border-color:var(--primary); }
-        .widget h3 { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:2px solid var(--border); }
-        .widget h3 i { color:var(--primary); }
-
-        .trending-item { padding:0.5rem 0; border-bottom:1px solid var(--border); cursor:pointer; transition:all var(--transition); }
-        .trending-item:last-child { border-bottom:none; }
-        .trending-item:hover { color:var(--primary); padding-left:0.5rem; }
-        .trending-rank { font-size:0.7rem; font-weight:700; color:var(--primary); }
-        .trending-title { font-size:0.9rem; font-weight:500; }
-
-        /* Comments Widget */
-        .comment-item { padding:0.5rem 0; border-bottom:1px solid var(--border); }
-        .comment-item:last-child { border-bottom:none; }
-        .comment-author { font-weight:600; font-size:0.85rem; }
-        .comment-text { font-size:0.8rem; color:var(--text-secondary); margin-top:0.2rem; }
-
-        /* Weather */
-        .weather-temp { font-size:2.2rem; font-weight:800; text-align:center; color:var(--primary); }
-        .weather-location { text-align:center; color:var(--text-secondary); }
-
-        /* Newsletter */
-        .newsletter-input { display:flex; flex-direction:column; gap:0.5rem; }
-        .newsletter-input input { padding:0.5rem 1rem; border:1px solid var(--border); border-radius:0.75rem; background:var(--bg-primary); color:var(--text-primary); transition:all var(--transition); }
-        .newsletter-input input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(220,38,38,0.1); }
-        .newsletter-input button { padding:0.5rem; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; border:none; border-radius:0.75rem; font-weight:600; cursor:pointer; transition:all var(--transition); }
-        .newsletter-input button:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); }
-
-        /* Footer */
-        .footer { background:var(--bg-secondary); border-top:1px solid var(--border); padding:2rem 0; text-align:center; margin-top:2rem; }
-        .footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-bottom:1rem; }
-        .footer-links a { color:var(--text-secondary); text-decoration:none; font-size:0.9rem; transition:all var(--transition); }
-        .footer-links a:hover { color:var(--primary); }
-        .footer-social { display:flex; justify-content:center; gap:1rem; margin-bottom:1rem; }
-        .footer-social a { color:var(--text-secondary); font-size:1.2rem; transition:all var(--transition); }
-        .footer-social a:hover { color:var(--primary); transform:translateY(-3px); }
-        .copyright { color:var(--text-muted); font-size:0.75rem; }
-
-        /* Loader */
-        .loader { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; }
-        .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-
-        /* Ripple */
-        .ripple { position:relative; overflow:hidden; }
-        .ripple-effect { position:absolute; border-radius:50%; background:rgba(255,255,255,0.4); transform:scale(0); animation:ripple-anim 0.6s linear; }
-        @keyframes ripple-anim { to { transform:scale(4); opacity:0; } }
-
-        /* Responsive */
-        @media (max-width:480px) {
-            .hero h1 { font-size:1.3rem; }
-            .category-grid { grid-template-columns:repeat(3,1fr); gap:0.5rem; }
-            .category-card { padding:0.75rem; }
-            .category-card i { font-size:1.6rem; }
-            .category-card span { font-size:0.7rem; }
-            .news-card { flex-direction:column; }
-            .news-image { height:140px; }
-            .header-content { height:60px; }
-            .bottom-nav-item { font-size:0.55rem; }
-            .bottom-nav-item i { font-size:1rem; }
+        .skeleton {
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+            animation: shimmer 1.5s infinite;
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border) 50%, var(--bg-secondary) 75%);
+            background-size: 200% 100%;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        @media (min-width: 768px) {
+            .skeleton-card {
+                flex-direction: row;
+            }
+        }
+        .skeleton-card .skeleton-img {
+            height: 150px;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .skeleton-card .skeleton-img {
+                width: 130px;
+                height: 130px;
+                flex-shrink: 0;
+            }
+        }
+        .skeleton-card .skeleton-text {
+            padding: 0.75rem;
+            flex: 1;
+        }
+        .skeleton-card .skeleton-text .skeleton-line {
+            height: 12px;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+        }
+        .skeleton-card .skeleton-text .skeleton-line.short {
+            width: 40%;
+        }
+        .skeleton-card .skeleton-text .skeleton-line.medium {
+            width: 70%;
+        }
+        .skeleton-card .skeleton-text .skeleton-line.long {
+            width: 90%;
         }
 
-        #progressBar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--primary),var(--primary-light)); width:0%; z-index:9999; transition:width 0.2s; }
+        /* News Card */
+        .news-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .news-card:hover {
+            transform: translateY(-4px) rotateX(1deg) rotateY(2deg);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+        @media (min-width: 768px) {
+            .news-card {
+                display: flex;
+                flex-direction: row;
+            }
+        }
+        .news-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: var(--bg-secondary);
+            transition: transform var(--transition-fast);
+        }
+        .news-card:hover .news-image {
+            transform: scale(1.02);
+        }
+        @media (min-width: 768px) {
+            .news-image {
+                width: 130px;
+                height: 130px;
+                flex-shrink: 0;
+            }
+        }
+        .news-content {
+            padding: 0.75rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .news-category {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .news-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .news-title { font-size: 0.95rem; }
+        }
+        .news-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+            flex: 1;
+        }
+        .news-meta {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.6rem;
+            color: var(--text-tertiary);
+        }
+        .news-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .news-meta .ai-badge {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ============================================ */
+        /* SIDEBAR RIGHT (WIDGETS) */
+        /* ============================================ */
+        .sidebar-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .widget {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+        }
+        .widget:hover {
+            border-color: var(--primary);
+        }
+        .widget h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+        .widget h3 i {
+            color: var(--primary);
+        }
+
+        /* Trending Items */
+        .trending-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+        .trending-item:hover {
+            padding-left: 0.3rem;
+            color: var(--primary);
+        }
+        .trending-rank {
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .trending-title {
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .trending-views {
+            font-size: 0.6rem;
+            color: var(--text-tertiary);
+        }
+
+        /* AI Picks Widget */
+        .ai-pick-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .ai-pick-item:last-child {
+            border-bottom: none;
+        }
+        .ai-pick-label {
+            font-size: 0.6rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+        .ai-pick-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .ai-pick-reason {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-top: 0.2rem;
+        }
+
+        /* Comments Widget */
+        .comment-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        .comment-author {
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .comment-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .comment-time {
+            font-size: 0.55rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Weather Widget */
+        .weather-info {
+            text-align: center;
+        }
+        .weather-temp {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        @media (min-width: 768px) {
+            .weather-temp { font-size: 2rem; }
+        }
+        .weather-location {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Newsletter Widget */
+        .newsletter-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .newsletter-input input {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            transition: all var(--transition-fast);
+        }
+        .newsletter-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+        .newsletter-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+        }
+        .newsletter-input button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================ */
+        /* FOOTER */
+        /* ============================================ */
+        .footer {
+            background: var(--bg-secondary);
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: var(--transition-fast);
+        }
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .footer-social a {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            transition: var(--transition-fast);
+        }
+        .footer-social a:hover {
+            color: var(--primary);
+            transform: translateY(-2px) scale(1.1);
+        }
+        .copyright {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+
+        /* ============================================ */
+        /* LOADER */
+        /* ============================================ */
+        .loader {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================ */
+        /* RIPPLE EFFECT */
+        /* ============================================ */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-anim 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-anim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* ============================================ */
+        /* UTILITY CLASSES */
+        /* ============================================ */
+        .text-center { text-align: center; }
+        .hidden { display: none; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+
+        /* Reading Progress Bar */
+        #progressBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            z-index: 999;
+            transition: width 0.15s ease;
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE FINE-TUNE */
+        /* ============================================ */
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.3rem; }
+            .category-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+            .category-card { padding: 0.5rem; }
+            .category-card i { font-size: 1.2rem; }
+            .category-card span { font-size: 0.6rem; }
+            .news-card { flex-direction: column; }
+            .news-image { height: 140px; }
+            .header-content { height: 60px; }
+            .bottom-nav-item { font-size: 0.55rem; }
+            .bottom-nav-item i { font-size: 1rem; }
+            .search-input.active { width: 140px; }
+        }
+        @media (min-width: 481px) and (max-width: 768px) {
+            .category-grid { grid-template-columns: repeat(3, 1fr); }
+            .news-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-<div id="progressBar"></div>
+    <!-- ============================================ -->
+    <!-- READING PROGRESS BAR -->
+    <!-- ============================================ -->
+    <div id="progressBar"></div>
 
-<!-- ============================================ -->
-<!-- HEADER -->
-<!-- ============================================ -->
-<header class="header">
-    <div class="container">
-        <div class="header-content">
-            <button class="menu-toggle" id="menuToggle" style="background:none;border:none;font-size:1.5rem;color:var(--text-primary);cursor:pointer;min-width:44px;">
-                <i class="fas fa-bars"></i>
-            </button>
-            <a href="/rasu/" class="logo">
-                <span class="logo-icon">🌙</span>
-                <span>THE MOON</span>
-                <span class="logo-badge">PREMIUM</span>
-            </a>
-            <div class="nav-desktop">
-                <a href="#" data-category="all" class="active">All</a>
-                <a href="#" data-category="Technology">Tech</a>
-                <a href="#" data-category="Sports">Sports</a>
-                <a href="#" data-category="Business">Business</a>
-                <a href="#" data-category="Politics">Politics</a>
-                <a href="#" data-category="Study">Study</a>
-            </div>
-            <div class="header-actions">
-                <div class="search-container">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search news...">
-                    <button id="searchBtn" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;"><i class="fas fa-search"></i></button>
+    <!-- ============================================ -->
+    <!-- HEADER -->
+    <!-- ============================================ -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <a href="/rasu/" class="logo">
+                    <span class="logo-icon">🌙</span>
+                    <span class="logo-text">THE MOON</span>
+                    <span class="logo-badge">PREMIUM</span>
+                </a>
+
+                <div class="nav-desktop">
+                    <a href="#" data-category="all" class="active">All</a>
+                    <a href="#" data-category="Technology">Tech</a>
+                    <a href="#" data-category="Sports">Sports</a>
+                    <a href="#" data-category="Business">Business</a>
+                    <a href="#" data-category="Politics">Politics</a>
+                    <a href="#" data-category="Study">Study</a>
                 </div>
-                <button id="themeToggle" class="theme-toggle"><i class="fas fa-moon"></i></button>
-            </div>
-        </div>
-    </div>
-</header>
 
-<!-- ============================================ -->
-<!-- SIDEBAR -->
-<!-- ============================================ -->
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <span class="logo" style="font-size:1.2rem;">🌙 THE MOON</span>
-        <button id="closeSidebar" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-primary);">✕</button>
-    </div>
-    <div class="sidebar-nav">
-        <a href="#" data-category="all">🏠 Home</a>
-        <a href="#" data-category="Technology">💻 Technology</a>
-        <a href="#" data-category="Sports">🏏 Sports</a>
-        <a href="#" data-category="Business">📊 Business</a>
-        <a href="#" data-category="Politics">🏛️ Politics</a>
-        <a href="#" data-category="Study">📚 Study</a>
-        <button id="bookmarkBtn" style="width:100%;text-align:left;background:none;border:none;padding:0.75rem 1rem;color:var(--text-secondary);cursor:pointer;border-radius:0.75rem;transition:all var(--transition);">🔖 Bookmarks</button>
-        <button id="settingsBtn" style="width:100%;text-align:left;background:none;border:none;padding:0.75rem 1rem;color:var(--text-secondary);cursor:pointer;border-radius:0.75rem;transition:all var(--transition);">⚙️ Settings</button>
-    </div>
-</div>
-<div class="overlay" id="overlay"></div>
-
-<!-- ============================================ -->
-<!-- BOTTOM NAV -->
-<!-- ============================================ -->
-<div class="bottom-nav">
-    <button class="bottom-nav-item active" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
-    <button class="bottom-nav-item" id="affiliateNavBtn"><i class="fas fa-tags"></i><span>Affiliate</span></button>
-    <button class="bottom-nav-item" id="earningNavBtn"><i class="fas fa-coins"></i><span>Earning</span></button>
-    <button class="bottom-nav-item" id="workspaceNavBtn"><i class="fas fa-briefcase"></i><span>Workspace</span></button>
-    <button class="bottom-nav-item" id="languageNavBtn"><i class="fas fa-language"></i><span>Language</span></button>
-</div>
-
-<!-- ============================================ -->
-<!-- MAIN CONTENT -->
-<!-- ============================================ -->
-<main class="container">
-    <div class="layout-main">
-        <!-- Left Column -->
-        <div>
-            <div class="hero">
-                <h1>Welcome to THE MOON 🌙</h1>
-                <p>India's Most Advanced AI-Powered News Platform | Real-Time | Unbiased</p>
-            </div>
-            <div class="ticker" id="ticker">
-                <div class="ticker-content" id="tickerContent">
-                    <span class="ticker-badge">🔴 LIVE</span> Breaking news will appear here
-                </div>
-            </div>
-            <div class="category-grid" id="categoryGrid"></div>
-            <div class="news-grid" id="newsGrid">
-                <!-- Skeleton loaders will be injected by JS -->
-            </div>
-        </div>
-
-        <!-- Right Column -->
-        <div class="sidebar-right">
-            <div class="widget">
-                <h3><i class="fas fa-fire"></i> Trending Now</h3>
-                <div id="trendingList">Loading...</div>
-            </div>
-            <div class="widget">
-                <h3><i class="fas fa-robot"></i> AI Curated</h3>
-                <div id="aiPicks"></div>
-            </div>
-            <div class="widget">
-                <h3><i class="fas fa-comments"></i> Latest Comments</h3>
-                <div id="latestComments">Loading comments...</div>
-            </div>
-            <div class="widget">
-                <h3><i class="fas fa-cloud-sun"></i> Weather</h3>
-                <div class="weather-info">
-                    <div class="weather-temp" id="weatherTemp">--°C</div>
-                    <div class="weather-location" id="weatherLocation">Mumbai, IN</div>
-                </div>
-            </div>
-            <div class="widget">
-                <h3><i class="fas fa-envelope"></i> Newsletter</h3>
-                <div class="newsletter-input">
-                    <input type="email" id="newsletterEmail" placeholder="Your email address">
-                    <button id="subscribeBtn">Subscribe</button>
+                <div class="header-actions">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search news...">
+                        <button id="searchBtn" aria-label="Search"><i class="fas fa-search"></i></button>
+                    </div>
+                    <button id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </header>
 
-<!-- ============================================ -->
-<!-- FOOTER -->
-<!-- ============================================ -->
-<footer class="footer">
-    <div class="container">
+    <!-- ============================================ -->
+    <!-- SIDEBAR -->
+    <!-- ============================================ -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="logo" style="font-size:1.2rem;">🌙 THE MOON</span>
+            <button id="closeSidebar" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-primary); padding:0.3rem; border-radius:9999px; transition:all var(--transition-fast);">✕</button>
+        </div>
+        <div class="sidebar-nav">
+            <a href="#" data-category="all">🏠 Home</a>
+            <a href="#" data-category="Technology">💻 Technology</a>
+            <a href="#" data-category="Sports">🏏 Sports</a>
+            <a href="#" data-category="Business">📊 Business</a>
+            <a href="#" data-category="Politics">🏛️ Politics</a>
+            <a href="#" data-category="Study">📚 Study</a>
+            <button id="bookmarkBtn">🔖 Bookmarks</button>
+            <button id="settingsBtn">⚙️ Settings</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- ============================================ -->
+    <!-- BOTTOM NAVIGATION (MOBILE) -->
+    <!-- ============================================ -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item active" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="bottom-nav-item" id="affiliateNavBtn"><i class="fas fa-tags"></i><span>Affiliate</span></button>
+        <button class="bottom-nav-item" id="earningNavBtn"><i class="fas fa-coins"></i><span>Earning</span></button>
+        <button class="bottom-nav-item" id="workspaceNavBtn"><i class="fas fa-briefcase"></i><span>Workspace</span></button>
+        <button class="bottom-nav-item" id="languageNavBtn"><i class="fas fa-language"></i><span>Language</span></button>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================ -->
+    <main class="container">
+        <div class="layout-main">
+            <!-- Left Column -->
+            <div>
+                <div class="hero">
+                    <h1>Welcome to THE MOON 🌙</h1>
+                    <p>India's Most Advanced AI-Powered News Platform | Real-Time | Unbiased</p>
+                </div>
+
+                <div class="ticker" id="ticker">
+                    <div class="ticker-content" id="tickerContent">
+                        <span class="ticker-badge">🔴 LIVE</span> Breaking news will appear here
+                    </div>
+                </div>
+
+                <div class="category-grid" id="categoryGrid"></div>
+
+                <div class="news-grid" id="newsGrid">
+                    <!-- Skeleton loaders injected by JS -->
+                </div>
+            </div>
+
+            <!-- Right Column (Sidebar) -->
+            <div class="sidebar-right">
+                <div class="widget">
+                    <h3><i class="fas fa-fire" style="color:var(--primary);"></i> Trending Now</h3>
+                    <div id="trendingList">Loading...</div>
+                </div>
+
+                <div class="widget">
+                    <h3><i class="fas fa-robot" style="color:var(--primary);"></i> AI Curated</h3>
+                    <div id="aiPicks"></div>
+                </div>
+
+                <div class="widget">
+                    <h3><i class="fas fa-comments" style="color:var(--primary);"></i> Latest Comments</h3>
+                    <div id="latestComments">Loading comments...</div>
+                </div>
+
+                <div class="widget">
+                    <h3><i class="fas fa-cloud-sun" style="color:var(--primary);"></i> Weather</h3>
+                    <div class="weather-info">
+                        <div class="weather-temp" id="weatherTemp">--°C</div>
+                        <div class="weather-location" id="weatherLocation">Mumbai, IN</div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3><i class="fas fa-envelope" style="color:var(--primary);"></i> Newsletter</h3>
+                    <div class="newsletter-input">
+                        <input type="email" id="newsletterEmail" placeholder="Your email address">
+                        <button id="subscribeBtn">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================ -->
+    <footer class="footer">
         <div class="footer-links">
             <a href="/rasu/about.html">About</a>
             <a href="/rasu/privacy.html">Privacy</a>
@@ -524,382 +1514,730 @@
             <a href="/rasu/admin.html">Admin Panel</a>
         </div>
         <div class="footer-social">
-            <a href="https://t.me/themoom247" target="_blank"><i class="fab fa-telegram"></i></a>
-            <a href="https://instagram.com/themoonr4" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://facebook.com/share/1GwHQhgx4g/" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://x.com/TheMoonZ60" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://t.me/themoom247" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://instagram.com/themoonr4" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://facebook.com/share/1GwHQhgx4g/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://x.com/TheMoonZ60" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
         <div class="copyright">
             <p>© 2026 THE MOON — Premium News Platform | Made with ❤️ in India</p>
         </div>
-    </div>
-</footer>
+    </footer>
 
-<!-- ============================================ -->
-<!-- SUPABASE CLIENT & GLOBALS -->
-<!-- ============================================ -->
-<script>
-    const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
-    const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================ -->
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_URL = 'https://zpubhlbdqwzyseditrls.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP';
+        const GEMINI_API_KEY = 'AIzaSyCVxua06c7WNESeIq79f44sD-LSUznPVpA';
 
-    let currentCategory = 'all';
-    let allNews = [];
-    let readHistory = JSON.parse(localStorage.getItem('readHistory') || '[]');
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Ripple effect on buttons
-    document.querySelectorAll('.ripple').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        // ============================================
+        // GLOBAL VARIABLES
+        // ============================================
+        let currentCategory = 'all';
+        let allNews = [];
+        let isDataLoaded = false;
+        let readHistory = JSON.parse(localStorage.getItem('readHistory') || '[]');
+
+        // ============================================
+        // READING PROGRESS BAR
+        // ============================================
+        window.addEventListener('scroll', function() {
+            const scroll = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progressBar').style.width = scroll + '%';
+        });
+
+        // ============================================
+        // THEME FUNCTIONS
+        // ============================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+
+        function toggleTheme() {
+            if (document.body.hasAttribute('data-theme')) {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+
+        // ============================================
+        // RIPPLE EFFECT
+        // ============================================
+        function createRipple(e) {
+            const button = e.currentTarget;
+            if (!button.classList.contains('ripple')) return;
+
             const ripple = document.createElement('span');
             ripple.className = 'ripple-effect';
-            const rect = this.getBoundingClientRect();
+            const rect = button.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
             ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
-            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
-            this.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
+            ripple.style.left = (e.clientX || e.touches?.[0]?.clientX || 0) - rect.left - size / 2 + 'px';
+            ripple.style.top = (e.clientY || e.touches?.[0]?.clientY || 0) - rect.top - size / 2 + 'px';
+            button.appendChild(ripple);
+            setTimeout(function() { ripple.remove(); }, 600);
+        }
+
+        // Add ripple to all .ripple elements
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.ripple').forEach(function(el) {
+                el.addEventListener('click', createRipple);
+            });
         });
-    });
 
-    // Theme
-    function initTheme() {
-        const saved = localStorage.getItem('theme');
-        if (saved === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-        }
-    }
-    function toggleTheme() {
-        if (document.body.hasAttribute('data-theme')) {
-            document.body.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
-        } else {
-            document.body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-        }
-    }
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    initTheme();
+        // ============================================
+        // AI FUNCTIONS WITH TIMEOUT
+        // ============================================
+        async function generateAISummaryWithTimeout(text, timeout) {
+            timeout = timeout || 8000;
+            if (!text || text.length < 50) return text.substring(0, 100);
 
-    // Sidebar
-    document.getElementById('menuToggle').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('overlay').classList.toggle('active');
-    });
-    document.getElementById('closeSidebar').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('overlay').classList.remove('active');
-    });
-    document.getElementById('overlay').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.remove('open');
-        this.classList.remove('active');
-    });
+            try {
+                var controller = new AbortController();
+                var timeoutId = setTimeout(function() { controller.abort(); }, timeout);
 
-    // Search
-    document.getElementById('searchBtn').addEventListener('click', function() {
-        const input = document.getElementById('searchInput');
-        input.classList.toggle('active');
-        if (input.classList.contains('active')) input.focus();
-    });
-    document.getElementById('searchInput').addEventListener('keyup', function(e) {
-        if (e.key === 'Enter') {
-            const term = this.value.toLowerCase();
-            const filtered = allNews.filter(n => n.title?.toLowerCase().includes(term));
-            if (filtered.length > 0) {
-                displayNews(filtered);
-            } else {
-                document.getElementById('newsGrid').innerHTML = '<div class="text-center" style="padding:2rem;">No news found for "' + term + '"</div>';
+                var response = await fetch(
+                    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' +
+                    GEMINI_API_KEY, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: controller.signal,
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: 'Summarize this news in 2 short sentences in simple Hindi/English mix (max 100 words): ' +
+                                        text.substring(0, 1500)
+                                }]
+                            }]
+                        })
+                    });
+
+                clearTimeout(timeoutId);
+                var data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || text.substring(0, 100);
+            } catch (error) {
+                return text.substring(0, 100);
             }
         }
-    });
 
-    // ============================================
-    // DISPLAY NEWS WITH SKELETON & PERSONALIZATION
-    // ============================================
-    function displayNews(newsToShow) {
-        const grid = document.getElementById('newsGrid');
-        let filtered = newsToShow || allNews;
-        if (currentCategory !== 'all') {
-            filtered = filtered.filter(n => n.category === currentCategory);
+        async function enhanceHeadlineWithTimeout(title, timeout) {
+            timeout = timeout || 6000;
+            if (!title) return title;
+
+            try {
+                var controller = new AbortController();
+                var timeoutId = setTimeout(function() { controller.abort(); }, timeout);
+
+                var response = await fetch(
+                    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' +
+                    GEMINI_API_KEY, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: controller.signal,
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: 'Make this news headline more attractive, clickable, and engaging (keep under 70 characters, add emoji if needed): ' +
+                                        title
+                                }]
+                            }]
+                        })
+                    });
+
+                clearTimeout(timeoutId);
+                var data = await response.json();
+                var enhanced = data.candidates?.[0]?.content?.parts?.[0]?.text || title;
+                return enhanced.length > 80 ? title : enhanced;
+            } catch (error) {
+                return title;
+            }
         }
 
-        // Personalized ordering: prioritize categories user reads most
-        if (readHistory.length > 0) {
-            const categoryCount = {};
-            readHistory.forEach(id => {
-                const article = allNews.find(n => n.id === id);
-                if (article) {
-                    categoryCount[article.category] = (categoryCount[article.category] || 0) + 1;
-                }
+        async function getAIPickWithTimeout(news, timeout) {
+            timeout = timeout || 8000;
+            if (!news || news.length === 0) return null;
+
+            try {
+                var headlines = news.slice(0, 10).map(function(n, i) { return (i + 1) + '. ' + n.title; }).join('\n');
+
+                var controller = new AbortController();
+                var timeoutId = setTimeout(function() { controller.abort(); }, timeout);
+
+                var response = await fetch(
+                    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' +
+                    GEMINI_API_KEY, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: controller.signal,
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: 'From these headlines, pick the ONE most important news for Indian readers today. Return in format: "TITLE|REASON"\n\n' +
+                                        headlines
+                                }]
+                            }]
+                        })
+                    });
+
+                clearTimeout(timeoutId);
+                var data = await response.json();
+                var result = data.candidates?.[0]?.content?.parts?.[0]?.text || news[0].title +
+                    '|Most important news of the day';
+                var parts = result.split('|');
+                return { title: parts[0] || news[0].title, reason: parts[1] || 'Must read for today' };
+            } catch (error) {
+                return { title: news[0]?.title, reason: 'Top trending news' };
+            }
+        }
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
             });
-            // Sort: categories with higher count come first
-            filtered.sort((a, b) => {
-                const aCount = categoryCount[a.category] || 0;
-                const bCount = categoryCount[b.category] || 0;
-                return bCount - aCount;
-            });
         }
 
-        if (!filtered || filtered.length === 0) {
-            grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
-            return;
-        }
-
-        grid.innerHTML = filtered.map(article => {
-            const imgUrl = article.image_url || `https://picsum.photos/400/200?random=${article.id}`;
-            return `
-                <div class="news-card ripple" onclick="handleNewsClick(${article.id})">
-                    <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" loading="lazy" onerror="this.src='https://picsum.photos/400/200?random=1'">
-                    <div class="news-content">
-                        <span class="news-category">${article.category || 'News'}</span>
-                        <h3 class="news-title">${escapeHtml(article.ai_title || article.title)}</h3>
-                        <p class="news-excerpt">${escapeHtml(article.ai_summary || article.summary || (article.content ? article.content.substring(0, 100) : ''))}...</p>
-                        <div class="news-meta">
-                            <span><i class="far fa-calendar"></i> ${new Date(article.published_at).toLocaleDateString()}</span>
-                            <span><i class="far fa-eye"></i> ${article.views || 0}</span>
-                            ${article.ai_enhanced ? '<span><i class="fas fa-robot"></i> AI</span>' : ''}
+        // ============================================
+        // SHOW SKELETON LOADERS
+        // ============================================
+        function showSkeletons() {
+            var grid = document.getElementById('newsGrid');
+            var skeletons = '';
+            for (var i = 0; i < 6; i++) {
+                skeletons +=
+                    `
+                    <div class="skeleton-card">
+                        <div class="skeleton-img skeleton"></div>
+                        <div class="skeleton-text">
+                            <div class="skeleton-line skeleton short"></div>
+                            <div class="skeleton-line skeleton long"></div>
+                            <div class="skeleton-line skeleton medium"></div>
+                            <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+                                <div class="skeleton-line skeleton" style="width:30%;height:8px;"></div>
+                                <div class="skeleton-line skeleton" style="width:30%;height:8px;"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function handleNewsClick(id) {
-        // Track read history
-        if (!readHistory.includes(id)) {
-            readHistory.push(id);
-            localStorage.setItem('readHistory', JSON.stringify(readHistory));
+                `;
+            }
+            grid.innerHTML = skeletons;
         }
-        window.location.href = `/rasu/article.html?id=${id}`;
-    }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');
-    }
+        // ============================================
+        // DISPLAY NEWS (FALLBACK - WITHOUT AI)
+        // ============================================
+        function displayNewsFallback(news) {
+            var grid = document.getElementById('newsGrid');
+            if (!grid) return;
 
-    // Show skeleton loaders initially
-    function showSkeletons() {
-        const grid = document.getElementById('newsGrid');
-        const skeletons = Array(6).fill(0).map(() => `
-            <div class="skeleton-card">
-                <div class="skeleton-img skeleton"></div>
-                <div class="skeleton-text">
-                    <div class="skeleton-line skeleton" style="width:30%;"></div>
-                    <div class="skeleton-line skeleton" style="width:80%;"></div>
-                    <div class="skeleton-line skeleton" style="width:60%;"></div>
-                    <div class="skeleton-line skeleton medium"></div>
-                    <div style="display:flex;gap:1rem;margin-top:0.5rem;">
-                        <div class="skeleton-line skeleton" style="width:40%;"></div>
-                        <div class="skeleton-line skeleton" style="width:40%;"></div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        grid.innerHTML = skeletons;
-    }
-    showSkeletons();
-
-    // ============================================
-    // FETCH NEWS
-    // ============================================
-    async function fetchNews() {
-        try {
-            const { data, error } = await supabaseClient
-                .from('news')
-                .select('*')
-                .order('published_at', { ascending: false });
-            if (error) throw error;
-            let news = data || [];
-            if (news.length === 0) {
-                document.getElementById('newsGrid').innerHTML = '<div class="text-center" style="padding:2rem;">No news yet.</div>';
+            if (!news || news.length === 0) {
+                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
                 return;
             }
-            allNews = news;
-            // Personalize: if user has read history, prioritize those categories
-            displayNews(allNews);
-            updateTrendingAndTicker(allNews);
-            updateAIPicks(allNews);
-        } catch (e) {
-            console.error('Fetch error:', e);
-            document.getElementById('newsGrid').innerHTML = '<div class="text-center" style="padding:2rem;color:var(--primary);">⚠️ Error loading news. Please refresh.</div>';
-        }
-    }
 
-    // ============================================
-    // TRENDING, TICKER, AI PICKS
-    // ============================================
-    function updateTrendingAndTicker(news) {
-        const trendingDiv = document.getElementById('trendingList');
-        if (trendingDiv && news.length > 0) {
-            const trending = [...news].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
-            trendingDiv.innerHTML = trending.map((item, index) => `
-                <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
-                    <div class="trending-rank">#${index + 1}</div>
-                    <div class="trending-title">${escapeHtml(item.title)}</div>
-                    <div style="font-size:0.7rem;color:var(--text-muted);">👁️ ${item.views || 0} views</div>
-                </div>
-            `).join('');
-        }
-        const tickerContent = document.getElementById('tickerContent');
-        if (tickerContent && news.length > 0) {
-            tickerContent.innerHTML = `<span class="ticker-badge">🔴 LIVE</span> ` + news.slice(0, 5).map(n => n.title).join(' | ') + ' | ';
-        }
-    }
-
-    async function updateAIPicks(news) {
-        // Simple AI pick: show first article with AI summary
-        const aiDiv = document.getElementById('aiPicks');
-        if (aiDiv && news.length > 0) {
-            const pick = news[0];
-            aiDiv.innerHTML = `
-                <div class="trending-item" style="padding:0.75rem 0;border-bottom:1px solid var(--border);">
-                    <div style="font-size:0.7rem;color:var(--primary);margin-bottom:0.25rem;">🤖 AI PICK OF THE DAY</div>
-                    <div style="font-weight:bold;">${escapeHtml(pick.title)}</div>
-                    <div style="font-size:0.6rem;color:var(--text-muted);margin-top:0.25rem;">💡 ${escapeHtml((pick.ai_summary || pick.summary || '').substring(0, 80))}...</div>
-                </div>
-            `;
-        }
-    }
-
-    // ============================================
-    // LOAD COMMENTS (Real-time)
-    // ============================================
-    async function loadComments() {
-        const container = document.getElementById('latestComments');
-        try {
-            // Assume a 'comments' table exists with columns: id, article_id, author, content, created_at
-            const { data, error } = await supabaseClient
-                .from('comments')
-                .select('author, content, created_at')
-                .order('created_at', { ascending: false })
-                .limit(5);
-            if (error) throw error;
-            if (data && data.length > 0) {
-                container.innerHTML = data.map(c => `
-                    <div class="comment-item">
-                        <div class="comment-author">${escapeHtml(c.author)}</div>
-                        <div class="comment-text">${escapeHtml(c.content)}</div>
-                        <div style="font-size:0.6rem;color:var(--text-muted);">${new Date(c.created_at).toLocaleString()}</div>
+            grid.innerHTML = news.map(function(article) {
+                var imgUrl = article.image_url || 'https://picsum.photos/400/200?random=' + article.id;
+                return `
+                    <div class="news-card ripple" onclick="location.href='/rasu/article.html?id=${article.id}'">
+                        <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" loading="lazy" onerror="this.src='https://picsum.photos/400/200?random=1'">
+                        <div class="news-content">
+                            <span class="news-category">${article.category || 'News'}</span>
+                            <h3 class="news-title">${escapeHtml(article.title)}</h3>
+                            <p class="news-excerpt">${escapeHtml(article.summary || (article.content ? article.content.substring(0, 100) : ''))}...</p>
+                            <div class="news-meta">
+                                <span><i class="far fa-calendar"></i> ${new Date(article.published_at).toLocaleDateString()}</span>
+                                <span><i class="far fa-eye"></i> ${article.views || 0}</span>
+                            </div>
+                        </div>
                     </div>
-                `).join('');
-            } else {
-                container.innerHTML = 'No comments yet. Be the first!';
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // DISPLAY NEWS (WITH AI) + Personalized Feed
+        // ============================================
+        function displayNewsWithAI(newsToShow) {
+            var grid = document.getElementById('newsGrid');
+            if (!grid) return;
+
+            var filtered = newsToShow || allNews;
+
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(function(n) { return n.category === currentCategory; });
             }
-        } catch (e) {
-            container.innerHTML = 'Comments unavailable.';
-        }
-    }
 
-    // ============================================
-    // LOAD CATEGORIES
-    // ============================================
-    function loadCategories() {
-        const grid = document.getElementById('categoryGrid');
-        const cats = [
-            { name: 'Study', icon: 'fa-graduation-cap', color: '#10b981', link: '/rasu/study.html' },
-            { name: 'Freelancing', icon: 'fa-briefcase', color: '#dc2626', link: '/rasu/freelance.html' },
-            { name: 'Vacancy', icon: 'fa-bullhorn', color: '#f59e0b', link: '/rasu/vacancy.html' }
-        ];
-        grid.innerHTML = cats.map(cat => `
-            <div class="category-card" onclick="window.location.href='${cat.link}'">
-                <i class="fas ${cat.icon}" style="color:${cat.color};"></i>
-                <span>${cat.name}</span>
-            </div>
-        `).join('');
-    }
-
-    // ============================================
-    // WEATHER
-    // ============================================
-    function getWeather() {
-        document.getElementById('weatherTemp').textContent = '28°C';
-        document.getElementById('weatherLocation').textContent = 'Mumbai, IN';
-    }
-
-    // ============================================
-    // NEWSLETTER
-    // ============================================
-    document.getElementById('subscribeBtn').addEventListener('click', async function() {
-        const email = document.getElementById('newsletterEmail').value.trim();
-        if (!email || !email.includes('@')) {
-            alert('Please enter a valid email.');
-            return;
-        }
-        try {
-            const { error } = await supabaseClient.from('subscribers').insert([{ email }]);
-            if (error && error.code === '23505') {
-                alert('📧 Already subscribed!');
-            } else if (!error) {
-                alert('✅ Subscribed!');
-                document.getElementById('newsletterEmail').value = '';
-            } else {
-                alert('❌ Subscription failed.');
+            // 🔥 Personalized Feed: prioritize categories user reads most
+            if (readHistory.length > 0) {
+                var categoryCount = {};
+                readHistory.forEach(function(id) {
+                    var article = allNews.find(function(n) { return n.id === id; });
+                    if (article) {
+                        categoryCount[article.category] = (categoryCount[article.category] || 0) + 1;
+                    }
+                });
+                // Sort: categories with higher count come first
+                filtered.sort(function(a, b) {
+                    var aCount = categoryCount[a.category] || 0;
+                    var bCount = categoryCount[b.category] || 0;
+                    return bCount - aCount;
+                });
             }
-        } catch (e) {
-            alert('❌ Subscription failed.');
+
+            if (!filtered || filtered.length === 0) {
+                grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news found</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(function(article) {
+                var imgUrl = article.image_url || 'https://picsum.photos/400/200?random=' + article.id;
+                return `
+                    <div class="news-card ripple" onclick="handleNewsClick(${article.id})">
+                        <img class="news-image" src="${imgUrl}" alt="${escapeHtml(article.title)}" loading="lazy" onerror="this.src='https://picsum.photos/400/200?random=1'">
+                        <div class="news-content">
+                            <span class="news-category">${article.category || 'News'}</span>
+                            <h3 class="news-title">${escapeHtml(article.ai_title || article.title)}</h3>
+                            <p class="news-excerpt">${escapeHtml(article.ai_summary || article.summary || (article.content ? article.content.substring(0, 100) : ''))}...</p>
+                            <div class="news-meta">
+                                <span><i class="far fa-calendar"></i> ${new Date(article.published_at).toLocaleDateString()}</span>
+                                <span><i class="far fa-eye"></i> ${article.views || 0}</span>
+                                ${article.ai_enhanced ? '<span class="ai-badge"><i class="fas fa-robot"></i> AI</span>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
-    });
 
-    // ============================================
-    // BOTTOM NAV
-    // ============================================
-    document.getElementById('affiliateNavBtn').addEventListener('click', function() {
-        alert('💰 Affiliate programs coming soon!');
-    });
-    document.getElementById('earningNavBtn').addEventListener('click', function() {
-        alert('💵 Earning options coming soon!');
-    });
-    document.getElementById('workspaceNavBtn').addEventListener('click', function() {
-        window.open('/rasu/admin.html', '_blank');
-    });
-    document.getElementById('languageNavBtn').addEventListener('click', function() {
-        alert('🌐 Language options coming soon!');
-    });
+        // ============================================
+        // HANDLE NEWS CLICK - Track reading history
+        // ============================================
+        function handleNewsClick(id) {
+            // Track read history for personalization
+            if (!readHistory.includes(id)) {
+                readHistory.push(id);
+                localStorage.setItem('readHistory', JSON.stringify(readHistory));
+            }
+            window.location.href = '/rasu/article.html?id=' + id;
+        }
 
-    // ============================================
-    // NAVIGATION LINKS (Desktop + Sidebar)
-    // ============================================
-    document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const category = this.getAttribute('data-category');
-            if (category) {
-                currentCategory = category;
-                displayNews(allNews);
-                document.querySelectorAll('.nav-desktop a, .sidebar-nav a[data-category]').forEach(a => a.classList.remove('active'));
+        // ============================================
+        // FETCH NEWS FROM SUPABASE
+        // ============================================
+        async function fetchNews() {
+            var grid = document.getElementById('newsGrid');
+            if (!grid) return;
+
+            // Show skeleton loaders
+            showSkeletons();
+
+            try {
+                var result = await supabaseClient
+                    .from('news')
+                    .select('*')
+                    .order('published_at', { ascending: false });
+
+                if (result.error) throw result.error;
+
+                var news = result.data || [];
+
+                if (news.length === 0) {
+                    grid.innerHTML = '<div class="text-center" style="padding:2rem;">No news yet. Add news from admin panel!</div>';
+                    return;
+                }
+
+                // 🔥 Try AI enhancement with timeout - agar fail ho to fallback
+                try {
+                    // Sirf 3 articles enhance karo (baaki direct display)
+                    var newsToEnhance = news.slice(0, 3);
+                    var enhancedNews = await Promise.all(newsToEnhance.map(async function(article) {
+                        var summary = await generateAISummaryWithTimeout(article.content || article.summary || '',
+                            8000);
+                        var enhancedTitle = await enhanceHeadlineWithTimeout(article.title, 6000);
+                        return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
+                    }));
+
+                    // Baaki news ko bina AI ke display karo
+                    var remainingNews = news.slice(3).map(function(a) { return { ...a, ai_enhanced: false }; });
+                    allNews = enhancedNews.concat(remainingNews);
+
+                    // AI Pick try karo - agar fail ho to ignore
+                    try {
+                        var aiPick = await getAIPickWithTimeout(allNews, 5000);
+                        var aiDiv = document.getElementById('aiPicks');
+                        if (aiDiv && aiPick) {
+                            aiDiv.innerHTML =
+                                `
+                                <div class="ai-pick-item">
+                                    <div class="ai-pick-label">🤖 AI PICK OF THE DAY</div>
+                                    <div class="ai-pick-title">${escapeHtml(aiPick.title)}</div>
+                                    <div class="ai-pick-reason">💡 ${escapeHtml(aiPick.reason)}</div>
+                                </div>
+                            `;
+                        }
+                    } catch (aiPickError) {
+                        // AI Pick fail ho to kuch mat dikhao
+                    }
+
+                } catch (aiError) {
+                    // 🔥 AI enhancement fail ho to direct fallback display
+                    console.log('AI enhancement failed, using fallback:', aiError.message);
+                    allNews = news.map(function(a) { return { ...a, ai_enhanced: false }; });
+                    displayNewsFallback(news);
+                    // Trending aur ticker update karo
+                    updateTrendingAndTicker(news);
+                    return;
+                }
+
+                // Trending aur ticker update karo
+                updateTrendingAndTicker(allNews);
+
+                // Display news with AI
+                displayNewsWithAI(allNews);
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                grid.innerHTML =
+                    '<div class="text-center" style="padding:2rem;color:var(--brand-red);">⚠️ Error loading news. Please refresh.</div>';
+            }
+        }
+
+        // ============================================
+        // UPDATE TRENDING AND TICKER
+        // ============================================
+        function updateTrendingAndTicker(news) {
+            var trendingDiv = document.getElementById('trendingList');
+            if (trendingDiv && news.length > 0) {
+                var trending = [...news].sort(function(a, b) { return (b.views || 0) - (a.views || 0); }).slice(0, 5);
+                trendingDiv.innerHTML = trending.map(function(item, index) {
+                    return `
+                        <div class="trending-item" onclick="location.href='/rasu/article.html?id=${item.id}'">
+                            <div class="trending-rank">#${index + 1}</div>
+                            <div class="trending-title">${escapeHtml(item.title)}</div>
+                            <div class="trending-views">👁️ ${item.views || 0} views</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            var tickerContent = document.getElementById('tickerContent');
+            if (tickerContent && news.length > 0) {
+                tickerContent.innerHTML = '<span class="ticker-badge">🔴 LIVE</span> ' + news.slice(0, 5).map(function(n) {
+                    return n.title;
+                }).join(' | ') + ' | ';
+            }
+        }
+
+        // ============================================
+        // LOAD COMMENTS
+        // ============================================
+        async function loadComments() {
+            var container = document.getElementById('latestComments');
+            if (!container) return;
+
+            try {
+                // Try to fetch comments from Supabase
+                var result = await supabaseClient
+                    .from('comments')
+                    .select('author, content, created_at')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (result.error) throw result.error;
+
+                var data = result.data;
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(function(c) {
+                        return `
+                            <div class="comment-item">
+                                <div class="comment-author">${escapeHtml(c.author)}</div>
+                                <div class="comment-text">${escapeHtml(c.content)}</div>
+                                <div class="comment-time">${new Date(c.created_at).toLocaleDateString()}</div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML =
+                    '<div style="color:var(--text-tertiary);font-size:0.8rem;">No comments yet. Be the first!</div>';
+                }
+            } catch (e) {
+                // If comments table doesn't exist, show message
+                container.innerHTML =
+                    '<div style="color:var(--text-tertiary);font-size:0.8rem;">Comments coming soon!</div>';
+            }
+        }
+
+        // ============================================
+        // LOAD CATEGORIES - SIRF 3 ICONS (Study, Freelancing, Vacancy)
+        // ============================================
+        function loadCategories() {
+            var categoryGrid = document.getElementById('categoryGrid');
+            if (!categoryGrid) return;
+
+            var newCategories = [
+                { name: 'Study', icon: 'fa-graduation-cap', color: '#10b981', link: '/rasu/study.html' },
+                { name: 'Freelancing', icon: 'fa-briefcase', color: '#dc2626', link: '/rasu/freelance.html' },
+                { name: 'Vacancy', icon: 'fa-bullhorn', color: '#f59e0b', link: '/rasu/vacancy.html' }
+            ];
+
+            categoryGrid.innerHTML = newCategories.map(function(cat) {
+                return `
+                    <div class="category-card" data-category="${cat.name}" onclick="window.location.href='${cat.link}'" style="background: linear-gradient(135deg, ${cat.color}, ${cat.color}dd); cursor: pointer;">
+                        <i class="fas ${cat.icon}" style="font-size: 1.5rem; margin-bottom: 0.25rem; display: block; color:white;"></i>
+                        <span style="font-size: 0.75rem; font-weight: 600; color:white;">${cat.name}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // WEATHER
+        // ============================================
+        function getWeather() {
+            var tempDiv = document.getElementById('weatherTemp');
+            var locDiv = document.getElementById('weatherLocation');
+            if (tempDiv) tempDiv.textContent = '28°C';
+            if (locDiv) locDiv.textContent = 'Mumbai, IN';
+        }
+
+        // ============================================
+        // SEARCH FUNCTION
+        // ============================================
+        function initSearch() {
+            var searchBtn = document.getElementById('searchBtn');
+            var searchInput = document.getElementById('searchInput');
+
+            if (searchBtn) {
+                searchBtn.addEventListener('click', function() {
+                    searchInput.classList.toggle('active');
+                    if (searchInput.classList.contains('active')) searchInput.focus();
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        var term = searchInput.value.toLowerCase();
+                        var filtered = allNews.filter(function(n) {
+                            return n.title?.toLowerCase().includes(term);
+                        });
+                        if (filtered.length > 0) {
+                            displayNewsWithAI(filtered);
+                        } else {
+                            document.getElementById('newsGrid').innerHTML =
+                                '<div class="text-center" style="padding:2rem;">No news found for "' + escapeHtml(
+                                    term) + '"</div>';
+                        }
+                    }
+                });
+            }
+        }
+
+        // ============================================
+        // SIDEBAR FUNCTIONS
+        // ============================================
+        function initSidebar() {
+            var menuToggle = document.getElementById('menuToggle');
+            var closeSidebar = document.getElementById('closeSidebar');
+            var overlay = document.getElementById('overlay');
+            var sidebar = document.getElementById('sidebar');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    if (sidebar) sidebar.classList.add('open');
+                    if (overlay) overlay.classList.add('active');
+                });
+            }
+
+            if (closeSidebar) {
+                closeSidebar.addEventListener('click', function() {
+                    if (sidebar) sidebar.classList.remove('open');
+                    if (overlay) overlay.classList.remove('active');
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    if (sidebar) sidebar.classList.remove('open');
+                    if (overlay) overlay.classList.remove('active');
+                });
+            }
+
+            // Sidebar navigation links
+            document.querySelectorAll('.sidebar-nav a[data-category]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var category = this.getAttribute('data-category');
+                    if (category) {
+                        currentCategory = category;
+                        displayNewsWithAI(allNews);
+                        document.querySelectorAll('.sidebar-nav a[data-category]').forEach(function(a) {
+                            a.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        if (sidebar) sidebar.classList.remove('open');
+                        if (overlay) overlay.classList.remove('active');
+                    }
+                });
+            });
+
+            // Bookmark button
+            var bookmarkBtn = document.getElementById('bookmarkBtn');
+            if (bookmarkBtn) {
+                bookmarkBtn.addEventListener('click', function() {
+                    alert('🔖 Bookmarks feature coming soon!');
+                    if (sidebar) sidebar.classList.remove('open');
+                    if (overlay) overlay.classList.remove('active');
+                });
+            }
+
+            // Settings button
+            var settingsBtn = document.getElementById('settingsBtn');
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', function() {
+                    alert('⚙️ Settings panel coming soon!');
+                    if (sidebar) sidebar.classList.remove('open');
+                    if (overlay) overlay.classList.remove('active');
+                });
+            }
+        }
+
+        // ============================================
+        // NEWSLETTER SUBSCRIPTION
+        // ============================================
+        async function initNewsletter() {
+            var subscribeBtn = document.getElementById('subscribeBtn');
+            if (subscribeBtn) {
+                subscribeBtn.addEventListener('click', async function() {
+                    var email = document.getElementById('newsletterEmail')?.value;
+                    if (email && email.includes('@')) {
+                        try {
+                            var result = await supabaseClient.from('subscribers').insert([{ email: email }]);
+                            if (result.error && result.error.code === '23505') {
+                                alert('📧 Email already subscribed!');
+                            } else if (!result.error) {
+                                alert('✅ Subscribed with ' + email + '!');
+                                document.getElementById('newsletterEmail').value = '';
+                            } else {
+                                alert('❌ Subscription failed');
+                            }
+                        } catch (e) {
+                            alert('❌ Subscription failed');
+                        }
+                    } else {
+                        alert('⚠️ Please enter valid email');
+                    }
+                });
+            }
+        }
+
+        // ============================================
+        // DESKTOP NAVIGATION
+        // ============================================
+        document.querySelectorAll('.nav-desktop a').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentCategory = this.getAttribute('data-category');
+                displayNewsWithAI(allNews);
+                document.querySelectorAll('.nav-desktop a').forEach(function(a) {
+                    a.classList.remove('active');
+                });
                 this.classList.add('active');
-                // Close sidebar on mobile
-                document.getElementById('sidebar').classList.remove('open');
-                document.getElementById('overlay').classList.remove('active');
-            }
+            });
         });
-    });
 
-    // ============================================
-    // SERVICE WORKER (PWA)
-    // ============================================
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/rasu/sw.js')
-            .then(reg => console.log('✅ Service Worker registered'))
-            .catch(err => console.log('⚠️ Service Worker registration failed:', err.message));
-    }
+        // ============================================
+        // BOTTOM NAVIGATION BUTTONS
+        // ============================================
+        document.getElementById('affiliateNavBtn')?.addEventListener('click', function() {
+            alert(
+                '💰 Affiliate Programs:\n\n• Amazon Affiliate - Earn up to 10%\n• Flipkart Affiliate\n• Share your affiliate links in news articles\n\nVisit admin panel to add affiliate links!'
+                );
+        });
 
-    // ============================================
-    // INIT
-    // ============================================
-    loadCategories();
-    getWeather();
-    fetchNews();
-    loadComments();
+        document.getElementById('earningNavBtn')?.addEventListener('click', function() {
+            alert(
+                '💵 Earning Options:\n\n• Google AdSense (Coming Soon)\n• Affiliate Marketing\n• Sponsored Posts\n• Donations via UPI\n\nStart earning by publishing quality news!'
+                );
+        });
 
-    console.log('[THE MOON] World-class features loaded! 🚀');
-</script>
+        document.getElementById('workspaceNavBtn')?.addEventListener('click', function() {
+            window.open('/rasu/admin.html', '_blank');
+        });
+
+        document.getElementById('languageNavBtn')?.addEventListener('click', function() {
+            alert(
+                '🌐 Language Options:\n\n• English (Default)\n• Hindi (Coming Soon)\n• Marathi (Coming Soon)\n• Tamil (Coming Soon)\n• Bengali (Coming Soon)'
+                );
+        });
+
+        // Bottom navigation home button
+        document.querySelectorAll('.bottom-nav-item[data-nav="home"]').forEach(function(item) {
+            item.addEventListener('click', function() {
+                currentCategory = 'all';
+                displayNewsWithAI(allNews);
+                document.querySelectorAll('.bottom-nav-item').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                document.querySelectorAll('.nav-desktop a').forEach(function(a) {
+                    a.classList.remove('active');
+                });
+                document.querySelector('.nav-desktop a[data-category="all"]')?.classList.add('active');
+            });
+        });
+
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        var themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+        // ============================================
+        // SERVICE WORKER (PWA)
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/rasu/sw.js')
+                .then(function(reg) { console.log('✅ Service Worker registered'); })
+                .catch(function(err) { console.log('⚠️ Service Worker registration failed:', err.message); });
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        initTheme();
+        loadCategories();
+        getWeather();
+        initSearch();
+        initSidebar();
+        initNewsletter();
+        fetchNews();
+        loadComments();
+
+        console.log('[THE MOON] Fully fixed and initialized with all features.');
+    </script>
 </body>
 </html>
