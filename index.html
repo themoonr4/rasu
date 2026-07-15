@@ -11,14 +11,12 @@
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
 
-        // ✅ Consent mode - allow analytics cookies
         gtag('consent', 'default', {
             'analytics_storage': 'granted',
             'ad_storage': 'denied',
             'wait_for_update': 500
         });
 
-        // ✅ Config with explicit page view parameters - using correct ID
         gtag('config', 'G-VK9TTNJ6BR', {
             send_page_view: true,
             page_title: document.title,
@@ -27,7 +25,6 @@
             cookie_flags: 'SameSite=None;Secure'
         });
 
-        // ✅ Manual page view trigger for SPA navigation
         function trackPageView() {
             gtag('event', 'page_view', {
                 page_title: document.title,
@@ -68,7 +65,6 @@
             }, e.__SV = 1)
         }(document, window.posthog || []);
 
-        // ✅ Proper initialization - removed invalid "defaults" parameter
         if (!window.posthog.__loaded) {
             posthog.init('phc_kAnmLqSV2F6EzcvaVoVZs5q3sPhPDVJWNSuyoqH2m4ft', {
                 api_host: 'https://us.i.posthog.com',
@@ -98,7 +94,6 @@
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
             try {
-                // ✅ Prevent duplicate initialization
                 if (window.OneSignal?.initialized) return;
                 await OneSignal.init({
                     appId: "60154f61-182d-45c0-99f1-fef13b3f9d1c",
@@ -120,7 +115,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <!-- Primary Meta Tags -->
     <title>THE MOON — World's Most Advanced AI-Powered News Platform</title>
     <meta name="title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
     <meta name="description" content="India's #1 AI-powered news platform delivering real-time, unbiased news, study materials, freelance jobs, and vacancies — powered by Gemini AI.">
@@ -138,7 +132,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="msapplication-TileColor" content="#dc2626">
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://themoonr4.github.io/rasu/">
     <meta property="og:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
@@ -149,7 +142,6 @@
     <meta property="og:site_name" content="THE MOON">
     <meta property="og:locale" content="en_IN">
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://themoonr4.github.io/rasu/">
     <meta name="twitter:title" content="THE MOON — World's Most Advanced AI-Powered News Platform">
@@ -158,16 +150,10 @@
     <meta name="twitter:site" content="@TheMoonZ60">
     <meta name="twitter:creator" content="@TheMoonZ60">
 
-    <!-- ============================================ -->
-    <!-- PWA MANIFEST & ICONS -->
-    <!-- ============================================ -->
     <link rel="manifest" href="/rasu/manifest.json">
     <link rel="apple-touch-icon" href="/rasu/icon-192.png">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z'/%3E%3Cpath d='M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z' fill='white'/%3E%3C/svg%3E">
 
-    <!-- ============================================ -->
-    <!-- PERFORMANCE - PRECONNECT & PRELOAD -->
-    <!-- ============================================ -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="preconnect" href="https://zpubhlbdqwzyseditrls.supabase.co">
@@ -176,9 +162,6 @@
     <link rel="dns-prefetch" href="//www.google-analytics.com">
     <link rel="dns-prefetch" href="//zpubhlbdqwzyseditrls.supabase.co">
 
-    <!-- ============================================ -->
-    <!-- FONTS & STYLES -->
-    <!-- ============================================ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
@@ -242,7 +225,6 @@
         }
     </script>
 
-    <!-- FAQ Schema -->
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -363,7 +345,6 @@
             transition: background var(--transition-normal), color var(--transition-normal);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -380,9 +361,6 @@
             background: var(--primary-dark);
         }
 
-        /* ============================================ */
-        /* CONTAINER */
-        /* ============================================ */
         .container {
             width: 100%;
             max-width: 1400px;
@@ -396,9 +374,6 @@
             .container { padding: 0 2rem; }
         }
 
-        /* ============================================ */
-        /* HEADER */
-        /* ============================================ */
         .header {
             position: sticky;
             top: 0;
@@ -423,7 +398,6 @@
             }
         }
 
-        /* Logo */
         .logo {
             display: flex;
             align-items: center;
@@ -444,7 +418,9 @@
         @media (min-width: 768px) {
             .logo { font-size: 1.5rem; gap: 8px; }
         }
-        .logo-icon { font-size: 1.4rem; -webkit-text-fill-color: initial; color: var(--primary); }
+        .logo-icon { font-size: 1.4rem;
+            -webkit-text-fill-color: initial;
+            color: var(--primary); }
         @media (min-width: 768px) { .logo-icon { font-size: 1.6rem; } }
         .logo-text { letter-spacing: -0.5px; }
         .logo-badge {
@@ -461,7 +437,6 @@
             .logo-badge { font-size: 0.6rem; padding: 2px 8px; }
         }
 
-        /* Desktop Navigation */
         .nav-desktop {
             display: none;
             flex: 1;
@@ -490,7 +465,6 @@
             color: var(--primary);
         }
 
-        /* Header Actions */
         .header-actions {
             display: flex;
             align-items: center;
@@ -521,7 +495,6 @@
             }
         }
 
-        /* Search Container */
         .search-container {
             position: relative;
             display: flex;
@@ -554,7 +527,6 @@
             box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
         }
 
-        /* Menu Toggle (Mobile) */
         .menu-toggle {
             display: flex;
             background: none;
@@ -576,9 +548,6 @@
             .menu-toggle { display: none; }
         }
 
-        /* ============================================ */
-        /* BOTTOM NAVIGATION (MOBILE) */
-        /* ============================================ */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -623,9 +592,6 @@
             .bottom-nav-item i { font-size: 1.2rem; }
         }
 
-        /* ============================================ */
-        /* SIDEBAR */
-        /* ============================================ */
         .sidebar {
             position: fixed;
             top: 0;
@@ -708,7 +674,6 @@
             color: var(--primary);
         }
 
-        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
@@ -726,9 +691,6 @@
             .overlay { display: none !important; }
         }
 
-        /* ============================================ */
-        /* LAYOUT MAIN */
-        /* ============================================ */
         .layout-main {
             display: flex;
             flex-direction: column;
@@ -746,9 +708,6 @@
             }
         }
 
-        /* ============================================ */
-        /* HERO SECTION */
-        /* ============================================ */
         .hero {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border-radius: var(--radius-2xl);
@@ -804,9 +763,6 @@
             .hero p { font-size: 0.95rem; }
         }
 
-        /* ============================================ */
-        /* TICKER */
-        /* ============================================ */
         .ticker {
             background: var(--bg-secondary);
             border-radius: 9999px;
@@ -845,13 +801,11 @@
             animation: pulse-badge 2s infinite;
         }
         @keyframes pulse-badge {
-            0%, 100% { opacity: 1; }
+            0%,
+            100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
 
-        /* ============================================ */
-        /* CATEGORY GRID - SIRF 3 ICONS */
-        /* ============================================ */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -893,9 +847,6 @@
             .category-card span { font-size: 0.75rem; }
         }
 
-        /* ============================================ */
-        /* NEWS GRID */
-        /* ============================================ */
         .news-grid {
             display: grid;
             gap: 1rem;
@@ -906,7 +857,6 @@
             }
         }
 
-        /* Skeleton Loader */
         .skeleton {
             background: var(--bg-secondary);
             border-radius: 0.5rem;
@@ -961,7 +911,6 @@
             width: 90%;
         }
 
-        /* News Card */
         .news-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
@@ -1061,9 +1010,6 @@
             font-weight: 600;
         }
 
-        /* ============================================ */
-        /* SIDEBAR RIGHT (WIDGETS) */
-        /* ============================================ */
         .sidebar-right {
             display: flex;
             flex-direction: column;
@@ -1094,7 +1040,6 @@
             color: var(--primary);
         }
 
-        /* Trending Items */
         .trending-item {
             padding: 0.5rem 0;
             border-bottom: 1px solid var(--border);
@@ -1127,7 +1072,6 @@
             color: var(--text-tertiary);
         }
 
-        /* AI Picks Widget */
         .ai-pick-item {
             padding: 0.5rem 0;
             border-bottom: 1px solid var(--border);
@@ -1153,7 +1097,6 @@
             margin-top: 0.2rem;
         }
 
-        /* Comments Widget */
         .comment-item {
             padding: 0.5rem 0;
             border-bottom: 1px solid var(--border);
@@ -1179,7 +1122,6 @@
             color: var(--text-tertiary);
         }
 
-        /* Weather Widget */
         .weather-info {
             text-align: center;
         }
@@ -1196,7 +1138,6 @@
             color: var(--text-secondary);
         }
 
-        /* Newsletter Widget */
         .newsletter-input {
             display: flex;
             flex-direction: column;
@@ -1232,9 +1173,6 @@
             transform: translateY(-2px);
         }
 
-        /* ============================================ */
-        /* FOOTER */
-        /* ============================================ */
         .footer {
             background: var(--bg-secondary);
             padding: 2rem 1rem;
@@ -1278,9 +1216,6 @@
             color: var(--text-tertiary);
         }
 
-        /* ============================================ */
-        /* LOADER */
-        /* ============================================ */
         .loader {
             text-align: center;
             padding: 2rem;
@@ -1298,9 +1233,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ============================================ */
-        /* RIPPLE EFFECT */
-        /* ============================================ */
         .ripple {
             position: relative;
             overflow: hidden;
@@ -1320,9 +1252,6 @@
             }
         }
 
-        /* ============================================ */
-        /* UTILITY CLASSES */
-        /* ============================================ */
         .text-center { text-align: center; }
         .hidden { display: none; }
         .mt-1 { margin-top: 0.5rem; }
@@ -1332,7 +1261,6 @@
         .mb-2 { margin-bottom: 1rem; }
         .mb-3 { margin-bottom: 1.5rem; }
 
-        /* Reading Progress Bar */
         #progressBar {
             position: fixed;
             top: 0;
@@ -1344,9 +1272,6 @@
             transition: width 0.15s ease;
         }
 
-        /* ============================================ */
-        /* RESPONSIVE FINE-TUNE */
-        /* ============================================ */
         @media (max-width: 480px) {
             .hero h1 { font-size: 1.3rem; }
             .category-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
@@ -1368,14 +1293,8 @@
 </head>
 <body>
 
-    <!-- ============================================ -->
-    <!-- READING PROGRESS BAR -->
-    <!-- ============================================ -->
     <div id="progressBar"></div>
 
-    <!-- ============================================ -->
-    <!-- HEADER -->
-    <!-- ============================================ -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -1409,9 +1328,6 @@
         </div>
     </header>
 
-    <!-- ============================================ -->
-    <!-- SIDEBAR -->
-    <!-- ============================================ -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <span class="logo" style="font-size:1.2rem;">🌙 THE MOON</span>
@@ -1431,9 +1347,6 @@
 
     <div class="overlay" id="overlay"></div>
 
-    <!-- ============================================ -->
-    <!-- BOTTOM NAVIGATION (MOBILE) -->
-    <!-- ============================================ -->
     <div class="bottom-nav">
         <button class="bottom-nav-item active" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
         <button class="bottom-nav-item" id="affiliateNavBtn"><i class="fas fa-tags"></i><span>Affiliate</span></button>
@@ -1442,12 +1355,8 @@
         <button class="bottom-nav-item" id="languageNavBtn"><i class="fas fa-language"></i><span>Language</span></button>
     </div>
 
-    <!-- ============================================ -->
-    <!-- MAIN CONTENT -->
-    <!-- ============================================ -->
     <main class="container">
         <div class="layout-main">
-            <!-- Left Column -->
             <div>
                 <div class="hero">
                     <h1>Welcome to THE MOON 🌙</h1>
@@ -1467,7 +1376,6 @@
                 </div>
             </div>
 
-            <!-- Right Column (Sidebar) -->
             <div class="sidebar-right">
                 <div class="widget">
                     <h3><i class="fas fa-fire" style="color:var(--primary);"></i> Trending Now</h3>
@@ -1503,25 +1411,24 @@
         </div>
     </main>
 
-    <!-- ============================================ -->
-    <!-- FOOTER -->
-    <!-- ============================================ -->
     <footer class="footer">
-        <div class="footer-links">
-            <a href="/rasu/about.html">About</a>
-            <a href="/rasu/privacy.html">Privacy</a>
-            <a href="/rasu/contact.html">Contact</a>
-            <a href="/rasu/admin.html">Admin Panel</a>
-        </div>
-        <div class="footer-social">
-            <a href="https://t.me/themoom247" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
-            <a href="https://instagram.com/themoonr4" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://facebook.com/share/1GwHQhgx4g/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-            <a href="https://x.com/TheMoonZ60" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-        </div>
-        <div class="copyright">
-            <p>© 2026 THE MOON — Premium News Platform | Made with ❤️ in India</p>
+        <div class="container">
+            <div class="footer-links">
+                <a href="/rasu/about.html">About</a>
+                <a href="/rasu/privacy.html">Privacy</a>
+                <a href="/rasu/contact.html">Contact</a>
+                <a href="/rasu/admin.html">Admin Panel</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://t.me/themoom247" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="https://instagram.com/themoonr4" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com/share/1GwHQhgx4g/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://x.com/TheMoonZ60" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://whatsapp.com/channel/0029VbCGlVCGZNCoPWO48H32" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="copyright">
+                <p>© 2026 THE MOON — Premium News Platform | Made with ❤️ in India</p>
+            </div>
         </div>
     </footer>
 
@@ -1595,7 +1502,6 @@
             setTimeout(function() { ripple.remove(); }, 600);
         }
 
-        // Add ripple to all .ripple elements
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.ripple').forEach(function(el) {
                 el.addEventListener('click', createRipple);
@@ -1603,7 +1509,7 @@
         });
 
         // ============================================
-        // AI FUNCTIONS WITH TIMEOUT
+        // AI FUNCTIONS WITH TIMEOUT (same as before)
         // ============================================
         async function generateAISummaryWithTimeout(text, timeout) {
             timeout = timeout || 8000;
@@ -1790,7 +1696,7 @@
                 filtered = filtered.filter(function(n) { return n.category === currentCategory; });
             }
 
-            // 🔥 Personalized Feed: prioritize categories user reads most
+            // Personalized ordering: prioritize categories user reads most
             if (readHistory.length > 0) {
                 var categoryCount = {};
                 readHistory.forEach(function(id) {
@@ -1799,7 +1705,6 @@
                         categoryCount[article.category] = (categoryCount[article.category] || 0) + 1;
                     }
                 });
-                // Sort: categories with higher count come first
                 filtered.sort(function(a, b) {
                     var aCount = categoryCount[a.category] || 0;
                     var bCount = categoryCount[b.category] || 0;
@@ -1836,7 +1741,6 @@
         // HANDLE NEWS CLICK - Track reading history
         // ============================================
         function handleNewsClick(id) {
-            // Track read history for personalization
             if (!readHistory.includes(id)) {
                 readHistory.push(id);
                 localStorage.setItem('readHistory', JSON.stringify(readHistory));
@@ -1851,7 +1755,6 @@
             var grid = document.getElementById('newsGrid');
             if (!grid) return;
 
-            // Show skeleton loaders
             showSkeletons();
 
             try {
@@ -1871,7 +1774,6 @@
 
                 // 🔥 Try AI enhancement with timeout - agar fail ho to fallback
                 try {
-                    // Sirf 3 articles enhance karo (baaki direct display)
                     var newsToEnhance = news.slice(0, 3);
                     var enhancedNews = await Promise.all(newsToEnhance.map(async function(article) {
                         var summary = await generateAISummaryWithTimeout(article.content || article.summary || '',
@@ -1880,11 +1782,9 @@
                         return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
                     }));
 
-                    // Baaki news ko bina AI ke display karo
                     var remainingNews = news.slice(3).map(function(a) { return { ...a, ai_enhanced: false }; });
                     allNews = enhancedNews.concat(remainingNews);
 
-                    // AI Pick try karo - agar fail ho to ignore
                     try {
                         var aiPick = await getAIPickWithTimeout(allNews, 5000);
                         var aiDiv = document.getElementById('aiPicks');
@@ -1898,24 +1798,17 @@
                                 </div>
                             `;
                         }
-                    } catch (aiPickError) {
-                        // AI Pick fail ho to kuch mat dikhao
-                    }
+                    } catch (aiPickError) {}
 
                 } catch (aiError) {
-                    // 🔥 AI enhancement fail ho to direct fallback display
                     console.log('AI enhancement failed, using fallback:', aiError.message);
                     allNews = news.map(function(a) { return { ...a, ai_enhanced: false }; });
                     displayNewsFallback(news);
-                    // Trending aur ticker update karo
                     updateTrendingAndTicker(news);
                     return;
                 }
 
-                // Trending aur ticker update karo
                 updateTrendingAndTicker(allNews);
-
-                // Display news with AI
                 displayNewsWithAI(allNews);
 
             } catch (error) {
@@ -1959,7 +1852,6 @@
             if (!container) return;
 
             try {
-                // Try to fetch comments from Supabase
                 var result = await supabaseClient
                     .from('comments')
                     .select('author, content, created_at')
@@ -1981,17 +1873,16 @@
                     }).join('');
                 } else {
                     container.innerHTML =
-                    '<div style="color:var(--text-tertiary);font-size:0.8rem;">No comments yet. Be the first!</div>';
+                        '<div style="color:var(--text-tertiary);font-size:0.8rem;">No comments yet. Be the first!</div>';
                 }
             } catch (e) {
-                // If comments table doesn't exist, show message
                 container.innerHTML =
                     '<div style="color:var(--text-tertiary);font-size:0.8rem;">Comments coming soon!</div>';
             }
         }
 
         // ============================================
-        // LOAD CATEGORIES - SIRF 3 ICONS (Study, Freelancing, Vacancy)
+        // LOAD CATEGORIES
         // ============================================
         function loadCategories() {
             var categoryGrid = document.getElementById('categoryGrid');
@@ -2086,7 +1977,6 @@
                 });
             }
 
-            // Sidebar navigation links
             document.querySelectorAll('.sidebar-nav a[data-category]').forEach(function(link) {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -2104,7 +1994,6 @@
                 });
             });
 
-            // Bookmark button
             var bookmarkBtn = document.getElementById('bookmarkBtn');
             if (bookmarkBtn) {
                 bookmarkBtn.addEventListener('click', function() {
@@ -2114,7 +2003,6 @@
                 });
             }
 
-            // Settings button
             var settingsBtn = document.getElementById('settingsBtn');
             if (settingsBtn) {
                 settingsBtn.addEventListener('click', function() {
@@ -2194,7 +2082,6 @@
                 );
         });
 
-        // Bottom navigation home button
         document.querySelectorAll('.bottom-nav-item[data-nav="home"]').forEach(function(item) {
             item.addEventListener('click', function() {
                 currentCategory = 'all';
