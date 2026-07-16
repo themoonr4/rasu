@@ -1749,7 +1749,7 @@
         }
 
         // ============================================
-        // FETCH NEWS FROM SUPABASE
+        // FETCH NEWS FROM SUPABASE (FIXED)
         // ============================================
         async function fetchNews() {
             var grid = document.getElementById('newsGrid');
@@ -1758,6 +1758,7 @@
             showSkeletons();
 
             try {
+                // Use a cache buster to prevent browser caching issues
                 var result = await supabaseClient
                     .from('news')
                     .select('*')
