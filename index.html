@@ -1749,7 +1749,46 @@
         }
 
         // ============================================
-        // FETCH NEWS FROM SUPABASE (FIXED)
+        // AI ENHANCEMENT IN BACKGROUND (NEW)
+        // ============================================
+        async function enhanceNewsInBackground(news) {
+            try {
+                // Enhance first 3 articles only (for performance)
+                const toEnhance = news.slice(0, 3);
+                const enhanced = await Promise.all(toEnhance.map(async function(article) {
+                    const summary = await generateAISummaryWithTimeout(article.content || article.summary || '', 8000);
+                    const title = await enhanceHeadlineWithTimeout(article.title, 6000);
+                    return { ...article, ai_summary: summary, ai_title: title, ai_enhanced: true };
+                }));
+                const rest = news.slice(3).map(function(a) { return { ...a, ai_enhanced: false }; });
+                const newAllNews = enhanced.concat(rest);
+                allNews = newAllNews;
+                updateTrendingAndTicker(allNews);
+                displayNewsWithAI(allNews); // Re-render with AI summaries
+                // Update AI pick
+                try {
+                    const aiPick = await getAIPickWithTimeout(allNews, 5000);
+                    const aiDiv = document.getElementById('aiPicks');
+                    if (aiDiv && aiPick) {
+                        aiDiv.innerHTML =
+                            `
+                            <div class="ai-pick-item">
+                                <div class="ai-pick-label">🤖 AI PICK OF THE DAY</div>
+                                <div class="ai-pick-title">${escapeHtml(aiPick.title)}</div>
+                                <div class="ai-pick-reason">💡 ${escapeHtml(aiPick.reason)}</div>
+                            </div>
+                        `;
+                    }
+                } catch (e) {}
+                console.log('✅ AI enhancement successful!');
+            } catch (error) {
+                console.warn('⚠️ AI enhancement failed (ignored):', error.message);
+                // Do nothing, news already displayed
+            }
+        }
+
+        // ============================================
+        // FETCH NEWS FROM SUPABASE (FIXED - NON-BLOCKING)
         // ============================================
         async function fetchNews() {
             var grid = document.getElementById('newsGrid');
@@ -1758,7 +1797,6 @@
             showSkeletons();
 
             try {
-                // Use a cache buster to prevent browser caching issues
                 var result = await supabaseClient
                     .from('news')
                     .select('*')
@@ -1773,44 +1811,13 @@
                     return;
                 }
 
-                // 🔥 Try AI enhancement with timeout - agar fail ho to fallback
-                try {
-                    var newsToEnhance = news.slice(0, 3);
-                    var enhancedNews = await Promise.all(newsToEnhance.map(async function(article) {
-                        var summary = await generateAISummaryWithTimeout(article.content || article.summary || '',
-                            8000);
-                        var enhancedTitle = await enhanceHeadlineWithTimeout(article.title, 6000);
-                        return { ...article, ai_summary: summary, ai_title: enhancedTitle, ai_enhanced: true };
-                    }));
-
-                    var remainingNews = news.slice(3).map(function(a) { return { ...a, ai_enhanced: false }; });
-                    allNews = enhancedNews.concat(remainingNews);
-
-                    try {
-                        var aiPick = await getAIPickWithTimeout(allNews, 5000);
-                        var aiDiv = document.getElementById('aiPicks');
-                        if (aiDiv && aiPick) {
-                            aiDiv.innerHTML =
-                                `
-                                <div class="ai-pick-item">
-                                    <div class="ai-pick-label">🤖 AI PICK OF THE DAY</div>
-                                    <div class="ai-pick-title">${escapeHtml(aiPick.title)}</div>
-                                    <div class="ai-pick-reason">💡 ${escapeHtml(aiPick.reason)}</div>
-                                </div>
-                            `;
-                        }
-                    } catch (aiPickError) {}
-
-                } catch (aiError) {
-                    console.log('AI enhancement failed, using fallback:', aiError.message);
-                    allNews = news.map(function(a) { return { ...a, ai_enhanced: false }; });
-                    displayNewsFallback(news);
-                    updateTrendingAndTicker(news);
-                    return;
-                }
-
+                // Set initial news (no AI yet)
+                allNews = news.map(function(a) { return { ...a, ai_enhanced: false }; });
                 updateTrendingAndTicker(allNews);
-                displayNewsWithAI(allNews);
+                displayNewsWithAI(allNews); // ✅ News appears immediately
+
+                // Start AI enhancement in background (non-blocking)
+                enhanceNewsInBackground(news);
 
             } catch (error) {
                 console.error('Fetch error:', error);
