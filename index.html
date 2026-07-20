@@ -1227,14 +1227,17 @@
             showSkeletons();
 
             try {
+                // 🔥 SIRF PUBLISHED NEWS (status = 'published')
                 const { data, error } = await supabaseClient
                     .from('news')
                     .select('*')
+                    .eq('status', 'published')           // ✅ Scheduled news hide
                     .order('published_at', { ascending: false });
+
                 if (error) throw error;
                 if (!data || data.length === 0) {
                     grid.innerHTML =
-                        '<div style="text-align:center;padding:30px;color:var(--text-muted);">No news yet. Add from admin panel!</div>';
+                        '<div style="text-align:center;padding:30px;color:var(--text-muted);">No published news yet. Check back soon!</div>';
                     return;
                 }
                 allNews = data.map(a => ({ ...a, ai_enhanced: false }));
