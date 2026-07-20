@@ -380,6 +380,12 @@
                 </form>
             </div>
             <div class="card"><h3><i class="fas fa-list" style="color:#3b82f6;"></i> Recent News</h3><div id="recentNewsList" class="items-list"></div></div>
+
+            <!-- ========== SCHEDULED POSTS LIST ========== -->
+            <div class="card">
+                <h3><i class="fas fa-clock" style="color:#f59e0b;"></i> Scheduled Posts</h3>
+                <div id="scheduledNewsList" class="items-list">Loading...</div>
+            </div>
         </div>
 
         <!-- ==================== STUDY ==================== -->
@@ -999,7 +1005,7 @@
         if (section === 'analytics') loadAnalytics();
         if (section === 'monetization') loadMonetization();
         if (section === 'security') loadSecurityLogs();
-        if (section === 'news') loadRecentNews();
+        if (section === 'news') { loadRecentNews(); loadScheduledNews(); }
     }
     
     document.getElementById('menuToggle')?.addEventListener('click', () => {
@@ -1240,12 +1246,63 @@
     // NEWS FUNCTIONS
     // ============================================
     async function loadRecentNews() {
-        const { data } = await supabaseClient.from('news').select('title,id,published_at').order('published_at', { ascending: false }).limit(10);
+        const { data } = await supabaseClient.from('news').select('title,id,published_at,status').eq('status', 'published').order('published_at', { ascending: false }).limit(10);
         const container = document.getElementById('recentNewsList');
         if (container) {
             if (!data || data.length === 0) { container.innerHTML = '<div style="padding:20px;">No news yet</div>'; return; }
             container.innerHTML = data.map(item => `<div class="item-card"><div class="item-info"><div class="item-title">📰 ${escapeHtml(item.title)}</div><div class="item-meta">Published: ${new Date(item.published_at).toLocaleString()}</div></div><div class="item-actions"><button onclick="deleteNews(${item.id})" class="danger">Delete</button></div></div>`).join('');
         }
+    }
+
+    // ========== SCHEDULED POSTS LIST ==========
+    async function loadScheduledNews() {
+        const container = document.getElementById('scheduledNewsList');
+        if (!container) return;
+        try {
+            const { data, error } = await supabaseClient
+                .from('news')
+                .select(`
+                    id,
+                    title,
+                    category,
+                    status,
+                    scheduled_posts!inner (scheduled_for, status, id)
+                `)
+                .eq('status', 'scheduled')
+                .order('published_at', { ascending: true });
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">No scheduled posts</div>';
+                return;
+            }
+            container.innerHTML = data.map(item => {
+                const sp = item.scheduled_posts?.[0];
+                return `<div class="item-card">
+                    <div class="item-info">
+                        <div class="item-title">📅 ${escapeHtml(item.title)}</div>
+                        <div class="item-meta">
+                            📂 ${item.category} | ⏰ ${sp ? new Date(sp.scheduled_for).toLocaleString() : 'N/A'}
+                            <span style="color:var(--gold);margin-left:10px;">⏳ ${sp ? sp.status : 'pending'}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="cancelSchedule(${item.id})" class="danger">Cancel</button>
+                    </div>
+                </div>`;
+            }).join('');
+        } catch(e) {
+            container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">Error loading scheduled posts.</div>';
+        }
+    }
+
+    async function cancelSchedule(newsId) {
+        if (!confirm('Cancel this scheduled post?')) return;
+        try {
+            await supabaseClient.from('scheduled_posts').update({ status: 'cancelled' }).eq('news_id', newsId);
+            await supabaseClient.from('news').update({ status: 'draft' }).eq('id', newsId);
+            alert('✅ Schedule cancelled!');
+            loadScheduledNews();
+        } catch(e) { alert('❌ Error: ' + e.message); }
     }
     
     async function publishNews(e) {
@@ -1253,17 +1310,23 @@
         const content = quillEditor ? quillEditor.root.innerHTML : '';
         const title = document.getElementById('newsTitle').value;
         const category = document.getElementById('newsCategory').value;
+        const scheduleTime = document.getElementById('newsSchedule').value;
         if (!title) {
             showMessage(document.getElementById('newsMessage'), 'Please enter a title', 'error');
             return;
         }
         // Check duplicate
-        const { data: existing } = await supabaseClient.from('news').select('title').eq('title', title).limit(1);
+        const { data: existing } = await supabaseClient.from('news').select('title').ilike('title', title).limit(1);
         if (existing && existing.length > 0) {
             showMessage(document.getElementById('newsMessage'), '⚠️ News with this title already exists!', 'warning');
             return;
         }
-        const { error } = await supabaseClient.from('news').insert([{
+
+        const isScheduled = scheduleTime && new Date(scheduleTime) > new Date();
+        const status = isScheduled ? 'scheduled' : 'published';
+        const publishedAt = isScheduled ? null : new Date();
+
+        const { data: newsData, error: newsError } = await supabaseClient.from('news').insert([{
             title, category, content,
             image_url: document.getElementById('newsImage').value,
             video_url: document.getElementById('newsVideo').value,
@@ -1273,21 +1336,41 @@
             affiliate_link: document.getElementById('newsAffiliate').value,
             author: document.getElementById('newsAuthor').value,
             featured: document.getElementById('newsFeatured').value,
-            published_at: new Date(),
+            status: status,
+            published_at: publishedAt,
             views: 0,
             summary: content.substring(0, 200)
-        }]);
-        if (error) {
-            showMessage(document.getElementById('newsMessage'), 'Error: ' + error.message, 'error');
-            console.error(error);
-        } else {
-            showMessage(document.getElementById('newsMessage'), '✅ News Published Successfully!', 'success');
-            document.getElementById('newsForm').reset();
-            if (quillEditor) quillEditor.root.innerHTML = '';
-            loadDashboard();
-            loadRecentNews();
-            sendPush('📰 Breaking News', title);
+        }]).select();
+
+        if (newsError) {
+            showMessage(document.getElementById('newsMessage'), 'Error: ' + newsError.message, 'error');
+            console.error(newsError);
+            return;
         }
+
+        const insertedNewsId = newsData?.[0]?.id;
+
+        if (isScheduled && insertedNewsId) {
+            const { error: scheduleError } = await supabaseClient.from('scheduled_posts').insert([{
+                news_id: insertedNewsId,
+                scheduled_for: new Date(scheduleTime).toISOString(),
+                status: 'pending'
+            }]);
+            if (scheduleError) {
+                showMessage(document.getElementById('newsMessage'), '⚠️ News saved but scheduling failed: ' + scheduleError.message, 'warning');
+            } else {
+                showMessage(document.getElementById('newsMessage'), `✅ News scheduled for ${new Date(scheduleTime).toLocaleString()}!`, 'success');
+                loadScheduledNews();
+            }
+        } else {
+            sendPush('📰 Breaking News', title);
+            showMessage(document.getElementById('newsMessage'), '✅ News Published Successfully!', 'success');
+        }
+
+        document.getElementById('newsForm').reset();
+        if (quillEditor) quillEditor.root.innerHTML = '';
+        loadDashboard();
+        loadRecentNews();
     }
     
     async function deleteNews(id) {
