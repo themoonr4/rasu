@@ -1254,43 +1254,46 @@
         }
     }
 
-    // ========== SCHEDULED POSTS LIST ==========
+    // ========== SCHEDULED POSTS LIST (FIXED) ==========
     async function loadScheduledNews() {
         const container = document.getElementById('scheduledNewsList');
         if (!container) return;
         try {
+            // 🔥 Fixed: Query scheduled_posts directly with news join
             const { data, error } = await supabaseClient
-                .from('news')
+                .from('scheduled_posts')
                 .select(`
                     id,
-                    title,
-                    category,
+                    scheduled_for,
                     status,
-                    scheduled_posts!inner (scheduled_for, status, id)
+                    news:news_id (id, title, category, status)
                 `)
-                .eq('status', 'scheduled')
-                .order('published_at', { ascending: true });
+                .eq('status', 'pending') // only pending
+                .order('scheduled_for', { ascending: true })
+                .limit(50);
             if (error) throw error;
             if (!data || data.length === 0) {
                 container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">No scheduled posts</div>';
                 return;
             }
             container.innerHTML = data.map(item => {
-                const sp = item.scheduled_posts?.[0];
+                const news = item.news;
+                if (!news) return '';
                 return `<div class="item-card">
                     <div class="item-info">
-                        <div class="item-title">📅 ${escapeHtml(item.title)}</div>
+                        <div class="item-title">📅 ${escapeHtml(news.title)}</div>
                         <div class="item-meta">
-                            📂 ${item.category} | ⏰ ${sp ? new Date(sp.scheduled_for).toLocaleString() : 'N/A'}
-                            <span style="color:var(--gold);margin-left:10px;">⏳ ${sp ? sp.status : 'pending'}</span>
+                            📂 ${news.category} | ⏰ ${new Date(item.scheduled_for).toLocaleString()}
+                            <span style="color:var(--gold);margin-left:10px;">⏳ ${item.status}</span>
                         </div>
                     </div>
                     <div class="item-actions">
-                        <button onclick="cancelSchedule(${item.id})" class="danger">Cancel</button>
+                        <button onclick="cancelSchedule(${news.id})" class="danger">Cancel</button>
                     </div>
                 </div>`;
             }).join('');
         } catch(e) {
+            console.error('Load scheduled posts error:', e);
             container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">Error loading scheduled posts.</div>';
         }
     }
@@ -1298,7 +1301,9 @@
     async function cancelSchedule(newsId) {
         if (!confirm('Cancel this scheduled post?')) return;
         try {
+            // Update scheduled_posts status to cancelled
             await supabaseClient.from('scheduled_posts').update({ status: 'cancelled' }).eq('news_id', newsId);
+            // Update news status to draft
             await supabaseClient.from('news').update({ status: 'draft' }).eq('id', newsId);
             alert('✅ Schedule cancelled!');
             loadScheduledNews();
