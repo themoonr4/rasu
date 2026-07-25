@@ -1,9 +1,8 @@
-name: Generate Sitemap (Ultimate)
+name: Generate Sitemap
 
 on:
   schedule:
-    # Har 2 ghante mein run (smart scheduling)
-    - cron: '0 */2 * * *'
+    - cron: '0 */2 * * *'   # Har 2 ghante
   workflow_dispatch:
   push:
     branches: [ main ]
@@ -38,10 +37,10 @@ jobs:
           CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
         run: python generate_sitemap.py
 
-      - name: Commit and push
+      - name: Commit & Push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add sitemap*.xml robots.txt
+          git add sitemap*.xml sitemap*.xml.gz sitemap.txt robots.txt
           git diff --staged --quiet || git commit -m "Auto-update sitemap [skip ci]"
           git push
