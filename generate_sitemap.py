@@ -1,32 +1,31 @@
 #!/usr/bin/env python3
 """
 THE MOON - Ultimate Sitemap Generator
-Features:
-- Multi-sitemap (sitemap index + multiple files)
-- Google News, Image, Video sitemap
-- hreflang (Hindi/English alternates)
-- Priority based on views + comments
-- Smart scheduling (auto-run after publish)
-- Telegram alert on failure
-- Cloudflare cache purge (optional)
+- Multi-sitemap (50k+ URLs)
+- Google News, Image, Video Sitemap
+- hreflang (Hindi/English)
+- Priority based on recency + views + comments
+- Gzip compression (.xml.gz)
+- Telegram alert & Cloudflare purge
 """
 
 import os
 import sys
+import gzip
 import logging
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import List, Dict
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
-from typing import List, Dict, Any
 
 # ===================== CONFIG =====================
 SUPABASE_URL = os.getenv('SUPABASE_URL', 'https://zpubhlbdqwzyseditrls.supabase.co')
 SUPABASE_KEY = os.getenv('SUPABASE_KEY', 'sb_publishable_4YiRI2c1Tij-2KvyNtJ9Sg_8-l0OFuP')
 BASE_URL = "https://themoonr4.github.io/rasu"
-SITEMAP_LIMIT = 50000  # Google max per sitemap
+SITEMAP_LIMIT = 50000
 
-# Telegram alert (optional)
+# Telegram (optional)
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
@@ -34,7 +33,7 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 CLOUDFLARE_ZONE_ID = os.getenv('CLOUDFLARE_ZONE_ID')
 CLOUDFLARE_API_KEY = os.getenv('CLOUDFLARE_API_KEY')
 
-# Static pages
+# Static Pages with hreflang
 STATIC_PAGES = [
     {'loc': '/', 'priority': 1.0, 'changefreq': 'daily', 'langs': {'en': '/', 'hi': '/hi/'}},
     {'loc': '/study.html', 'priority': 0.8, 'changefreq': 'weekly'},
@@ -51,24 +50,23 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 def send_telegram_alert(message):
-    """Send alert to Telegram if bot token is set"""
     if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
         try:
-            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-            requests.post(url, json={'chat_id': TELEGRAM_CHAT_ID, 'text': message, 'parse_mode': 'HTML'})
+            requests.post(
+                f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+                json={'chat_id': TELEGRAM_CHAT_ID, 'text': message, 'parse_mode': 'HTML'}
+            )
             logger.info("✅ Telegram alert sent")
         except Exception as e:
-            logger.error(f"Failed to send Telegram alert: {e}")
+            logger.error(f"Telegram error: {e}")
 
-# ===================== FETCH DATA =====================
-def fetch_news_and_comments() -> List[Dict]:
-    """Fetch published news with comments count"""
+# ===================== FETCH NEWS =====================
+def fetch_news() -> List[Dict]:
     headers = {'apikey': SUPABASE_KEY, 'Authorization': f'Bearer {SUPABASE_KEY}'}
-    all_items = []
+    all_news = []
     page = 0
     page_size = 1000
 
-    # First fetch news with views
     while True:
         offset = page * page_size
         url = f"{SUPABASE_URL}/rest/v1/news?select=id,title,content,image_url,video_url,views,published_at&status=eq.published&order=published_at.desc&limit={page_size}&offset={offset}"
@@ -77,195 +75,178 @@ def fetch_news_and_comments() -> List[Dict]:
             r.raise_for_status()
             data = r.json()
             if not data: break
-            all_items.extend(data)
+            all_news.extend(data)
             if len(data) < page_size: break
             page += 1
         except Exception as e:
-            logger.error(f"Error fetching news: {e}")
-            send_telegram_alert(f"❌ Sitemap generation failed at fetch news: {e}")
+            logger.error(f"Fetch error: {e}")
+            send_telegram_alert(f"❌ Sitemap fetch failed: {e}")
             break
 
-    # Fetch comments count for each news (if needed)
-    # We'll get comments count per article
-    if all_items:
-        ids = [str(item['id']) for item in all_items]
-        # Supabase can do in-clause, we'll batch
-        # For simplicity, we can fetch all comments and count, but for large data we can use aggregate query.
-        # We'll use a group by query
-        try:
-            comment_url = f"{SUPABASE_URL}/rest/v1/comments?select=news_id,count=id&group=news_id"
-            r = requests.get(comment_url, headers=headers, timeout=30)
-            if r.status_code == 200:
-                comments_data = r.json()
-                comments_map = {int(c['news_id']): int(c['count']) for c in comments_data}
-                for item in all_items:
-                    item['comment_count'] = comments_map.get(item['id'], 0)
-            else:
-                for item in all_items:
-                    item['comment_count'] = 0
-        except Exception as e:
-            logger.warning(f"Could not fetch comments, using 0: {e}")
-            for item in all_items:
+    # Fetch comments count
+    try:
+        comment_url = f"{SUPABASE_URL}/rest/v1/comments?select=news_id,count=id&group=news_id"
+        r = requests.get(comment_url, headers=headers, timeout=30)
+        if r.status_code == 200:
+            comments_map = {int(c['news_id']): int(c['count']) for c in r.json()}
+            for item in all_news:
+                item['comment_count'] = comments_map.get(item['id'], 0)
+        else:
+            for item in all_news:
                 item['comment_count'] = 0
+    except:
+        for item in all_news:
+            item['comment_count'] = 0
 
-    logger.info(f"✅ Total news fetched: {len(all_items)}")
-    return all_items
+    logger.info(f"✅ Fetched {len(all_news)} published articles.")
+    return all_news
 
-# ===================== GENERATE SITEMAP FILE =====================
+# ===================== GENERATE SITEMAP =====================
 def generate_sitemap_file(news_list, filename, is_index=False):
-    """Generate a single sitemap XML file (or sitemap index)"""
+    root = ET.Element('urlset' if not is_index else 'sitemapindex')
     if is_index:
-        root = ET.Element('sitemapindex', xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
-        for news in news_list:
+        root.set('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9')
+    else:
+        root.set('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9')
+        root.set('xmlns:news', 'http://www.google.com/schemas/sitemap-news/0.9')
+        root.set('xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1')
+        root.set('xmlns:video', 'http://www.google.com/schemas/sitemap-video/1.1')
+        root.set('xmlns:xhtml', 'http://www.w3.org/1999/xhtml')
+
+    if is_index:
+        for item in news_list:
             sitemap = ET.SubElement(root, 'sitemap')
             loc = ET.SubElement(sitemap, 'loc')
-            loc.text = news['loc']
+            loc.text = item['loc']
             lastmod = ET.SubElement(sitemap, 'lastmod')
             lastmod.text = datetime.now().strftime('%Y-%m-%d')
-        xml_str = ET.tostring(root, encoding='unicode')
-        pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(pretty)
-        logger.info(f"✅ Sitemap index generated: {filename}")
-        return
+    else:
+        # Static Pages
+        for page in STATIC_PAGES:
+            url_elem = ET.SubElement(root, 'url')
+            loc = ET.SubElement(url_elem, 'loc')
+            loc.text = BASE_URL + page['loc']
+            lastmod = ET.SubElement(url_elem, 'lastmod')
+            lastmod.text = datetime.now().strftime('%Y-%m-%d')
+            changefreq = ET.SubElement(url_elem, 'changefreq')
+            changefreq.text = page['changefreq']
+            priority = ET.SubElement(url_elem, 'priority')
+            priority.text = str(page['priority'])
+            if 'langs' in page:
+                for lang, suffix in page['langs'].items():
+                    link = ET.SubElement(url_elem, 'xhtml:link', rel='alternate', hreflang=lang, href=BASE_URL + suffix)
 
-    # Regular sitemap
-    root = ET.Element('urlset', xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
-    root.set('xmlns:news', 'http://www.google.com/schemas/sitemap-news/0.9')
-    root.set('xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1')
-    root.set('xmlns:video', 'http://www.google.com/schemas/sitemap-video/1.1')
-    root.set('xmlns:xhtml', 'http://www.w3.org/1999/xhtml')  # for hreflang
+        # News Articles
+        total = len(news_list)
+        for idx, article in enumerate(news_list):
+            article_id = article.get('id')
+            title = article.get('title', '')
+            content = article.get('content', '')
+            image = article.get('image_url')
+            video = article.get('video_url')
+            views = article.get('views', 0)
+            comments = article.get('comment_count', 0)
+            pub_at = article.get('published_at')
 
-    # Static pages with hreflang
-    for page in STATIC_PAGES:
-        url_elem = ET.SubElement(root, 'url')
-        loc = ET.SubElement(url_elem, 'loc')
-        loc.text = BASE_URL + page['loc']
-        lastmod = ET.SubElement(url_elem, 'lastmod')
-        lastmod.text = datetime.now().strftime('%Y-%m-%d')
-        changefreq = ET.SubElement(url_elem, 'changefreq')
-        changefreq.text = page.get('changefreq', 'daily')
-        priority = ET.SubElement(url_elem, 'priority')
-        priority.text = str(page.get('priority', 0.5))
-
-        # hreflang (if Hindi version exists)
-        if 'langs' in page:
-            for lang, url_suffix in page['langs'].items():
-                link = ET.SubElement(url_elem, 'xhtml:link', rel='alternate', hreflang=lang, href=BASE_URL + url_suffix)
-
-    # News articles
-    for idx, article in enumerate(news_list):
-        article_id = article.get('id')
-        title = article.get('title', '')
-        content = article.get('content', '')
-        image_url = article.get('image_url')
-        video_url = article.get('video_url')
-        views = article.get('views', 0)
-        comments = article.get('comment_count', 0)
-        published_at = article.get('published_at')
-
-        # Lastmod
-        try:
-            if published_at and 'T' in published_at:
-                pub_date = datetime.fromisoformat(published_at.replace('Z', '+00:00'))
-                lastmod_str = pub_date.strftime('%Y-%m-%d')
-            else:
+            # Lastmod
+            try:
+                if pub_at and 'T' in pub_at:
+                    lastmod_str = datetime.fromisoformat(pub_at.replace('Z', '+00:00')).strftime('%Y-%m-%d')
+                else:
+                    lastmod_str = datetime.now().strftime('%Y-%m-%d')
+            except:
                 lastmod_str = datetime.now().strftime('%Y-%m-%d')
-        except:
-            lastmod_str = datetime.now().strftime('%Y-%m-%d')
 
-        # Priority: recency + views + comments
-        if idx < 5:
-            base_priority = 0.9
-        elif idx < 20:
-            base_priority = 0.8
-        else:
-            base_priority = 0.7
+            # Priority: Recency (0.9) + Views boost + Comments boost
+            recency = 0.9 if idx < 5 else (0.85 if idx < 20 else 0.7)
+            view_boost = min(0.1, views / 100000) if views else 0
+            comment_boost = min(0.05, comments / 100) if comments else 0
+            priority_val = min(1.0, recency + view_boost + comment_boost)
 
-        engagement_boost = min(0.08, (views * 0.01 + comments * 0.1) / 1000)
-        priority_val = min(1.0, base_priority + engagement_boost)
+            url_elem = ET.SubElement(root, 'url')
+            loc = ET.SubElement(url_elem, 'loc')
+            loc.text = f"{BASE_URL}/article.html?id={article_id}"
+            lastmod = ET.SubElement(url_elem, 'lastmod')
+            lastmod.text = lastmod_str
+            changefreq = ET.SubElement(url_elem, 'changefreq')
+            changefreq.text = 'daily'
+            priority = ET.SubElement(url_elem, 'priority')
+            priority.text = f"{priority_val:.3f}"
 
-        url_elem = ET.SubElement(root, 'url')
-        loc = ET.SubElement(url_elem, 'loc')
-        loc.text = f"{BASE_URL}/article.html?id={article_id}"
-        lastmod = ET.SubElement(url_elem, 'lastmod')
-        lastmod.text = lastmod_str
-        changefreq = ET.SubElement(url_elem, 'changefreq')
-        changefreq.text = 'daily'
-        priority = ET.SubElement(url_elem, 'priority')
-        priority.text = f"{priority_val:.2f}"
+            # Google News
+            news_elem = ET.SubElement(url_elem, 'news:news')
+            pub_elem = ET.SubElement(news_elem, 'news:publication')
+            pub_name = ET.SubElement(pub_elem, 'news:name')
+            pub_name.text = 'THE MOON'
+            pub_lang = ET.SubElement(pub_elem, 'news:language')
+            pub_lang.text = 'en'
+            news_date = ET.SubElement(news_elem, 'news:publication_date')
+            news_date.text = pub_at if pub_at else datetime.now().isoformat()
+            news_title = ET.SubElement(news_elem, 'news:title')
+            news_title.text = title[:100]
 
-        # hreflang for news (English default, Hindi alternate if exists)
-        # We assume Hindi version would be /hi/article.html?id=... (if implemented)
-        # For now, we add only English.
-        # If you have Hindi pages, add similar xhtml:link.
+            # Image
+            if image:
+                img_elem = ET.SubElement(url_elem, 'image:image')
+                img_loc = ET.SubElement(img_elem, 'image:loc')
+                img_loc.text = image
+                img_cap = ET.SubElement(img_elem, 'image:caption')
+                img_cap.text = title[:100]
+                img_tit = ET.SubElement(img_elem, 'image:title')
+                img_tit.text = title[:100]
 
-        # Google News
-        news_elem = ET.SubElement(url_elem, 'news:news')
-        pub_elem = ET.SubElement(news_elem, 'news:publication')
-        pub_name = ET.SubElement(pub_elem, 'news:name')
-        pub_name.text = 'THE MOON'
-        pub_lang = ET.SubElement(pub_elem, 'news:language')
-        pub_lang.text = 'en'
-        news_date = ET.SubElement(news_elem, 'news:publication_date')
-        news_date.text = published_at if published_at else datetime.now().isoformat()
-        news_title = ET.SubElement(news_elem, 'news:title')
-        news_title.text = title[:100] if title else 'News'
+            # Video
+            if video:
+                vid_elem = ET.SubElement(url_elem, 'video:video')
+                vid_loc = ET.SubElement(vid_elem, 'video:content_loc')
+                vid_loc.text = video
+                vid_title = ET.SubElement(vid_elem, 'video:title')
+                vid_title.text = title[:100]
+                vid_desc = ET.SubElement(vid_elem, 'video:description')
+                vid_desc.text = content[:200] if content else 'Video'
+                vid_dur = ET.SubElement(vid_elem, 'video:duration')
+                vid_dur.text = '300'
 
-        # Image
-        if image_url:
-            img_elem = ET.SubElement(url_elem, 'image:image')
-            img_loc = ET.SubElement(img_elem, 'image:loc')
-            img_loc.text = image_url
-            img_caption = ET.SubElement(img_elem, 'image:caption')
-            img_caption.text = title[:100] if title else 'News image'
-            img_title = ET.SubElement(img_elem, 'image:title')
-            img_title.text = title[:100] if title else 'News image'
-
-        # Video
-        if video_url:
-            vid_elem = ET.SubElement(url_elem, 'video:video')
-            vid_loc = ET.SubElement(vid_elem, 'video:content_loc')
-            vid_loc.text = video_url
-            vid_title = ET.SubElement(vid_elem, 'video:title')
-            vid_title.text = title[:100] if title else 'Video'
-            vid_desc = ET.SubElement(vid_elem, 'video:description')
-            vid_desc.text = content[:200] if content else 'Video description'
-            vid_dur = ET.SubElement(vid_elem, 'video:duration')
-            vid_dur.text = '300'  # placeholder, can be extracted if available
-
-    # Write pretty XML
+    # Write XML
     xml_str = ET.tostring(root, encoding='unicode')
     pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
     clean = '\n'.join(line for line in pretty.splitlines() if line.strip())
+    
+    # Write .xml
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(clean)
+    
+    # Write .xml.gz (compressed)
+    try:
+        with gzip.open(filename + '.gz', 'wt', encoding='utf-8') as f:
+            f.write(clean)
+    except Exception as e:
+        logger.warning(f"Could not write .gz: {e}")
 
-    logger.info(f"✅ Sitemap generated: {filename} with {len(news_list)} articles")
+    logger.info(f"✅ Generated: {filename} ({len(news_list)} urls)")
 
 # ===================== MULTI-SITEMAP =====================
 def generate_multi_sitemaps(all_news):
-    """Split news into multiple sitemaps if > limit"""
     total = len(all_news)
     if total <= SITEMAP_LIMIT:
         generate_sitemap_file(all_news, 'sitemap.xml')
-        # Also create sitemap_index.xml with one entry
-        index_entries = [{'loc': f"{BASE_URL}/sitemap.xml"}]
-        generate_sitemap_file(index_entries, 'sitemap_index.xml', is_index=True)
+        index = [{'loc': f"{BASE_URL}/sitemap.xml"}]
+        generate_sitemap_file(index, 'sitemap_index.xml', is_index=True)
+        with open('sitemap.txt', 'w') as f:
+            f.write(f"{BASE_URL}/sitemap.xml\n")
         return
 
-    # Split into chunks
     chunks = [all_news[i:i+SITEMAP_LIMIT] for i in range(0, total, SITEMAP_LIMIT)]
-    index_entries = []
+    index = []
     for i, chunk in enumerate(chunks):
-        filename = f"sitemap_{i+1}.xml"
-        generate_sitemap_file(chunk, filename)
-        index_entries.append({'loc': f"{BASE_URL}/{filename}"})
+        name = f"sitemap_{i+1}.xml"
+        generate_sitemap_file(chunk, name)
+        index.append({'loc': f"{BASE_URL}/{name}"})
+    
+    generate_sitemap_file(index, 'sitemap_index.xml', is_index=True)
+    with open('sitemap.txt', 'w') as f:
+        f.write(f"{BASE_URL}/sitemap_index.xml\n")
 
-    generate_sitemap_file(index_entries, 'sitemap_index.xml', is_index=True)
-    logger.info(f"✅ Multi-sitemap: {len(chunks)} files + index")
-
-# ===================== ROBOTS.TXT =====================
 def update_robots_txt():
     sitemap_line = f"Sitemap: {BASE_URL}/sitemap_index.xml\n"
     try:
@@ -279,41 +260,30 @@ def update_robots_txt():
             f.write("User-agent: *\nAllow: /\n" + sitemap_line)
         logger.info("✅ robots.txt created")
 
-# ===================== CLOUDFLARE PURGE (optional) =====================
-def purge_cloudflare_cache():
+def purge_cloudflare():
     if CLOUDFLARE_ZONE_ID and CLOUDFLARE_API_KEY:
         try:
             url = f"https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/purge_cache"
             headers = {'Authorization': f'Bearer {CLOUDFLARE_API_KEY}', 'Content-Type': 'application/json'}
-            payload = {'files': [f"{BASE_URL}/sitemap.xml", f"{BASE_URL}/sitemap_index.xml"]}
+            payload = {'files': [f"{BASE_URL}/sitemap.xml", f"{BASE_URL}/sitemap_index.xml", f"{BASE_URL}/sitemap.xml.gz"]}
             r = requests.post(url, headers=headers, json=payload)
             if r.status_code == 200:
                 logger.info("✅ Cloudflare cache purged")
-            else:
-                logger.warning("Cloudflare purge failed")
         except Exception as e:
             logger.error(f"Cloudflare error: {e}")
 
-# ===================== MAIN =====================
 def main():
     try:
-        logger.info("🚀 Starting ultimate sitemap generation...")
-        news = fetch_news_and_comments()
-        if news:
-            generate_multi_sitemaps(news)
-        else:
-            logger.warning("No news found, creating static-only sitemap")
-            generate_sitemap_file([], 'sitemap.xml')
-            index_entries = [{'loc': f"{BASE_URL}/sitemap.xml"}]
-            generate_sitemap_file(index_entries, 'sitemap_index.xml', is_index=True)
-
+        logger.info("🚀 Generating World-Class Sitemap...")
+        news = fetch_news()
+        generate_multi_sitemaps(news)
         update_robots_txt()
-        purge_cloudflare_cache()
-        send_telegram_alert("✅ Sitemap generation successful!")
-        logger.info("🎉 All done!")
+        purge_cloudflare()
+        send_telegram_alert(f"✅ Sitemap generated with {len(news)} articles!")
+        logger.info("🎉 World-Class Sitemap Generation Complete!")
     except Exception as e:
-        logger.error(f"❌ Fatal error: {e}")
-        send_telegram_alert(f"❌ Sitemap generation failed: {e}")
+        logger.error(f"❌ Fatal: {e}")
+        send_telegram_alert(f"❌ Sitemap failed: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
