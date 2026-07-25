@@ -1,10 +1,12 @@
 <?xml version="1.0" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://themoonr4.github.io/rasu/</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://themoonr4.github.io/rasu/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://themoonr4.github.io/rasu/hi/"/>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/study.html</loc>
@@ -49,375 +51,935 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://themoonr4.github.io/rasu/article.html?id=63</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://themoonr4.github.io/rasu/article.html?id=58</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://themoonr4.github.io/rasu/article.html?id=62</loc>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=68</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.90</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-25T04:28:45.011</news:publication_date>
+      <news:title>**Best Title:**  आरआरबी ग्रुप डी शहर सूचना स्लिप 2026 जारी – 3 अगस्त परीक्षा के लिए अभी डाउनलोड करें</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=67</loc>
     <lastmod>2026-07-24</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.90</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-24T04:41:20.272</news:publication_date>
+      <news:title>**Activist Ends 26-Day Hunger Strike in Support of Education Reforms and Student Demands**</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=66</loc>
     <lastmod>2026-07-23</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.90</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-23T10:23:31.669</news:publication_date>
+      <news:title>प्रधानमंत्री की बड़ी घोषणा: परीक्षा लीक पर फास्ट ट्रैक कोर्ट, युवाओं का भविष्य अब सुरक्षित</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=65</loc>
     <lastmod>2026-07-22</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.90</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-22T04:23:32.507</news:publication_date>
+      <news:title>**जंतर मंतर पर उबल रहा गुस्सा: राहुल गांधी ने शिक्षा मंत्री धर्मेंद्र प्रधान के इस्तीफे की मांग की, </news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=64</loc>
     <lastmod>2026-07-21</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.90</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-21T18:05:00.064301</news:publication_date>
+      <news:title>Check 10</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=61</loc>
     <lastmod>2026-07-21</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-21T07:05:29.608</news:publication_date>
+      <news:title>हिमाचल प्रदेश में भारी बारिश: कई जिलों में स्कूल-कॉलेज दो दिन बंद, रेड अलर्ट जारी | मौसम अपडेट</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=60</loc>
     <lastmod>2026-07-20</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-20T08:58:12.203</news:publication_date>
+      <news:title>Massive Student Protests Erupt at Jantar Mantar as Youth Attempt March to Parliament Amid Tight Secu</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=59</loc>
     <lastmod>2026-07-20</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-20T04:09:22.197</news:publication_date>
+      <news:title>Spain Crowned 2026 World Champions as Ferran Torres Strikes in Extra Time to Beat Argentina 1-0**</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=52</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-14T02:22:12.062</news:publication_date>
+      <news:title>आज 14 जुलाई 2026 को अषाढ़ अमावस्या: पितरों की पूजा का पावन अवसर</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=51</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-13T04:01:33.229</news:publication_date>
+      <news:title>रोहित शर्मा का एक दिवसीय अंतरराष्ट्रीय क्रिकेट में शानदार जलवा जारी</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=50</loc>
     <lastmod>2026-07-12</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-12T06:03:03.297</news:publication_date>
+      <news:title>**भारतीय सेना ने अग्निवीर 2026 भर्ती परीक्षा के परिणाम घोषित किए: अब शुरू होगा शारीरिक चयन का दौर**</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=49</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-10T04:57:22.732</news:publication_date>
+      <news:title>बाजार अपडेट: ऊर्जा, एल्यूमिनियम और स्टील क्षेत्र की कंपनियों में उतार-चढ़ाव जारी</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=48</loc>
     <lastmod>2026-07-09</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-09T07:30:20.823</news:publication_date>
+      <news:title>भारतीय रेलवे 2026: नई ट्रेनें, टिकट नियम बदलाव, तेज गति और सुरक्षा अपडेट की पूरी जानकारी</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=47</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-07T07:46:22.143</news:publication_date>
+      <news:title>एमएस धोनी का 45वां जन्मदिन: कैप्टन कूल की जयंती पर देश भर में जश्न</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=46</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-07T07:46:15.777</news:publication_date>
+      <news:title>एमएस धोनी का 45वां जन्मदिन: कैप्टन कूल की जयंती पर देश भर में जश्न</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=45</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-06T05:49:10.68</news:publication_date>
+      <news:title>ऑस्ट्रेलिया महिला ने इंग्लैंड को 7 विकेट से हराकर टी20 विश्व कप 2026 का रिकॉर्ड 7वां खिताब जीता | बे</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=44</loc>
     <lastmod>2026-07-03</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-03T04:05:13.394</news:publication_date>
+      <news:title>Ronaldo's Milestone and Ramos' Late Heroics: Portugal Edges Croatia 2-1 in World Cup Thriller</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=43</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-02T07:59:46.14</news:publication_date>
+      <news:title>**Rain Ruins India vs England Opener: Shreyas &amp; Abhishek's Explosive 189 Ends in Washout!**</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=42</loc>
     <lastmod>2026-07-01</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-07-01T04:56:19.653</news:publication_date>
+      <news:title>सुप्रीम कोर्ट: संवैधानिक मूल्यों की रक्षक</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=41</loc>
     <lastmod>2026-06-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-30T04:03:06.134</news:publication_date>
+      <news:title>महिलाओं की टी20 विश्व कप</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=40</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-25T09:01:32.286</news:publication_date>
+      <news:title>Gold Prices Drop Today in Chennai &amp; Delhi | 22K &amp; 24K Gold Rate June 25, 2026</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=39</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-25T01:53:26.795</news:publication_date>
+      <news:title>England Women Crush West Indies by 38 Runs in T20 World Cup Thriller at Lord's, Qualify for Semis</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=38</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-24T03:16:55.498</news:publication_date>
+      <news:title>आज की ताजा खबरें 24 जून 2026 | TMC विभाजन, लद्दाख बंद, मुंबई भारी बारिश, Ronaldo विश्व कप</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=37</loc>
     <lastmod>2026-06-23</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-23T11:21:03.009</news:publication_date>
+      <news:title>कुनाल शाह मैसेजिंग प्लेटफॉर्म के नए ग्लोबल प्रमुख नियुक्त</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=36</loc>
     <lastmod>2026-06-23</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-23T03:26:56.865</news:publication_date>
+      <news:title>भारतीय राजनीति में हलचल: महाराष्ट्र, कर्नाटक से लेकर तमिलनाडु तक नए समीकरण</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=35</loc>
     <lastmod>2026-06-23</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-23T02:31:10.513</news:publication_date>
+      <news:title>फीफा विश्व कप 2026: मेस्सी का जादू, अर्जेंटीना की धमाकेदार शुरुआत और रोमांच का सिलसिला! ⚽</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=34</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-21T03:01:09.294</news:publication_date>
+      <news:title>पिता दिवस 2026: बेटे की आँखों में पिता का अनमोल प्यार</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=33</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-21T03:01:07.43</news:publication_date>
+      <news:title>पिता दिवस 2026: बेटे की आँखों में पिता का अनमोल प्यार</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=32</loc>
     <lastmod>2026-06-20</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-20T03:15:31.358</news:publication_date>
+      <news:title>Brazil 3-0 Haiti: Cunha Brace Powers Dominant 2026 World Cup Win in Philadelphia</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=30</loc>
     <lastmod>2026-06-18</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-18T08:21:23.143</news:publication_date>
+      <news:title>India Women vs Netherlands Women, WT20 World Cup 2026: IND-W Thrash NED-W by 95 Runs | Match Report</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=29</loc>
     <lastmod>2026-06-16</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-16T08:07:48.752</news:publication_date>
+      <news:title>जीडी कांस्टेबल भर्ती परीक्षा 2026 की प्रोविजनल आंसर की जारी*</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=28</loc>
     <lastmod>2026-06-16</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-16T05:35:58.559</news:publication_date>
+      <news:title>जीडी कांस्टेबल भर्ती परीक्षा 2026 की प्रोविजनल आंसर की जारी**</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=27</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-15T08:30:33.715</news:publication_date>
+      <news:title>NEET 2026 Admit Card जारी! Re-NEET परीक्षा का Hall Ticket डाउनलोड करें</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=26</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-15T01:25:46.836</news:publication_date>
+      <news:title>Global Crude Oil Prices Decline Sharply Amid Easing Tensions</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=25</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-13T06:28:47.192</news:publication_date>
+      <news:title>घर बैठे ऑनलाइन पैसे कमाने के तरीके | 2026 की पूरी गाइड बिना निवेश</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=24</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-12T00:51:38.97</news:publication_date>
+      <news:title>दिल्ली में आंधी और मौसम का बदला मिजाज: लोगों को मिली गर्मी से राहत</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=23</loc>
     <lastmod>2026-06-11</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-11T10:31:43.984</news:publication_date>
+      <news:title>India A Gain Strong Position Against Afghanistan A in Tri-Nation One-Day Series</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=22</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-10T08:02:02.034</news:publication_date>
+      <news:title>फीफा विश्व कप 2026: कल शुरू हो रहा है महाकुम्भ, 48 टीमों का रोमांचक सफर</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://image.pollinations.ai/prompt/Fifa%20world%20cup%202026?width=800&amp;height=400&amp;nologo=true</image:loc>
+      <image:caption>फीफा विश्व कप 2026: कल शुरू हो रहा है महाकुम्भ, 48 टीमों का रोमांचक सफर</image:caption>
+      <image:title>फीफा विश्व कप 2026: कल शुरू हो रहा है महाकुम्भ, 48 टीमों का रोमांचक सफर</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=21</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-10T02:57:07.676</news:publication_date>
+      <news:title>Argentina National Team Defeats Iceland 2-0 in International Friendly</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=20</loc>
     <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-09T06:01:09.859</news:publication_date>
+      <news:title>भारत ए बनाम श्रीलंका ए: त्रि-राष्ट्र ए टीम वनडे सीरीज 2026 का उद्घाटन मैच</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://image.pollinations.ai/prompt/%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%8F%20%E0%A4%AC%E0%A4%A8%E0%A4%BE%E0%A4%AE%20%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80%E0%A4%B2%E0%A4%82%E0%A4%95%E0%A4%BE%20%E0%A4%8F%3A%20%E0%A4%9F%E0%A5%8D%E0%A4%B0%E0%A4%BE%E0%A4%88%20%E0%A4%A8%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%8F%20%E0%A4%B8%E0%A5%80%E0%A4%B0%E0%A5%80%E0%A4%9C%202026%20%E0%A4%95%E0%A4%BE%20%E0%A4%AA%E0%A4%B9%E0%A4%B2%E0%A4%BE%20%E0%A4%B5%E0%A4%A8%E0%A4%A1%E0%A5%87%20%E0%A4%AE%E0%A5%88%E0%A4%9A%20%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%B5%E0%A5%A4%20%E0%A4%A6%E0%A4%BE%E0%A4%82%E0%A4%AC%E0%A5%81%E0%A4%B2%E0%A4%BE%20%E0%A4%AE%E0%A5%87%E0%A4%82%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%8F%20%E0%A4%A8%E0%A5%87%20%E0%A4%9F%E0%A5%89%E0%A4%B8%20%E0%A4%9C%E0%A5%80%E0%A4%A4%E0%A4%95%E0%A4%B0%20%E0%A4%AC%E0%A4%B2%E0%A5%8D%E0%A4%B2%E0%A5%87%E0%A4%AC%E0%A4%BE%E0%A4%9C%E0%A5%80%20%E0%A4%9A%E0%A5%81%E0%A4%A8%E0%A5%80%2C%20%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A4%E0%A4%AE%E0%A4%BE%E0%A4%A8%20%E0%A4%B8%E0%A5%8D%E0%A4%95%E0%A5%8B%E0%A4%B0%20%E0%A4%85%E0%A4%AA%E0%A4%A1%E0%A5%87%E0%A4%9F%20%E0%A4%95%E0%A5%87%20%E0%A4%B8%E0%A4%BE%E0%A4%A5%E0%A5%A4%20%E0%A4%B0%E0%A5%82%E0%A4%A4%E0%A5%81%E0%A4%B0%E0%A4%BE%E0%A4%9C%20%E0%A4%97%E0%A4%BE%E0%A4%AF%E0%A4%95%E0%A4%B5%E0%A4%BE%E0%A4%A1%E0%A4%BC%2C%20%E0%A4%A4%E0%A4%BF%E0%A4%B2%E0%A4%95%20%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%AE%E0%A4%BE%20%E0%A4%94%E0%A4%B0%20%E0%A4%AF%E0%A5%81%E0%A4%B5%E0%A4%BE%20%E0%A4%96%E0%A4%BF%E0%A4%B2%E0%A4%BE%E0%A4%A1%E0%A4%BC%E0%A4%BF%E0%A4%AF%E0%A5%8B%E0%A4%82%20%E0%A4%95%E0%A4%BE%20%E0%A4%B0%E0%A5%8B%E0%A4%AE%E0%A4%BE%E0%A4%82%E0%A4%9A%E0%A4%95%20%E0%A4%AE%E0%A5%81%E0%A4%95%E0%A4%BE%E0%A4%AC%E0%A4%B2%E0%A4%BE%E0%A5%A4%20%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%B5%20%E0%A4%B8%E0%A5%8D%E0%A4%95%E0%A5%8B%E0%A4%B0%2C%20%E0%A4%B9%E0%A4%BE%E0%A4%87%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%9F%E0%A5%8D%E0%A4%B8%20%E0%A4%94%E0%A4%B0%20%E0%A4%AE%E0%A5%88%E0%A4%9A%20%E0%A4%85%E0%A4%AA%E0%A4%A1%E0%A5%87%E0%A4%9F%20%E0%A4%95%E0%A5%87%20%E0%A4%B2%E0%A4%BF%E0%A4%8F%20%E0%A4%AA%E0%A4%A2%E0%A4%BC%E0%A5%87%E0%A4%82%E0%A5%A4?width=800&amp;height=400&amp;nologo=true</image:loc>
+      <image:caption>भारत ए बनाम श्रीलंका ए: त्रि-राष्ट्र ए टीम वनडे सीरीज 2026 का उद्घाटन मैच</image:caption>
+      <image:title>भारत ए बनाम श्रीलंका ए: त्रि-राष्ट्र ए टीम वनडे सीरीज 2026 का उद्घाटन मैच</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=19</loc>
     <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-09T06:01:02.492</news:publication_date>
+      <news:title>भारत ए बनाम श्रीलंका ए: त्रि-राष्ट्र ए टीम वनडे सीरीज 2026 का उद्घाटन मैच</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://image.pollinations.ai/prompt/%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%8F%20%E0%A4%AC%E0%A4%A8%E0%A4%BE%E0%A4%AE%20%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80%E0%A4%B2%E0%A4%82%E0%A4%95%E0%A4%BE%20%E0%A4%8F%3A%20%E0%A4%9F%E0%A5%8D%E0%A4%B0%E0%A4%BE%E0%A4%88%20%E0%A4%A8%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%8F%20%E0%A4%B8%E0%A5%80%E0%A4%B0%E0%A5%80%E0%A4%9C%202026%20%E0%A4%95%E0%A4%BE%20%E0%A4%AA%E0%A4%B9%E0%A4%B2%E0%A4%BE%20%E0%A4%B5%E0%A4%A8%E0%A4%A1%E0%A5%87%20%E0%A4%AE%E0%A5%88%E0%A4%9A%20%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%B5%E0%A5%A4%20%E0%A4%A6%E0%A4%BE%E0%A4%82%E0%A4%AC%E0%A5%81%E0%A4%B2%E0%A4%BE%20%E0%A4%AE%E0%A5%87%E0%A4%82%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%8F%20%E0%A4%A8%E0%A5%87%20%E0%A4%9F%E0%A5%89%E0%A4%B8%20%E0%A4%9C%E0%A5%80%E0%A4%A4%E0%A4%95%E0%A4%B0%20%E0%A4%AC%E0%A4%B2%E0%A5%8D%E0%A4%B2%E0%A5%87%E0%A4%AC%E0%A4%BE%E0%A4%9C%E0%A5%80%20%E0%A4%9A%E0%A5%81%E0%A4%A8%E0%A5%80%2C%20%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A4%E0%A4%AE%E0%A4%BE%E0%A4%A8%20%E0%A4%B8%E0%A5%8D%E0%A4%95%E0%A5%8B%E0%A4%B0%20%E0%A4%85%E0%A4%AA%E0%A4%A1%E0%A5%87%E0%A4%9F%20%E0%A4%95%E0%A5%87%20%E0%A4%B8%E0%A4%BE%E0%A4%A5%E0%A5%A4%20%E0%A4%B0%E0%A5%82%E0%A4%A4%E0%A5%81%E0%A4%B0%E0%A4%BE%E0%A4%9C%20%E0%A4%97%E0%A4%BE%E0%A4%AF%E0%A4%95%E0%A4%B5%E0%A4%BE%E0%A4%A1%E0%A4%BC%2C%20%E0%A4%A4%E0%A4%BF%E0%A4%B2%E0%A4%95%20%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%AE%E0%A4%BE%20%E0%A4%94%E0%A4%B0%20%E0%A4%AF%E0%A5%81%E0%A4%B5%E0%A4%BE%20%E0%A4%96%E0%A4%BF%E0%A4%B2%E0%A4%BE%E0%A4%A1%E0%A4%BC%E0%A4%BF%E0%A4%AF%E0%A5%8B%E0%A4%82%20%E0%A4%95%E0%A4%BE%20%E0%A4%B0%E0%A5%8B%E0%A4%AE%E0%A4%BE%E0%A4%82%E0%A4%9A%E0%A4%95%20%E0%A4%AE%E0%A5%81%E0%A4%95%E0%A4%BE%E0%A4%AC%E0%A4%B2%E0%A4%BE%E0%A5%A4%20%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%B5%20%E0%A4%B8%E0%A5%8D%E0%A4%95%E0%A5%8B%E0%A4%B0%2C%20%E0%A4%B9%E0%A4%BE%E0%A4%87%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%9F%E0%A5%8D%E0%A4%B8%20%E0%A4%94%E0%A4%B0%20%E0%A4%AE%E0%A5%88%E0%A4%9A%20%E0%A4%85%E0%A4%AA%E0%A4%A1%E0%A5%87%E0%A4%9F%20%E0%A4%95%E0%A5%87%20%E0%A4%B2%E0%A4%BF%E0%A4%8F%20%E0%A4%AA%E0%A4%A2%E0%A4%BC%E0%A5%87%E0%A4%82%E0%A5%A4?width=800&amp;height=400&amp;nologo=true</image:loc>
+      <image:caption>भारत ए बनाम श्रीलंका ए: त्रि-राष्ट्र ए टीम वनडे सीरीज 2026 का उद्घाटन मैच</image:caption>
+      <image:title>भारत ए बनाम श्रीलंका ए: त्रि-राष्ट्र ए टीम वनडे सीरीज 2026 का उद्घाटन मैच</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=18</loc>
     <lastmod>2026-06-09</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-09T01:29:12.683</news:publication_date>
+      <news:title>अंजना ओम कश्यप vs खान सर: ₹2 करोड़ का मानहानि मुकदमा, कोर्ट ने दी बड़ी राहत से इनकार!</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://image.pollinations.ai/prompt/Create%20anjana%20om%20kashyap%20emage?width=800&amp;height=400&amp;nologo=true</image:loc>
+      <image:caption>अंजना ओम कश्यप vs खान सर: ₹2 करोड़ का मानहानि मुकदमा, कोर्ट ने दी बड़ी राहत से इनकार!</image:caption>
+      <image:title>अंजना ओम कश्यप vs खान सर: ₹2 करोड़ का मानहानि मुकदमा, कोर्ट ने दी बड़ी राहत से इनकार!</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=17</loc>
     <lastmod>2026-06-08</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-08T01:42:42.764</news:publication_date>
+      <news:title>श्रीराम कृष्णन का व्हाइट हाउस से इस्तीफा: AI नीति पर बड़ा झटका</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://image.pollinations.ai/prompt/%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80%E0%A4%B0%E0%A4%BE%E0%A4%AE%20%E0%A4%95%E0%A5%83%E0%A4%B7%E0%A5%8D%E0%A4%A3%E0%A4%A8%20%E0%A4%95%E0%A4%BE%20%E0%A4%B5%E0%A5%8D%E0%A4%B9%E0%A4%BE%E0%A4%87%E0%A4%9F%20%E0%A4%B9%E0%A4%BE%E0%A4%89%E0%A4%B8%20%E0%A4%B8%E0%A5%87%20%E0%A4%87%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%80%E0%A4%AB%E0%A4%BE%3A%20AI%20%E0%A4%A8%E0%A5%80%E0%A4%A4%E0%A4%BF%20%E0%A4%AA%E0%A4%B0%20%E0%A4%AC%E0%A4%A1%E0%A4%BC%E0%A4%BE%20%E0%A4%9D%E0%A4%9F%E0%A4%95%E0%A4%BE?width=800&amp;height=400&amp;nologo=true</image:loc>
+      <image:caption>श्रीराम कृष्णन का व्हाइट हाउस से इस्तीफा: AI नीति पर बड़ा झटका</image:caption>
+      <image:title>श्रीराम कृष्णन का व्हाइट हाउस से इस्तीफा: AI नीति पर बड़ा झटका</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=16</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-07T09:46:31.131</news:publication_date>
+      <news:title>LPG सिलेंडर के दाम बढ़े, आम उपभोक्ताओं पर नया बोझ</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://image.pollinations.ai/prompt/LPG%20%E0%A4%B8%E0%A4%BF%E0%A4%B2%E0%A5%87%E0%A4%82%E0%A4%A1%E0%A4%B0%20%E0%A4%95%E0%A5%87%20%E0%A4%A6%E0%A4%BE%E0%A4%AE%20%E0%A4%AC%E0%A4%A2%E0%A4%BC%E0%A5%87%2C%20%E0%A4%86%E0%A4%AE%20%E0%A4%89%E0%A4%AA%E0%A4%AD%E0%A5%8B%E0%A4%95%E0%A5%8D%E0%A4%A4%E0%A4%BE%E0%A4%93%E0%A4%82%20%E0%A4%AA%E0%A4%B0%20%E0%A4%A8%E0%A4%AF%E0%A4%BE%20%E0%A4%AC%E0%A5%8B%E0%A4%9D?width=800&amp;height=400&amp;nologo=true</image:loc>
+      <image:caption>LPG सिलेंडर के दाम बढ़े, आम उपभोक्ताओं पर नया बोझ</image:caption>
+      <image:title>LPG सिलेंडर के दाम बढ़े, आम उपभोक्ताओं पर नया बोझ</image:title>
+    </image:image>
+    <video:video>
+      <video:content_loc>https://image.pollinations.ai/prompt/LPG%20%E0%A4%B8%E0%A4%BF%E0%A4%B2%E0%A5%87%E0%A4%82%E0%A4%A1%E0%A4%B0%20%E0%A4%95%E0%A5%87%20%E0%A4%A6%E0%A4%BE%E0%A4%AE%20%E0%A4%AC%E0%A4%A2%E0%A4%BC%E0%A5%87%2C%20%E0%A4%86%E0%A4%AE%20%E0%A4%89%E0%A4%AA%E0%A4%AD%E0%A5%8B%E0%A4%95%E0%A5%8D%E0%A4%A4%E0%A4%BE%E0%A4%93%E0%A4%82%20%E0%A4%AA%E0%A4%B0%20%E0%A4%A8%E0%A4%AF%E0%A4%BE%20%E0%A4%AC%E0%A5%8B%E0%A4%9D?width=800&amp;height=400&amp;nologo=true</video:content_loc>
+      <video:title>LPG सिलेंडर के दाम बढ़े, आम उपभोक्ताओं पर नया बोझ</video:title>
+      <video:description>&lt;p&gt;**LPG सिलेंडर के दाम बढ़े, आम उपभोक्ताओं पर नया बोझ**&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;**नई दिल्ली, 7 जून 2026:** घरेलू एलपीजी सिलेंडर की कीमत में ₹29 की बढ़ोतरी के बाद दिल्ली में अब एक सिलेंडर की कीमत ₹942 हो गई </video:description>
+      <video:duration>300</video:duration>
+    </video:video>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=15</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-07T02:59:12.35</news:publication_date>
+      <news:title>Nepal Crush Oman in Dominant Semi-Final Victory</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780801152347</image:loc>
+      <image:caption>Nepal Crush Oman in Dominant Semi-Final Victory</image:caption>
+      <image:title>Nepal Crush Oman in Dominant Semi-Final Victory</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=14</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-06T08:10:43.556</news:publication_date>
+      <news:title>मध्य पूर्व में तनाव कम करने के प्रयास, ट्रंप ने ईरान से समझौते की बात कही</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780733443550</image:loc>
+      <image:caption>मध्य पूर्व में तनाव कम करने के प्रयास, ट्रंप ने ईरान से समझौते की बात कही</image:caption>
+      <image:title>मध्य पूर्व में तनाव कम करने के प्रयास, ट्रंप ने ईरान से समझौते की बात कही</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=13</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-06T01:11:13.954</news:publication_date>
+      <news:title>मेन्‍स U18 हॉकी एशिया कप 2026: पाकिस्तान को 5-3 से रौंदा, पूर्ति आशीष तानी का जादू! अकेले पलटा मैच, </news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780708273949</image:loc>
+      <image:caption>मेन्‍स U18 हॉकी एशिया कप 2026: पाकिस्तान को 5-3 से रौंदा, पूर्ति आशीष तानी का जादू! अकेले पलटा मैच, </image:caption>
+      <image:title>मेन्‍स U18 हॉकी एशिया कप 2026: पाकिस्तान को 5-3 से रौंदा, पूर्ति आशीष तानी का जादू! अकेले पलटा मैच, </image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=12</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-04T07:56:45.177</news:publication_date>
+      <news:title>केरल में धूल भरी आंधी का अलर्ट जारी, IMD ने दी चेतावनी</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780559805175</image:loc>
+      <image:caption>केरल में धूल भरी आंधी का अलर्ट जारी, IMD ने दी चेतावनी</image:caption>
+      <image:title>केरल में धूल भरी आंधी का अलर्ट जारी, IMD ने दी चेतावनी</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=11</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-04T04:30:43.445</news:publication_date>
+      <news:title>Breaking: Global Markets Surge Amid Renewed Optimism on Tech Innovations and Trade Talks</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780547443439</image:loc>
+      <image:caption>Breaking: Global Markets Surge Amid Renewed Optimism on Tech Innovations and Trade Talks</image:caption>
+      <image:title>Breaking: Global Markets Surge Amid Renewed Optimism on Tech Innovations and Trade Talks</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=10</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-03T08:50:56.367</news:publication_date>
+      <news:title>Tragic Fire Engulfs Restaurant in Delhi's Malviya Nagar, Claims Multiple Lives</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780476656362</image:loc>
+      <image:caption>Tragic Fire Engulfs Restaurant in Delhi's Malviya Nagar, Claims Multiple Lives</image:caption>
+      <image:title>Tragic Fire Engulfs Restaurant in Delhi's Malviya Nagar, Claims Multiple Lives</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=9</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-03T01:34:11.102</news:publication_date>
+      <news:title>इंग्लैंड का धमाका! एलिस कैप्सी और हीदर नाइट की तूफानी पारियों ने भारत को रौंद दिया, सीरीज इंग्लैंड क</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780450451095</image:loc>
+      <image:caption>इंग्लैंड का धमाका! एलिस कैप्सी और हीदर नाइट की तूफानी पारियों ने भारत को रौंद दिया, सीरीज इंग्लैंड क</image:caption>
+      <image:title>इंग्लैंड का धमाका! एलिस कैप्सी और हीदर नाइट की तूफानी पारियों ने भारत को रौंद दिया, सीरीज इंग्लैंड क</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=8</loc>
     <lastmod>2026-06-02</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-02T08:15:10.756</news:publication_date>
+      <news:title>पेट्रोल पंप पर फिर से महंगाई का बोझ: सरकार आम आदमी को कैसे बेवकूफ बना रही है?</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780388110749</image:loc>
+      <image:caption>पेट्रोल पंप पर फिर से महंगाई का बोझ: सरकार आम आदमी को कैसे बेवकूफ बना रही है?</image:caption>
+      <image:title>पेट्रोल पंप पर फिर से महंगाई का बोझ: सरकार आम आदमी को कैसे बेवकूफ बना रही है?</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=7</loc>
     <lastmod>2026-06-02</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-02T01:56:59.972</news:publication_date>
+      <news:title>IRCTC Informational Update – June 2026</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780365419964</image:loc>
+      <image:caption>IRCTC Informational Update – June 2026</image:caption>
+      <image:title>IRCTC Informational Update – June 2026</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=6</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-01T01:45:19.57</news:publication_date>
+      <news:title>Brazil National Team Defeats Panama 6-2 in Friendly Match</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780278319566</image:loc>
+      <image:caption>Brazil National Team Defeats Panama 6-2 in Friendly Match</image:caption>
+      <image:title>Brazil National Team Defeats Panama 6-2 in Friendly Match</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=5</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-31T08:30:30.553</news:publication_date>
+      <news:title>धनुष स्टारर 'कारा' रिलीज, 90 के दशक की सस्पेंस वाली कहानी ने मचाया हंगामा</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780216230548</image:loc>
+      <image:caption>धनुष स्टारर 'कारा' रिलीज, 90 के दशक की सस्पेंस वाली कहानी ने मचाया हंगामा</image:caption>
+      <image:title>धनुष स्टारर 'कारा' रिलीज, 90 के दशक की सस्पेंस वाली कहानी ने मचाया हंगामा</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=4</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-31T05:00:24.965</news:publication_date>
+      <news:title>Welcome in my website</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780203624957</image:loc>
+      <image:caption>Welcome in my website</image:caption>
+      <image:title>Welcome in my website</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=3</loc>
     <lastmod>2026-05-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-30T02:31:42.441</news:publication_date>
+      <news:title>Check</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/400/200?random=1780108302437</image:loc>
+      <image:caption>Check</image:caption>
+      <image:title>Check</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=2</loc>
     <lastmod>2026-05-30</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-30T02:31:03.550466</news:publication_date>
+      <news:title>Test</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=1</loc>
     <lastmod>2026-05-29</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.70</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-29T01:21:49.365689</news:publication_date>
+      <news:title>Welcome to THE MOON</news:title>
+    </news:news>
+    <image:image>
+      <image:loc>https://picsum.photos/id/20/400/200</image:loc>
+      <image:caption>Welcome to THE MOON</image:caption>
+      <image:title>Welcome to THE MOON</image:title>
+    </image:image>
   </url>
 </urlset>
