@@ -1,12 +1,10 @@
-name: Generate Sitemap
+name: Generate Sitemap (Ultimate)
 
 on:
   schedule:
-    # Run every 6 hours
-    - cron: '0 */6 * * *'
-  # Manual trigger from Actions tab
+    # Har 2 ghante mein run (smart scheduling)
+    - cron: '0 */2 * * *'
   workflow_dispatch:
-  # Also run on push to main (optional)
   push:
     branches: [ main ]
 
@@ -17,8 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -29,27 +26,22 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
+        run: pip install requests
 
       - name: Run sitemap generator
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
         run: python generate_sitemap.py
 
-      - name: Configure Git
+      - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-
-      - name: Commit and push if changed
-        run: |
-          if git diff --quiet; then
-            echo "No changes to commit"
-          else
-            git add sitemap.xml
-            git commit -m "Auto-update sitemap [skip ci]"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
-          fi
+          git add sitemap*.xml robots.txt
+          git diff --staged --quiet || git commit -m "Auto-update sitemap [skip ci]"
+          git push
