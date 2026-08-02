@@ -39,4 +39,3 @@ Disallow: /
 
 User-agent: Google-Extended
 Disallow: /
-Sitemap: https://themoonr4.github.io/rasu/sitemap_index.xml
