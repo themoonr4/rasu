@@ -344,6 +344,23 @@
                     <div id="aiImageResult" class="ai-image-preview" style="display: none;"></div>
                 </div>
                 
+                <!-- ========== AI HEADLINE SUGGESTIONS (ADDED) ========== -->
+                <div style="background: #0a1628; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #1a3a5f;">
+                    <h4 style="color:#93bbfc; margin-bottom: 15px;">🤖 AI Headline Suggestions</h4>
+                    <div id="headlineSuggestions"></div>
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label>✍️ Final Headline (Edit if needed)</label>
+                            <input type="text" id="newsTitle" required placeholder="Your headline here...">
+                        </div>
+                        <div class="form-group">
+                            <label>📝 Meta Description</label>
+                            <textarea id="newsMeta" rows="2" placeholder="SEO meta description..."></textarea>
+                        </div>
+                    </div>
+                    <button onclick="generateAISuggestions()" class="secondary" style="margin-top:10px;">✨ Generate AI Suggestions</button>
+                </div>
+                
                 <!-- News Form -->
                 <form id="newsForm">
                     <div class="row-2">
@@ -385,6 +402,15 @@
             <div class="card">
                 <h3><i class="fas fa-clock" style="color:#f59e0b;"></i> Scheduled Posts</h3>
                 <div id="scheduledNewsList" class="items-list">Loading...</div>
+            </div>
+
+            <!-- ========== PENDING REVIEWS SECTION (ADDED) ========== -->
+            <div id="reviews-section" style="display: none;">
+                <div class="card">
+                    <h3><i class="fas fa-user-check" style="color:#f59e0b;"></i> Human Review Dashboard</h3>
+                    <p style="color:var(--text-muted);margin-bottom:15px;">Review AI-generated headlines & meta tags before publishing</p>
+                    <div id="pendingReviewsList" class="items-list">Loading...</div>
+                </div>
             </div>
         </div>
 
@@ -1005,7 +1031,7 @@
         if (section === 'analytics') loadAnalytics();
         if (section === 'monetization') loadMonetization();
         if (section === 'security') loadSecurityLogs();
-        if (section === 'news') { loadRecentNews(); loadScheduledNews(); }
+        if (section === 'news') { loadRecentNews(); loadScheduledNews(); loadPendingReviews(); }
     }
     
     document.getElementById('menuToggle')?.addEventListener('click', () => {
@@ -1384,6 +1410,181 @@
             loadRecentNews();
             loadDashboard();
         }
+    }
+    
+    // ============================================
+    // HUMAN REVIEW FUNCTIONS (ADDED)
+    // ============================================
+
+    // Load pending articles for review
+    async function loadPendingReviews() {
+        const container = document.getElementById('pendingReviewsList');
+        if (!container) return;
+        
+        try {
+            const { data, error } = await supabaseClient
+                .from('news')
+                .select(`
+                    id, 
+                    title, 
+                    seo_title, 
+                    seo_description, 
+                    seo_keywords,
+                    seo_suggestions (suggestion_text, suggestion_type, score)
+                `)
+                .eq('review_status', 'pending')
+                .order('created_at', { ascending: false })
+                .limit(20);
+            
+            if (error) throw error;
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">✅ No pending articles. All caught up!</div>';
+                return;
+            }
+            
+            container.innerHTML = data.map(article => {
+                const suggestions = article.seo_suggestions || [];
+                const headlines = suggestions.filter(s => s.suggestion_type === 'headline');
+                
+                return `
+                    <div class="item-card" style="border-left: 4px solid #f59e0b;">
+                        <div class="item-info" style="flex:1;">
+                            <div class="item-title">📰 ${escapeHtml(article.title)}</div>
+                            <div class="item-meta">
+                                <span style="color:#f59e0b;">⏳ Pending Review</span>
+                                ${headlines.length > 0 ? ` | 🤖 ${headlines.length} headline suggestions` : ''}
+                            </div>
+                            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+                                ${headlines.slice(0, 3).map(h => 
+                                    `<span class="category-tag" onclick="useHeadline('${escapeHtml(h.suggestion_text)}')">💡 ${escapeHtml(h.suggestion_text)}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button onclick="approveArticle(${article.id})" class="success">✅ Approve</button>
+                            <button onclick="editArticle(${article.id})" class="secondary">✏️ Edit</button>
+                            <button onclick="rejectArticle(${article.id})" class="danger">❌ Reject</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch(e) {
+            console.error('Load pending reviews error:', e);
+            container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">Error loading pending reviews.</div>';
+        }
+    }
+
+    // Approve article with SEO data
+    async function approveArticle(id) {
+        if (!confirm('Approve this article for publishing?')) return;
+        
+        const { error } = await supabaseClient
+            .from('news')
+            .update({ 
+                review_status: 'approved',
+                reviewed_at: new Date(),
+                reviewed_by: 'Admin'
+            })
+            .eq('id', id);
+        
+        if (error) {
+            alert('Error: ' + error.message);
+        } else {
+            alert('✅ Article approved!');
+            loadPendingReviews();
+            loadDashboard();
+            sendPush('📰 New Article Published', 'A new article has been approved!');
+        }
+    }
+
+    // Reject article
+    async function rejectArticle(id) {
+        if (!confirm('Reject this article? (It will remain as draft)')) return;
+        
+        const { error } = await supabaseClient
+            .from('news')
+            .update({ 
+                review_status: 'draft',
+                reviewed_at: new Date()
+            })
+            .eq('id', id);
+        
+        if (error) {
+            alert('Error: ' + error.message);
+        } else {
+            alert('❌ Article rejected and moved to draft.');
+            loadPendingReviews();
+        }
+    }
+
+    // Edit article (redirect to publish form)
+    async function editArticle(id) {
+        alert('✏️ Edit feature coming soon! You can manually edit the article in the database.');
+        // Optional: Open publish form with article data for editing
+    }
+
+    // Generate AI suggestions for current article
+    async function generateAISuggestions() {
+        const title = document.getElementById('newsTitle')?.value;
+        const content = quillEditor ? quillEditor.root.innerHTML : '';
+        const category = document.getElementById('newsCategory')?.value;
+        
+        if (!title || !content) {
+            alert('Please enter title and content first.');
+            return;
+        }
+        
+        const container = document.getElementById('headlineSuggestions');
+        container.innerHTML = '🤖 Generating suggestions...';
+        
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Generate 5 engaging, clickable headlines for this news article.
+                            
+Category: ${category || 'News'}
+Title: ${title}
+Content: ${content.substring(0, 500)}
+
+Return format (one per line, numbered 1-5):
+1. [Headline 1]
+2. [Headline 2]
+...
+(Each headline max 70 characters)`
+                        }]
+                    }]
+                })
+            });
+            const data = await response.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const headlines = text.split('\n').filter(line => line.match(/^\d+\./)).map(line => line.replace(/^\d+\.\s*/, '').trim());
+            
+            if (headlines.length > 0) {
+                container.innerHTML = headlines.map((h, idx) => `
+                    <span class="category-tag" onclick="useHeadline('${escapeHtml(h)}')" style="cursor:pointer;background:var(--gold);color:#0a0e1a;padding:8px 14px;margin:4px;display:inline-block;border-radius:20px;">
+                        ${idx+1}. ${escapeHtml(h)}
+                    </span>
+                `).join('');
+                container.innerHTML += `<br><small style="color:var(--text-muted);">Click any headline to use it</small>`;
+            } else {
+                container.innerHTML = '⚠️ Could not generate suggestions. Please try again.';
+            }
+        } catch(e) {
+            container.innerHTML = '⚠️ Error generating suggestions. Please try again.';
+            console.error(e);
+        }
+    }
+
+    // Use selected headline
+    function useHeadline(headline) {
+        document.getElementById('newsTitle').value = headline;
+        document.getElementById('headlineSuggestions').innerHTML = '';
+        alert('✅ Headline applied! You can edit it further.');
     }
     
     // ============================================
