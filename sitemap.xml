@@ -51,6 +51,20 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=71</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-08-23T07:05:12.524</news:publication_date>
+      <news:title>टीम इंडिया का दबदबा! श्रीलंका के खिलाफ मैच में मजबूत पकड़</news:title>
+    </news:news>
+  </url>
+  <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=70</loc>
     <lastmod>2026-08-23</lastmod>
     <changefreq>daily</changefreq>
@@ -110,7 +124,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=66</loc>
     <lastmod>2026-07-23</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -320,7 +334,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=43</loc>
     <lastmod>2026-08-23</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
