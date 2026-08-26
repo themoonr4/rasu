@@ -12,7 +12,6 @@ Allow: /about.html
 Allow: /contact.html
 Allow: /privacy.html
 Disallow: /admin.html
-Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 
 # ============================================
 # Googlebot - Special Instructions
@@ -39,4 +38,4 @@ Disallow: /
 
 User-agent: Google-Extended
 Disallow: /
-Sitemap: https://themoonr4.github.io/rasu/sitemap_index.xml
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
