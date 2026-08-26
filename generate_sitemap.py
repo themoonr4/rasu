@@ -247,18 +247,23 @@ def generate_multi_sitemaps(all_news):
     with open('sitemap.txt', 'w') as f:
         f.write(f"{BASE_URL}/sitemap_index.xml\n")
 
+# ===================== ROBOTS.TXT (FIXED) =====================
 def update_robots_txt():
-    sitemap_line = f"Sitemap: {BASE_URL}/sitemap_index.xml\n"
+    # ✅ FIX: Use sitemap.xml directly (since we generate single sitemap for now)
+    sitemap_line = f"Sitemap: {BASE_URL}/sitemap.xml\n"
     try:
-        with open('robots.txt', 'r+') as f:
+        with open('robots.txt', 'r') as f:
             content = f.read()
-            if sitemap_line not in content:
-                f.write(sitemap_line)
-                logger.info("✅ robots.txt updated")
     except FileNotFoundError:
-        with open('robots.txt', 'w') as f:
-            f.write("User-agent: *\nAllow: /\n" + sitemap_line)
-        logger.info("✅ robots.txt created")
+        content = "User-agent: *\nAllow: /\n"
+    
+    # Remove any existing Sitemap lines
+    lines = [line for line in content.splitlines() if not line.strip().startswith('Sitemap:')]
+    lines.append(sitemap_line.strip())
+    
+    with open('robots.txt', 'w') as f:
+        f.write('\n'.join(lines))
+    logger.info("✅ robots.txt updated with sitemap.xml")
 
 def purge_cloudflare():
     if CLOUDFLARE_ZONE_ID and CLOUDFLARE_API_KEY:
