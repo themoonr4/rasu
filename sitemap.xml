@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://themoonr4.github.io/rasu/</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://themoonr4.github.io/rasu/"/>
@@ -10,45 +10,59 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/study.html</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/freelance.html</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/vacancy.html</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/about.html</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/contact.html</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/privacy.html</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/admin.html</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=77</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-08-29T04:34:51.334</news:publication_date>
+      <news:title>₹22,000 करोड़ का लोन विवाद: क्या है सुभाष चंद्रा के 'हेयरकट' केस की पूरी सच्चाई?</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=76</loc>
@@ -110,7 +124,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=72</loc>
     <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -136,7 +150,7 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=70</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.850</priority>
     <news:news>
@@ -320,7 +334,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=49</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -374,7 +388,7 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=45</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.700</priority>
     <news:news>
@@ -402,7 +416,7 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=43</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.700</priority>
     <news:news>
@@ -542,7 +556,7 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=33</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.700</priority>
     <news:news>
@@ -654,7 +668,7 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=24</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.700</priority>
     <news:news>
@@ -816,7 +830,7 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=15</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.700</priority>
     <news:news>
@@ -987,7 +1001,7 @@
   </url>
   <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=6</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.700</priority>
     <news:news>
