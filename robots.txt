@@ -1,4 +1,9 @@
 # ============================================
+# SITEMAP — Sabse Upar (Important for Google)
+# ============================================
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
+
+# ============================================
 # THE MOON - Robots.txt
 # ============================================
 # Allow all crawlers for THE MOON News
@@ -38,4 +43,3 @@ Disallow: /
 
 User-agent: Google-Extended
 Disallow: /
-Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
