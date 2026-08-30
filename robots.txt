@@ -1,13 +1,62 @@
 # ============================================
-# SITEMAP — Sabse Upar (Important for Google)
+# SITEMAP — Google, Bing & Search Engines
 # ============================================
 Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
+Sitemap: https://themoonr4.github.io/rasu/sitemap_index.xml
 
 # ============================================
-# THE MOON - Robots.txt
+# THE MOON - News Platform
+# Robots.txt Configuration v2.1
+# Last Updated: 2026-08-30
 # ============================================
-# Allow all crawlers for THE MOON News
+
+# ============================================
+# DEFAULT POLICY - Allow All Crawlers
+# ============================================
 User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /article.html
+Allow: /categories.html
+Allow: /search.html
+Allow: /study.html
+Allow: /freelance.html
+Allow: /vacancy.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /sitemap.xml
+Allow: /sitemap_index.xml
+Allow: /feed.xml
+Allow: /opensearch.xml
+Allow: /manifest.json
+
+# Block sensitive admin & system areas
+Disallow: /admin.html
+Disallow: /admin/
+Disallow: /test.html
+Disallow: /test-supabase.html
+Disallow: /health.html
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /.well-known/private/
+Disallow: /error_logs.html
+Disallow: /logs/
+Disallow: /temp/
+Disallow: /cache/
+Disallow: /backup/
+Disallow: /*.json$ (JSON files except manifest)
+Disallow: /*.py$ (Python scripts)
+
+# Crawl-delay for all crawlers (respectful crawling)
+Crawl-delay: 1
+Request-rate: 1/1s
+
+# ============================================
+# GOOGLE BOT - Special Instructions
+# ============================================
+User-agent: Googlebot
 Allow: /
 Allow: /article.html
 Allow: /study.html
@@ -16,30 +65,143 @@ Allow: /vacancy.html
 Allow: /about.html
 Allow: /contact.html
 Allow: /privacy.html
+Allow: /categories.html
+Allow: /search.html
+Allow: /sitemap.xml
+Allow: /sitemap_index.xml
+Allow: /feed.xml
+Allow: /opensearch.xml
+
 Disallow: /admin.html
+Disallow: /admin/
+Disallow: /test.html
+Disallow: /test-supabase.html
 
-# ============================================
-# Googlebot - Special Instructions
-# ============================================
-User-agent: Googlebot
-Allow: /
+# Crawl delay for Googlebot (1 second)
 Crawl-delay: 1
+Request-rate: 2/1s
 
 # ============================================
-# Bingbot - Special Instructions
+# BINGBOT - Special Instructions
 # ============================================
 User-agent: Bingbot
 Allow: /
+Allow: /article.html
+Allow: /study.html
+Allow: /freelance.html
+Allow: /vacancy.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+
+Disallow: /admin.html
+Disallow: /admin/
+Disallow: /test.html
+
+# Crawl delay for Bingbot (1 second)
 Crawl-delay: 1
+Request-rate: 2/1s
 
 # ============================================
-# AI Scrapers - Block (Optional)
+# AI/LLM MODEL CRAWLERS - BLOCK
 # ============================================
+# GPT Bot (OpenAI)
 User-agent: GPTBot
 Disallow: /
 
+# ChatGPT User
 User-agent: ChatGPT-User
 Disallow: /
 
+# Google Extended (Google's AI model training)
 User-agent: Google-Extended
 Disallow: /
+
+# Anthropic Claude Bot
+User-agent: Claude-Web
+Disallow: /
+
+# Meta Llama Bot
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+# Other AI Crawlers
+User-agent: CCBot
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+# ============================================
+# AGGRESSIVE CRAWLERS - RATE LIMIT/BLOCK
+# ============================================
+User-agent: AhrefsBot
+Crawl-delay: 10
+Request-rate: 1/10s
+
+User-agent: SemrushBot
+Crawl-delay: 10
+Request-rate: 1/10s
+
+User-agent: MJ12bot
+Crawl-delay: 10
+Request-rate: 1/10s
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# ============================================
+# SOCIAL MEDIA CRAWLERS - ALLOW
+# ============================================
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# ============================================
+# MOBILE CRAWLERS - ALLOW
+# ============================================
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Bingbot-Mobile
+Allow: /
+
+# ============================================
+# SEO MONITORING & ANALYTICS - ALLOW
+# ============================================
+User-agent: Screaming Frog SEO Spider
+Allow: /
+
+User-agent: SiteLiner
+Allow: /
+
+User-agent: Semrush
+Allow: /
+
+# ============================================
+# NOTES
+# ============================================
+# - Primary Sitemap: sitemap.xml (main articles)
+# - Secondary Sitemap: sitemap_index.xml (index file)
+# - News Sitemap: sitemap-news.xml (recent articles)
+# - All sitemaps are auto-generated every 2 hours
+# - Admin panel requires authentication
+# - AI crawlers are blocked to protect content
+# - Support: contact@themoonr4.github.io
