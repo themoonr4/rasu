@@ -1,29 +1,195 @@
-# Enable Rewrite Engine
+# ============================================
+# THE MOON - Advanced .htaccess Configuration
+# Production Grade Server Optimization
+# Last Updated: 2026-08-30
+# ============================================
+
+# ============================================
+# SECURITY HEADERS
+# ============================================
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevent MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Enable XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (Permissive for CDN assets)
+    Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' https: data:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self' https://zpubhlbdqwzyseditrls.supabase.co https://api.telegram.org https://api.cloudflare.com;"
+    
+    # Strict Transport Security (HSTS)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Permissions Policy
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# ============================================
+# REWRITE ENGINE & URL HANDLING
+# ============================================
 RewriteEngine On
+RewriteBase /
+
+# Remove .html extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^.]+)$ $1.html [NC,L]
 
 # Redirect www to non-www
 RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
-# Custom 404 page
-ErrorDocument 404 /404.html
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Block access to sensitive files
-<FilesMatch "^\.">
+# Redirect old sitemap locations (if any)
+RewriteRule ^sitemap-news\.xml$ sitemap_news.xml [R=301,L]
+
+# ============================================
+# ERROR DOCUMENTS & 404 HANDLING
+# ============================================
+ErrorDocument 400 /404.html
+ErrorDocument 401 /404.html
+ErrorDocument 403 /404.html
+ErrorDocument 404 /404.html
+ErrorDocument 500 /404.html
+
+# ============================================
+# FILE & DIRECTORY PROTECTION
+# ============================================
+<FilesMatch "^\.|^\.git|^\.htaccess|^\.well-known">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
-# Enable GZIP compression
+# Protect sensitive files
+<FilesMatch "\.(env|json|py|md|txt|bak|sql|log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Allow only specific files in root
+<FilesMatch "\.(html|css|js|xml|ico|txt|json)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# ============================================
+# GZIP COMPRESSION
+# ============================================
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+    AddOutputFilterByType DEFLATE application/xml+rss application/rss+xml application/atom+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+    
+    # Exclude already compressed files
+    <FilesMatch "\.(?:gz|gzip|zip|jar|rar|7z)$">
+        Header set Content-Encoding identity
+    </FilesMatch>
 </IfModule>
 
-# Cache static files
+# ============================================
+# BROWSER CACHING & EXPIRES
+# ============================================
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresDefault "access plus 7 days"
+    
+    # Images
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # Media files
+    ExpiresByType audio/mpeg "access plus 1 month"
+    ExpiresByType video/mp4 "access plus 1 month"
+    
+    # Stylesheets & Scripts
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    
+    # Fonts
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/x-font-truetype "access plus 1 year"
+    
+    # Documents (Cache less)
+    ExpiresByType text/html "access plus 1 day"
+    ExpiresByType application/json "access plus 12 hours"
+    ExpiresByType text/xml "access plus 12 hours"
+    ExpiresByType application/xml "access plus 12 hours"
+    
+    # Manifests
+    ExpiresByType application/manifest+json "access plus 7 days"
+    ExpiresByType application/x-web-app-manifest+xml "access plus 7 days"
+ExpiresByType text/cache-manifest "access plus 7 days"
+ExpiresByType application/atom+xml "access plus 1 day"
+ExpiresByType application/rss+xml "access plus 1 day"
 </IfModule>
+
+# ============================================
+# ETAG & CACHE VALIDATION
+# ============================================
+<IfModule mod_headers.c>
+    Header unset ETag
+    FileETag None
+</IfModule>
+
+# ============================================
+# RATE LIMITING (Prevent abuse)
+# ============================================
+<IfModule mod_ratelimit.c>
+    <Location /admin.html>
+        SetOutputFilter RATE_LIMIT
+        SetEnv rate-limit 10
+    </Location>
+    <Location /api/>
+        SetOutputFilter RATE_LIMIT
+        SetEnv rate-limit 100
+    </Location>
+</IfModule>
+
+# ============================================
+# UTF-8 ENCODING
+# ============================================
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .html .css .js .xml .json .rss .atom
+
+# ============================================
+# DIRECTORY LISTING
+# ============================================
+<Directory />
+    Options -Indexes
+</Directory>
+
+# ============================================
+# DNS PREFETCH & PRECONNECT
+# ============================================
+<IfModule mod_headers.c>
+    Header always set Link "<https://unpkg.com>; rel=preconnect, <https://cdnjs.cloudflare.com>; rel=preconnect, <https://zpubhlbdqwzyseditrls.supabase.co>; rel=preconnect"
+</IfModule>
+
+# ============================================
+# LEGACY BROWSER SUPPORT
+# ============================================
+AddType application/javascript .js
+AddType text/css .css
+AddType text/html .html
+AddType application/json .json
+AddType text/xml .xml
+AddType application/xml+rss .rss
+AddType application/atom+xml .atom
+AddType image/svg+xml .svg
