@@ -249,21 +249,37 @@ def generate_multi_sitemaps(all_news):
 
 # ===================== ROBOTS.TXT (FIXED) =====================
 def update_robots_txt():
-    # ✅ FIX: Use sitemap.xml directly (since we generate single sitemap for now)
-    sitemap_line = f"Sitemap: {BASE_URL}/sitemap.xml\n"
+    """✅ FIXED: Keep Sitemap at TOP after header comment"""
+    sitemap_line = f"Sitemap: {BASE_URL}/sitemap.xml"
+    
     try:
         with open('robots.txt', 'r') as f:
             content = f.read()
     except FileNotFoundError:
-        content = "User-agent: *\nAllow: /\n"
+        content = ""
+    
+    # Split content into lines
+    lines = content.splitlines()
+    
+    # Find where the header comment ends
+    header_end = 0
+    for i, line in enumerate(lines):
+        if line.startswith('#') or line.strip() == '':
+            header_end = i + 1
+        else:
+            break
     
     # Remove any existing Sitemap lines
-    lines = [line for line in content.splitlines() if not line.strip().startswith('Sitemap:')]
-    lines.append(sitemap_line.strip())
+    lines = [line for line in lines if not line.strip().startswith('Sitemap:')]
     
+    # Insert Sitemap at proper position (after header, before any rules)
+    lines.insert(header_end, sitemap_line)
+    
+    # Write back
     with open('robots.txt', 'w') as f:
         f.write('\n'.join(lines))
-    logger.info("✅ robots.txt updated with sitemap.xml")
+    
+    logger.info("✅ robots.txt updated with sitemap at TOP")
 
 def purge_cloudflare():
     if CLOUDFLARE_ZONE_ID and CLOUDFLARE_API_KEY:
