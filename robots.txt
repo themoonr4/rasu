@@ -6,6 +6,7 @@
 # THE MOON - Robots.txt
 # ============================================
 # Allow all crawlers for THE MOON News
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 User-agent: *
 Allow: /
 Allow: /article.html
@@ -42,4 +43,3 @@ Disallow: /
 
 User-agent: Google-Extended
 Disallow: /
-Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
