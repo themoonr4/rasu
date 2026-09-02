@@ -268,7 +268,16 @@ def generate_multi_sitemaps(all_news):
 # ===================== ROBOTS.TXT (FIXED) =====================
 def update_robots_txt():
     """✅ FIXED: Keep Sitemap at TOP after header comment"""
-    sitemap_line = f"Sitemap: {BASE_URL}/sitemap.xml"
+    # Prefer sitemap_index.xml if present, otherwise sitemap.xml
+    if os.path.exists('sitemap_index.xml'):
+        sitemap_filename = 'sitemap_index.xml'
+    elif os.path.exists('sitemap.xml'):
+        sitemap_filename = 'sitemap.xml'
+    else:
+        # default to sitemap.xml if none generated yet
+        sitemap_filename = 'sitemap.xml'
+
+    sitemap_line = f"Sitemap: {BASE_URL}/{sitemap_filename}"
     
     try:
         with open('robots.txt', 'r') as f:
