@@ -214,8 +214,8 @@ def generate_sitemap_file(news_list, filename, is_index=False):
     pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
     clean = '\n'.join(line for line in pretty.splitlines() if line.strip())
     
-    # 🔥 XML Declaration Add Karo
-    final_xml = '<?xml version="1.0" ?>\n' + clean
+    # 🔥 ONLY CHANGE: lstrip() removes any leading blank line
+    final_xml = '<?xml version="1.0" ?>\n' + clean.lstrip()
 
     # Write .xml
     with open(filename, 'w', encoding='utf-8') as f:
