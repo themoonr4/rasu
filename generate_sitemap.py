@@ -208,14 +208,25 @@ def generate_sitemap_file(news_list, filename, is_index=False):
                 vid_dur.text = '300'
 
     # ============================================================
-    # 🔥 FIXED: Write XML with declaration
+    # 🔥 FINAL FIX: Write XML with declaration (NO blank lines)
     # ============================================================
     xml_str = ET.tostring(root, encoding='unicode')
     pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
-    clean = '\n'.join(line for line in pretty.splitlines() if line.strip())
     
-    # 🔥 ONLY CHANGE: lstrip() removes any leading blank line
-    final_xml = '<?xml version="1.0" ?>\n' + clean.lstrip()
+    # Remove ALL blank lines from the beginning
+    lines = pretty.splitlines()
+    # Find first non-empty line
+    start = 0
+    for i, line in enumerate(lines):
+        if line.strip():
+            start = i
+            break
+    
+    # Join from first non-empty line
+    clean = '\n'.join(lines[start:])
+    
+    # 🔥 XML Declaration + content (no extra blank lines)
+    final_xml = '<?xml version="1.0" ?>\n' + clean
 
     # Write .xml
     with open(filename, 'w', encoding='utf-8') as f:
