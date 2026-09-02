@@ -1,7 +1,7 @@
 # ============================================
 # SITEMAP — Google, Bing & Search Engines
 # ============================================
-Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
+Sitemap: https://themoonr4.github.io/rasu/sitemap_index.xml
 
 # ============================================
 # THE MOON - News Platform
