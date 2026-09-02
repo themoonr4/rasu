@@ -207,19 +207,24 @@ def generate_sitemap_file(news_list, filename, is_index=False):
                 vid_dur = ET.SubElement(vid_elem, 'video:duration')
                 vid_dur.text = '300'
 
-    # Write XML
+    # ============================================================
+    # 🔥 FIXED: Write XML with declaration
+    # ============================================================
     xml_str = ET.tostring(root, encoding='unicode')
     pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
     clean = '\n'.join(line for line in pretty.splitlines() if line.strip())
     
+    # 🔥 XML Declaration Add Karo
+    final_xml = '<?xml version="1.0" ?>\n' + clean
+
     # Write .xml
     with open(filename, 'w', encoding='utf-8') as f:
-        f.write(clean)
+        f.write(final_xml)
     
     # Write .xml.gz (compressed)
     try:
         with gzip.open(filename + '.gz', 'wt', encoding='utf-8') as f:
-            f.write(clean)
+            f.write(final_xml)
     except Exception as e:
         logger.warning(f"Could not write .gz: {e}")
 
