@@ -220,6 +220,10 @@ def generate_sitemap_file(news_list, filename, is_index=False):
     if lines and lines[0].strip() == '':
         lines = lines[1:]
     
+    # If minidom already included XML declaration, remove it so we don't double-declare
+    if lines and lines[0].strip().startswith('<?xml'):
+        lines = lines[1:]
+    
     # Join remaining lines
     clean = '\n'.join(lines)
     
