@@ -208,23 +208,28 @@ def generate_sitemap_file(news_list, filename, is_index=False):
                 vid_dur.text = '300'
 
     # ============================================================
-    # 🔥 FINAL FIX: Ensure declaration is first line, strip any leading whitespace
+    # 🔥 FINAL FIX: Ensure declaration is first line, strip any leading content/BOM
     # ============================================================
     xml_str = ET.tostring(root, encoding='unicode')
     pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
 
-    # If minidom included an XML declaration, strip it and take the remainder
-    if '<?xml' in pretty:
-        idx = pretty.find('?>')
-        if idx != -1:
-            rest = pretty[idx+2:]
+    # If there's anything before the first "<?xml", drop it (handles stray blank lines/BOM)
+    idx_decl = pretty.find('<?xml')
+    if idx_decl != -1:
+        pretty = pretty[idx_decl:]
+
+    # If minidom produced an XML declaration, remove it (we'll add our own)
+    if pretty.startswith('<?xml'):
+        idx_end = pretty.find('?>')
+        if idx_end != -1:
+            rest = pretty[idx_end + 2:]
         else:
-            rest = pretty
+            rest = pretty[len('<?xml'):]
     else:
         rest = pretty
 
-    # Strip leading whitespace/newlines from the remainder
-    rest = rest.lstrip('\r\n\t ')
+    # Strip any leading BOM / whitespace / newlines from the remaining content
+    rest = rest.lstrip('\ufeff\r\n\t ')
 
     # Prepend a single well-formed XML declaration with encoding
     final_xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + rest
