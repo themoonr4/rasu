@@ -208,32 +208,30 @@ def generate_sitemap_file(news_list, filename, is_index=False):
                 vid_dur.text = '300'
 
     # ============================================================
-    # 🔥 FINAL FIX: Remove first blank line from pretty
+    # 🔥 FINAL FIX: Remove leading blank lines and ensure single XML declaration (UTF-8)
     # ============================================================
     xml_str = ET.tostring(root, encoding='unicode')
     pretty = minidom.parseString(xml_str).toprettyxml(indent='  ')
-    
-    # Split into lines
+
+    # Split into lines and remove leading blank lines
     lines = pretty.splitlines()
-    
-    # Remove first blank line if it exists
-    if lines and lines[0].strip() == '':
-        lines = lines[1:]
-    
-    # If minidom already included XML declaration, remove it so we don't double-declare
+    while lines and lines[0].strip() == '':
+        lines.pop(0)
+
+    # If minidom included XML declaration, drop it so we don't double-declare
     if lines and lines[0].strip().startswith('<?xml'):
-        lines = lines[1:]
-    
+        lines.pop(0)
+
     # Join remaining lines
     clean = '\n'.join(lines)
-    
-    # XML Declaration + content
-    final_xml = '<?xml version="1.0" ?>\n' + clean
+
+    # Prepend a single well-formed XML declaration with encoding
+    final_xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + clean
 
     # Write .xml
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(final_xml)
-    
+
     # Write .xml.gz (compressed)
     try:
         with gzip.open(filename + '.gz', 'wt', encoding='utf-8') as f:
@@ -260,7 +258,7 @@ def generate_multi_sitemaps(all_news):
         name = f"sitemap_{i+1}.xml"
         generate_sitemap_file(chunk, name)
         index.append({'loc': f"{BASE_URL}/{name}"})
-    
+
     generate_sitemap_file(index, 'sitemap_index.xml', is_index=True)
     with open('sitemap.txt', 'w') as f:
         f.write(f"{BASE_URL}/sitemap_index.xml\n")
@@ -274,20 +272,19 @@ def update_robots_txt():
     elif os.path.exists('sitemap.xml'):
         sitemap_filename = 'sitemap.xml'
     else:
-        # default to sitemap.xml if none generated yet
         sitemap_filename = 'sitemap.xml'
 
     sitemap_line = f"Sitemap: {BASE_URL}/{sitemap_filename}"
-    
+
     try:
         with open('robots.txt', 'r') as f:
             content = f.read()
     except FileNotFoundError:
         content = ""
-    
+
     # Split content into lines
     lines = content.splitlines()
-    
+
     # Find where the header comment ends
     header_end = 0
     for i, line in enumerate(lines):
@@ -295,17 +292,17 @@ def update_robots_txt():
             header_end = i + 1
         else:
             break
-    
+
     # Remove any existing Sitemap lines
     lines = [line for line in lines if not line.strip().startswith('Sitemap:')]
-    
+
     # Insert Sitemap at proper position (after header, before any rules)
     lines.insert(header_end, sitemap_line)
-    
+
     # Write back
     with open('robots.txt', 'w') as f:
         f.write('\n'.join(lines))
-    
+
     logger.info("✅ robots.txt updated with sitemap at TOP")
 
 def purge_cloudflare():
