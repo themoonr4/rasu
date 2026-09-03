@@ -7,6 +7,7 @@ THE MOON - Ultimate Sitemap Generator
 - Priority based on recency + views + comments
 - Gzip compression (.xml.gz)
 - Telegram alert & Cloudflare purge
+- Optional: commit & push generated files to `main` (root) so GitHub Pages serves sitemap
 """
 
 import os
@@ -14,6 +15,8 @@ import sys
 import gzip
 import logging
 import requests
+import subprocess
+import shutil
 from datetime import datetime
 from typing import List, Dict
 import xml.etree.ElementTree as ET
@@ -323,6 +326,76 @@ def purge_cloudflare():
         except Exception as e:
             logger.error(f"Cloudflare error: {e}")
 
+# ===================== PUBLISH (auto-commit & push to main root) =====================
+def publish_generated_files(files, publish_branch='main', publish_folder=''):
+    """
+    Commit & push `files` to the repository `publish_branch` into `publish_folder` (root by default).
+    - Requires GITHUB_TOKEN env var (a repo-scoped PAT or Actions' GITHUB_TOKEN) OR SSH configured.
+    - Safe: if GITHUB_TOKEN is not set, this function will skip pushing and only log a warning.
+    """
+    repo = os.getenv('GITHUB_REPO', 'themoonr4/rasu')
+    token = os.getenv('GITHUB_TOKEN')
+    git_name = os.getenv('GIT_USER', 'auto-sitemap')
+    git_email = os.getenv('GIT_EMAIL', 'sitemap@local')
+
+    # If no token, skip (avoid accidental commit from local runs)
+    if not token:
+        logger.warning("GITHUB_TOKEN not set: skipping automatic push. Use manual git commands to publish.")
+        return
+
+    try:
+        # configure git user
+        subprocess.check_call(['git', 'config', 'user.name', git_name])
+        subprocess.check_call(['git', 'config', 'user.email', git_email])
+
+        # If publish branch exists locally, check it out, otherwise create it
+        exists = subprocess.call(['git', 'rev-parse', '--verify', publish_branch], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if exists == 0:
+            subprocess.check_call(['git', 'checkout', publish_branch])
+            # Pull latest to avoid overwriting remote changes
+            subprocess.call(['git', 'pull', 'origin', publish_branch])
+        else:
+            subprocess.check_call(['git', 'checkout', '-b', publish_branch])
+
+        # Move files into publish_folder if requested
+        target_paths = []
+        if publish_folder:
+            os.makedirs(publish_folder, exist_ok=True)
+            for f in files:
+                if os.path.exists(f):
+                    dest = os.path.join(publish_folder, os.path.basename(f))
+                    shutil.move(f, dest)
+                    target_paths.append(dest)
+                gz = f + '.gz'
+                if os.path.exists(gz):
+                    destgz = os.path.join(publish_folder, os.path.basename(gz))
+                    shutil.move(gz, destgz)
+                    target_paths.append(destgz)
+        else:
+            for f in files:
+                if os.path.exists(f):
+                    target_paths.append(f)
+                if os.path.exists(f + '.gz'):
+                    target_paths.append(f + '.gz')
+
+        if not target_paths:
+            logger.warning('No generated files found to commit. Skipping push.')
+            return
+
+        subprocess.check_call(['git', 'add'] + target_paths)
+        # Use --no-verify to avoid hooks if any
+        subprocess.check_call(['git', 'commit', '-m', 'chore: update sitemap files', '--no-verify'])
+
+        # Push using token auth (non-interactive); write remote URL with token
+        remote = f'https://{token}@github.com/{repo}.git'
+        subprocess.check_call(['git', 'push', remote, f'HEAD:{publish_branch}'])
+        logger.info('✅ Published sitemap files to GitHub')
+    except subprocess.CalledProcessError as e:
+        logger.error(f'Git publish failed: {e}')
+    except Exception as e:
+        logger.error(f'Unexpected error publishing files: {e}')
+
+
 def main():
     try:
         logger.info("🚀 Generating World-Class Sitemap...")
@@ -330,6 +403,11 @@ def main():
         generate_multi_sitemaps(news)
         update_robots_txt()
         purge_cloudflare()
+
+        # Attempt to auto-publish generated files to `main` root so GitHub Pages serves them
+        # This will only run if GITHUB_TOKEN is set in environment. It is safe to skip otherwise.
+        publish_generated_files(['sitemap.xml', 'sitemap_index.xml', 'sitemap.txt', 'robots.txt'], publish_branch='main', publish_folder='')
+
         send_telegram_alert(f"✅ Sitemap generated with {len(news)} articles!")
         logger.info("🎉 World-Class Sitemap Generation Complete!")
     except Exception as e:
