@@ -1,0 +1,57 @@
+# Jekyll Configuration for GitHub Pages
+title: THE MOON
+description: World's Most Advanced AI-Powered News Platform
+url: https://themoonr4.github.io/rasu/
+baseurl: /rasu
+lang: en
+
+# Build settings
+theme: null
+plugins: []
+
+# Include files
+include:
+  - .htaccess
+  - sitemap.xml
+  - robots.txt
+  - feed.xml
+  - opensearch.xml
+  - manifest.json
+  - sitemap-index.xml
+  - sitemap-news.xml
+
+# MIME types
+defaults:
+  - scope:
+      path: "sitemap.xml"
+    values:
+      layout: null
+  - scope:
+      path: "robots.txt"
+    values:
+      layout: null
+  - scope:
+      path: "feed.xml"
+    values:
+      layout: null
+  - scope:
+      path: "sitemap-*.xml"
+    values:
+      layout: null
+
+# Exclude from Jekyll processing
+exclude:
+  - .git
+  - .github
+  - node_modules
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+
+# Output settings
+encoding: UTF-8
+keep_files:
+  - sitemap.xml
+  - robots.txt
+  - feed.xml
+  - manifest.json
