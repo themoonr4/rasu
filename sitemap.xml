@@ -51,6 +51,20 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=85</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-09-10T04:58:31.966</news:publication_date>
+      <news:title>आधार कार्ड धारकों के लिए बड़ी खबर! जानिए क्या-क्या बदले नियम</news:title>
+    </news:news>
+  </url>
+  <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=84</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>daily</changefreq>
@@ -110,7 +124,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=80</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -320,7 +334,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=65</loc>
     <lastmod>2026-07-22</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
