@@ -51,6 +51,20 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=87</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-09-12T04:31:54.453</news:publication_date>
+      <news:title>जसप्रीत बुमराह का मैदान पर फिर चला जादू: जानिए चोट के बाद वापसी, घातक यॉर्कर और आगामी मैचों की रणनीत</news:title>
+    </news:news>
+  </url>
+  <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=86</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>daily</changefreq>
@@ -110,7 +124,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=82</loc>
     <lastmod>2026-09-03</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -320,7 +334,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=67</loc>
     <lastmod>2026-07-24</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
