@@ -51,6 +51,34 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=90</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-09-21T04:25:33.957</news:publication_date>
+      <news:title>Understanding the 30-Stock Benchmark: Free-Float Mechanics, Risk, and Investor Opportunities</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=89</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-09-21T04:22:53.214</news:publication_date>
+      <news:title>The Engine of Indian Capital Markets: How the 30-Stock Index Drives Wealth Creation</news:title>
+    </news:news>
+  </url>
+  <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=88</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>daily</changefreq>
@@ -96,7 +124,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=85</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -110,7 +138,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=84</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -306,7 +334,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=70</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -320,7 +348,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=69</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
