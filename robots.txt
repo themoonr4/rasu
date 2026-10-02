@@ -1,176 +1,134 @@
 # ============================================
-# SITEMAP — Google, Bing & Search Engines
+# THE MOON - Comprehensive Robots.txt v3.0
+# Optimized for Google, Bing, and Search Crawlers
 # ============================================
+
+# ============================================
+# SITEMAP - HIGHEST PRIORITY
+# ============================================
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 Sitemap: https://themoonr4.github.io/rasu/sitemap_index.xml
 
 # ============================================
-# THE MOON - News Platform
-# Robots.txt Configuration v2.1
-# Last Updated: 2026-09-04
-# ============================================
-
-# ============================================
-# DEFAULT POLICY - Allow All Crawlers
+# DEFAULT POLICY - ALLOW ALL QUALITY PAGES
 # ============================================
 User-agent: *
 Allow: /
-Allow: /index.html
-Allow: /article.html
-Allow: /categories.html
-Allow: /search.html
-Allow: /study.html
-Allow: /freelance.html
-Allow: /vacancy.html
-Allow: /about.html
-Allow: /contact.html
-Allow: /privacy.html
-Allow: /terms.html
-Allow: /sitemap.xml
-Allow: /sitemap_index.xml
-Allow: /feed.xml
-Allow: /opensearch.xml
-Allow: /manifest.json
-
-# Block sensitive admin & system areas
-Disallow: /admin.html
-Disallow: /admin/
-Disallow: /test.html
-Disallow: /test-supabase.html
-Disallow: /health.html
-Disallow: /.git/
-Disallow: /.github/
-Disallow: /.well-known/private/
-Disallow: /error_logs.html
-Disallow: /logs/
-Disallow: /temp/
-Disallow: /cache/
-Disallow: /backup/
-Disallow: /*.json$ (JSON files except manifest)
-Disallow: /*.py$ (Python scripts)
-
-# Crawl-delay for all crawlers (respectful crawling)
+Allow: /rasu/
+Allow: /rasu/index.html
+Allow: /rasu/article.html
+Allow: /rasu/study.html
+Allow: /rasu/freelance.html
+Allow: /rasu/vacancy.html
+Allow: /rasu/about.html
+Allow: /rasu/contact.html
+Allow: /rasu/privacy.html
+Allow: /rasu/terms.html
+Disallow: /rasu/admin.html
+Disallow: /rasu/admin/
+Disallow: /rasu/.git/
+Disallow: /rasu/.github/
+Disallow: /rasu/node_modules/
+Disallow: /rasu/test.html
+Disallow: /rasu/error_logs.html
+Disallow: /rasu/logs/
+Disallow: /rasu/temp/
+Disallow: /rasu/cache/
+Disallow: /rasu/backup/
+Allow: /rasu/*.js$
+Allow: /rasu/*.css$
+Allow: /rasu/*.json$
+Allow: /rasu/manifest.json
+Allow: /rasu/opensearch.xml
 Crawl-delay: 1
 Request-rate: 1/1s
 
 # ============================================
-# GOOGLE BOT - Special Instructions
+# GOOGLEBOT - OPTIMIZED
 # ============================================
 User-agent: Googlebot
 Allow: /
-Allow: /article.html
-Allow: /study.html
-Allow: /freelance.html
-Allow: /vacancy.html
-Allow: /about.html
-Allow: /contact.html
-Allow: /privacy.html
-Allow: /categories.html
-Allow: /search.html
-Allow: /sitemap.xml
-Allow: /sitemap_index.xml
-Allow: /feed.xml
-Allow: /opensearch.xml
-
-Disallow: /admin.html
-Disallow: /admin/
-Disallow: /test.html
-Disallow: /test-supabase.html
-
-# Crawl delay for Googlebot (1 second)
-Crawl-delay: 1
+Allow: /rasu/
+Allow: /rasu/index.html
+Allow: /rasu/article.html
+Allow: /rasu/study.html
+Allow: /rasu/freelance.html
+Allow: /rasu/vacancy.html
+Allow: /rasu/about.html
+Allow: /rasu/contact.html
+Allow: /rasu/privacy.html
+Allow: /rasu/terms.html
+Allow: /rasu/sitemap.xml
+Allow: /rasu/sitemap_index.xml
+Allow: /rasu/opensearch.xml
+Disallow: /rasu/admin.html
+Disallow: /rasu/admin/
+Disallow: /rasu/test.html
+Disallow: /rasu/.git/
+Disallow: /rasu/.github/
+Crawl-delay: 0
 Request-rate: 2/1s
 
 # ============================================
-# BINGBOT - Special Instructions
+# BINGBOT - OPTIMIZED
 # ============================================
 User-agent: Bingbot
 Allow: /
-Allow: /article.html
-Allow: /study.html
-Allow: /freelance.html
-Allow: /vacancy.html
-Allow: /about.html
-Allow: /contact.html
-Allow: /privacy.html
-
-Disallow: /admin.html
-Disallow: /admin/
-Disallow: /test.html
-
-# Crawl delay for Bingbot (1 second)
+Allow: /rasu/
+Allow: /rasu/index.html
+Allow: /rasu/article.html
+Allow: /rasu/study.html
+Allow: /rasu/freelance.html
+Allow: /rasu/vacancy.html
+Allow: /rasu/about.html
+Allow: /rasu/contact.html
+Allow: /rasu/privacy.html
+Disallow: /rasu/admin.html
+Disallow: /rasu/admin/
+Disallow: /rasu/test.html
 Crawl-delay: 1
-Request-rate: 2/1s
+Request-rate: 1/1s
 
 # ============================================
 # AI/LLM MODEL CRAWLERS - BLOCK
 # ============================================
-# GPT Bot (OpenAI)
 User-agent: GPTBot
 Disallow: /
-
-# ChatGPT User
 User-agent: ChatGPT-User
 Disallow: /
-
-# Google Extended (Google's AI model training)
 User-agent: Google-Extended
 Disallow: /
-
-# Anthropic Claude Bot
 User-agent: Claude-Web
 Disallow: /
-
-# Meta Llama Bot
+User-agent: Claude-Web-Crawler
+Disallow: /
 User-agent: Meta-ExternalAgent
 Disallow: /
-
-# Other AI Crawlers
+User-agent: Meta-ExternalFetcher
+Disallow: /
 User-agent: CCBot
 Disallow: /
-
 User-agent: OAI-SearchBot
 Disallow: /
-
 User-agent: PerplexityBot
 Disallow: /
-
-# ============================================
-# AGGRESSIVE CRAWLERS - RATE LIMIT/BLOCK
-# ============================================
-User-agent: AhrefsBot
-Crawl-delay: 10
-Request-rate: 1/10s
-
-User-agent: SemrushBot
-Crawl-delay: 10
-Request-rate: 1/10s
-
-User-agent: MJ12bot
-Crawl-delay: 10
-Request-rate: 1/10s
-
-User-agent: DotBot
-Disallow: /
-
-User-agent: MJ12bot
+User-agent: anthropic-ai
 Disallow: /
 
 # ============================================
-# SOCIAL MEDIA CRAWLERS - ALLOW
+# SOCIAL MEDIA & PREVIEW CRAWLERS - ALLOW
 # ============================================
 User-agent: facebookexternalhit
 Allow: /
-
 User-agent: Twitterbot
 Allow: /
-
 User-agent: LinkedInBot
 Allow: /
-
 User-agent: WhatsApp
 Allow: /
-
 User-agent: Slurp
+Allow: /
+User-agent: Baiduspider
 Allow: /
 
 # ============================================
@@ -178,29 +136,54 @@ Allow: /
 # ============================================
 User-agent: Googlebot-Mobile
 Allow: /
-
 User-agent: Bingbot-Mobile
+Allow: /
+User-agent: MobileBot
 Allow: /
 
 # ============================================
-# SEO MONITORING & ANALYTICS - ALLOW
+# AGGRESSIVE CRAWLERS - RATE LIMIT
+# ============================================
+User-agent: AhrefsBot
+Crawl-delay: 10
+Request-rate: 1/10s
+User-agent: SemrushBot
+Crawl-delay: 10
+Request-rate: 1/10s
+User-agent: MJ12bot
+Crawl-delay: 10
+Request-rate: 1/10s
+User-agent: DotBot
+Crawl-delay: 5
+User-agent: YandexBot
+Crawl-delay: 3
+User-agent: YandexMobileBot
+Crawl-delay: 3
+
+# ============================================
+# SEO & ANALYTICS CRAWLERS - ALLOW
 # ============================================
 User-agent: Screaming Frog SEO Spider
 Allow: /
-
 User-agent: SiteLiner
 Allow: /
-
 User-agent: Semrush
+Allow: /
+User-agent: Majestic
+Allow: /
+User-agent: Pingdom
+Allow: /
+User-agent: UptimeRobot
 Allow: /
 
 # ============================================
-# NOTES
+# NOTES & BEST PRACTICES
 # ============================================
-# - Primary Sitemap: sitemap.xml (main articles)
-# - Secondary Sitemap: sitemap_index.xml (index file)
-# - News Sitemap: sitemap-news.xml (recent articles)
-# - All sitemaps are auto-generated every 2 hours
-# - Admin panel requires authentication
-# - AI crawlers are blocked to protect content
-# - Support: contact@themoonr4.github.io
+# - Sitemap updated automatically every 2 hours by the sitemap generator
+# - Primary sitemap: sitemap.xml
+# - Sitemap index: sitemap_index.xml
+# - Admin panel is blocked from crawlers
+# - AI crawlers are blocked to protect original content
+# - Social previews allowed for correct unfurling
+# - Mobile crawlers explicitly allowed for indexing
+# - Monitor with Google Search Console: https://search.google.com/search-console
