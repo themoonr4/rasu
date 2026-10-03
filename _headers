@@ -1,0 +1,106 @@
+/* ============================================ */
+/* THE MOON - HTTP HEADERS CONFIGURATION */
+/* Optimized for Security, Performance & SEO */
+/* ============================================ */
+
+/* ============================================ */
+/* SECURITY HEADERS */
+/* ============================================ */
+
+/* Prevent clickjacking */
+X-Frame-Options: SAMEORIGIN
+
+/* Prevent MIME type sniffing */
+X-Content-Type-Options: nosniff
+
+/* Enable XSS protection */
+X-XSS-Protection: 1; mode=block
+
+/* Referrer Policy */
+Referrer-Policy: strict-origin-when-cross-origin
+
+/* Permissions Policy */
+Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+/* ============================================ */
+/* CACHING HEADERS */
+/* ============================================ */
+
+/* HTML - No cache, always validate */
+/rasu/*.html
+  Cache-Control: public, no-cache, must-revalidate, max-age=0
+  ETag: W/"themoonr4-rasu"
+
+/* CSS & JS - Cache for 30 days */
+/rasu/*.css
+/rasu/*.js
+  Cache-Control: public, immutable, max-age=2592000
+  ETag: W/"themoonr4-rasu"
+
+/* Images - Cache for 90 days */
+/rasu/*.jpg
+/rasu/*.png
+/rasu/*.svg
+/rasu/*.webp
+  Cache-Control: public, immutable, max-age=7776000
+  ETag: W/"themoonr4-rasu"
+
+/* Fonts - Cache for 1 year */
+/rasu/*.woff2
+/rasu/*.woff
+  Cache-Control: public, immutable, max-age=31536000
+  ETag: W/"themoonr4-rasu"
+
+/* JSON & XML - No cache */
+/rasu/*.json
+/rasu/*.xml
+  Cache-Control: public, no-cache, must-revalidate, max-age=0
+
+/* ============================================ */
+/* CONTENT SECURITY POLICY */
+/* ============================================ */
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://us.i.posthog.com https://cdn.onesignal.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://zpubhlbdqwzyseditrls.supabase.co https://www.google-analytics.com https://us.i.posthog.com https://onesignal.com https://api.github.com; frame-src 'self'; object-src 'none'
+
+/* ============================================ */
+/* COMPRESSION & ENCODING */
+/* ============================================ */
+
+/* Enable compression for all text content */
+/rasu/*
+  Content-Encoding: gzip
+
+/* ============================================ */
+/* HSTS - HTTPS ENFORCEMENT */
+/* ============================================ */
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+/* ============================================ */
+/* CORS HEADERS */
+/* ============================================ */
+Access-Control-Allow-Origin: https://themoonr4.github.io
+
+/* ============================================ */
+/* SEO & CONTENT TYPE */
+/* ============================================ */
+
+/* HTML served with correct content type */
+/rasu/*.html
+  Content-Type: text/html; charset=utf-8
+
+/* JSON served with correct content type */
+/rasu/*.json
+  Content-Type: application/json; charset=utf-8
+
+/* XML served with correct content type */
+/rasu/*.xml
+  Content-Type: application/xml; charset=utf-8
+
+/* ============================================ */
+/* NOTES */
+/* ============================================ */
+/* - These headers apply to GitHub Pages deployment
+   - Security headers prevent common web vulnerabilities
+   - Caching optimized for performance & freshness
+   - CSP prevents XSS & code injection attacks
+   - HSTS enforces HTTPS connections
+   - CORS configured for GitHub Pages origin
