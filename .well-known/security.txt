@@ -1,0 +1,4 @@
+Contact: security-issues@themoonr4.github.io
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en, hi
+Canonical: https://themoonr4.github.io/rasu/.well-known/security.txt
