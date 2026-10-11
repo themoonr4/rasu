@@ -6,7 +6,7 @@
 # ============================================
 # SITEMAP - HIGHEST PRIORITY
 # ============================================
-Sitemap: https://themoonr4.github.io/rasu/sitemap_index.xml
+Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 
 # ============================================
 # DEFAULT POLICY - ALLOW ALL QUALITY PAGES
@@ -96,7 +96,7 @@ Crawl-delay: 3
 # ============================================
 # NOTES
 # ============================================
-# - Sitemap: https://themoonr4.github.io/rasu/sitemap_index.xml
+# - Sitemap: https://themoonr4.github.io/rasu/sitemap.xml
 # - Admin panel blocked from all crawlers
 # - AI crawlers blocked to protect original content
 # - Monitor with Google Search Console: https://search.google.com/search-console
