@@ -51,6 +51,20 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=92</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-10-14T03:07:01.387</news:publication_date>
+      <news:title>जंतर मंतर पर फिर गूंजी आवाज: जगह बदली, सवाल नहीं बदला</news:title>
+    </news:news>
+  </url>
+  <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=91</loc>
     <lastmod>2026-10-12</lastmod>
     <changefreq>daily</changefreq>
@@ -110,7 +124,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=87</loc>
     <lastmod>2026-09-12</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -320,7 +334,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=72</loc>
     <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
