@@ -51,6 +51,20 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://themoonr4.github.io/rasu/article.html?id=100</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.900</priority>
+    <news:news>
+      <news:publication>
+        <news:name>THE MOON</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-10-28T04:11:27.917</news:publication_date>
+      <news:title>​पटना-नालंदा MLC चुनाव नतीजे: संजीव कुमार ने खत्म किया नवल किशोर का 30 साल का दबदबा, स्नातक सीट पर न</news:title>
+    </news:news>
+  </url>
+  <url>
     <loc>https://themoonr4.github.io/rasu/article.html?id=99</loc>
     <lastmod>2026-10-27</lastmod>
     <changefreq>daily</changefreq>
@@ -110,7 +124,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=95</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.900</priority>
+    <priority>0.850</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
@@ -320,7 +334,7 @@
     <loc>https://themoonr4.github.io/rasu/article.html?id=80</loc>
     <lastmod>2026-10-28</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.850</priority>
+    <priority>0.700</priority>
     <news:news>
       <news:publication>
         <news:name>THE MOON</news:name>
